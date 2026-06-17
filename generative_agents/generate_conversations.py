@@ -10,8 +10,6 @@ from generative_agents.conversation_utils import *
 from generative_agents.html_utils import convert_to_chat_html
 from generative_agents.event_utils import *
 from generative_agents.memory_utils import *
-from transformers import BlipProcessor, BlipForConditionalGeneration
-from PIL import Image
 from global_methods import run_chatgpt, run_chatgpt_with_examples, set_openai_key
 
 logging.basicConfig(level=logging.INFO)
@@ -21,7 +19,7 @@ def parse_args():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--out-dir', required=True, type=str, help="Path to directory containing agent files and downloaded images for a conversation")
+    parser.add_argument('--out-dir', required=True, type=str, help="Path to directory containing agent files for a conversation")
     parser.add_argument('--prompt-dir', required=True, type=str, help="Path to the dirctory containing in-context examples")
     
     parser.add_argument('--start-session', type=int, default=1, help="Start iterating from this index; first session is 1")
@@ -34,7 +32,6 @@ def parse_args():
     parser.add_argument('--persona', action="store_true", help="Set flag to sample a new persona from MSC and generate details")
     parser.add_argument('--session', action="store_true", help="Set flag to generate sessions based on the generated/existing personas")
     parser.add_argument('--events', action="store_true", help="Set flag to generate and events suited to the generated/existing personas")
-    parser.add_argument('--blip-caption', action="store_true", help="Set flag to use BLIP model to generate captions for downloaded images")
     parser.add_argument('--overwrite-persona', action='store_true', help="Overwrite existing persona summaries saved in the agent files")
     parser.add_argument('--overwrite-events', action='store_true', help="Overwrite existing events saved in the agent files")
     parser.add_argument('--overwrite-session', action='store_true', help="Overwrite existing sessions saved in the agent files")
@@ -45,17 +42,6 @@ def parse_args():
 
     args = parser.parse_args()
     return args
-
-
-def get_blip_caption(img_file, model, processor):
-
-    raw_image = Image.open(img_file).convert('RGB')
-    # conditional image captioning
-    text = "a photography of"
-    inputs = processor(raw_image, text, return_tensors="pt").to("cuda")
-    out = model.generate(**inputs)
-    caption = processor.decode(out[0], skip_special_tokens=True)
-    return caption
 
 
 def save_agents(agents, args):
@@ -321,7 +307,7 @@ def get_agent_query(speaker_1, speaker_2, curr_sess_id=0,
     return query
 
 
-def get_session(agent_a, agent_b, args, prev_date_time_string='', curr_date_time_string='', curr_sess_id=0, captioner=None, img_processor=None, reflection=False):
+def get_session(agent_a, agent_b, args, prev_date_time_string='', curr_date_time_string='', curr_sess_id=0, reflection=False):
     
     # load embeddings for retrieveing relevat observations from previous conversations
     if curr_sess_id == 1:
@@ -359,50 +345,13 @@ def get_session(agent_a, agent_b, args, prev_date_time_string='', curr_date_time
                                     dialog_id=i, last_dialog='' if i == 0 else session[-1]['speaker'] + ' says, ' + session[-1]['clean_text'], 
                                     embeddings=embeddings, reflection=reflection)
         
-        # if the speaker in previous turn sent an image, get caption + questions
-        if len(session) > 1 and "img_id" in session[-1]:
-
-            # caption = re.findall(r"\[.*\]", session[-1]['raw_text'])[0][1:-1]
-            caption = "shares " + session[-1]['blip_caption']
-            if curr_speaker == 0:
-                question = run_chatgpt(VISUAL_QUESTION_PROMPT.format(agent_a['persona_summary'], 
-                                                                     agent_b['persona_summary'], 
-                                                                     agent_b['name'], session[-1]['clean_text'], caption,
-                                                                     agent_a['name']), 1, 100, 'chatgpt')
-            else:
-                question = run_chatgpt(VISUAL_QUESTION_PROMPT.format(agent_a['persona_summary'], 
-                                                                     agent_b['persona_summary'], 
-                                                                     agent_a['name'], session[-1]['clean_text'], caption,
-                                                                     agent_b['name']), 1, 100, 'chatgpt')
-            question = question.strip()
-
-            if curr_speaker == 0:
-                agent_query = agent_query + f"\nUse the following question about the photo shared by {agent_b['name']} in your reply: {question}."
-            else:
-                agent_query = agent_query + f"\nUse the following question about the photo shared by {agent_a['name']} in your reply: {question}."
-
         output = run_chatgpt(agent_query + conv_so_far, 1, 100, 'chatgpt', temperature=1.2)
         output = output.strip().split('\n')[0]
         output = clean_dialog(output, agent_a['name'] if curr_speaker == 0 else agent_b['name'])
         output = {"text": output, "raw_text": output}
 
-        image_search_query, photo_caption = insert_image_response(output["text"])
-        if image_search_query is not None:
-            img_dir = os.path.join(args.out_dir, 'session_%s' % curr_sess_id, 'a') if curr_speaker == 0 else os.path.join(args.out_dir, 'session_%s' % curr_sess_id, 'b')
-            file_urls, file_names = get_images(image_search_query, img_dir, i)
-            if file_names == []:
-                print("Image not found, for search query: ", image_search_query)
-            else:
-                output["img_url"] = file_urls
-                output["img_file"] = file_names
-                output["img_id"] = i
-                output['query'] = image_search_query
-                output['caption'] = photo_caption
-                if args.blip_caption:
-                    output['blip_caption'] = get_blip_caption(os.path.join(img_dir, file_names[0]), captioner, img_processor).replace('photography', 'photo')
-
         output["speaker"] = agent_a["name"] if curr_speaker == 0 else agent_b['name']
-        text_replaced_caption = replace_captions(output["text"], args)
+        text_replaced_caption = output["text"]
         if not text_replaced_caption.isspace():
             if '[END]' in output["text"]:
                 output["clean_text"] = text_replaced_caption
@@ -414,16 +363,9 @@ def get_session(agent_a, agent_b, args, prev_date_time_string='', curr_date_time
         output["dia_id"] = 'D%s:%s' % (curr_sess_id, i+1)
         session.append(output)
 
-        # print(output)
         print("############ ", agent_a['name'] if curr_speaker == 0 else agent_b['name'], ': ', output["clean_text"])
-        if "caption" in output:
-            print("[ {} ]".format(output["blip_caption"]))
         
-        # conv_so_far = conv_so_far + output["text"] + '\n'
-        if "blip_caption" in output:
-            conv_so_far = conv_so_far + output["clean_text"] + '[shares ' + output["blip_caption"] + ']' + '\n'
-        else:
-            conv_so_far = conv_so_far + output["clean_text"] + '\n'
+        conv_so_far = conv_so_far + output["clean_text"] + '\n'
 
 
 
@@ -516,14 +458,6 @@ def main():
 
         agent_a, agent_b = load_agents(args)
 
-        if args.blip_caption: # load an image captioner
-            # init_model
-            img_processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-large")
-            captioner = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-large").to("cuda")
-        else:
-            img_processor = None
-            captioner = None
-
         # default start index is 1; if resuming conversation from a leter session, indicate in script arguments using --start-session
         for j in range(args.start_session, args.num_sessions+1):
 
@@ -558,7 +492,7 @@ def main():
                 
                 session = get_session(agent_a, agent_b, args,
                                       prev_date_time_string=prev_date_time_string, curr_date_time_string=curr_date_time_string, 
-                                      curr_sess_id=j, captioner=captioner, img_processor=img_processor, reflection=args.reflection)
+                                      curr_sess_id=j, reflection=args.reflection)
                 
                 agent_a['session_%s' % j] = session
                 agent_b['session_%s' % j] = session
@@ -600,7 +534,7 @@ def main():
                 save_agents([agent_a, agent_b], args)
 
     agent_a, agent_b = load_agents(args)
-    convert_to_chat_html(agent_a, agent_b, outfile=os.path.join(args.out_dir, 'sessions.html'), use_events=args.events, img_dir=args.out_dir)
+    convert_to_chat_html(agent_a, agent_b, outfile=os.path.join(args.out_dir, 'sessions.html'), use_events=args.events)
 
 
 if __name__ == "__main__":
