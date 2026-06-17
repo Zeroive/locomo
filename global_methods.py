@@ -130,7 +130,10 @@ def run_chatgpt(query, num_gen=1, num_tokens_request=1000,
                 temperature=temperature,
                 max_tokens=num_tokens_request,
                 n=num_gen,
-                messages=messages
+                messages=messages,
+                extra_body={
+                    "chat_template_kwargs": {"enable_thinking": False}
+                }
             )
         except Exception as e:
             print(f"API Error: {e}; waiting for {wait_time} seconds")
@@ -172,7 +175,10 @@ def run_chatgpt_with_examples(query, examples, input, num_gen=1, num_tokens_requ
                 temperature=temperature,
                 max_tokens=num_tokens_request,
                 n=num_gen,
-                messages=messages
+                messages=messages,
+                extra_body={
+                    "chat_template_kwargs": {"enable_thinking": False}
+                }
             )
         except Exception as e:
             print(f"API Error: {e}; waiting for {wait_time} seconds")
