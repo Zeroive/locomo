@@ -14,16 +14,17 @@ def save_eval(data_file, accs, key='exact_match'):
 
     
     if os.path.exists(data_file.replace('.json', '_scores.json')):
-        data = json.load(open(data_file.replace('.json', '_scores.json')))
+        data = json.load(open(data_file.replace('.json', '_scores.json'), encoding='utf-8'))
     else:
-        data = json.load(open(data_file))
+        data = json.load(open(data_file, encoding='utf-8'))
 
     assert len(data['qa']) == len(accs), (len(data['qa']), len(accs), accs)
     for i in range(0, len(data['qa'])):
         data['qa'][i][key] = accs[i]
     
-    with open(data_file.replace('.json', '_scores.json'), 'w') as f:
+    with open(data_file.replace('.json', '_scores.json'), 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2)
+
 
 
 # Mean pooling

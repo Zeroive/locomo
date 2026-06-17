@@ -104,9 +104,9 @@ def main():
 
         out_samples[data['sample_id']] = answers
 
-
-    with open(args.out_file, 'w') as f:
-        json.dump(list(out_samples.values()), f, indent=2)
+        # 为json.dump()调用添加ensure_ascii=False参数，避免编码问题
+    with open(args.out_file, 'w', encoding='utf-8') as f:
+        json.dump(list(out_samples.values()), f, indent=2, ensure_ascii=False)
 
     
     analyze_aggr_acc(args.data_file, args.out_file, args.out_file.replace('.json', '_stats.json'),

@@ -48,17 +48,17 @@ def save_agents(agents, args):
 
     agent_a, agent_b = agents
     logging.info("Saving updated Agent A to %s" % args.agent_a_file)
-    with open(args.agent_a_file, 'w') as f:
-        json.dump(agent_a, f, indent=2)
+    with open(args.agent_a_file, 'w', encoding='utf-8') as f:
+        json.dump(agent_a, f, indent=2, ensure_ascii=False)
     logging.info("Saving updated Agent B to %s" % args.agent_b_file)
-    with open(args.agent_b_file, 'w') as f:
-        json.dump(agent_b, f, indent=2)
+    with open(args.agent_b_file, 'w', encoding='utf-8') as f:
+        json.dump(agent_b, f, indent=2, ensure_ascii=False)
 
 
 def load_agents(args):
 
-    agent_a = json.load(open(args.agent_a_file))
-    agent_b = json.load(open(args.agent_b_file))
+    agent_a = json.load(open(args.agent_a_file, encoding='utf-8'))
+    agent_b = json.load(open(args.agent_b_file, encoding='utf-8'))
     return agent_a, agent_b
 
 

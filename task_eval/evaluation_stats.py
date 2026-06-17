@@ -37,9 +37,9 @@ def analyze_aggr_acc(ann_file, in_file, out_file, model_name, metric_key, encode
     context_len_counts = defaultdict(lambda: 0)
     context_len_og = defaultdict(lambda: 0)
     recall_by_category = defaultdict(lambda: 0)
-
-    outputs = {d['sample_id']: d for d in json.load(open(in_file))}
-    data = {d['sample_id']: d for d in json.load(open(ann_file))}
+    # 为json.load()调用添加encoding='utf-8'参数，避免编码问题
+    outputs = {d['sample_id']: d for d in json.load(open(in_file), encoding='utf-8')}
+    data = {d['sample_id']: d for d in json.load(open(ann_file), encoding='utf-8')}
     sample_ids = outputs.keys()
     
     for sample_id in sample_ids:
@@ -116,7 +116,7 @@ def analyze_aggr_acc(ann_file, in_file, out_file, model_name, metric_key, encode
     #     results_by_memory["gpt3.5-16k"][k] = float(memory_counts[k])/memory_counts_og[k]
     
     if os.path.exists(out_file):
-        results_dict = json.load(open(out_file))
+        results_dict = json.load(open(out_file, encoding='utf-8'))
     else:
         results_dict = {}
 
@@ -142,8 +142,8 @@ def analyze_aggr_acc(ann_file, in_file, out_file, model_name, metric_key, encode
         results_dict[model_name]['context_length_counts'] = context_len_og
         results_dict[model_name]['cum_accuracy_by_context_length'] = context_len_counts
 
-    with open(out_file, 'w') as f:
-        json.dump(results_dict, f, indent=2)
+    with open(out_file, 'w', encoding='utf-8') as f:
+        json.dump(results_dict, f, indent=2, ensure_ascii=False)
 
 
 if __name__ == "__main__":

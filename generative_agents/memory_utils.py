@@ -33,9 +33,8 @@ def get_embedding(texts, model="text-embedding-ada-002"):
 
 
 def get_session_facts(args, agent_a, agent_b, session_idx, return_embeddings=True):
-
     # Step 1: get events
-    task = json.load(open(os.path.join(args.prompt_dir, 'fact_generation_examples_new.json')))
+    task = json.load(open(os.path.join(args.prompt_dir, 'fact_generation_examples_new.json'), encoding='utf-8'))
     query = CONVERSATION2FACTS_PROMPT
     examples = [[task['input_prefix'] + e["input"], json.dumps(e["output"], indent=2)] for e in task['examples']]
 

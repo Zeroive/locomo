@@ -99,11 +99,11 @@ def sort_events_by_time(graph):
 def get_events(agent, start_date, end_date, args):
 
 
-    task = json.load(open(os.path.join(args.prompt_dir, 'event_generation_examples.json')))
+    task = json.load(open(os.path.join(args.prompt_dir, 'event_generation_examples.json'), encoding='utf-8'))
     persona_examples = [e["input"] + '\nGenerate events between 1 January, 2020 and 30 April, 2020.' for e in task['examples']]
     
     # Step 1: Get initial events
-    task = json.load(open(os.path.join(args.prompt_dir, 'graph_generation_examples.json')))
+    task = json.load(open(os.path.join(args.prompt_dir, 'graph_generation_examples.json'), encoding='utf-8'))
     input = agent['persona_summary'] + '\nAssign dates between %s and %s.' % (start_date, end_date)
     query = EVENT_KG_FROM_PERSONA_PROMPT_SEQUENTIAL_INIT % (persona_examples[0], 
                                                                    json.dumps(task['examples'][0]["output"][:12], indent=2),

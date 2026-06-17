@@ -138,12 +138,12 @@ def get_msc_persona(args):
     if (os.path.exists(args.agent_a_file) and os.path.exists(args.agent_b_file)) and not args.overwrite_persona:
         return None, None
     else:
-        all_personas = json.load(open('./data/msc_personas_all.json'))
+        all_personas = json.load(open('./data/msc_personas_all.json', encoding='utf-8'))
         selected_idx = random.choice([idx for idx, d in enumerate(all_personas['train']) if not d["in_dataset"]])
         attributes = all_personas['train'][selected_idx]
-        with open('./data/msc_personas_all.json', "w") as f:
+        with open('./data/msc_personas_all.json', "w", encoding='utf-8') as f:
             all_personas['train'][selected_idx]["in_dataset"] = 1
-            json.dump(all_personas, f, indent=2)
+            json.dump(all_personas, f, indent=2, ensure_ascii=False)
         agent_a = get_persona(args, attributes['Speaker 1'])
 
         agent_a['persona_summary'] = agent_a['persona']
@@ -160,8 +160,8 @@ def get_msc_persona(args):
 
 
 def get_persona(args, attributes, target='human', ref_age=None):
-
-    task = json.load(open(os.path.join(args.prompt_dir, 'persona_generation_examples.json')))
+    # 为 json.load() 添加编码参数，避免编码问题
+    task = json.load(open(os.path.join(args.prompt_dir, 'persona_generation_examples.json'), encoding='utf-8')) 
     persona_examples = [task["input_prefix"] + json.dumps(e["input"], indent=2) + '\n' + task["output_prefix"] + e["output"] for e in task['examples']]
     input_string = task["input_prefix"] + json.dumps(attributes, indent=2)
 

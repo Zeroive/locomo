@@ -35,11 +35,11 @@ def main():
     args = parse_args()
 
     # load conversations
-    samples = json.load(open(args.data_file))
+    samples = json.load(open(args.data_file, encoding='utf-8'))
 
     # load the output file if it exists to check for overwriting
     if os.path.exists(args.out_file):
-        out_samples = {d['sample_id']: d for d in json.load(open(args.out_file))}
+        out_samples = {d['sample_id']: d for d in json.load(open(args.out_file), encoding='utf-8')}
     else:
         out_samples = {}
 
@@ -73,9 +73,9 @@ def main():
                     date_times.append(date_time)
 
             # save intermittently to prevent loss of data
-            out_samples[output['sample_id']] = output.copy()
-            with open(args.out_file, 'w') as f:
-                json.dump(list(out_samples.values()), f, indent=2)
+                    out_samples[output['sample_id']] = output.copy()
+            with open(args.out_file, 'w', encoding='utf-8') as f:
+                json.dump(list(out_samples.values()), f, indent=2, ensure_ascii=False)
 
         # use date + observation as context when getting embeddings, if flag is set to True
         if args.use_date:
@@ -97,8 +97,8 @@ def main():
 
         out_samples[output['sample_id']] = output.copy()
     
-    with open(args.out_file, 'w') as f:
-        json.dump(list(out_samples.values()), f, indent=2)
+        with open(args.out_file, 'w', encoding='utf-8') as f:
+            json.dump(list(out_samples.values()), f, indent=2, ensure_ascii=False)
 
 
 main()

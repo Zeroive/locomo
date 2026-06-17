@@ -169,7 +169,7 @@ def run_llama(pipeline, question, data, tokenizer, args):
 
 def get_chatgpt_summaries(ann_file):
 
-    data = json.load(open(ann_file))
+    data = json.load(open(ann_file, encoding='utf-8'))
     conv = ''
     for i in range(1,20):
         if 'session_%s' % i in data:
