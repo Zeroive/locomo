@@ -66,7 +66,7 @@ def get_random_time():
 
     start_time = timedelta(hours=9, minutes=0, seconds=0)
     end_time = timedelta(hours=21, minutes=59, seconds=59)
-    random_seconds = random.randint(start_time.total_seconds(), end_time.total_seconds())
+    random_seconds = random.randint(int(start_time.total_seconds()), int(end_time.total_seconds()))
     hours = random_seconds//3600
     minutes = (random_seconds - (hours*3600))//60
     return timedelta(hours=hours, minutes=minutes, seconds=0)

@@ -106,7 +106,7 @@ def run_gemini(model, content: str, max_tokens: int = 0):
 
 
 def run_chatgpt(query, num_gen=1, num_tokens_request=1000, 
-                model='chatgpt', use_16k=False, temperature=1.0, wait_time=1):
+                model='chatgpt', use_16k=False, temperature=1.0, wait_time=1) -> str:
 
     from openai import OpenAI
     client = OpenAI(

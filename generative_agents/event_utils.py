@@ -4,7 +4,6 @@ import openai
 import logging
 from datetime import datetime
 from global_methods import run_chatgpt
-import tiktoken
 logging.basicConfig(level=logging.INFO)
 
 
@@ -63,10 +62,22 @@ OUTPUT:
 
 def num_tokens_from_string(string: str, model_name: str) -> int:
     """Returns the number of tokens in a text string."""
-    encoding_name = 'cl100k_base' if model_name in ['gpt-4', 'gpt-3.5-turbo', 'text-embedding-ada-002'] else 'p50k_base'
-    encoding = tiktoken.get_encoding(encoding_name)
-    num_tokens = len(encoding.encode(string))
-    return num_tokens
+    # 本地简单实现：中文按字符计算，英文按单词计算
+    # 这是一个近似估算，实际token数可能略有差异
+    tokens = 0
+    for char in string:
+        if '\u4e00' <= char <= '\u9fff':
+            # 中文字符
+            tokens += 1
+        elif char.isspace():
+            # 空格不计数
+            continue
+        else:
+            # 英文字符和其他字符，按每4个字符算1个token
+            tokens += 1
+    # 额外加上标点和特殊字符的开销
+    tokens = int(tokens * 1.1)
+    return tokens
 
 def sort_events_by_time(graph):
 
