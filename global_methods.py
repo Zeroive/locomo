@@ -8,10 +8,26 @@ import os
 import google.generativeai as genai
 from anthropic import Anthropic
 
+# 自定义模型服务配置
+CUSTOM_MODEL_BASE_URL = "http://7.216.57.92:24073/v1/chat/completions"
+CUSTOM_MODEL_NAME = "Qwen3-32B"
+CUSTOM_EMBEDDING_BASE_URL = "http://7.216.57.92:24067/v1"
+CUSTOM_EMBEDDING_API_KEY = "token-abc123"
+
 
 def get_openai_embedding(texts, model="text-embedding-ada-002"):
-   texts = [text.replace("\n", " ") for text in texts]
-   return np.array([openai.Embedding.create(input = texts, model=model)['data'][i]['embedding'] for i in range(len(texts))])
+    from openai import OpenAI
+    client = OpenAI(
+        base_url=CUSTOM_EMBEDDING_BASE_URL,
+        api_key=CUSTOM_EMBEDDING_API_KEY
+    )
+    texts = [text.replace("\n", " ") for text in texts]
+    embedding = client.embeddings.create(
+        model=model,
+        input=texts,
+        encoding_format='float'
+    )
+    return np.array([item.embedding for item in embedding.data])
 
 def set_anthropic_key():
     pass
@@ -22,7 +38,7 @@ def set_gemini_key():
     genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 
 def set_openai_key():
-    openai.api_key = os.environ['OPENAI_API_KEY']
+    openai.api_key = os.environ.get('OPENAI_API_KEY', 'token-abc123')
 
 
 def run_json_trials(query, num_gen=1, num_tokens_request=1000, 
@@ -92,84 +108,41 @@ def run_gemini(model, content: str, max_tokens: int = 0):
 def run_chatgpt(query, num_gen=1, num_tokens_request=1000, 
                 model='chatgpt', use_16k=False, temperature=1.0, wait_time=1):
 
+    from openai import OpenAI
+    client = OpenAI(
+        base_url=CUSTOM_MODEL_BASE_URL,
+        api_key=CUSTOM_EMBEDDING_API_KEY
+    )
+
     completion = None
     while completion is None:
         wait_time = wait_time * 2
         try:
-            # if model == 'davinci':
-            #     completion = openai.Completion.create(
-            #                     # model = "gpt-3.5-turbo",
-            #                     model = "text-davinci-003",
-            #                     temperature = temperature,
-            #                     max_tokens = num_tokens_request,
-            #                     n=num_gen,
-            #                     prompt=query
-            #                 )
-            if model == 'chatgpt':
-                messages = [
-                        {"role": "system", "content": query}
-                    ]
-                completion = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    temperature = temperature,
-                    max_tokens = num_tokens_request,
-                    n=num_gen,
-                    messages = messages
-                )
-            elif 'gpt-4' in model:
-                completion = openai.ChatCompletion.create(
-                    model=model,
-                    temperature = temperature,
-                    max_tokens = num_tokens_request,
-                    n=num_gen,
-                    messages = [
-                        {"role": "user", "content": query}
-                    ]
-                )
-            else:
-                print("Did not find model %s" % model)
-                raise ValueError
-        except openai.error.APIError as e:
-            #Handle API error here, e.g. retry or log
-            print(f"OpenAI API returned an API Error: {e}; waiting for {wait_time} seconds")
+            messages = [
+                {"role": "user", "content": query}
+            ]
+            completion = client.chat.completions.create(
+                model=CUSTOM_MODEL_NAME,
+                temperature=temperature,
+                max_tokens=num_tokens_request,
+                n=num_gen,
+                messages=messages
+            )
+        except Exception as e:
+            print(f"API Error: {e}; waiting for {wait_time} seconds")
             time.sleep(wait_time)
             pass
-        except openai.error.APIConnectionError as e:
-            #Handle connection error here
-            print(f"Failed to connect to OpenAI API: {e}; waiting for {wait_time} seconds")
-            time.sleep(wait_time)
-            pass
-        except openai.error.RateLimitError as e:
-            #Handle rate limit error (we recommend using exponential backoff)
-            print(f"OpenAI API request exceeded rate limit: {e}")
-            pass
-        except openai.error.ServiceUnavailableError as e:
-            #Handle rate limit error (we recommend using exponential backoff)
-            print(f"OpenAI API request exceeded rate limit: {e}; waiting for {wait_time} seconds")
-            time.sleep(wait_time)
-            pass
-        # except Exception as e:
-        #     if e:
-        #         print(e)
-        #         print(f"Timeout error, retrying after waiting for {wait_time} seconds")
-        #         time.sleep(wait_time)
     
-
-    if model == 'davinci':
-        outputs = [choice.get('text').strip() for choice in completion.get('choices')]
-        if num_gen > 1:
-            return outputs
-        else:
-            # print(outputs[0])
-            return outputs[0]
-    else:
-        # print(completion.choices[0].message.content)
-        return completion.choices[0].message.content
+    return completion.choices[0].message.content
     
 
 def run_chatgpt_with_examples(query, examples, input, num_gen=1, num_tokens_request=1000, use_16k=False, wait_time = 1, temperature=1.0):
 
-    completion = None
+    from openai import OpenAI
+    client = OpenAI(
+        base_url=CUSTOM_MODEL_BASE_URL,
+        api_key=CUSTOM_EMBEDDING_API_KEY
+    )
     
     messages = [
         {"role": "system", "content": query}
@@ -185,33 +158,19 @@ def run_chatgpt_with_examples(query, examples, input, num_gen=1, num_tokens_requ
         {"role": "user", "content": input}
     )   
     
+    completion = None
     while completion is None:
         wait_time = wait_time * 2
         try:
-            completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo" if not use_16k else "gpt-3.5-turbo-16k",
-                temperature = temperature,
-                max_tokens = num_tokens_request,
+            completion = client.chat.completions.create(
+                model=CUSTOM_MODEL_NAME,
+                temperature=temperature,
+                max_tokens=num_tokens_request,
                 n=num_gen,
-                messages = messages
+                messages=messages
             )
-        except openai.error.APIError as e:
-            #Handle API error here, e.g. retry or log
-            print(f"OpenAI API returned an API Error: {e}; waiting for {wait_time} seconds")
-            time.sleep(wait_time)
-            pass
-        except openai.error.APIConnectionError as e:
-            #Handle connection error here
-            print(f"Failed to connect to OpenAI API: {e}; waiting for {wait_time} seconds")
-            time.sleep(wait_time)
-            pass
-        except openai.error.RateLimitError as e:
-            #Handle rate limit error (we recommend using exponential backoff)
-            print(f"OpenAI API request exceeded rate limit: {e}")
-            pass
-        except openai.error.ServiceUnavailableError as e:
-            #Handle rate limit error (we recommend using exponential backoff)
-            print(f"OpenAI API request exceeded rate limit: {e}; waiting for {wait_time} seconds")
+        except Exception as e:
+            print(f"API Error: {e}; waiting for {wait_time} seconds")
             time.sleep(wait_time)
             pass
     

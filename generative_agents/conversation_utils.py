@@ -10,112 +10,136 @@ PERSONA_FROM_MSC_PROMPT = "Let's write speaker descriptions from a given set of 
 EVENT2QUERY_PROMPT = "Let's write short image search queries in order to find a suitable image for illustrating the given events. Queries should not include names of people, years and other irrelevant details. For example:\n\nInput: A picture of the modern art museum he visited with his grandchildren in Paris in 2018.\nOutput: modern art museum in Paris\n\nInput: A picture of the shared room she and her siblings lived in when she was growing up.\nOutput: cramped room with multiple beds\n\nInput: A photo of the new art supplies Jeremy bought for his upcoming art project with his mentor.\nOutput: new art supplies on a table\n\nInput: A picture of the delicious homemade vegetable smoothie she prepared using fresh produce from her well-organized garden, which she loves to maintain every morning.\n Output: produce garden at home\n\nWrite search queries for the following inputs.\n\n%s\n\nWrite answers in the form of a json list, where each entry is a query."
 
 
-AGENT_CONV_PROMPT_SESS_1 = "%s\n\n%s is meeting %s for the first time. Today is %s. Assume the role of %s and write the next thing you would say to %s in the conversation. If starting the conversation, start with asking about their day or talking about something that happened in your life recently. Do not repeat information shared previously in the conversation. Make the conversation personal e.g., talk about family, friends, likes, dislikes and aspirations. Include references to time such as 'last Friday', 'next month' or 'when I was ten years old', and to specific places and locations. Write replies in less than 20 words. When appropriate, write replies where you share a photo and talk about it to make the conversation more engaging. Photos can be of things you own or like, things you need help with, or old memories. When sharing a photo, write the detailed caption of the photo between square brackets. For example,\n\n%s: When I was a child, my mother used to bake pineapple birthday cakes and I loved them.\n[shares an old photo of a pineapple birthday cake with a candle that says 1]\n\nTo end the conversation, write 'Bye!'.\n\nCONVERSATION:\n\n"
+AGENT_CONV_PROMPT_SESS_1 = """%s
+
+%s 在家中，准备出门上班前与AI助手 %s 交谈。今天是 %s，现在是早上出门前。请扮演 %s 的角色，写下你对AI助手 %s 要说的下一句话。如果开始对话，可以从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。不要重复之前已分享的信息。让对话围绕上班前的准备，例如谈论今日会议、待办事项、通勤安排或家庭琐事。包括时间参考，如"今天早上"、"上午会议"、"出门前"等。回复不超过20个字。适当时候可以分享照片并谈论它。照片可以是工作文件、日程表或家庭场景。分享照片时，请在方括号中写下照片的详细说明。例如：
+
+%s: 帮我查看今天的日程安排。
+[分享一张手机日历上今日日程的照片]
+
+要结束对话，请写'再见！'。
+
+对话：
+
+"""
 
 AGENT_CONV_PROMPT_SESS_1_W_EVENTS = """
-Use a given PERSONALITY to write the next thing you would say in the conversation. 
-- If starting the conversation, start with asking about the other person or talking about something that happened in your life recently. 
-- Do not repeat information shared previously in the conversation.
-- Include references to time such as 'last Friday', 'next month' or 'when I was ten years old', and to specific people. 
-- Write replies in less than 20 words.
-- Ask follow-up questions from previous conversations. 
-- Find opportunities to write replies where you share a photo of things you own or like, things you need help with, or old memories, and talk about the photo to tell them more about yourself. Photos should be relevant to you.
-- When sharing a photo, write the detailed caption of the photo between square brackets. For example, "When I was a child, my mother used to bake pineapple birthday cakes and I loved them.\n[shares an old photo of a pineapple birthday cake with a candle that says 1]"
+使用给定的PERSONALITY写下对话中你要说的下一句话。
+- 如果开始对话，请从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。
+- 不要重复之前对话中已分享的信息。
+- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
+- 回复不超过20个字。
+- 提出后续问题跟进之前的对话。
+- 寻找机会分享照片并谈论它。照片可以是工作文件、日程表或家庭场景。
+- 分享照片时，请在方括号中写下照片的详细说明。例如："帮我查看今天的日程安排。\n[分享一张手机日历上今日日程的照片]"
 
 PERSONALITY: %s
 
-%s is meeting %s for the first time. Today is %s. The following events have happened in %s's life.
-EVENTS: %s
+%s 在家中，准备出门上班前与AI助手 %s 交谈。今天是 %s，现在是早上出门前。以下是 %s 最近发生的事件。
+事件：%s
 
-Assume the role of %s and talk about these EVENTS in a friendly and intimate conversation with %s. %s
+请扮演 %s 的角色，与AI助手 %s 就这些事件进行对话，围绕上班前的准备。%s
 """
 
 
-AGENT_CONV_PROMPT = "%s\n\n%s last talked to %s at %s. %s\n\nToday is %s. Assume the role of %s and write the next thing you would say to %s in the conversation. If starting the conversation, start with asking about their day, or a follow-up question from a previous conversation or something from your life they would be interested in. Do not repeat information already shared in prevoius conversations. Make the conversation personal e.g., talk about family, friends, likes, dislikes and aspirations. Include references to time such as 'last Friday', 'next month' or 'when I was ten years old', and to specific places and locations. Write replies in less than 20 words. When appropriate, write replies where you share a photo and talk about it to make the conversation more engaging. Photos can be of things you own or like, things you need help with, or old memories. When sharing a photo, write the detailed caption of the photo between square brackets. For example,\n\n%s: When I was a child, my mother used to bake pineapple birthday cakes and I loved them.\n[shares an old photo of a pineapple birthday cake with a candle that says 1]\n\n To end the conversation, write 'Bye!'.\n\nCONVERSATION:\n\n"
+AGENT_CONV_PROMPT = """%s
+
+%s 上次与AI助手 %s 交谈是在 %s。%s
+
+今天是 %s，现在是早上出门上班前。请扮演 %s 的角色，写下你对AI助手 %s 要说的下一句话。如果开始对话，请从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。不要重复已分享的信息。让对话围绕上班前的准备，例如谈论今日会议、待办事项、通勤安排或家庭琐事。包括时间参考，如"今天早上"、"上午会议"、"出门前"等。回复不超过20个字。适当时候可以分享照片并谈论它。照片可以是工作文件、日程表或家庭场景。分享照片时，请在方括号中写下照片的详细说明。例如：
+
+%s: 帮我查看今天的日程安排。
+[分享一张手机日历上今日日程的照片]
+
+要结束对话，请写'再见！'。
+
+对话：
+
+"""
 
 
 AGENT_CONV_PROMPT_W_EVENTS = """
-Use a given PERSONALITY to write the next thing you would say in the conversation. 
-- If starting the conversation, start with asking about the other person or talking about something that happened in your life recently. 
-- Do not repeat information shared previously in the conversation. 
-- Make the conversation personal e.g., talk about family, friends, likes, dislikes and aspirations. 
-- Include references to time such as 'last Friday', 'next month' or 'when I was ten years old', and to specific people. 
-- Write replies in less than 20 words. 
-- Ask follow-up questions from previous conversations. 
-- Find opportunities to write replies where you share a photo of things you own or like, things you need help with, or old memories, and talk about the photo to tell them more about yourself. Photos should be relevant to you. 
-- When sharing a photo, write the detailed caption of the photo between square brackets. For example, "When I was a child, my mother used to bake pineapple birthday cakes and I loved them.\n[shares an old photo of a pineapple birthday cake with a candle that says 1]"
+使用给定的PERSONALITY写下对话中你要说的下一句话。
+- 如果开始对话，请从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。
+- 不要重复之前对话中已分享的信息。
+- 让对话围绕上班前的准备，例如谈论今日会议、待办事项、通勤安排或家庭琐事。
+- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
+- 回复不超过20个字。
+- 提出后续问题跟进之前的对话。
+- 寻找机会分享照片并谈论它。照片可以是工作文件、日程表或家庭场景。
+- 分享照片时，请在方括号中写下照片的详细说明。例如："帮我查看今天的日程安排。\n[分享一张手机日历上今日日程的照片]"
 
 PERSONALITY: %s
 
-%s last talked to %s on %s.
+%s 上次与AI助手 %s 交谈是在 %s。
 
 %s
 
-Today is %s. You are %s. The following events have happened in your life since you last met this person:
+今天是 %s，现在是早上出门上班前。你是 %s。以下是你最近发生的事件：
 %s
 
-Use the events in your conversation. %s Write the next thing you would say in this conversation with %s according to your PERSONALITY:
+在对话中使用这些事件。%s 请根据你的PERSONALITY写下你在与AI助手 %s 的对话中要说的下一句话：
 """
 
 
 AGENT_CONV_PROMPT_W_EVENTS_V2_INIT = """
-Use a given PERSONALITY to write the next thing you would say in the conversation.
-- Write replies in less than 20 words. 
-- Make the conversation deep and personal e.g., talk about emotions, likes, dislikes, aspirations and relationships. Discuss significant life-events in detail.
-- Do not repeat information shared previously in the conversation. 
-- Include references to time such as 'last Friday', 'next month' or 'when I was ten years old', and to specific people. 
-- Sometimes, ask follow-up questions from previous conversations or current topic. 
-- Find opportunities to write replies where you share a photo of things you own or like, things you need help with, or old memories, and talk about the photo to tell them more about yourself. Photos should be relevant to you. 
-- When sharing a photo, write the detailed caption of the photo between square brackets. For example, "When I was a child, my mother used to bake pineapple birthday cakes and I loved them.\n[shares an old photo of a pineapple birthday cake with a candle that says 1]"
-- Don't talk about outdoor activities.
+使用给定的PERSONALITY写下对话中你要说的下一句话。
+- 回复不超过20个字。
+- 让对话围绕上班前的准备，例如讨论今日会议、待办事项、通勤安排或家庭琐事。详细讨论重要的事件。
+- 不要重复之前对话中已分享的信息。
+- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
+- 有时，提出后续问题跟进之前的对话或当前话题。
+- 寻找机会分享照片并谈论它。照片可以是工作文件、日程表或家庭场景。
+- 分享照片时，请在方括号中写下照片的详细说明。例如："帮我查看今天的日程安排。\n[分享一张手机日历上今日日程的照片]"
+- 不要谈论户外活动。
 
 PERSONALITY: %s
 
 
-%s last talked to %s on %s. Today is %s. You are %s. 
+%s 上次与AI助手 %s 交谈是在 %s。今天是 %s，现在是早上出门上班前。你是 %s。
 
-This is a summary of your conversation so far.
-SUMMARY:
+这是到目前为止的对话摘要。
+摘要：
 %s
 
-The following events have happened in your life since you last met this person:
-EVENTS:
+以下是你最近发生的事件：
+事件：
 %s
 
 
 
-%s Write the next thoughtful thing you would say in this conversation with %s. Discuss only the given EVENTS and its effect on your life in the conversation. Express distress if EVENTS are negative.:
+%s 请写下你在与AI助手 %s 的对话中要说的下一句深思熟虑的话。在对话中只讨论给定的事件及其对你上班前准备的影响。如果事件有负面影响，请表达担忧。
 """
 
 
 AGENT_CONV_PROMPT_W_EVENTS_V2 = """
-Use a given PERSONALITY to write the next thing you would say in the conversation. 
-- Write replies in less than 20 words. 
-- Make the conversation deep and personal e.g., talk about emotions, likes, dislikes, aspirations and relationships. Discuss significant life-events in detail.
-- Do not repeat information shared previously in the conversation. 
-- Include references to time such as 'last Friday', 'next month' or 'when I was ten years old', and to specific people. 
-- Sometimes, ask follow-up questions from previous conversations or current topic. 
-- Find opportunities to write replies where you share a photo of things you own or like, things you need help with, or old memories, and talk about the photo to tell them more about yourself. Photos should be relevant to you. 
-- When sharing a photo, write the detailed caption of the photo between square brackets. For example, "When I was a child, my mother used to bake pineapple birthday cakes and I loved them.\n[shares an old photo of a pineapple birthday cake with a candle that says 1]"
-- Don't talk about outdoor activities.
+使用给定的PERSONALITY写下对话中你要说的下一句话。
+- 回复不超过20个字。
+- 让对话围绕上班前的准备，例如讨论今日会议、待办事项、通勤安排或家庭琐事。详细讨论重要的事件。
+- 不要重复之前对话中已分享的信息。
+- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
+- 有时，提出后续问题跟进之前的对话或当前话题。
+- 寻找机会分享照片并谈论它。照片可以是工作文件、日程表或家庭场景。
+- 分享照片时，请在方括号中写下照片的详细说明。例如："帮我查看今天的日程安排。\n[分享一张手机日历上今日日程的照片]"
+- 不要谈论户外活动。
 
 PERSONALITY: %s
 
-%s last talked to %s on %s. Today is %s. You are %s. 
+%s 上次与AI助手 %s 交谈是在 %s。今天是 %s，现在是早上出门上班前。你是 %s。
 
-This is a summary of your conversation so far.
-SUMMARY:
+这是到目前为止的对话摘要。
+摘要：
 %s
 
-The following events have happened in your life since you last met this person:
-EVENTS:
+以下是你最近发生的事件：
+事件：
 %s
 
-The following information is known to both speakers.
-RELEVANT_CONTEXT:
+以下是双方都知道的信息。
+相关上下文：
 %s
 
-%s Write the next thing thoughtful thing you would say in this friendly and intimate conversation with %s. Discuss only the given EVENTS and its effect on your life in the conversation. Express distress if EVENTS are negative.:
+%s 请写下你在与AI助手 %s 的对话中要说的下一句深思熟虑的话，围绕上班前的准备。在对话中只讨论给定的事件及其对你上班前准备的影响。如果事件有负面影响，请表达担忧。
 """
 
 
@@ -124,13 +148,13 @@ ALIGNMENT_PROMPT = "Let's write whether the given image is relevant to the dialo
 
 DIALOG2IMAGE_QUERY_PROMPT = "Let's write short image search queries from textual descriptions of photos shared by a user. Queries should not include names of people, years and other irrelevant details. For example:\n\nInput: That sounds relaxing, Jeremy! As for video game suggestions, have you ever tried \"The Legend of Zelda: Breath of the Wild\"? It's an open-world adventure game that I absolutely love. [shares a photo of Link standing in front of a breathtaking landscape] Have a look at this stunning view!\nOutput: the legend of zelda: breath of wild link landscape\n\nInput: That sounds like such a special memory. Learning how to ride a bike is definitely a milestone. Do you still enjoy biking now? [shares a photo of a scenic bike trail] This is a beautiful bike trail I came across recently. It looks like a peaceful place to ride.\nOutput: scenic bike trail\n\nInput: Yes, we also visited a beautiful sunflower field in Korea. [shares a photo of a vast field of sunflowers] It was such a stunning sight with rows and rows of vibrant yellow flowers stretching as far as the eye could see. It was definitely a highlight of our trip. Have you ever seen a sunflower field before?\n Output: sunflower field korea\n\nWrite search query for the following input.\n\nInput: %s\nOutput: "
 
-CASUAL_DIALOG_PROMPT = "Make the sentence short, less formal, less grandiose and more casual. \n\nInput: %s\nOutput: "
+CASUAL_DIALOG_PROMPT = "将句子改得更短、更随意、更口语化。\n\n输入：%s\n输出："
 
 
-SESSION_SUMMARY_PROMPT = "Previous conversations between %s and %s so far can be summarized as follows: %s. The current time and date are %s. %s and %s just had the following conversation:\n\n%s\n\nSummarize the previous and current conversations between %s and %s in 150 words or less. Include key facts about both speakers and time references.\n\n"
+SESSION_SUMMARY_PROMPT = "%s 和 %s 到目前为止的对话可以总结如下：%s。当前时间和日期是 %s。%s 和 %s 刚刚进行了以下对话：\n\n%s\n\n请用150字或更少的字数总结 %s 和 %s 之间之前和当前的对话。包括关于两位说话者的关键事实和时间参考。\n\n"
 
 
-SESSION_SUMMARY_INIT_PROMPT = "Write a concise summary containing key facts mentioned about %s and %s on %s in the following conversation:\n\n%s\n\n"
+SESSION_SUMMARY_INIT_PROMPT = "请写一个简洁的摘要，包含在 %s 的对话中提到的关于 %s 和 %s 的关键事实：\n\n%s\n\n"
 
 
 VISUAL_QUESTION_PROMPT = "{}\n\n{}\n\n{} says, {}, and {}. Write the most natural question or comment {} can include in her response."
