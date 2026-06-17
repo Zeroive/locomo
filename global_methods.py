@@ -9,7 +9,7 @@ import google.generativeai as genai
 from anthropic import Anthropic
 
 # 自定义模型服务配置
-CUSTOM_MODEL_BASE_URL = "http://7.216.57.92:24073/v1/chat/completions"
+CUSTOM_MODEL_BASE_URL = "http://7.216.57.92:24073/v1"
 CUSTOM_MODEL_NAME = "Qwen3-32B"
 CUSTOM_EMBEDDING_BASE_URL = "http://7.216.57.92:24067/v1"
 CUSTOM_EMBEDDING_API_KEY = "token-abc123"
