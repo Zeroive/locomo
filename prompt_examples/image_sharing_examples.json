@@ -1,14 +1,30 @@
 {
-    "prompt": "Modify speaker's DIALOG to include context from the CAPTION of the photo shared the speaker with a certain INTENT.",
+    "prompt": "根据照片标题（CAPTION）和意图（INTENT），修改说话者的对话（DIALOG）以包含照片的上下文信息。",
     "input_format": "DIALOG: {}\nCAPTION: {}\nINTENT:{}\nMODIFIED_DIALOG: ",
     "examples": [
       {
         "input": [
-            "I love having empanadas while studying. They remind me of when I visited Spain!", 
-            "a photo of a plate of food on a wooden table",
-            "shares a photo of empanadas she made during a cooking class in Spain"
+            "我今天有个重要的客户会议，需要准备一下。",
+            "一张显示手机日历应用的照片，上面显示今天的日程安排",
+            "分享一张手机日历上今日日程的照片"
         ],
-        "output": "I love having empanadas while studying. They remind me of when I visited Spain! I made some during a cooking class in Spain!"
+        "output": "我今天有个重要的客户会议，需要准备一下。你看，日历上显示会议在上午10点开始！"
+      },
+      {
+        "input": [
+            "我需要检查一下今天的待办事项。",
+            "一张笔记本电脑屏幕显示待办事项列表的照片",
+            "分享一张待办事项列表的照片"
+        ],
+        "output": "我需要检查一下今天的待办事项。你看，我已经完成了前两项任务！"
+      },
+      {
+        "input": [
+            "我在考虑通勤方式，可能会堵车。",
+            "一张显示实时交通状况的地图照片",
+            "分享一张显示交通状况的地图照片"
+        ],
+        "output": "我在考虑通勤方式，可能会堵车。地图显示主干道现在有点拥堵。"
       }
     ]
   }

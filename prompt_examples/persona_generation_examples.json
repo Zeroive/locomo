@@ -1,15 +1,16 @@
 {
-    "input_prefix": "Attributes: ",
-    "output_prefix": "Persona: ",
+    "input_prefix": "特征：",
+    "output_prefix": "人物性格：",
     "examples": [
       {
         "input": [
-            "I am a computer scientist.",
-            "I have been married for 5 years.",
-            "I love cooking for family and friends.",
-            "I like to be active and like surfing."
+            "我是一名软件工程师。",
+            "我已经结婚5年了。",
+            "我喜欢为家人做饭。",
+            "我早上会慢跑锻炼。",
+            "我每天上班前都会查看日程安排。"
           ],
-        "output": "Tom is a 36 year old male Computer Scientist, who is dynamic and creative. He is married to Sophia. He likes outside activities like surfing, climbing and hiking. He likes to cook italian dishes, including focaccia and pasta, and he often cooks for his friends. He has a good number of friends and some of them are neighbors, like Emma and Jason. He wakes up early in the morning to do some sport activities. His goals and plans are to become a dad since his wife is pregnant, save up to buy a mansion, and buy kitchen gadgets. He likes his neighbor dogs, but he would not have one for himself."
+        "output": "李明是一位35岁的男性软件工程师，工作勤奋且有条理。他已婚，与妻子关系融洽。他喜欢早上慢跑保持健康，经常在上班前查看日程安排。他喜欢为家人烹饪，周末经常做早餐。他每天早上都会与AI助手核对当天的工作计划，确保工作效率。他的工作目标是年底前晋升为技术主管，并正在学习项目管理知识。"
       }
     ]
   }
