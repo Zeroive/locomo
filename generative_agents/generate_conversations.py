@@ -125,23 +125,6 @@ def get_session_summary(session, speaker_1, speaker_2, curr_date, previous_summa
     return output
 
 
-def get_image_queries(events):
-
-    images = [e["image"] for e in events]
-    input_query = "\nInput: ".join(images)
-
-    output = run_chatgpt(EVENT2QUERY_PROMPT % input_query, 1, 200, 'chatgpt')
-    output = output.strip()
-    print(output)
-    json_output = clean_json_output(output)
-
-    assert len(events) == len(json_output), [events, json_output]
-
-    for i in range(len(events)):
-        events[i]["query"] = json_output[i]
-    return events
-
-
 def get_all_session_summary(speaker, curr_sess_id):
 
     summary = "\n"
