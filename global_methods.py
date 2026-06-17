@@ -48,6 +48,8 @@ def run_json_trials(query, num_gen=1, num_tokens_request=1000,
 
     run_loop = True
     counter = 0
+    output = ""
+    facts = {}
     while run_loop:
         try:
             if examples is not None and input is not None:
@@ -134,8 +136,8 @@ def run_chatgpt(query, num_gen=1, num_tokens_request=1000,
             print(f"API Error: {e}; waiting for {wait_time} seconds")
             time.sleep(wait_time)
             pass
-    
-    return completion.choices[0].message.content.replace("```json", "").replace("```", "")
+    print(completion.choices[0].message.content)
+    return completion.choices[0].message.content.replace("```json", "").replace("```", "") if completion.choices[0].message.content else ""
     
 
     
@@ -177,4 +179,4 @@ def run_chatgpt_with_examples(query, examples, input, num_gen=1, num_tokens_requ
             time.sleep(wait_time)
             pass
     
-    return completion.choices[0].message.content.replace("```json", "").replace("```", "")
+    return completion.choices[0].message.content.replace("```json", "").replace("```", "") if completion.choices[0].message.content else ""
