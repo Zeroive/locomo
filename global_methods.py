@@ -8,6 +8,8 @@ import os
 import google.generativeai as genai
 from anthropic import Anthropic
 
+os.environ['NO_PROXY'] = 'localhost,127.0.0.1'
+
 # 自定义模型服务配置
 CUSTOM_MODEL_BASE_URL = "http://7.216.57.92:24073/v1"
 CUSTOM_MODEL_NAME = "Qwen3-32B"
@@ -133,9 +135,10 @@ def run_chatgpt(query, num_gen=1, num_tokens_request=1000,
             time.sleep(wait_time)
             pass
     
-    return completion.choices[0].message.content
+    return completion.choices[0].message.content.replace("```json", "").replace("```", "")
     
 
+    
 def run_chatgpt_with_examples(query, examples, input, num_gen=1, num_tokens_request=1000, use_16k=False, wait_time = 1, temperature=1.0):
 
     from openai import OpenAI
@@ -174,4 +177,4 @@ def run_chatgpt_with_examples(query, examples, input, num_gen=1, num_tokens_requ
             time.sleep(wait_time)
             pass
     
-    return completion.choices[0].message.content
+    return completion.choices[0].message.content.replace("```json", "").replace("```", "")
