@@ -20,7 +20,7 @@ SELF_REFLECTION_CONTINUE_PROMPT = "{} has the following insights about self.{}\n
 
 
 CONVERSATION2FACTS_PROMPT = """
-Write a concise and short list of all possible OBSERVATIONS about each speaker that can be gathered from the CONVERSATION. Each dialog in the conversation contains a dialogue id within square brackets. Each observation should contain a piece of information about the speaker, and also include the dialog id of the dialogs from which the information is taken. The OBSERVATIONS should be objective factual information about the speaker that can be used as a database about them. Avoid abstract observations about the dynamics between the two speakers such as 'speaker is supportive', 'speaker appreciates' etc. Do not leave out any information from the CONVERSATION. Important: Escape all double-quote characters within string output with backslash.\n\n
+根据对话内容，为每个说话人写一份简洁的观察事实列表。对话中的每一句都包含一个对话ID（在方括号中）。每个观察事实应包含关于说话人的具体信息，并注明信息来源的对话ID。观察事实应该是客观的、可作为数据库使用的事实信息。避免抽象的观察（如"说话人很支持"、"说话人很感激"等）。不要遗漏对话中的任何信息。输出格式必须是JSON字典，键是说话人名字，值是该说话人的事实列表。重要：字符串中的双引号需要用反斜杠转义。\n\n
 """
 
 
