@@ -3,7 +3,7 @@ import time
 import openai
 import logging
 from datetime import datetime
-from global_methods import run_json_trials
+from global_methods import run_json_trials, get_openai_embedding
 import numpy as np
 import pickle as pkl
 import random
@@ -28,8 +28,7 @@ RETRIEVAL_MODEL = "text-embedding-ada-002" # contriever dragon dpr
 
 
 def get_embedding(texts, model="text-embedding-ada-002"):
-   texts = [text.replace("\n", " ") for text in texts]
-   return np.array([openai.Embedding.create(input = texts, model=model)['data'][i]['embedding'] for i in range(len(texts))])
+    return get_openai_embedding(texts, model)
 
 
 def get_session_facts(args, agent_a, agent_b, session_idx, return_embeddings=True):
