@@ -27,7 +27,7 @@ CONVERSATION2FACTS_PROMPT = """
 RETRIEVAL_MODEL = "text-embedding-ada-002" # contriever dragon dpr
 
 
-def get_embedding(texts, model="text-embedding-ada-002"):
+def get_embedding(texts, model="Qwen3-Embedding-8B"):
     return get_openai_embedding(texts, model)
 
 
