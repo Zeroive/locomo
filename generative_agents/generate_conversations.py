@@ -64,8 +64,8 @@ def load_agents(args):
 
 def get_random_time():
 
-    start_time = timedelta(hours=9, minutes=0, seconds=0)
-    end_time = timedelta(hours=21, minutes=59, seconds=59)
+    start_time = timedelta(hours=17, minutes=0, seconds=0)  # 下午5点开始，符合下班时间
+    end_time = timedelta(hours=22, minutes=59, seconds=59)  # 晚上10:59结束
     random_seconds = random.randint(int(start_time.total_seconds()), int(end_time.total_seconds()))
     hours = random_seconds//3600
     minutes = (random_seconds - (hours*3600))//60
