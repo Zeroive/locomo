@@ -11,9 +11,9 @@ logging.basicConfig(level=logging.INFO)
 EVENT_KG_FROM_PERSONA_PROMPT_SEQUENTIAL_INIT = """
 根据人物的简短性格描述，编写一个代表其生活中发生的子事件的图。节点代表子事件，边代表过去子事件对当前子事件的影响。
 - 图以JSON列表形式表示。
-- 每个条目是一个字典，包含以下键："sub-event"、"time"、"caused_by"、"id"。
+- 每个条目是一个字典，包含以下键："sub-event"、"date"、"caused_by"、"id"。
 - "sub-event"字段包含子事件的简短描述。
-- "time"字段包含日期。
+- "date"字段包含日期。
 - "id"字段包含子事件的唯一标识符。
 - "caused_by"字段表示边，是导致此子事件的现有子事件的"id"列表。"caused_by"字段中的子事件应发生在它们所导致的子事件之前的日期。尽可能生成更多的因果关系。
 - 因果效应的一个例子是子事件"开始了一个菜园"导致"收获了西红柿"。
@@ -37,9 +37,9 @@ OUTPUT:
 EVENT_KG_FROM_PERSONA_PROMPT_SEQUENTIAL_CONTINUE = """
 根据人物的简短性格描述，编写一个代表其生活中发生的子事件的图。节点代表子事件，边代表过去子事件对当前子事件的影响。
 - 图以JSON列表形式表示。
-- 每个条目是一个字典，包含以下键："sub-event"、"time"、"caused_by"、"id"。
+- 每个条目是一个字典，包含以下键："sub-event"、"date"、"caused_by"、"id"。
 - "sub-event"字段包含子事件的简短描述。
-- "time"字段包含日期。
+- "date"字段包含日期。
 - "id"字段包含子事件的唯一标识符。
 - "caused_by"字段表示边，是导致此子事件的现有子事件的"id"列表。"caused_by"字段中的子事件应发生在它们所导致的子事件之前的日期。尽可能生成更多的因果关系。
 - 因果效应的一个例子是子事件"开始了一个菜园"导致"收获了西红柿"。

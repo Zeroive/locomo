@@ -2,18 +2,7 @@ import json, re, os
 import random
 from global_methods import run_chatgpt, run_chatgpt_with_examples
 
-PERSONA_FROM_MSC_PROMPT = """根据给定的生活属性编写说话人描述。示例：
-
-%s
-
-注意：在人物描述中添加关于该人的重要细节，例如姓名、年龄、婚姻状况、性别、工作等。适当时添加额外细节，如家人/朋友的名字或特定活动、喜好、经历。
-
-根据以下属性，编写一个人物描述。输出一个包含'persona'和'name'键的JSON文件。
-
-%s
-
-用大括号开始你的回答。
-"""
+PERSONA_FROM_MSC_PROMPT = "Let's write speaker descriptions from a given set of life attributes. Example:\n\n%s\n\nNote: Add crucial details in the persona about the person such as their name, age, marital status, gender, job etc. Add additional details like names of family/friends or specific activities, likes and dislikes, experiences when appropriate.\n\nFor the following attributes, write a persona. Output a json file with the keys 'persona' and 'name'.\n\n%s\n\nStart your answer with a curly bracket.\n"
 
 
 AGENT_CONV_PROMPT_SESS_1 = """%s
