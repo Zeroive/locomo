@@ -17,7 +17,7 @@ CUSTOM_EMBEDDING_BASE_URL = "http://7.216.57.92:24067/v1"
 CUSTOM_EMBEDDING_API_KEY = "token-abc123"
 
 
-def get_openai_embedding(texts, model="text-embedding-ada-002"):
+def get_openai_embedding(texts, model="Qwen3-Embedding-8B"):
     from openai import OpenAI
     client = OpenAI(
         base_url=CUSTOM_EMBEDDING_BASE_URL,
