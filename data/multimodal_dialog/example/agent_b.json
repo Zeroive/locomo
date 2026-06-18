@@ -1,4 +1,41 @@
 {
-  "name": "Alisa",
-  "persona_summary": "Alisa is a 27 year old graduate student at UNC Chapel Hill. She is finishing her PhD in Computer Science. She is learning to do digital art and frequently practices new techniques on her iPad."
+  "name": "李华",
+  "persona_summary": "李华是一位30岁的软件工程师，在一家科技公司工作。他已婚，有一个5岁的女儿。李华工作繁忙，但非常注重家庭生活，每天早上都会花时间准备女儿的早餐，然后送她上学。他喜欢在周末和家人一起户外活动，比如徒步和野餐。最近他正在计划一次家庭旅行，希望能在年假期间带家人去海边度假。李华性格开朗，善于与人交流，总是保持积极乐观的态度。",
+  "msc_prompt": [
+    "I work as a software engineer.",
+    "I am married with a daughter.",
+    "I prepare breakfast for my family every morning.",
+    "I enjoy outdoor activities with my family.",
+    "I am planning a family trip."
+  ],
+  "events_start_date": "18 November, 2022",
+  "graph": [
+    {
+      "sub-event": "李华昨晚和妻子讨论了周末的家庭活动安排。",
+      "date": "18 November, 2022",
+      "id": "E1",
+      "caused_by": []
+    },
+    {
+      "sub-event": "李华今天早上送女儿上学时，老师提到需要准备下周的亲子活动材料。",
+      "date": "19 November, 2022",
+      "id": "E2",
+      "caused_by": []
+    }
+  ],
+  "events_session_1": [
+    {
+      "sub-event": "李华昨晚和妻子讨论了周末的家庭活动安排。",
+      "date": "18 November, 2022",
+      "id": "E1",
+      "caused_by": []
+    },
+    {
+      "sub-event": "李华今天早上送女儿上学时，老师提到需要准备下周的亲子活动材料。",
+      "date": "19 November, 2022",
+      "id": "E2",
+      "caused_by": []
+    }
+  ],
+  "session_1_date_time": "11:45 am on 19 November, 2022"
 }

@@ -252,45 +252,217 @@ def get_agent_query(speaker_1, speaker_2, curr_sess_id=0,
     if instruct_stop:
         print("**** Using stop instruction ****")
 
+    # speaker_1 is always the AI assistant, speaker_2 is always the user
+    assistant_name = speaker_1['name']
+    user_name = speaker_2['name']
+    user_persona = speaker_2['persona_summary']
+
     if curr_sess_id == 1:
         
         if use_events:
-            events = get_event_string(speaker_1['events_session_%s' % curr_sess_id], speaker_1['graph'])
+            events = get_event_string(speaker_2['events_session_%s' % curr_sess_id], speaker_2['graph'])
             query = AGENT_CONV_PROMPT_SESS_1_W_EVENTS % (speaker_1['persona_summary'],
-                    speaker_1['name'], speaker_2['name'], 
-                    curr_sess_date_time, speaker_1['name'],  events, speaker_1['name'], speaker_2['name'], stop_instruction if instruct_stop else '')
+                    user_name, assistant_name, 
+                    curr_sess_date_time, user_name,  events, assistant_name, user_name, stop_instruction if instruct_stop else '')
         else:
             query = AGENT_CONV_PROMPT_SESS_1 % (speaker_1['persona_summary'],
-                                speaker_1['name'], speaker_2['name'], 
-                                curr_sess_date_time, speaker_1['name'],  speaker_2['name'], speaker_1['name'])
+                                user_name, assistant_name, 
+                                curr_sess_date_time, assistant_name,  user_name, assistant_name)
     
     else:
         if use_events:
-            events = get_event_string(speaker_1['events_session_%s' % curr_sess_id], speaker_1['graph'])
+            events = get_event_string(speaker_2['events_session_%s' % curr_sess_id], speaker_2['graph'])
             if dialog_id == 0:
                 # if a new session is starting, get information about the topics discussed in last session
-                context_from_1, context_from_2 = get_recent_context(speaker_1, speaker_2, curr_sess_id, reflection=reflection)
+                context_from_1, context_from_2 = get_recent_context(speaker_2, speaker_1, curr_sess_id, reflection=reflection)
                 recent_context = '\n'.join(context_from_1) + '\n' +  '\n'.join(context_from_2) # with reflection
                 query = AGENT_CONV_PROMPT_W_EVENTS_V2_INIT % (speaker_1['persona_summary'],
-                            speaker_1['name'], speaker_2['name'], prev_sess_date_time,
-                            curr_sess_date_time, speaker_1['name'],  speaker_1['session_%s_summary' % (curr_sess_id-1)], events, stop_instruction if instruct_stop else '', speaker_2['name'])
+                            user_name, assistant_name, prev_sess_date_time,
+                            curr_sess_date_time, assistant_name,  speaker_2['session_%s_summary' % (curr_sess_id-1)], events, assistant_name, user_name)
                 
             else:
                 # during an ongoing session, get fine-grained information from a previous session using retriever modules
-                past_context = get_relevant_context(speaker_1, speaker_2, last_dialog, embeddings, curr_sess_id, reflection=reflection)
+                past_context = get_relevant_context(speaker_2, speaker_1, last_dialog, embeddings, curr_sess_id, reflection=reflection)
                 query = AGENT_CONV_PROMPT_W_EVENTS_V2 % (speaker_1['persona_summary'],
-                            speaker_1['name'], speaker_2['name'], prev_sess_date_time,
-                            curr_sess_date_time, speaker_1['name'], speaker_1['session_%s_summary' % (curr_sess_id-1)], events, past_context, stop_instruction if instruct_stop else '', speaker_2['name'])
+                            user_name, assistant_name, prev_sess_date_time,
+                            curr_sess_date_time, assistant_name, speaker_2['session_%s_summary' % (curr_sess_id-1)], events, past_context, assistant_name, user_name)
         else:
-            summary = get_all_session_summary(speaker_1, curr_sess_id)
+            summary = get_all_session_summary(speaker_2, curr_sess_id)
             query = AGENT_CONV_PROMPT % (speaker_1['persona_summary'],
-                                        speaker_1['name'], speaker_2['name'], prev_sess_date_time, summary,
-                                        curr_sess_date_time, speaker_1['name'],  speaker_2['name'], speaker_1['name']) 
+                                        user_name, assistant_name, prev_sess_date_time, summary,
+                                        curr_sess_date_time, assistant_name,  user_name, assistant_name) 
+    
+    return query
+
+
+USER_CONV_PROMPT_SESS_1 = """%s
+
+你是 %s，一位在家中准备出门上班的用户。今天是 %s，现在是早上出门前。请扮演用户 %s 的角色，写下你对AI助手 %s 要说的下一句话。如果开始对话，可以从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。不要重复之前已分享的信息。让对话围绕上班前的准备，例如谈论今日会议、待办事项、通勤安排或家庭琐事。包括时间参考，如"今天早上"、"上午会议"、"出门前"等。回复不超过20个字。
+
+要结束对话，请写'再见！'。
+
+对话：
+
+"""
+
+USER_CONV_PROMPT_SESS_1_W_EVENTS = """
+使用给定的PERSONALITY写下对话中你要说的下一句话。
+- 如果开始对话，请从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。
+- 不要重复之前对话中已分享的信息。
+- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
+- 回复不超过20个字。
+- 提出后续问题跟进之前的对话。
+
+PERSONALITY: %s
+
+你是用户 %s，在家中准备出门上班前与AI助手 %s 交谈。今天是 %s，现在是早上出门前。以下是你最近发生的事件。
+事件：%s
+
+请扮演用户 %s 的角色，与AI助手 %s 就这些事件进行对话，围绕上班前的准备。%s
+"""
+
+USER_CONV_PROMPT = """%s
+
+你是用户 %s，上次与AI助手 %s 交谈是在 %s。%s
+
+今天是 %s，现在是早上出门上班前。请扮演用户 %s 的角色，写下你对AI助手 %s 要说的下一句话。如果开始对话，可以从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。不要重复已分享的信息。让对话围绕上班前的准备，例如谈论今日会议、待办事项、通勤安排或家庭琐事。包括时间参考，如"今天早上"、"上午会议"、"出门前"等。回复不超过20个字。
+
+要结束对话，请写'再见！'。
+
+对话：
+
+"""
+
+USER_CONV_PROMPT_W_EVENTS = """
+使用给定的PERSONALITY写下对话中你要说的下一句话。
+- 如果开始对话，请从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。
+- 不要重复之前对话中已分享的信息。
+- 让对话围绕上班前的准备，例如谈论今日会议、待办事项、通勤安排或家庭琐事。
+- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
+- 回复不超过20个字。
+- 提出后续问题跟进之前的对话。
+
+PERSONALITY: %s
+
+你是用户 %s，上次与AI助手 %s 交谈是在 %s。
+
+%s
+
+今天是 %s，现在是早上出门上班前。以下是你最近发生的事件：
+%s
+
+在对话中使用这些事件。请根据你的PERSONALITY写下你在与AI助手 %s 的对话中要说的下一句话：
+"""
+
+USER_CONV_PROMPT_W_EVENTS_V2_INIT = """
+使用给定的PERSONALITY写下对话中你要说的下一句话。
+- 回复不超过20个字。
+- 让对话围绕上班前的准备，例如讨论今日会议、待办事项、通勤安排或家庭琐事。详细讨论重要的事件。
+- 不要重复之前对话中已分享的信息。
+- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
+- 有时，提出后续问题跟进之前的对话或当前话题。
+- 不要谈论户外活动。
+
+PERSONALITY: %s
+
+
+你是用户 %s，上次与AI助手 %s 交谈是在 %s。今天是 %s，现在是早上出门上班前。
+
+这是到目前为止的对话摘要。
+摘要：
+%s
+
+以下是你最近发生的事件：
+事件：
+%s
+
+
+请扮演用户 %s，写下你在与AI助手 %s 的对话中要说的下一句深思熟虑的话。在对话中只讨论给定的事件及其对你上班前准备的影响。如果事件有负面影响，请表达担忧。
+"""
+
+USER_CONV_PROMPT_W_EVENTS_V2 = """
+使用给定的PERSONALITY写下对话中你要说的下一句话。
+- 回复不超过20个字。
+- 让对话围绕上班前的准备，例如讨论今日会议、待办事项、通勤安排或家庭琐事。详细讨论重要的事件。
+- 不要重复之前对话中已分享的信息。
+- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
+- 有时，提出后续问题跟进之前的对话或当前话题。
+- 不要谈论户外活动。
+
+PERSONALITY: %s
+
+你是用户 %s，上次与AI助手 %s 交谈是在 %s。今天是 %s，现在是早上出门上班前。
+
+这是到目前为止的对话摘要。
+摘要：
+%s
+
+以下是你最近发生的事件：
+事件：
+%s
+
+以下是双方都知道的信息。
+相关上下文：
+%s
+
+请扮演用户 %s，写下你在与AI助手 %s 的对话中要说的下一句深思熟虑的话，围绕上班前的准备。在对话中只讨论给定的事件及其对你上班前准备的影响。如果事件有负面影响，请表达担忧。
+"""
+
+
+def get_user_query(user, assistant, curr_sess_id=0, 
+                    prev_sess_date_time='', curr_sess_date_time='', 
+                    use_events=False, instruct_stop=False, dialog_id=0, last_dialog='', embeddings=None, reflection=False):
+
+    stop_instruction = "To end the conversation, write [END] at the end of the dialog."
+    if instruct_stop:
+        print("**** Using stop instruction ****")
+
+    user_name = user['name']
+    assistant_name = assistant['name']
+    user_persona = user['persona_summary']
+
+    if curr_sess_id == 1:
+        
+        if use_events:
+            events = get_event_string(user['events_session_%s' % curr_sess_id], user['graph'])
+            query = USER_CONV_PROMPT_SESS_1_W_EVENTS % (user_persona,
+                    user_name, assistant_name, 
+                    curr_sess_date_time, events, user_name, assistant_name, stop_instruction if instruct_stop else '')
+        else:
+            query = USER_CONV_PROMPT_SESS_1 % (user_persona,
+                                user_name, curr_sess_date_time, user_name, assistant_name)
+    
+    else:
+        if use_events:
+            events = get_event_string(user['events_session_%s' % curr_sess_id], user['graph'])
+            if dialog_id == 0:
+                # if a new session is starting, get information about the topics discussed in last session
+                context_from_1, context_from_2 = get_recent_context(user, assistant, curr_sess_id, reflection=reflection)
+                recent_context = '\n'.join(context_from_1) + '\n' +  '\n'.join(context_from_2) # with reflection
+                query = USER_CONV_PROMPT_W_EVENTS_V2_INIT % (user_persona,
+                            user_name, assistant_name, prev_sess_date_time,
+                            curr_sess_date_time, user['session_%s_summary' % (curr_sess_id-1)], events, user_name, assistant_name)
+                
+            else:
+                # during an ongoing session, get fine-grained information from a previous session using retriever modules
+                past_context = get_relevant_context(user, assistant, last_dialog, embeddings, curr_sess_id, reflection=reflection)
+                query = USER_CONV_PROMPT_W_EVENTS_V2 % (user_persona,
+                            user_name, assistant_name, prev_sess_date_time,
+                            curr_sess_date_time, user['session_%s_summary' % (curr_sess_id-1)], events, past_context, user_name, assistant_name)
+        else:
+            summary = get_all_session_summary(user, curr_sess_id)
+            query = USER_CONV_PROMPT % (user_persona,
+                                        user_name, assistant_name, prev_sess_date_time, summary,
+                                        curr_sess_date_time, user_name,  assistant_name) 
     
     return query
 
 
 def get_session(agent_a, agent_b, args, prev_date_time_string='', curr_date_time_string='', curr_sess_id=0, reflection=False):
+    
+    # agent_a is AI assistant, agent_b is human user
+    assistant = agent_a
+    user = agent_b
     
     # load embeddings for retrieveing relevat observations from previous conversations
     if curr_sess_id == 1:
@@ -298,42 +470,41 @@ def get_session(agent_a, agent_b, args, prev_date_time_string='', curr_date_time
     else:
         embeddings = pkl.load(open(args.emb_file, 'rb'))
 
-    # select one of the speakers to start the session at random
-    curr_speaker = -1
-    if random.random() < 0.5:
-        conv_so_far = agent_a['name'] + ': '
-        curr_speaker = 0
-    else:
-        conv_so_far = agent_b['name'] + ': '
-        curr_speaker = 1
+    # By default, user starts the conversation
+    curr_speaker = 1  # 0 = assistant, 1 = user
+    conv_so_far = user['name'] + ': '
 
     session = []
     
     stop_dialog_count = args.max_turns_per_session if args.max_turns_per_session <= 10 else random.choice(list(range(10, args.max_turns_per_session))) # choose a random turn number to include instructions for ending the session
-    break_at_next_a = False
-    break_at_next_b = False
+    break_at_next_assistant = False
+    break_at_next_user = False
     for i in range(args.max_turns_per_session):
 
-        if break_at_next_a and break_at_next_b:
+        if break_at_next_assistant and break_at_next_user:
             break
 
         if curr_speaker == 0:
-            agent_query = get_agent_query(agent_a, agent_b, prev_sess_date_time=prev_date_time_string, curr_sess_date_time=curr_date_time_string,
+            # AI assistant's turn - use get_agent_query
+            agent_query = get_agent_query(assistant, user, prev_sess_date_time=prev_date_time_string, curr_sess_date_time=curr_date_time_string,
                                     curr_sess_id=curr_sess_id, use_events=args.events, instruct_stop=i>=stop_dialog_count, 
                                     dialog_id=i, last_dialog='' if i == 0 else session[-1]['speaker'] + ' says, ' + session[-1]['clean_text'], 
                                     embeddings=embeddings, reflection=reflection)
+            speaker_name = assistant['name']
         else:
-            agent_query = get_agent_query(agent_b, agent_a, prev_sess_date_time=prev_date_time_string, curr_sess_date_time=curr_date_time_string,
+            # User's turn - use get_user_query
+            agent_query = get_user_query(user, assistant, prev_sess_date_time=prev_date_time_string, curr_sess_date_time=curr_date_time_string,
                                     curr_sess_id=curr_sess_id, use_events=args.events, instruct_stop=i>=stop_dialog_count, 
                                     dialog_id=i, last_dialog='' if i == 0 else session[-1]['speaker'] + ' says, ' + session[-1]['clean_text'], 
                                     embeddings=embeddings, reflection=reflection)
+            speaker_name = user['name']
         
         output = run_chatgpt(agent_query + conv_so_far, 1, 100, 'chatgpt', temperature=1.2)
         output = output.strip().split('\n')[0]
-        output = clean_dialog(output, agent_a['name'] if curr_speaker == 0 else agent_b['name'])
+        output = clean_dialog(output, speaker_name)
         output = {"text": output, "raw_text": output}
 
-        output["speaker"] = agent_a["name"] if curr_speaker == 0 else agent_b['name']
+        output["speaker"] = speaker_name
         text_replaced_caption = output["text"]
         if not text_replaced_caption.isspace():
             if '[END]' in output["text"]:
@@ -346,19 +517,18 @@ def get_session(agent_a, agent_b, args, prev_date_time_string='', curr_date_time
         output["dia_id"] = 'D%s:%s' % (curr_sess_id, i+1)
         session.append(output)
 
-        print("############ ", agent_a['name'] if curr_speaker == 0 else agent_b['name'], ': ', output["clean_text"])
+        print("############ ", speaker_name, ': ', output["clean_text"])
         
         conv_so_far = conv_so_far + output["clean_text"] + '\n'
 
 
-
         if output['text'].endswith('[END]'):
             if curr_speaker == 0:
-                break_at_next_a = True
+                break_at_next_assistant = True
             else:
-                break_at_next_b = True
+                break_at_next_user = True
 
-        conv_so_far += f"\n{agent_b['name']}: " if curr_speaker == 0 else f"\n{agent_a['name']}: "
+        conv_so_far += f"\n{user['name']}: " if curr_speaker == 0 else f"\n{assistant['name']}: "
         curr_speaker = int(not curr_speaker)
 
     return session
