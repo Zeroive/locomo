@@ -9,24 +9,24 @@ logging.basicConfig(level=logging.INFO)
 
 
 EVENT_KG_FROM_PERSONA_PROMPT_SEQUENTIAL_INIT = """
-Let's write a graph representing sub-events that occur in a person's life based on a short summary of their personality. Nodes represent sub-events and edges represent the influence of past sub-events on a current sub-event.
-- The graph is represented in the form of a json list. 
-- Each entry is a dictionary containing the following keys: "sub-event", "time", "caused_by", "id". 
-- The "sub-event" field contains a short description of the sub-event. 
-- The "time" field contains a date.
-- The "id" field contains a unique identifier for the sub-event.
-- The "caused_by" field represents edges and is a list of "id" of existing sub-events that have caused this sub-event. Sub-events in the "caused_by" field should occur on dates before the sub-event they have caused. Generate as many causal connections as possible.
-- An example of a causal effect is when the sub-event "started a vegetable garden" causes "harvested tomatoes".
-- Sub-events can be positive or negative life events.
+根据人物的简短性格描述，编写一个代表其生活中发生的子事件的图。节点代表子事件，边代表过去子事件对当前子事件的影响。
+- 图以JSON列表形式表示。
+- 每个条目是一个字典，包含以下键："sub-event"、"time"、"caused_by"、"id"。
+- "sub-event"字段包含子事件的简短描述。
+- "time"字段包含日期。
+- "id"字段包含子事件的唯一标识符。
+- "caused_by"字段表示边，是导致此子事件的现有子事件的"id"列表。"caused_by"字段中的子事件应发生在它们所导致的子事件之前的日期。尽可能生成更多的因果关系。
+- 因果效应的一个例子是子事件"开始了一个菜园"导致"收获了西红柿"。
+- 子事件可以是积极的或消极的生活事件。
 
-For example,
+例如，
 
 PERSONALITY: %s
 OUTPUT: %s
 
 ----------------------------------------------------------------------------------------------------------------
 
-For the following input personality, generate three independent sub-events E1, E2 and E3 aligned with their personality. Sub-events can be positive or negative life events and should reflect evolution in the person's relationships, state of mind, personality etc. 
+根据以下输入的性格描述，生成三个独立的子事件E1、E2和E3，与他们的性格相符。子事件可以是积极的或消极的生活事件，应反映人物关系、心态、性格等方面的演变。
 
 PERSONALITY: %s
 OUTPUT: 
@@ -35,25 +35,25 @@ OUTPUT:
 
 
 EVENT_KG_FROM_PERSONA_PROMPT_SEQUENTIAL_CONTINUE = """
-Let's write a graph representing sub-events that occur in a person's life based on a short summary of their personality. Nodes represent sub-events and edges represent the influence of past sub-events on a current sub-event.
-- The graph is represented in the form of a json list. 
-- Each entry is a dictionary containing the following keys: "sub-event", "time", "caused_by", "id". 
-- The "sub-event" field contains a short description of the sub-event. 
-- The "time" field contains a date.
-- The "id" field contains a unique identifier for the sub-event.
-- The "caused_by" field represents edges and is a list of "id" of existing sub-events that have caused this sub-event. Sub-events in the "caused_by" field should occur on dates before the sub-event they have caused. Generate as many causal connections as possible.
-- An example of a causal effect is when the sub-event "started a vegetable garden" causes "harvested tomatoes".
-- Sub-events can be positive or negative life events.
-- Do not generate outdoor activities as sub-events.
+根据人物的简短性格描述，编写一个代表其生活中发生的子事件的图。节点代表子事件，边代表过去子事件对当前子事件的影响。
+- 图以JSON列表形式表示。
+- 每个条目是一个字典，包含以下键："sub-event"、"time"、"caused_by"、"id"。
+- "sub-event"字段包含子事件的简短描述。
+- "time"字段包含日期。
+- "id"字段包含子事件的唯一标识符。
+- "caused_by"字段表示边，是导致此子事件的现有子事件的"id"列表。"caused_by"字段中的子事件应发生在它们所导致的子事件之前的日期。尽可能生成更多的因果关系。
+- 因果效应的一个例子是子事件"开始了一个菜园"导致"收获了西红柿"。
+- 子事件可以是积极的或消极的生活事件。
+- 不要生成户外活动作为子事件。
 
-For example,
+例如，
 
 PERSONALITY: %s
 OUTPUT: %s
 
 ----------------------------------------------------------------------------------------------------------------
 
-For the following input personality, generate new sub-events %s that are caused by one or more EXISTING sub-events. Sub-events can be positive or negative life events and should reflect evolution in the person's relationships, state of mind, personality etc. Do not repeat existing sub-events. Start and end your answer with a square bracket.
+根据以下输入的性格描述，生成新的子事件%s，这些子事件由一个或多个现有子事件引起。子事件可以是积极的或消极的生活事件，应反映人物关系、心态、性格等方面的演变。不要重复现有的子事件。用方括号开始和结束你的答案。
 
 PERSONALITY: %s
 EXISTING: %s
