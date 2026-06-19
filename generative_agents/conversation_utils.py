@@ -133,7 +133,19 @@ SESSION_SUMMARY_INIT_PROMPT = "请写一个简洁的摘要，包含在 %s 的对
 
 
 def get_msc_persona(args):
-    # check if personas exist, else generate persona + summary
+    """
+    从MSC数据集中获取人物角色信息。
+    
+    检查已存在的角色文件，如果不存在或需要覆盖，则从MSC数据集中随机选择
+    一对人物角色并生成其详细描述。标记已使用的人物数据以避免重复。
+    
+    Args:
+        args: 包含文件路径和覆盖标志的命令行参数
+        
+    Returns:
+        tuple: (agent_a, agent_b) 两个角色对象的元组，如果文件已存在则返回(None, None)
+    """
+    # 检查角色文件是否存在，如果存在且不覆盖则直接返回
     if (os.path.exists(args.agent_a_file) and os.path.exists(args.agent_b_file)) and not args.overwrite_persona:
         return None, None
     else:
@@ -159,6 +171,21 @@ def get_msc_persona(args):
 
 
 def get_persona(args, attributes, target='human', ref_age=None):
+    """
+    根据给定的属性信息生成人物角色描述。
+    
+    使用ChatGPT模型根据人物属性生成详细的人格描述，包括姓名、年龄、
+    婚姻状况、工作、兴趣爱好等信息。
+    
+    Args:
+        args: 包含prompt目录路径的命令行参数
+        attributes: 人物的基本属性信息字典
+        target: 目标类型，默认为'human'
+        ref_age: 参考年龄，用于生成年龄相近的角色
+        
+    Returns:
+        dict: 包含'persona'和'name'键的角色描述字典
+    """
     # 为 json.load() 添加编码参数，避免编码问题
     task = json.load(open(os.path.join(args.prompt_dir, 'persona_generation_examples.json'), encoding='utf-8')) 
     persona_examples = [task["input_prefix"] + json.dumps(e["input"], indent=2) + '\n' + task["output_prefix"] + e["output"] for e in task['examples']]
@@ -189,6 +216,22 @@ def get_persona(args, attributes, target='human', ref_age=None):
 
 
 def get_datetime_string(input_time='', input_date=''):
+    """
+    将输入的时间和日期格式化为可读的字符串。
+    
+    根据提供的输入时间或日期，返回格式化的字符串表示。
+    支持仅提供时间、仅提供日期或同时提供两者的情况。
+    
+    Args:
+        input_time: 时间元组 (hour, minute)，可选
+        input_date: 日期元组 (year, month, day)，可选
+        
+    Returns:
+        str: 格式化的时间日期字符串
+             - 仅时间: "9:30 am"
+             - 仅日期: "5 January, 2023"
+             - 完整: "9:30 am on 5 January, 2023"
+    """
 
     assert input_time or input_date
 
@@ -212,6 +255,19 @@ def get_datetime_string(input_time='', input_date=''):
 
 
 def clean_dialog(output, name):
+    """
+    清理对话输出文本，去除说话人名字前缀。
+    
+    当模型输出包含说话人名字前缀时（如 "Alice: xxx"），
+    将其去除以获得纯对话内容。
+    
+    Args:
+        output: 原始输出字符串
+        name: 说话人名字
+        
+    Returns:
+        str: 清理后的对话文本
+    """
 
     if output.startswith(name):
         output = output[len(name):]
@@ -224,6 +280,18 @@ def clean_dialog(output, name):
 
 
 def clean_json_output(output_string):
+    """
+    清理并解析JSON输出字符串。
+    
+    处理模型返回的JSON字符串可能存在的各种格式问题，
+    如括号不平衡、前后多余字符等，确保能被正确解析。
+    
+    Args:
+        output_string: 原始JSON字符串
+        
+    Returns:
+        dict 或 list: 解析后的JSON对象
+    """
 
     print(output_string)
 
@@ -263,6 +331,16 @@ def clean_json_output(output_string):
 
 
 def find_indices(list_to_check, item_to_find):
+    """
+    查找列表中所有匹配项的索引。
+    
+    Args:
+        list_to_check: 要搜索的列表
+        item_to_find: 要查找的项
+        
+    Returns:
+        list: 所有匹配项的索引列表
+    """
     indices = []
     for idx, value in enumerate(list_to_check):
         if value == item_to_find:

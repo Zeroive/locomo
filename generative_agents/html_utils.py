@@ -73,6 +73,18 @@ date_time_div = """
 """
 
 def get_speaker_info(speaker, use_events=False):
+    """
+    获取说话人信息的HTML格式字符串。
+    
+    提取说话人的基本信息和人格描述，格式化为HTML片段。
+    
+    Args:
+        speaker: 说话人对象，包含name和persona_summary等字段
+        use_events: 是否包含事件信息（当前未使用）
+        
+    Returns:
+        str: HTML格式的说话人信息字符串
+    """
 
     output = ""
     output += "<b>Name</b>: " + speaker["name"] + '<br>'
@@ -96,6 +108,17 @@ def get_speaker_info(speaker, use_events=False):
     return output
 
 def get_session_events(events):
+    """
+    获取会话事件的HTML格式字符串。
+    
+    将事件列表格式化为带日期标签的HTML列表。
+    
+    Args:
+        events: 事件列表，每个事件包含date和sub-event字段
+        
+    Returns:
+        str: HTML格式的事件描述字符串
+    """
 
     output = '<b>' + 'Events' + '</b>' + '<br>'
     for e in events:
@@ -104,6 +127,21 @@ def get_session_events(events):
 
 
 def convert_to_chat_html(speaker_1, speaker_2, outfile="", use_events=False):
+    """
+    将对话数据转换为可浏览的HTML聊天页面。
+    
+    生成一个完整的HTML文件，包含两个说话人的信息、所有会话记录
+    和对话内容。使用不同的背景色区分两个说话人的消息。
+    
+    Args:
+        speaker_1: 第一个说话人对象，包含会话数据
+        speaker_2: 第二个说话人对象，包含会话数据
+        outfile: 输出HTML文件路径，默认为空字符串
+        use_events: 是否在输出中包含事件信息
+        
+    Returns:
+        None（生成的文件写入outfile指定路径）
+    """
 
     body = header
     # add persona

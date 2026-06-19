@@ -28,10 +28,40 @@ RETRIEVAL_MODEL = "text-embedding-ada-002" # contriever dragon dpr
 
 
 def get_embedding(texts, model="Qwen3-Embedding-8B"):
+    """
+    获取文本的向量嵌入表示。
+    
+    使用指定的嵌入模型将文本转换为向量表示，用于后续的
+    相似度计算和上下文检索。
+    
+    Args:
+        texts: 文本字符串或文本列表
+        model: 嵌入模型名称，默认为"Qwen3-Embedding-8B"
+        
+    Returns:
+        numpy.ndarray: 文本的嵌入向量表示
+    """
     return get_openai_embedding(texts, model)
 
 
 def get_session_facts(args, agent_a, agent_b, session_idx, return_embeddings=True):
+    """
+    从会话对话中提取事实信息。
+    
+    使用ChatGPT分析对话内容，为每个说话人提取客观的事实陈述。
+    每个事实包含对话ID作为引用来源。同时生成对应的事实嵌入向量。
+    
+    Args:
+        args: 包含prompt_dir等配置的命令行参数
+        agent_a: 第一个说话人对象
+        agent_b: 第二个说话人对象
+        session_idx: 会话索引
+        return_embeddings: 是否返回嵌入向量，默认为True
+        
+    Returns:
+        dict: 以说话人名字为键的事实列表字典；如果return_embeddings为True，
+              同时将嵌入向量保存到文件
+    """
     # Step 1: get events
     task = json.load(open(os.path.join(args.prompt_dir, 'fact_generation_examples_new.json'), encoding='utf-8'))
     query = CONVERSATION2FACTS_PROMPT
@@ -78,6 +108,24 @@ def get_session_facts(args, agent_a, agent_b, session_idx, return_embeddings=Tru
 
 
 def get_session_reflection(args, agent_a, agent_b, session_idx):
+    """
+    生成会话反思和洞察。
+    
+    分析对话内容，提取两个层面的反思：
+    1. 自我反思：每个说话人对自己的认知和洞察
+    2. 相互反思：每个说话人对另一个说话人的认知
+    
+    反思信息用于增强后续对话生成的上下文。
+    
+    Args:
+        args: 命令行参数
+        agent_a: 第一个说话人对象
+        agent_b: 第二个说话人对象
+        session_idx: 会话索引
+        
+    Returns:
+        dict: 包含'a'和'b'两个键的反思字典，每个键对应包含'self'和'other'子键的结构
+    """
 
 
     # Step 1: get conversation
@@ -125,6 +173,22 @@ def get_session_reflection(args, agent_a, agent_b, session_idx):
 
 
 def get_recent_context(agent_a, agent_b, sess_id, context_length=2, reflection=False):
+    """
+    获取最近会话的事实和反思上下文。
+    
+    从指定数量的最近会话中提取事实信息，可选择性地包含反思内容。
+    用于在开始新会话时提供对话背景。
+    
+    Args:
+        agent_a: 第一个说话人对象，包含各会话的事实和反思数据
+        agent_b: 第二个说话人对象
+        sess_id: 当前会话ID
+        context_length: 上下文中包含的最近会话数量，默认为2
+        reflection: 是否包含反思信息，默认为False
+        
+    Returns:
+        tuple: (speaker_1上下文列表, speaker_2上下文列表)
+    """
 
     speaker_1_facts = []
     for i in range(1, sess_id):
@@ -142,6 +206,24 @@ def get_recent_context(agent_a, agent_b, sess_id, context_length=2, reflection=F
 
 
 def get_relevant_context(agent_a, agent_b, input_dialogue, embeddings, sess_id, context_length=2, reflection=False):
+    """
+    基于语义相似度检索相关上下文。
+    
+    使用嵌入向量计算输入对话与历史事实的相似度，
+    检索出最相关的上下文用于增强当前对话生成。
+    
+    Args:
+        agent_a: 第一个说话人对象
+        agent_b: 第二个说话人对象
+        input_dialogue: 当前输入的对话内容
+        embeddings: 历史事实的嵌入向量字典
+        sess_id: 当前会话ID
+        context_length: 检索的上下文数量，默认为2
+        reflection: 是否在结果中包含反思内容，默认为False
+        
+    Returns:
+        tuple: (speaker_1相关上下文列表, speaker_2相关上下文列表)
+    """
 
     logging.info("Getting relevant context for response to %s (session %s)" % (input_dialogue, sess_id))
     contexts_a, context_b = get_recent_context(agent_a, agent_b, sess_id, 10000)

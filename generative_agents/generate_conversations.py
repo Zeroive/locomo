@@ -45,6 +45,18 @@ def parse_args():
 
 
 def save_agents(agents, args):
+    """
+    保存角色对象到JSON文件。
+    
+    将两个角色的最新状态序列化并保存到指定路径，以便后续会话复用。
+    
+    Args:
+        agents: (agent_a, agent_b) 角色对象元组
+        args: 包含agent_a_file和agent_b_file路径的命令行参数
+        
+    Returns:
+        None
+    """
 
     agent_a, agent_b = agents
     logging.info("Saving updated Agent A to %s" % args.agent_a_file)
@@ -56,6 +68,17 @@ def save_agents(agents, args):
 
 
 def load_agents(args):
+    """
+    从JSON文件加载角色对象。
+    
+    从指定路径读取两个角色的保存状态。
+    
+    Args:
+        args: 包含agent_a_file和agent_b_file路径的命令行参数
+        
+    Returns:
+        tuple: (agent_a, agent_b) 两个角色对象
+    """
 
     agent_a = json.load(open(args.agent_a_file, encoding='utf-8'))
     agent_b = json.load(open(args.agent_b_file, encoding='utf-8'))
@@ -63,6 +86,14 @@ def load_agents(args):
 
 
 def get_random_time():
+    """
+    生成一个随机的日内时间。
+    
+    在上午9点到晚上9:59之间的随机时间点，用于模拟会话发生时间。
+    
+    Returns:
+        timedelta: 随机生成的时间差对象
+    """
 
     start_time = timedelta(hours=9, minutes=0, seconds=0)
     end_time = timedelta(hours=21, minutes=59, seconds=59)
@@ -73,6 +104,17 @@ def get_random_time():
 
 
 def datetimeStr2Obj(dateStr):
+    """
+    将日期时间字符串转换为datetime对象。
+    
+    支持带am/pm标记的12小时制时间格式。
+    
+    Args:
+        dateStr: 日期时间字符串，格式如 "9:30 am on 5 January, 2023"
+        
+    Returns:
+        datetime: 解析后的datetime对象
+    """
     if 'am' in dateStr:
         datetimeObj = datetime.strptime(dateStr, "%H:%M am on %d %B, %Y")
     else:
@@ -80,6 +122,17 @@ def datetimeStr2Obj(dateStr):
     return datetimeObj
 
 def datetimeObj2Str(datetimeObj):
+    """
+    将datetime对象转换为日期时间字符串。
+    
+    转换为12小时制格式，添加am/pm标记。
+    
+    Args:
+        datetimeObj: datetime对象
+        
+    Returns:
+        str: 格式化的时间字符串，格式如 "9:30 am on 5 January, 2023"
+    """
 
     time_mod = 'am' if datetimeObj.hour <= 12 else 'pm'
     hour = datetimeObj.hour if datetimeObj.hour <= 12 else datetimeObj.hour-12
@@ -88,10 +141,27 @@ def datetimeObj2Str(datetimeObj):
 
 
 def dateObj2Str(dateObj):
+    """
+    将date对象转换为日期字符串。
+    
+    Args:
+        dateObj: date对象
+        
+    Returns:
+        str: 格式化日期字符串，格式如 "5 January, 2023"
+    """
     return dateObj.strftime("%d") + ' ' + dateObj.strftime("%B") + ', ' + dateObj.strftime("%Y")
 
 
 def get_random_date():
+    """
+    在指定范围内生成随机日期。
+    
+    在2022年1月1日到2023年6月1日之间随机选择一个日期。
+    
+    Returns:
+        date: 随机生成的日期对象
+    """
 
     # initializing dates ranges
     test_date1, test_date2 = date(2022, 1, 1), date(2023, 6, 1)
@@ -104,6 +174,22 @@ def get_random_date():
 
 
 def get_session_summary(session, speaker_1, speaker_2, curr_date, previous_summary=""):
+    """
+    生成单个会话的摘要。
+    
+    分析会话对话内容，生成简洁的摘要，包含关键事实和时间参考。
+    可基于前一个会话的摘要进行增量总结。
+    
+    Args:
+        session: 会话对话列表，每个元素包含speaker和text字段
+        speaker_1: 第一个说话人对象
+        speaker_2: 第二个说话人对象
+        curr_date: 当前会话日期
+        previous_summary: 前一个会话的摘要，可选
+        
+    Returns:
+        str: 会话摘要字符串
+    """
 
     session_query = ''
     for c in session:
@@ -126,6 +212,18 @@ def get_session_summary(session, speaker_1, speaker_2, curr_date, previous_summa
 
 
 def get_all_session_summary(speaker, curr_sess_id):
+    """
+    获取指定说话人的所有历史会话摘要。
+    
+    从第一个会话到当前会话之前的所有会话摘要汇总。
+    
+    Args:
+        speaker: 说话人对象，包含各会话的摘要数据
+        curr_sess_id: 当前会话ID
+        
+    Returns:
+        str: 包含日期和摘要的汇总字符串
+    """
 
     summary = "\n"
     for sess_id in range(1, curr_sess_id):
@@ -145,6 +243,20 @@ def catch_date(date_str):
 
 
 def get_session_date(events, args, prev_date = None):
+    """
+    确定下一个会话的日期。
+    
+    基于事件时间线，计算包含指定数量事件的日期范围，
+    返回该范围的结束日期作为会话日期。
+    
+    Args:
+        events: (agent_a_events, agent_b_events) 两个角色的事件列表元组
+        args: 包含num_events_per_session配置的命令行参数
+        prev_date: 前一个会话的日期，用于确定时间顺序
+        
+    Returns:
+        date: 会话日期，在事件范围结束后1-2天
+    """
 
     agent_a_events, agent_b_events = events
     
@@ -190,6 +302,20 @@ def get_session_date(events, args, prev_date = None):
 
 
 def get_relevant_events(events, curr_date, prev_date=None):
+    """
+    获取在指定时间范围内发生的相关事件。
+    
+    过滤出发生在prev_date之后、curr_date之前的事件，
+    用于在会话生成时提供上下文事件。
+    
+    Args:
+        events: 事件列表
+        curr_date: 当前会话日期
+        prev_date: 前一个会话日期，可选
+        
+    Returns:
+        list: 在时间范围内的事件列表
+    """
 
     events = sort_events_by_time(events)
     relevant_events = []
@@ -207,6 +333,19 @@ def get_relevant_events(events, curr_date, prev_date=None):
 
 
 def get_event_string(session_events, all_events):
+    """
+    将事件列表转换为可读的文本描述。
+    
+    将事件转换为包含日期的自然语言描述，如果事件有因果关联，
+    还会包含原因事件的描述。
+    
+    Args:
+        session_events: 当前会话相关的事件列表
+        all_events: 所有事件的字典，用于查找因果关联
+        
+    Returns:
+        str: 格式化的事件描述文本
+    """
 
     id2events = {e['id']: e for e in all_events}
 
@@ -232,6 +371,21 @@ def get_event_string(session_events, all_events):
 
 
 def remove_context(args, curr_dialog, prev_dialog, caption=None):
+    """
+    从当前对话中移除与历史对话重复的内容。
+    
+    使用ChatGPT分析当前对话和历史对话，过滤掉重复的信息，
+    只保留新的独特内容，避免对话中重复已分享的信息。
+    
+    Args:
+        args: 包含prompt_dir配置的命令行参数
+        curr_dialog: 当前对话内容
+        prev_dialog: 历史对话内容
+        caption: 图像描述，可选
+        
+    Returns:
+        str: 去除重复内容后的对话字符串
+    """
 
     prompt_data = json.load(open(os.path.join(args.prompt_dir, 'remove_context_examples.json')))
     if caption:
@@ -247,6 +401,28 @@ def remove_context(args, curr_dialog, prev_dialog, caption=None):
 def get_agent_query(speaker_1, speaker_2, curr_sess_id=0, 
                     prev_sess_date_time='', curr_sess_date_time='', 
                     use_events=False, instruct_stop=False, dialog_id=0, last_dialog='', embeddings=None, reflection=False):
+    """
+    为AI助手指挥生成对话提示。
+    
+    根据当前会话状态、历史上下文和相关事件，生成用于指导AI助手
+    下一轮对话的完整提示。
+    
+    Args:
+        speaker_1: AI助手角色对象
+        speaker_2: 用户角色对象
+        curr_sess_id: 当前会话ID，首个会话为1
+        prev_sess_date_time: 前一会话的时间日期字符串
+        curr_sess_date_time: 当前会话的时间日期字符串
+        use_events: 是否在提示中包含事件信息
+        instruct_stop: 是否在提示中包含停止指令
+        dialog_id: 当前会话中的对话轮次ID
+        last_dialog: 上一轮对话内容，用于检索相关上下文
+        embeddings: 嵌入向量，用于细粒度检索
+        reflection: 是否包含反思信息
+        
+    Returns:
+        str: 格式化的对话提示字符串
+    """
 
     stop_instruction = "To end the conversation, write [END] at the end of the dialog."
     if instruct_stop:
@@ -412,6 +588,28 @@ PERSONALITY: %s
 def get_user_query(user, assistant, curr_sess_id=0, 
                     prev_sess_date_time='', curr_sess_date_time='', 
                     use_events=False, instruct_stop=False, dialog_id=0, last_dialog='', embeddings=None, reflection=False):
+    """
+    为用户角色生成对话提示。
+    
+    根据当前会话状态、历史上下文和相关事件，生成用于指导用户角色
+    下一轮对话的完整提示。
+    
+    Args:
+        user: 用户角色对象
+        assistant: AI助手角色对象
+        curr_sess_id: 当前会话ID，首个会话为1
+        prev_sess_date_time: 前一会话的时间日期字符串
+        curr_sess_date_time: 当前会话的时间日期字符串
+        use_events: 是否在提示中包含事件信息
+        instruct_stop: 是否在提示中包含停止指令
+        dialog_id: 当前会话中的对话轮次ID
+        last_dialog: 上一轮对话内容，用于检索相关上下文
+        embeddings: 嵌入向量，用于细粒度检索
+        reflection: 是否包含反思信息
+        
+    Returns:
+        str: 格式化的对话提示字符串
+    """
 
     stop_instruction = "To end the conversation, write [END] at the end of the dialog."
     if instruct_stop:

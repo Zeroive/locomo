@@ -80,6 +80,17 @@ def num_tokens_from_string(string: str, model_name: str) -> int:
     return tokens
 
 def sort_events_by_time(graph):
+    """
+    将事件图按时间顺序排序。
+    
+    解析每个事件节点中的日期字段，按日期从早到晚排序。
+    
+    Args:
+        graph: 事件图列表，每个元素是包含'date'键的字典
+        
+    Returns:
+        list: 按时间排序后的事件列表
+    """
 
     def catch_date(date_str):
         date_format1 = '%d %B, %Y'
@@ -97,6 +108,21 @@ def sort_events_by_time(graph):
 
 # get events in one initialization step and one or more continuation steps.
 def get_events(agent, start_date, end_date, args):
+    """
+    生成人物的事件时间线。
+    
+    使用两阶段生成策略：首先初始化一批基础事件，然后根据需要继续生成更多事件。
+    事件之间可能存在因果关系，后续事件可以由先前事件引起。
+    
+    Args:
+        agent: 角色对象，包含persona_summary信息
+        start_date: 事件开始日期字符串
+        end_date: 事件结束日期字符串
+        args: 包含num_events等配置的命令行参数
+        
+    Returns:
+        list: 生成的事件列表，每个事件包含id、sub-event、date、caused_by等字段
+    """
 
 
     task = json.load(open(os.path.join(args.prompt_dir, 'event_generation_examples.json'), encoding='utf-8'))
@@ -156,6 +182,18 @@ def get_events(agent, start_date, end_date, args):
 
 
 def filter_events(events):
+    """
+    过滤孤立事件，保留有因果关联的事件。
+    
+    孤立事件是指既不导致其他事件发生，也不由其他事件引起的节点。
+    这些事件缺少上下文关联，在使用时可能缺乏意义。
+    
+    Args:
+        events: 事件列表，每个事件包含id和caused_by字段
+        
+    Returns:
+        list: 过滤后保留的有因果关联的事件列表
+    """
 
     id2events = {e["id"]: e for e in events}
     remove_ids = []
