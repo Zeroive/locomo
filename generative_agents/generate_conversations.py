@@ -39,6 +39,14 @@ def parse_args():
 
     parser.add_argument('--emb-file', type=str, default='embeddings.pkl', help="Name of the file used to save embeddings for the fine-grained retrieval-based memory module")
     parser.add_argument('--reflection', action="store_true", help="Set flag to use reflection module at the end of each session and include in the conversation generation prompt for context")
+    
+    # 场景相关参数
+    parser.add_argument('--scenario', type=str, default='male_leave_work', 
+                        choices=['male_leave_work', 'elderly_outdoor', 'child_return', 'family_return', 
+                                 'visitor_arrival', 'all_leave_arm', 'anomaly_detection'],
+                        help="指定对话场景类型，默认为 male_leave_work (男主人上班离家)")
+    parser.add_argument('--scenario-file', type=str, default='./data/scenarios/scenarios.json',
+                        help="场景配置文件路径，默认为 ./data/scenarios/scenarios.json")
 
     args = parser.parse_args()
     return args
@@ -400,12 +408,13 @@ def remove_context(args, curr_dialog, prev_dialog, caption=None):
 
 def get_agent_query(speaker_1, speaker_2, curr_sess_id=0, 
                     prev_sess_date_time='', curr_sess_date_time='', 
-                    use_events=False, instruct_stop=False, dialog_id=0, last_dialog='', embeddings=None, reflection=False):
+                    use_events=False, instruct_stop=False, dialog_id=0, last_dialog='', embeddings=None, reflection=False,
+                    scenario_id='male_leave_work', scenario_file='./data/scenarios/scenarios.json'):
     """
     为AI助手指挥生成对话提示。
     
     根据当前会话状态、历史上下文和相关事件，生成用于指导AI助手
-    下一轮对话的完整提示。
+    下一轮对话的完整提示。支持从场景库动态获取prompt模板。
     
     Args:
         speaker_1: AI助手角色对象
@@ -419,6 +428,8 @@ def get_agent_query(speaker_1, speaker_2, curr_sess_id=0,
         last_dialog: 上一轮对话内容，用于检索相关上下文
         embeddings: 嵌入向量，用于细粒度检索
         reflection: 是否包含反思信息
+        scenario_id: 场景ID，默认为 'male_leave_work'
+        scenario_file: 场景配置文件路径
         
     Returns:
         str: 格式化的对话提示字符串
@@ -433,15 +444,35 @@ def get_agent_query(speaker_1, speaker_2, curr_sess_id=0,
     user_name = speaker_2['name']
     user_persona = speaker_2['persona_summary']
 
+    # 加载场景配置
+    from generative_agents.conversation_utils import load_scenario_config, get_scenario_prompt
+    load_scenario_config(scenario_file)
+
     if curr_sess_id == 1:
         
         if use_events:
             events = get_event_string(speaker_2['events_session_%s' % curr_sess_id], speaker_2['graph'])
-            query = AGENT_CONV_PROMPT_SESS_1_W_EVENTS % (speaker_1['persona_summary'],
-                    user_name, assistant_name, 
-                    curr_sess_date_time, user_name,  events, assistant_name, user_name, stop_instruction if instruct_stop else '')
+            # 尝试从场景库获取prompt
+            prompt_template = get_scenario_prompt(scenario_id, 'sess_1_w_events', 'agent')
+            if prompt_template:
+                query = prompt_template % (speaker_1['persona_summary'],
+                        user_name, assistant_name, 
+                        curr_sess_date_time, user_name,  events, assistant_name, user_name, stop_instruction if instruct_stop else '')
+            else:
+                # 使用默认模板
+                query = AGENT_CONV_PROMPT_SESS_1_W_EVENTS % (speaker_1['persona_summary'],
+                        user_name, assistant_name, 
+                        curr_sess_date_time, user_name,  events, assistant_name, user_name, stop_instruction if instruct_stop else '')
         else:
-            query = AGENT_CONV_PROMPT_SESS_1 % (speaker_1['persona_summary'],
+            # 尝试从场景库获取prompt
+            prompt_template = get_scenario_prompt(scenario_id, 'sess_1', 'agent')
+            if prompt_template:
+                query = prompt_template % (speaker_1['persona_summary'],
+                                user_name, assistant_name, 
+                                curr_sess_date_time, assistant_name,  user_name, assistant_name)
+            else:
+                # 使用默认模板
+                query = AGENT_CONV_PROMPT_SESS_1 % (speaker_1['persona_summary'],
                                 user_name, assistant_name, 
                                 curr_sess_date_time, assistant_name,  user_name, assistant_name)
     
@@ -452,21 +483,42 @@ def get_agent_query(speaker_1, speaker_2, curr_sess_id=0,
                 # if a new session is starting, get information about the topics discussed in last session
                 context_from_1, context_from_2 = get_recent_context(speaker_2, speaker_1, curr_sess_id, reflection=reflection)
                 recent_context = '\n'.join(context_from_1) + '\n' +  '\n'.join(context_from_2) # with reflection
-                query = AGENT_CONV_PROMPT_W_EVENTS_V2_INIT % (speaker_1['persona_summary'],
-                            user_name, assistant_name, prev_sess_date_time,
-                            curr_sess_date_time, assistant_name,  speaker_2['session_%s_summary' % (curr_sess_id-1)], events, assistant_name, user_name)
+                # 尝试从场景库获取prompt
+                prompt_template = get_scenario_prompt(scenario_id, 'sess_w_events_v2_init', 'agent')
+                if prompt_template:
+                    query = prompt_template % (speaker_1['persona_summary'],
+                                user_name, assistant_name, prev_sess_date_time,
+                                curr_sess_date_time, assistant_name,  speaker_2['session_%s_summary' % (curr_sess_id-1)], events, assistant_name, user_name)
+                else:
+                    query = AGENT_CONV_PROMPT_W_EVENTS_V2_INIT % (speaker_1['persona_summary'],
+                                user_name, assistant_name, prev_sess_date_time,
+                                curr_sess_date_time, assistant_name,  speaker_2['session_%s_summary' % (curr_sess_id-1)], events, assistant_name, user_name)
                 
             else:
                 # during an ongoing session, get fine-grained information from a previous session using retriever modules
                 past_context = get_relevant_context(speaker_2, speaker_1, last_dialog, embeddings, curr_sess_id, reflection=reflection)
-                query = AGENT_CONV_PROMPT_W_EVENTS_V2 % (speaker_1['persona_summary'],
-                            user_name, assistant_name, prev_sess_date_time,
-                            curr_sess_date_time, assistant_name, speaker_2['session_%s_summary' % (curr_sess_id-1)], events, past_context, assistant_name, user_name)
+                # 尝试从场景库获取prompt
+                prompt_template = get_scenario_prompt(scenario_id, 'sess_w_events_v2', 'agent')
+                if prompt_template:
+                    query = prompt_template % (speaker_1['persona_summary'],
+                                user_name, assistant_name, prev_sess_date_time,
+                                curr_sess_date_time, assistant_name, speaker_2['session_%s_summary' % (curr_sess_id-1)], events, past_context, assistant_name, user_name)
+                else:
+                    query = AGENT_CONV_PROMPT_W_EVENTS_V2 % (speaker_1['persona_summary'],
+                                user_name, assistant_name, prev_sess_date_time,
+                                curr_sess_date_time, assistant_name, speaker_2['session_%s_summary' % (curr_sess_id-1)], events, past_context, assistant_name, user_name)
         else:
             summary = get_all_session_summary(speaker_2, curr_sess_id)
-            query = AGENT_CONV_PROMPT % (speaker_1['persona_summary'],
-                                        user_name, assistant_name, prev_sess_date_time, summary,
-                                        curr_sess_date_time, assistant_name,  user_name, assistant_name) 
+            # 尝试从场景库获取prompt
+            prompt_template = get_scenario_prompt(scenario_id, 'sess_continue', 'agent')
+            if prompt_template:
+                query = prompt_template % (speaker_1['persona_summary'],
+                                            user_name, assistant_name, prev_sess_date_time, summary,
+                                            curr_sess_date_time, assistant_name,  user_name, assistant_name)
+            else:
+                query = AGENT_CONV_PROMPT % (speaker_1['persona_summary'],
+                                            user_name, assistant_name, prev_sess_date_time, summary,
+                                            curr_sess_date_time, assistant_name,  user_name, assistant_name) 
     
     return query
 
@@ -587,12 +639,13 @@ PERSONALITY: %s
 
 def get_user_query(user, assistant, curr_sess_id=0, 
                     prev_sess_date_time='', curr_sess_date_time='', 
-                    use_events=False, instruct_stop=False, dialog_id=0, last_dialog='', embeddings=None, reflection=False):
+                    use_events=False, instruct_stop=False, dialog_id=0, last_dialog='', embeddings=None, reflection=False,
+                    scenario_id='male_leave_work', scenario_file='./data/scenarios/scenarios.json'):
     """
     为用户角色生成对话提示。
     
     根据当前会话状态、历史上下文和相关事件，生成用于指导用户角色
-    下一轮对话的完整提示。
+    下一轮对话的完整提示。支持从场景库动态获取prompt模板。
     
     Args:
         user: 用户角色对象
@@ -606,6 +659,8 @@ def get_user_query(user, assistant, curr_sess_id=0,
         last_dialog: 上一轮对话内容，用于检索相关上下文
         embeddings: 嵌入向量，用于细粒度检索
         reflection: 是否包含反思信息
+        scenario_id: 场景ID，默认为 'male_leave_work'
+        scenario_file: 场景配置文件路径
         
     Returns:
         str: 格式化的对话提示字符串
@@ -619,15 +674,32 @@ def get_user_query(user, assistant, curr_sess_id=0,
     assistant_name = assistant['name']
     user_persona = user['persona_summary']
 
+    # 加载场景配置
+    from generative_agents.conversation_utils import load_scenario_config, get_scenario_prompt
+    load_scenario_config(scenario_file)
+
     if curr_sess_id == 1:
         
         if use_events:
             events = get_event_string(user['events_session_%s' % curr_sess_id], user['graph'])
-            query = USER_CONV_PROMPT_SESS_1_W_EVENTS % (user_persona,
-                    user_name, assistant_name, 
-                    curr_sess_date_time, events, user_name, assistant_name, stop_instruction if instruct_stop else '')
+            # 尝试从场景库获取prompt
+            prompt_template = get_scenario_prompt(scenario_id, 'sess_1_w_events', 'user')
+            if prompt_template:
+                query = prompt_template % (user_persona,
+                        user_name, assistant_name, 
+                        curr_sess_date_time, events, user_name, assistant_name, stop_instruction if instruct_stop else '')
+            else:
+                query = USER_CONV_PROMPT_SESS_1_W_EVENTS % (user_persona,
+                        user_name, assistant_name, 
+                        curr_sess_date_time, events, user_name, assistant_name, stop_instruction if instruct_stop else '')
         else:
-            query = USER_CONV_PROMPT_SESS_1 % (user_persona,
+            # 尝试从场景库获取prompt
+            prompt_template = get_scenario_prompt(scenario_id, 'sess_1', 'user')
+            if prompt_template:
+                query = prompt_template % (user_persona,
+                                user_name, curr_sess_date_time, user_name, assistant_name)
+            else:
+                query = USER_CONV_PROMPT_SESS_1 % (user_persona,
                                 user_name, curr_sess_date_time, user_name, assistant_name)
     
     else:
@@ -637,6 +709,7 @@ def get_user_query(user, assistant, curr_sess_id=0,
                 # if a new session is starting, get information about the topics discussed in last session
                 context_from_1, context_from_2 = get_recent_context(user, assistant, curr_sess_id, reflection=reflection)
                 recent_context = '\n'.join(context_from_1) + '\n' +  '\n'.join(context_from_2) # with reflection
+                # 尝试从场景库获取prompt (user模板目前没有sess_w_events_v2_init，使用默认)
                 query = USER_CONV_PROMPT_W_EVENTS_V2_INIT % (user_persona,
                             user_name, assistant_name, prev_sess_date_time,
                             curr_sess_date_time, user['session_%s_summary' % (curr_sess_id-1)], events, user_name, assistant_name)
@@ -644,90 +717,159 @@ def get_user_query(user, assistant, curr_sess_id=0,
             else:
                 # during an ongoing session, get fine-grained information from a previous session using retriever modules
                 past_context = get_relevant_context(user, assistant, last_dialog, embeddings, curr_sess_id, reflection=reflection)
+                # 尝试从场景库获取prompt (user模板目前没有sess_w_events_v2，使用默认)
                 query = USER_CONV_PROMPT_W_EVENTS_V2 % (user_persona,
                             user_name, assistant_name, prev_sess_date_time,
                             curr_sess_date_time, user['session_%s_summary' % (curr_sess_id-1)], events, past_context, user_name, assistant_name)
         else:
             summary = get_all_session_summary(user, curr_sess_id)
-            query = USER_CONV_PROMPT % (user_persona,
-                                        user_name, assistant_name, prev_sess_date_time, summary,
-                                        curr_sess_date_time, user_name,  assistant_name) 
+            # 尝试从场景库获取prompt
+            prompt_template = get_scenario_prompt(scenario_id, 'sess_continue', 'user')
+            if prompt_template:
+                query = prompt_template % (user_persona,
+                                            user_name, assistant_name, prev_sess_date_time, summary,
+                                            curr_sess_date_time, user_name,  assistant_name)
+            else:
+                query = USER_CONV_PROMPT % (user_persona,
+                                            user_name, assistant_name, prev_sess_date_time, summary,
+                                            curr_sess_date_time, user_name,  assistant_name) 
     
     return query
 
 
 def get_session(agent_a, agent_b, args, prev_date_time_string='', curr_date_time_string='', curr_sess_id=0, reflection=False):
+    """
+    生成单个会话的完整对话内容
     
-    # agent_a is AI assistant, agent_b is human user
+    该函数负责模拟AI助手与用户之间的一轮完整对话，通过交替调用get_agent_query和get_user_query
+    构建Prompt，调用LLM生成回复，并进行口语化转换和格式清洗。
+    
+    Args:
+        agent_a (dict): AI助手角色信息，包含persona、name、graph等字段
+        agent_b (dict): 用户角色信息，包含persona、name、graph等字段
+        args (argparse.Namespace): 命令行参数，包含max_turns_per_session、events、emb_file、scenario、scenario_file等配置
+        prev_date_time_string (str, optional): 上一个会话的日期时间字符串，用于上下文关联
+        curr_date_time_string (str, optional): 当前会话的日期时间字符串
+        curr_sess_id (int, optional): 当前会话ID，从1开始递增
+        reflection (bool, optional): 是否启用反思机制，默认为False
+    
+    Returns:
+        list: 会话对话列表，每个元素是一个字典，包含text、raw_text、speaker、clean_text、dia_id字段
+    
+    Notes:
+        - agent_a固定为AI助手角色，agent_b固定为用户角色
+        - 用户默认先发起对话（curr_speaker初始值为1）
+        - 对话终止条件：达到最大轮次 或 双方都发送了[END]标记
+        - 场景参数从args中获取：args.scenario 和 args.scenario_file
+    """
+    
+    # 角色分配：agent_a = AI助手，agent_b = 用户
     assistant = agent_a
     user = agent_b
     
-    # load embeddings for retrieveing relevat observations from previous conversations
+    # 获取场景参数
+    scenario_id = getattr(args, 'scenario', 'male_leave_work')
+    scenario_file = getattr(args, 'scenario_file', './data/scenarios/scenarios.json')
+    
+    # 加载历史对话嵌入向量，用于细粒度上下文检索（仅非首次会话需要）
     if curr_sess_id == 1:
-        embeddings = None
+        embeddings = None  # 第一轮会话无历史，无需加载
     else:
         embeddings = pkl.load(open(args.emb_file, 'rb'))
 
-    # By default, user starts the conversation
-    curr_speaker = 1  # 0 = assistant, 1 = user
-    conv_so_far = user['name'] + ': '
+    # 初始化对话状态：用户先发言（1=用户，0=助手）
+    curr_speaker = 1
+    conv_so_far = user['name'] + ': '  # 构建对话历史前缀
 
-    session = []
+    session = []  # 存储完整会话内容
     
-    stop_dialog_count = args.max_turns_per_session if args.max_turns_per_session <= 10 else random.choice(list(range(10, args.max_turns_per_session))) # choose a random turn number to include instructions for ending the session
-    break_at_next_assistant = False
-    break_at_next_user = False
+    # 随机选择对话终止指令插入位置（10轮之后），用于引导会话自然结束
+    stop_dialog_count = args.max_turns_per_session if args.max_turns_per_session <= 10 else random.choice(list(range(10, args.max_turns_per_session)))
+    break_at_next_assistant = False  # 标记助手是否需要结束
+    break_at_next_user = False       # 标记用户是否需要结束
+    
+    # 循环生成对话轮次
     for i in range(args.max_turns_per_session):
-
+        # 终止条件：双方都发送了[END]标记
         if break_at_next_assistant and break_at_next_user:
             break
 
+        # 根据当前发言者选择对应的Prompt生成函数
         if curr_speaker == 0:
-            # AI assistant's turn - use get_agent_query
-            agent_query = get_agent_query(assistant, user, prev_sess_date_time=prev_date_time_string, curr_sess_date_time=curr_date_time_string,
-                                    curr_sess_id=curr_sess_id, use_events=args.events, instruct_stop=i>=stop_dialog_count, 
-                                    dialog_id=i, last_dialog='' if i == 0 else session[-1]['speaker'] + ' says, ' + session[-1]['clean_text'], 
-                                    embeddings=embeddings, reflection=reflection)
+            # AI助手发言：使用get_agent_query构建Prompt
+            agent_query = get_agent_query(
+                speaker_1=assistant,
+                speaker_2=user,
+                prev_sess_date_time=prev_date_time_string,
+                curr_sess_date_time=curr_date_time_string,
+                curr_sess_id=curr_sess_id,
+                use_events=args.events,
+                instruct_stop=i >= stop_dialog_count,  # 是否插入终止指令
+                dialog_id=i,
+                last_dialog='' if i == 0 else session[-1]['speaker'] + ' says, ' + session[-1]['clean_text'],
+                embeddings=embeddings,
+                reflection=reflection,
+                scenario_id=scenario_id,
+                scenario_file=scenario_file
+            )
             speaker_name = assistant['name']
         else:
-            # User's turn - use get_user_query
-            agent_query = get_user_query(user, assistant, prev_sess_date_time=prev_date_time_string, curr_sess_date_time=curr_date_time_string,
-                                    curr_sess_id=curr_sess_id, use_events=args.events, instruct_stop=i>=stop_dialog_count, 
-                                    dialog_id=i, last_dialog='' if i == 0 else session[-1]['speaker'] + ' says, ' + session[-1]['clean_text'], 
-                                    embeddings=embeddings, reflection=reflection)
+            # 用户发言：使用get_user_query构建Prompt
+            agent_query = get_user_query(
+                user=user,
+                assistant=assistant,
+                prev_sess_date_time=prev_date_time_string,
+                curr_sess_date_time=curr_date_time_string,
+                curr_sess_id=curr_sess_id,
+                use_events=args.events,
+                instruct_stop=i >= stop_dialog_count,
+                dialog_id=i,
+                last_dialog='' if i == 0 else session[-1]['speaker'] + ' says, ' + session[-1]['clean_text'],
+                embeddings=embeddings,
+                reflection=reflection,
+                scenario_id=scenario_id,
+                scenario_file=scenario_file
+            )
             speaker_name = user['name']
         
+        # 调用LLM生成回复
         output = run_chatgpt(agent_query + conv_so_far, 1, 100, 'chatgpt', temperature=1.2)
-        output = output.strip().split('\n')[0]
-        output = clean_dialog(output, speaker_name)
+        output = output.strip().split('\n')[0]  # 取第一行作为回复
+        output = clean_dialog(output, speaker_name)  # 清洗对话内容
         output = {"text": output, "raw_text": output}
 
         output["speaker"] = speaker_name
         text_replaced_caption = output["text"]
+        
+        # 处理回复内容：非空且未结束标记时进行口语化转换
         if not text_replaced_caption.isspace():
             if '[END]' in output["text"]:
-                output["clean_text"] = text_replaced_caption
+                output["clean_text"] = text_replaced_caption  # 结束标记保留原样
             else:
+                # 通过CASUAL_DIALOG_PROMPT将正式表达转为日常口语
                 output["clean_text"] = run_chatgpt(CASUAL_DIALOG_PROMPT % text_replaced_caption, 1, 100, 'chatgpt').strip()
         else:
-            output["clean_text"] = ""
+            output["clean_text"] = ""  # 空内容处理
         
+        # 添加对话ID标识（格式：D{会话ID}:{轮次}）
         output["dia_id"] = 'D%s:%s' % (curr_sess_id, i+1)
         session.append(output)
 
         print("############ ", speaker_name, ': ', output["clean_text"])
         
+        # 更新对话历史
         conv_so_far = conv_so_far + output["clean_text"] + '\n'
 
-
+        # 检测结束标记：当一方发送[END]后，等待另一方也发送[END]
         if output['text'].endswith('[END]'):
             if curr_speaker == 0:
                 break_at_next_assistant = True
             else:
                 break_at_next_user = True
 
+        # 准备下一轮对话历史前缀并切换发言者
         conv_so_far += f"\n{user['name']}: " if curr_speaker == 0 else f"\n{assistant['name']}: "
-        curr_speaker = int(not curr_speaker)
+        curr_speaker = int(not curr_speaker)  # 切换发言者（0↔1）
 
     return session
 

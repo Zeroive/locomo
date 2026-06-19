@@ -1,10 +1,76 @@
-import json, re, os
+import json, re, os, logging
 import random
 from global_methods import run_chatgpt, run_chatgpt_with_examples
+
+# 全局场景配置缓存
+SCENARIO_CONFIG = None
+
+def load_scenario_config(scenario_file='./data/scenarios/scenarios.json'):
+    """
+    加载场景配置文件。
+    
+    Args:
+        scenario_file: 场景配置文件路径
+        
+    Returns:
+        dict: 场景配置字典
+    """
+    global SCENARIO_CONFIG
+    if SCENARIO_CONFIG is None:
+        try:
+            SCENARIO_CONFIG = json.load(open(scenario_file, encoding='utf-8'))
+            logging.info(f"Loaded scenario config from {scenario_file}")
+        except FileNotFoundError:
+            logging.warning(f"Scenario file not found: {scenario_file}, using default prompts")
+            SCENARIO_CONFIG = None
+    return SCENARIO_CONFIG
+
+def get_scenario_prompt(scenario_id, prompt_type, role='agent'):
+    """
+    根据场景ID和prompt类型获取对应的prompt模板。
+    
+    Args:
+        scenario_id: 场景ID，如 'male_leave_work'
+        prompt_type: prompt类型，如 'sess_1', 'sess_1_w_events', 'sess_continue', 'sess_w_events_v2_init', 'sess_w_events_v2'
+        role: 角色，'agent' 或 'user'
+        
+    Returns:
+        str: prompt模板字符串，如果场景不存在则返回默认模板
+    """
+    config = load_scenario_config()
+    if config is None or scenario_id not in config['scenarios']:
+        # 返回默认模板
+        return get_default_prompt(prompt_type, role)
+    
+    scenario = config['scenarios'][scenario_id]
+    template_key = 'agent_prompt_template' if role == 'agent' else 'user_prompt_template'
+    
+    try:
+        return scenario[template_key][prompt_type]
+    except KeyError:
+        logging.warning(f"Prompt type {prompt_type} not found for scenario {scenario_id}, using default")
+        return get_default_prompt(prompt_type, role)
+
+def get_default_prompt(prompt_type, role='agent'):
+    """
+    获取默认的prompt模板（用于场景配置不存在时的fallback）。
+    
+    注意：此函数返回None，实际默认模板在generate_conversations.py中定义。
+    
+    Args:
+        prompt_type: prompt类型
+        role: 角色
+        
+    Returns:
+        str: 返回None，让调用者使用内置默认模板
+    """
+    # 返回None，让调用者使用内置的默认模板
+    return None
 
 PERSONA_FROM_MSC_PROMPT = "Let's write speaker descriptions from a given set of life attributes. Example:\n\n%s\n\nNote: Add crucial details in the persona about the person such as their name, age, marital status, gender, job etc. Add additional details like names of family/friends or specific activities, likes and dislikes, experiences when appropriate.\n\nFor the following attributes, write a persona. Output a json file with the keys 'persona' and 'name'.\n\n%s\n\nStart your answer with a curly bracket.\n"
 
 
+# 默认prompt模板（保留作为fallback）
 AGENT_CONV_PROMPT_SESS_1 = """%s
 
 %s 在家中，准备出门上班前与AI助手 %s 交谈。今天是 %s，现在是早上出门前。请扮演AI助手 %s 的角色，根据用户的情况和对话历史，写下你对用户 %s 要说的下一句话。如果开始对话，可以从问候开始，然后询问用户今日工作安排、检查日程、提醒事项或家庭事务。不要重复之前已分享的信息。让对话围绕上班前的准备，例如谈论今日会议、待办事项、通勤安排或家庭琐事。包括时间参考，如"今天早上"、"上午会议"、"出门前"等。回复不超过20个字。
@@ -136,37 +202,44 @@ def get_msc_persona(args):
     """
     从MSC数据集中获取人物角色信息。
     
-    检查已存在的角色文件，如果不存在或需要覆盖，则从MSC数据集中随机选择
-    一对人物角色并生成其详细描述。标记已使用的人物数据以避免重复。
+    检查已存在的角色文件，如果不存在或需要覆盖，则从单角色数据集
+    msc_speakers_single.json 中随机选择一个人物角色作为用户，AI助手使用默认角色。
     
     Args:
         args: 包含文件路径和覆盖标志的命令行参数
         
     Returns:
-        tuple: (agent_a, agent_b) 两个角色对象的元组，如果文件已存在则返回(None, None)
+        tuple: (agent_a, agent_b) 两个角色对象的元组，agent_a为AI助手，agent_b为用户，如果文件已存在则返回(None, None)
     """
     # 检查角色文件是否存在，如果存在且不覆盖则直接返回
     if (os.path.exists(args.agent_a_file) and os.path.exists(args.agent_b_file)) and not args.overwrite_persona:
         return None, None
     else:
-        all_personas = json.load(open('./data/msc_personas_all.json', encoding='utf-8'))
-        selected_idx = random.choice([idx for idx, d in enumerate(all_personas['train']) if not d["in_dataset"]])
+        # agent_a: 默认AI助手角色
+        agent_a = {
+            'name': 'AI助手',
+            'persona_summary': '你是一个友好、乐于助人的AI助手，善于倾听和提供建议。',
+            'msc_prompt': ['I am an AI assistant.', 'I am helpful and friendly.', 'I like to help people.']
+        }
+        
+        # agent_b: 从单角色数据集中随机选择一个用户角色
+        all_personas = json.load(open('./data/msc_speakers_single.json', encoding='utf-8'))
+        available_indices = [idx for idx, d in enumerate(all_personas['train'])]
+        if not available_indices:
+            logging.warning("No available personas in msc_speakers_single.json")
+            return None, None
+        
+        selected_idx = random.choice(available_indices)
         attributes = all_personas['train'][selected_idx]
-        with open('./data/msc_personas_all.json', "w", encoding='utf-8') as f:
-            all_personas['train'][selected_idx]["in_dataset"] = 1
-            json.dump(all_personas, f, indent=2, ensure_ascii=False)
-        agent_a = get_persona(args, attributes['Speaker 1'])
-
-        agent_a['persona_summary'] = agent_a['persona']
-        agent_a['msc_prompt'] = attributes['Speaker 1']
-        agent_b = get_persona(args, attributes['Speaker 2']) # setting the second agent to have age within +/- 5 years of first agent
-
+        
+        # 使用 Speaker 字段生成用户角色
+        agent_b = get_persona(args, attributes['Speaker'])
         agent_b['persona_summary'] = agent_b['persona']
-        agent_b['msc_prompt'] = attributes['Speaker 2']
-        del agent_a['persona']
+        agent_b['msc_prompt'] = attributes['Speaker']
         del agent_b['persona']
-        print("Agent A Persona: %s" % agent_a['persona_summary'])
-        print("Agent B Persona: %s" % agent_b['persona_summary'])
+        
+        print("Agent A (AI助手) Persona: %s" % agent_a['persona_summary'])
+        print("Agent B (用户) Persona: %s" % agent_b['persona_summary'])
     return agent_a, agent_b
 
 
