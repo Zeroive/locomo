@@ -7,29 +7,88 @@
         "wifi_router": {
           "name": "WiFi AP / 路由器",
           "description": "用于检测家庭成员手机、手表等终端上线",
+          "scenarios": ["male_leave_work", "family_return", "all_leave_arm", "anomaly_detection"],
+          "typical_events": [
+            {"event_type": "device_online", "description": "{设备名称}上线", "trigger": "手机连接WiFi"},
+            {"event_type": "device_offline", "description": "{设备名称}离线", "trigger": "手机离开WiFi覆盖范围"},
+            {"event_type": "network_block", "description": "设备{设备名称}被踢出网络", "trigger": "家长控制操作"},
+            {"event_type": "guest_network", "description": "访客网络{状态}", "trigger": "开启/关闭访客网络"}
+          ],
+          "operation_probability": {
+            "male_leave_work": {"online": 0.05, "offline": 0.95},
+            "family_return": {"online": 0.95, "offline": 0.05},
+            "all_leave_arm": {"online": 0.05, "offline": 0.95},
+            "anomaly_detection": {"unusual_device": 0.1}
+          },
           "capabilities": {
             "query": ["连接设备列表", "MAC地址", "RSSI信号强度", "在线状态"],
             "control": ["踢出设备", "开启/关闭访客网络", "儿童上网时间段限制"],
             "config": ["设备别名绑定", "回家/离家地理围栏触发阈值"]
-          }
+          },
+          "state_transitions": {
+            "online": ["offline"],
+            "offline": ["online"],
+            "blocked": ["unblocked"]
+          },
+          "data_types": ["device_id", "timestamp", "rssi", "connection_duration"]
         },
         "door_camera": {
           "name": "门口摄像头",
           "description": "用于检测门口有人靠近",
+          "scenarios": ["visitor_arrival", "anomaly_detection", "family_return", "all_leave_arm"],
+          "typical_events": [
+            {"event_type": "motion_detected", "description": "检测到门口移动", "trigger": "人形进入监控区域"},
+            {"event_type": "face_recognized", "description": "识别到{人名}", "trigger": "人脸匹配成功"},
+            {"event_type": "snapshot", "description": "摄像头抓拍", "trigger": "手动/自动触发"},
+            {"event_type": "two_way_audio", "description": "双向对讲{状态}", "trigger": "发起/结束对讲"},
+            {"event_type": "intrusion_alert", "description": "逗留报警", "trigger": "超过逗留阈值"}
+          ],
+          "operation_probability": {
+            "visitor_arrival": {"motion": 1.0, "face_recognized": 0.7},
+            "anomaly_detection": {"motion": 0.3, "intrusion": 0.1},
+            "family_return": {"motion": 0.95, "face_recognized": 0.9},
+            "all_leave_arm": {"motion": 0.1, "intrusion": 0.05}
+          },
           "capabilities": {
             "control": ["抓拍", "录制短视频", "开启双向对讲", "播放预设语音"],
             "query": ["当前画面流", "最近一次移动侦测时间"],
             "config": ["人形检测灵敏度", "逗留报警时间阈值", "人脸库白名单比对"]
-          }
+          },
+          "state_transitions": {
+            "idle": ["motion_detected"],
+            "motion_detected": ["face_recognized", "intrusion_alert", "idle"],
+            "recording": ["idle"]
+          },
+          "data_types": ["timestamp", "motion_type", "face_id", "image_url", "duration"]
         },
         "smart_lock": {
           "name": "智能门锁",
           "description": "开锁、锁门、指纹开锁、关门",
+          "scenarios": ["male_leave_work", "family_return", "all_leave_arm", "visitor_arrival"],
+          "typical_events": [
+            {"event_type": "lock_unlock", "description": "门锁{操作}", "trigger": "指纹/密码/远程解锁"},
+            {"event_type": "door_status", "description": "门{状态}", "trigger": "开门/关门/虚掩"},
+            {"event_type": "temp_password", "description": "生成临时密码", "trigger": "创建一次性/周期密码"},
+            {"event_type": "tamper_alert", "description": "防撬报警", "trigger": "异常开锁尝试"}
+          ],
+          "operation_probability": {
+            "male_leave_work": {"lock": 0.95, "unlock": 0.05},
+            "family_return": {"unlock": 0.95, "lock": 0.05},
+            "all_leave_arm": {"lock": 1.0, "auto_lock": 0.9},
+            "visitor_arrival": {"temp_password": 0.5, "remote_unlock": 0.3}
+          },
           "capabilities": {
             "control": ["远程解锁（需二次确认）", "关门自动落锁"],
             "query": ["当前电量", "门状态（开/关/虚掩）", "开锁日志（谁在何时用什么方式）"],
             "config": ["生成临时密码（一次性/周期/限时）", "下发指纹/IC卡", "防撬报警开关"]
-          }
+          },
+          "state_transitions": {
+            "locked": ["unlocked"],
+            "unlocked": ["locked", "door_open"],
+            "door_open": ["door_closed", "locked"],
+            "low_battery": ["normal"]
+          },
+          "data_types": ["timestamp", "operation_type", "user_id", "method", "battery_level"]
         }
       }
     },
@@ -40,26 +99,78 @@
         "temp_humidity_sensor": {
           "name": "温湿度传感器",
           "description": "监测室内冷暖干湿",
+          "scenarios": ["male_leave_work", "family_return", "elderly_outdoor", "child_return"],
+          "typical_events": [
+            {"event_type": "temp_threshold", "description": "温度{状态}", "trigger": "超过高低温阈值"},
+            {"event_type": "humidity_threshold", "description": "湿度{状态}", "trigger": "超过高低湿阈值"},
+            {"event_type": "climate_alert", "description": "舒适度提醒", "trigger": "温湿度组合触发"}
+          ],
+          "operation_probability": {
+            "male_leave_work": {"read": 0.3},
+            "family_return": {"read": 0.5},
+            "elderly_outdoor": {"alert": 0.2},
+            "child_return": {"read": 0.2}
+          },
           "capabilities": {
             "query": ["当前温度(℃)", "当前湿度(%)"],
             "config": ["温度/湿度高低阈值报警", "数据采样上报频率"]
-          }
+          },
+          "state_transitions": {
+            "normal": ["temp_high", "temp_low", "humidity_high", "humidity_low"],
+            "temp_high": ["normal"],
+            "temp_low": ["normal"]
+          },
+          "data_types": ["timestamp", "temperature", "humidity", "comfort_level"]
         },
         "light_sensor": {
           "name": "光照传感器",
           "description": "监测环境亮度",
+          "scenarios": ["child_return", "family_return", "male_leave_work"],
+          "typical_events": [
+            {"event_type": "light_change", "description": "光照强度变化", "trigger": "亮度超过阈值"},
+            {"event_type": "dark_trigger", "description": "暗光触发", "trigger": "低于设定亮度"}
+          ],
+          "operation_probability": {
+            "child_return": {"dark_trigger": 0.6},
+            "family_return": {"dark_trigger": 0.7},
+            "male_leave_work": {"light_change": 0.3}
+          },
           "capabilities": {
             "query": ["光照度(Lux)"],
             "config": ["暗光触发阈值（如低于50 Lux联动开灯）"]
-          }
+          },
+          "state_transitions": {
+            "bright": ["dim", "dark"],
+            "dim": ["bright", "dark"],
+            "dark": ["dim", "bright"]
+          },
+          "data_types": ["timestamp", "lux", "trigger_status"]
         },
         "air_quality_sensor": {
           "name": "空气质量传感器",
           "description": "监测PM2.5、CO2、甲醛/TVOC",
+          "scenarios": ["family_return", "elderly_outdoor", "child_return", "all_leave_arm"],
+          "typical_events": [
+            {"event_type": "pm25_alert", "description": "PM2.5超标", "trigger": "浓度超过标准"},
+            {"event_type": "co2_alert", "description": "CO2浓度过高", "trigger": "超过1500ppm"},
+            {"event_type": "tvoc_alert", "description": "TVOC超标", "trigger": "空气质量等级变化"}
+          ],
+          "operation_probability": {
+            "family_return": {"read": 0.4, "alert": 0.1},
+            "elderly_outdoor": {"alert": 0.15},
+            "child_return": {"read": 0.2},
+            "all_leave_arm": {"monitor": 0.5}
+          },
           "capabilities": {
             "query": ["PM2.5浓度", "CO2 ppm", "TVOC等级"],
             "config": ["超标联动阈值（如CO2>1500联动新风系统）"]
-          }
+          },
+          "state_transitions": {
+            "good": ["moderate", "poor"],
+            "moderate": ["good", "poor"],
+            "poor": ["moderate", "good"]
+          },
+          "data_types": ["timestamp", "pm25", "co2", "tvoc", "aqi"]
         }
       }
     },
@@ -70,43 +181,136 @@
         "smart_light": {
           "name": "智能灯",
           "description": "照明及氛围营造",
+          "scenarios": ["male_leave_work", "child_return", "family_return", "visitor_arrival"],
+          "typical_events": [
+            {"event_type": "light_switch", "description": "{灯名称}{状态}", "trigger": "手动/定时/联动"},
+            {"event_type": "brightness_change", "description": "{灯名称}亮度调整", "trigger": "语音/APP控制"},
+            {"event_type": "color_temp", "description": "{灯名称}色温调整", "trigger": "场景模式切换"},
+            {"event_type": "scene_activate", "description": "灯光场景{场景名称}激活", "trigger": "模式选择"}
+          ],
+          "operation_probability": {
+            "male_leave_work": {"off": 0.95, "on": 0.05},
+            "child_return": {"on": 0.9, "brightness": 0.5},
+            "family_return": {"on": 0.85, "scene": 0.4},
+            "visitor_arrival": {"on": 0.9, "brightness": 0.3}
+          },
           "capabilities": {
             "control": ["开关", "亮度(0-100%)", "色温(2700K-6500K)"],
             "config": ["渐变过渡时间(ms)", "定时/倒计时", "生物钟节律模式"]
-          }
+          },
+          "state_transitions": {
+            "off": ["on"],
+            "on": ["off", "dimmed", "color_changed"],
+            "dimmed": ["bright", "off"]
+          },
+          "data_types": ["timestamp", "power_state", "brightness", "color_temp", "scene_id"]
         },
         "air_conditioner": {
           "name": "空调",
           "description": "室内温度调节",
+          "scenarios": ["male_leave_work", "family_return", "elderly_outdoor", "child_return"],
+          "typical_events": [
+            {"event_type": "ac_switch", "description": "空调{状态}", "trigger": "手动/定时/温度联动"},
+            {"event_type": "mode_change", "description": "空调模式切换为{模式}", "trigger": "模式选择"},
+            {"event_type": "temp_adjust", "description": "温度调整至{温度}℃", "trigger": "语音/APP控制"},
+            {"event_type": "energy_save", "description": "节能模式{状态}", "trigger": "模式切换"}
+          ],
+          "operation_probability": {
+            "male_leave_work": {"off": 0.8, "energy_save": 0.1},
+            "family_return": {"on": 0.7, "temp_adjust": 0.5},
+            "elderly_outdoor": {"on": 0.6, "mode_change": 0.3},
+            "child_return": {"on": 0.5}
+          },
           "capabilities": {
             "control": ["开关", "模式(制冷/热/除湿/送风)", "目标温度", "风速(低/中/高/自动)", "扫风方向"],
             "config": ["节能模式", "睡眠曲线", "滤网清洗提醒重置"]
-          }
+          },
+          "state_transitions": {
+            "off": ["cooling", "heating", "fan_only", "dehumidify"],
+            "cooling": ["off", "heating", "temp_changed"],
+            "heating": ["off", "cooling", "temp_changed"]
+          },
+          "data_types": ["timestamp", "power_state", "mode", "target_temp", "fan_speed", "energy_consumption"]
         },
         "smart_curtain": {
           "name": "智能窗帘",
           "description": "控制自然光与隐私",
+          "scenarios": ["male_leave_work", "family_return", "child_return", "visitor_arrival"],
+          "typical_events": [
+            {"event_type": "curtain_move", "description": "窗帘{操作}", "trigger": "手动/定时/光照联动"},
+            {"event_type": "curtain_stop", "description": "窗帘暂停", "trigger": "手动控制"},
+            {"event_type": "scene_linkage", "description": "窗帘联动{场景}", "trigger": "场景触发"}
+          ],
+          "operation_probability": {
+            "male_leave_work": {"close": 0.3, "open": 0.1},
+            "family_return": {"open": 0.2, "close": 0.4},
+            "child_return": {"open": 0.3},
+            "visitor_arrival": {"open": 0.5}
+          },
           "capabilities": {
             "control": ["开合百分比(0-100%)", "暂停", "全开/全关"],
             "config": ["手拉启动灵敏度", "定时开合（如早晨7点自动开30%）"]
-          }
+          },
+          "state_transitions": {
+            "open": ["closing", "closed"],
+            "closed": ["opening", "open"],
+            "opening": ["open", "stopped"],
+            "closing": ["closed", "stopped"]
+          },
+          "data_types": ["timestamp", "position", "direction", "speed"]
         },
         "fresh_air_system": {
           "name": "新风系统",
           "description": "室内外空气交换与净化",
+          "scenarios": ["family_return", "child_return", "elderly_outdoor", "all_leave_arm"],
+          "typical_events": [
+            {"event_type": "fan_switch", "description": "新风系统{状态}", "trigger": "手动/空气质量联动"},
+            {"event_type": "speed_change", "description": "风速调整至{档位}", "trigger": "APP控制"},
+            {"event_type": "filter_alert", "description": "滤网更换提醒", "trigger": "达到使用寿命"},
+            {"event_type": "air_exchange", "description": "换气模式{模式}", "trigger": "内/外循环切换"}
+          ],
+          "operation_probability": {
+            "family_return": {"on": 0.6, "auto": 0.4},
+            "child_return": {"on": 0.5},
+            "elderly_outdoor": {"on": 0.55},
+            "all_leave_arm": {"off": 0.8}
+          },
           "capabilities": {
             "control": ["开关", "风速档位", "内/外循环切换"],
             "query": ["PM2.5过滤效率", "滤网剩余寿命"],
             "config": ["空气质量联动自动档位"]
-          }
+          },
+          "state_transitions": {
+            "off": ["low", "medium", "high", "auto"],
+            "low": ["medium", "high", "auto", "off"],
+            "auto": ["low", "medium", "high", "off"]
+          },
+          "data_types": ["timestamp", "power_state", "speed_level", "filter_life", "pm25_removal_rate"]
         },
         "tv_projector": {
           "name": "电视 / 投影仪",
           "description": "影音娱乐",
+          "scenarios": ["family_return", "child_return"],
+          "typical_events": [
+            {"event_type": "tv_switch", "description": "{设备名称}{状态}", "trigger": "手动/语音控制"},
+            {"event_type": "source_change", "description": "输入源切换至{源}", "trigger": "遥控器操作"},
+            {"event_type": "media_control", "description": "{操作}媒体", "trigger": "播放/暂停/快进"},
+            {"event_type": "scene_mode", "description": "观影模式{状态}", "trigger": "一键场景"}
+          ],
+          "operation_probability": {
+            "family_return": {"on": 0.5, "scene": 0.2},
+            "child_return": {"on": 0.4, "media_control": 0.3}
+          },
           "capabilities": {
             "control": ["开关", "音量", "输入源切换(HDMI1/2)", "媒体控制(播放/暂停/快进)"],
             "config": ["观影模式联动（一键关窗帘、关灯、开电视）"]
-          }
+          },
+          "state_transitions": {
+            "off": ["on"],
+            "on": ["off", "playing", "paused"],
+            "playing": ["paused", "stopped"]
+          },
+          "data_types": ["timestamp", "power_state", "input_source", "volume", "media_state"]
         }
       }
     },
@@ -117,10 +321,32 @@
         "smart_speaker": {
           "name": "智能音箱",
           "description": "语音交互、背景音乐",
+          "scenarios": ["male_leave_work", "family_return", "child_return", "elderly_outdoor", "visitor_arrival"],
+          "typical_events": [
+            {"event_type": "voice_command", "description": "语音指令：{指令}", "trigger": "唤醒词+命令"},
+            {"event_type": "tts_announcement", "description": "播报：{内容}", "trigger": "事件触发/定时"},
+            {"event_type": "media_play", "description": "播放{内容}", "trigger": "语音指令"},
+            {"event_type": "conversation_start", "description": "对话开始", "trigger": "唤醒词"},
+            {"event_type": "conversation_end", "description": "对话结束", "trigger": "超时/主动结束"}
+          ],
+          "operation_probability": {
+            "male_leave_work": {"query": 0.3, "tts": 0.2},
+            "family_return": {"query": 0.4, "media": 0.3},
+            "child_return": {"query": 0.2, "media": 0.4},
+            "elderly_outdoor": {"query": 0.5, "tts": 0.3},
+            "visitor_arrival": {"tts": 0.6}
+          },
           "capabilities": {
             "control": ["音量调节", "TTS文本播报（文字转语音，如\"饭做好了\"）", "媒体播放控制"],
             "config": ["麦克风阵列静音（物理隐私）", "蓝牙配对", "声纹识别绑定"]
-          }
+          },
+          "state_transitions": {
+            "idle": ["listening", "playing"],
+            "listening": ["processing", "idle"],
+            "processing": ["speaking", "idle"],
+            "playing": ["idle", "paused"]
+          },
+          "data_types": ["timestamp", "interaction_type", "command_text", "tts_text", "duration"]
         }
       }
     }
@@ -138,5 +364,14 @@
     "fresh_air_system": "actuators",
     "tv_projector": "actuators",
     "smart_speaker": "interaction_devices"
+  },
+  "scenario_device_mapping": {
+    "male_leave_work": ["wifi_router", "smart_lock", "smart_light", "air_conditioner", "smart_speaker"],
+    "elderly_outdoor": ["wifi_router", "door_camera", "temp_humidity_sensor", "air_quality_sensor", "fresh_air_system", "smart_speaker"],
+    "child_return": ["wifi_router", "smart_light", "light_sensor", "air_conditioner", "smart_curtain", "tv_projector", "smart_speaker"],
+    "family_return": ["wifi_router", "door_camera", "smart_lock", "temp_humidity_sensor", "light_sensor", "air_quality_sensor", "smart_light", "air_conditioner", "smart_curtain", "fresh_air_system", "tv_projector", "smart_speaker"],
+    "visitor_arrival": ["door_camera", "smart_lock", "smart_light", "smart_curtain", "smart_speaker"],
+    "all_leave_arm": ["wifi_router", "door_camera", "smart_lock", "air_quality_sensor", "smart_light", "air_conditioner", "fresh_air_system"],
+    "anomaly_detection": ["wifi_router", "door_camera"]
   }
 }
