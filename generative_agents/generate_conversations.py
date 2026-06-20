@@ -930,6 +930,9 @@ def main():
             save_agents([agent_a, agent_b], args)
 
         # make sure keys are all lower case
+        # agent_a 是 AI助手，不产生事件，确保 graph 字段存在
+        if 'graph' not in agent_a:
+            agent_a['graph'] = []
         agent_a_events = agent_a['graph']
         agent_a_events = [{k.lower(): v for k,v in e.items()} for e in agent_a_events]
         agent_a["graph"] = agent_a_events
