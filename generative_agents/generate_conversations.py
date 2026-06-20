@@ -241,7 +241,23 @@ def get_all_session_summary(speaker, curr_sess_id):
     return summary
 
 
-def catch_date(date_str):
+def catch_date(date_str) -> datetime:
+    """
+    将日期字符串解析为datetime对象。
+    
+    支持两种日期格式：
+    - '%d %B, %Y' (如 "10 January, 2023")
+    - '%d %B %Y' (如 "10 January 2023")
+    
+    Args:
+        date_str: 日期字符串，格式为 "DD Month, YYYY" 或 "DD Month YYYY"
+        
+    Returns:
+        datetime: 解析后的datetime对象
+        
+    Raises:
+        ValueError: 如果日期字符串格式不匹配任何支持的格式
+    """
     date_format1 = '%d %B, %Y'
     date_format2 = '%d %B %Y'
     try:
@@ -327,11 +343,16 @@ def get_session_date(events, args, prev_date = None):
         else:
             stop_date_b = date(2022, 1, 1)
 
-    # 确保 stop_date_a 和 stop_date_b 都有值
+    # 确保 stop_date_a 和 stop_date_b 都有值（统一使用 datetime 类型）
     if stop_date_a is None:
-        stop_date_a = date(2022, 1, 1)
+        stop_date_a = datetime(2022, 1, 1)
+    elif isinstance(stop_date_a, date) and not isinstance(stop_date_a, datetime):
+        stop_date_a = datetime(stop_date_a.year, stop_date_a.month, stop_date_a.day)
+    
     if stop_date_b is None:
-        stop_date_b = date(2022, 1, 1)
+        stop_date_b = datetime(2022, 1, 1)
+    elif isinstance(stop_date_b, date) and not isinstance(stop_date_b, datetime):
+        stop_date_b = datetime(stop_date_b.year, stop_date_b.month, stop_date_b.day)
 
     # return max(stop_date_a, stop_date_b) + timedelta(days=1)
     return max(stop_date_a, stop_date_b) + timedelta(days=random.choice([1, 2]))
