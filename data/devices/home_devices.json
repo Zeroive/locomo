@@ -1,0 +1,142 @@
+{
+  "device_categories": {
+    "sensing_devices": {
+      "name": "感知类设备",
+      "description": "用于感知和检测环境及人员状态的设备",
+      "devices": {
+        "wifi_router": {
+          "name": "WiFi AP / 路由器",
+          "description": "用于检测家庭成员手机、手表等终端上线",
+          "capabilities": {
+            "query": ["连接设备列表", "MAC地址", "RSSI信号强度", "在线状态"],
+            "control": ["踢出设备", "开启/关闭访客网络", "儿童上网时间段限制"],
+            "config": ["设备别名绑定", "回家/离家地理围栏触发阈值"]
+          }
+        },
+        "door_camera": {
+          "name": "门口摄像头",
+          "description": "用于检测门口有人靠近",
+          "capabilities": {
+            "control": ["抓拍", "录制短视频", "开启双向对讲", "播放预设语音"],
+            "query": ["当前画面流", "最近一次移动侦测时间"],
+            "config": ["人形检测灵敏度", "逗留报警时间阈值", "人脸库白名单比对"]
+          }
+        },
+        "smart_lock": {
+          "name": "智能门锁",
+          "description": "开锁、锁门、指纹开锁、关门",
+          "capabilities": {
+            "control": ["远程解锁（需二次确认）", "关门自动落锁"],
+            "query": ["当前电量", "门状态（开/关/虚掩）", "开锁日志（谁在何时用什么方式）"],
+            "config": ["生成临时密码（一次性/周期/限时）", "下发指纹/IC卡", "防撬报警开关"]
+          }
+        }
+      }
+    },
+    "environmental_sensors": {
+      "name": "环境感知设备",
+      "description": "监测室内环境参数的传感器",
+      "devices": {
+        "temp_humidity_sensor": {
+          "name": "温湿度传感器",
+          "description": "监测室内冷暖干湿",
+          "capabilities": {
+            "query": ["当前温度(℃)", "当前湿度(%)"],
+            "config": ["温度/湿度高低阈值报警", "数据采样上报频率"]
+          }
+        },
+        "light_sensor": {
+          "name": "光照传感器",
+          "description": "监测环境亮度",
+          "capabilities": {
+            "query": ["光照度(Lux)"],
+            "config": ["暗光触发阈值（如低于50 Lux联动开灯）"]
+          }
+        },
+        "air_quality_sensor": {
+          "name": "空气质量传感器",
+          "description": "监测PM2.5、CO2、甲醛/TVOC",
+          "capabilities": {
+            "query": ["PM2.5浓度", "CO2 ppm", "TVOC等级"],
+            "config": ["超标联动阈值（如CO2>1500联动新风系统）"]
+          }
+        }
+      }
+    },
+    "actuators": {
+      "name": "执行设备",
+      "description": "用于执行特定动作或控制的设备",
+      "devices": {
+        "smart_light": {
+          "name": "智能灯",
+          "description": "照明及氛围营造",
+          "capabilities": {
+            "control": ["开关", "亮度(0-100%)", "色温(2700K-6500K)"],
+            "config": ["渐变过渡时间(ms)", "定时/倒计时", "生物钟节律模式"]
+          }
+        },
+        "air_conditioner": {
+          "name": "空调",
+          "description": "室内温度调节",
+          "capabilities": {
+            "control": ["开关", "模式(制冷/热/除湿/送风)", "目标温度", "风速(低/中/高/自动)", "扫风方向"],
+            "config": ["节能模式", "睡眠曲线", "滤网清洗提醒重置"]
+          }
+        },
+        "smart_curtain": {
+          "name": "智能窗帘",
+          "description": "控制自然光与隐私",
+          "capabilities": {
+            "control": ["开合百分比(0-100%)", "暂停", "全开/全关"],
+            "config": ["手拉启动灵敏度", "定时开合（如早晨7点自动开30%）"]
+          }
+        },
+        "fresh_air_system": {
+          "name": "新风系统",
+          "description": "室内外空气交换与净化",
+          "capabilities": {
+            "control": ["开关", "风速档位", "内/外循环切换"],
+            "query": ["PM2.5过滤效率", "滤网剩余寿命"],
+            "config": ["空气质量联动自动档位"]
+          }
+        },
+        "tv_projector": {
+          "name": "电视 / 投影仪",
+          "description": "影音娱乐",
+          "capabilities": {
+            "control": ["开关", "音量", "输入源切换(HDMI1/2)", "媒体控制(播放/暂停/快进)"],
+            "config": ["观影模式联动（一键关窗帘、关灯、开电视）"]
+          }
+        }
+      }
+    },
+    "interaction_devices": {
+      "name": "交互设备",
+      "description": "用于与用户进行交互的设备",
+      "devices": {
+        "smart_speaker": {
+          "name": "智能音箱",
+          "description": "语音交互、背景音乐",
+          "capabilities": {
+            "control": ["音量调节", "TTS文本播报（文字转语音，如\"饭做好了\"）", "媒体播放控制"],
+            "config": ["麦克风阵列静音（物理隐私）", "蓝牙配对", "声纹识别绑定"]
+          }
+        }
+      }
+    }
+  },
+  "device_types": {
+    "wifi_router": "sensing_devices",
+    "door_camera": "sensing_devices",
+    "smart_lock": "sensing_devices",
+    "temp_humidity_sensor": "environmental_sensors",
+    "light_sensor": "environmental_sensors",
+    "air_quality_sensor": "environmental_sensors",
+    "smart_light": "actuators",
+    "air_conditioner": "actuators",
+    "smart_curtain": "actuators",
+    "fresh_air_system": "actuators",
+    "tv_projector": "actuators",
+    "smart_speaker": "interaction_devices"
+  }
+}
