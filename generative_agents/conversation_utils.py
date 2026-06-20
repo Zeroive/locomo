@@ -230,11 +230,11 @@ def get_msc_persona(args):
     if (os.path.exists(args.agent_a_file) and os.path.exists(args.agent_b_file)) and not args.overwrite_persona:
         return None, None
     else:
-        # agent_a: 默认AI助手角色
+        # agent_a: 默认AI助手角色 - 家庭智能助手
         agent_a = {
             'name': 'AI助手',
-            'persona_summary': '你是一个友好、乐于助人的AI助手，善于倾听和提供建议。',
-            'msc_prompt': ['I am an AI assistant.', 'I am helpful and friendly.', 'I like to help people.']
+            'persona_summary': '你是一个友好、专业的家庭智能助手，负责管理和控制家中的智能设备。你可以操作智能灯、空调、窗帘、门锁、摄像头、温湿度传感器等设备，帮助用户实现家居自动化和安全监控。你善于倾听用户需求，提供贴心的生活建议，并能根据场景自动触发设备联动。',
+            'msc_prompt': ['I am a smart home AI assistant.', 'I can control smart home devices like lights, air conditioners, curtains, and locks.', 'I monitor home security and environmental conditions.', 'I am helpful and friendly, always ready to assist with household tasks.']
         }
         
         # agent_b: 从单角色数据集中随机选择一个用户角色
