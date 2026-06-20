@@ -334,7 +334,7 @@ def get_session_date(events, args, prev_date = None):
         stop_date_b = date(2022, 1, 1)
 
     # return max(stop_date_a, stop_date_b) + timedelta(days=1)
-    return min(stop_date_a, stop_date_b) + timedelta(days=random.choice([1, 2]))
+    return max(stop_date_a, stop_date_b) + timedelta(days=random.choice([1, 2]))
 
 
 def get_relevant_events(events, curr_date, prev_date=None):
