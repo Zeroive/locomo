@@ -142,7 +142,7 @@ def get_random_time(scenario_config=None):
     return timedelta(hours=hours, minutes=minutes, seconds=0)
 
 
-def select_devices_for_user(user_persona, scenario, device_file='./data/devices/home_devices.json'):
+def select_devices_for_user(user_persona, scenario, scenario_desc="", device_file='./data/devices/home_devices.json'):
     """
     根据用户特点和场景，使用模型挑选相关的设备列表。
     
@@ -152,6 +152,7 @@ def select_devices_for_user(user_persona, scenario, device_file='./data/devices/
     Args:
         user_persona: 用户的persona描述字符串
         scenario: 当前场景ID
+        scenario_desc: 场景详细描述（一段话描述场景背景和特点）
         device_file: 设备库文件路径
         
     Returns:
@@ -185,6 +186,11 @@ def select_devices_for_user(user_persona, scenario, device_file='./data/devices/
             'capabilities': device_info.get('capabilities', {})
         })
     
+    # 构建场景描述和模型提示词
+    scenario_context = f"场景ID: {scenario}"
+    if scenario_desc:
+        scenario_context += f"\n场景描述: {scenario_desc}"
+    
     # 构建模型提示词
     prompt = f"""你是一个智能家居设备推荐专家。请根据用户特点和当前场景，从设备列表中选择最相关的设备。
 
@@ -192,7 +198,7 @@ def select_devices_for_user(user_persona, scenario, device_file='./data/devices/
 {user_persona}
 
 ## 当前场景
-{scenario}
+{scenario_context}
 
 ## 可选设备列表
 {json.dumps(device_info_list, ensure_ascii=False, indent=2)}
@@ -1117,14 +1123,28 @@ def main():
         
         # 根据用户特点挑选相关设备
         if agent_b and 'persona_summary' in agent_b:
-            user_persona = agent_b['persona_summary']
-            scenario = args.scenario if hasattr(args, 'scenario') else 'male_leave_work'
-            
-            # 挑选与用户相关的设备（使用模型智能选择）
-            user_devices = select_devices_for_user(user_persona, scenario, args.device_file)
-            
-            # 记录到 agent_b 中
-            agent_b['devices'] = user_devices
+            # 如果已存在设备列表且不需要覆盖，则跳过
+            if 'devices' in agent_b and agent_b['devices'] and not args.overwrite_persona:
+                logging.info("Devices already exist in agent_b, skipping device selection")
+            else:
+                user_persona = agent_b['persona_summary']
+                scenario = args.scenario if hasattr(args, 'scenario') else 'male_leave_work'
+                
+                # 加载场景描述
+                scenario_desc = scenario
+                try:
+                    with open(args.scenario_file, 'r', encoding='utf-8') as f:
+                        scenarios_data = json.load(f)
+                    scenario_info = scenarios_data.get('scenarios', {}).get(scenario, {})
+                    scenario_desc = scenario_info.get('description', scenario)
+                except Exception as e:
+                    logging.warning(f"Failed to load scenario description: {e}")
+                
+                # 挑选与用户相关的设备（使用模型智能选择）
+                user_devices = select_devices_for_user(user_persona, scenario, scenario_desc, args.device_file)
+                
+                # 记录到 agent_b 中
+                agent_b['devices'] = user_devices
             
             # AI助手也需要知道可用的设备列表
             if 'devices' not in agent_a:
