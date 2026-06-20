@@ -165,14 +165,14 @@ def get_random_date():
     """
     在指定范围内生成随机日期。
     
-    在2022年1月1日到2023年6月1日之间随机选择一个日期。
+    在2025年1月1日到2026年6月1日之间随机选择一个日期。
     
     Returns:
         date: 随机生成的日期对象
     """
 
     # initializing dates ranges
-    test_date1, test_date2 = date(2022, 1, 1), date(2023, 6, 1)
+    test_date1, test_date2 = date(2025, 1, 1), date(2026, 6, 1)
     # getting days between dates
     dates_bet = test_date2 - test_date1
     total_days = dates_bet.days
@@ -914,22 +914,14 @@ def main():
             end_date = dateObj2Str(end_date)
             agent_a['events_start_date'] = start_date
             agent_b['events_start_date'] = start_date
-            logging.info("Generating a random start date for the conversation")
+            logging.info(f"Generating a random start date:{start_date} and end date:{end_date} for the conversation")
             save_agents([agent_a, agent_b], args)
 
             
-            agent_a_events = []
+            agent_a_events = []  # AI助手不产生事件，保留为空列表
             agent_b_events = []
 
-            logging.info("Generating events for Agent A")
-            trials = 0
-            while len(agent_a_events) < args.num_events:
-                logging.info("(Re)trying to generate events with dense causal connections: trial %s" % trials)
-                agent_a_events = get_events(agent_a, start_date, end_date, args)
-                agent_a["graph"] = agent_a_events
-                trials += 1
-
-            logging.info("Generating events for Agent B")
+            logging.info("Generating events for Agent B (user)")
             trials = 0
             while len(agent_b_events) < args.num_events:
                 logging.info("(Re)trying to generate events with dense causal connections: trial %s" % trials)
