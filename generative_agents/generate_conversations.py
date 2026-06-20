@@ -272,26 +272,39 @@ def get_session_date(events, args, prev_date = None):
     curr_count = 0
     stop_count = args.num_events_per_session
     stop_date_a = None
-    for e in agent_a_events:
-        event_date =  catch_date(e['date'])
-        if prev_date:
-            if event_date >= prev_date:
+    event_date = None  # 初始化 event_date
+    
+    # agent_a 是 AI助手，可能没有事件，需要特殊处理
+    if len(agent_a_events) > 0:
+        for e in agent_a_events:
+            event_date = catch_date(e['date'])
+            if prev_date:
+                if event_date >= prev_date:
+                    print("Including event %s for Agent A" % json.dumps(e, indent=2, ensure_ascii=False))
+                    curr_count += 1
+            else:
                 print("Including event %s for Agent A" % json.dumps(e, indent=2, ensure_ascii=False))
                 curr_count += 1
-        else:
-            print("Including event %s for Agent A" % json.dumps(e, indent=2, ensure_ascii=False))
-            curr_count += 1
-        if curr_count == stop_count:
+            if curr_count == stop_count:
+                stop_date_a = event_date
+                break
+        # 循环结束后，确保 stop_date_a 有值
+        if stop_date_a is None and event_date is not None:
             stop_date_a = event_date
-            break
-    stop_date_a = event_date
+    else:
+        # 如果 agent_a 没有事件，使用 prev_date 或默认日期
+        if prev_date:
+            stop_date_a = prev_date
+        else:
+            stop_date_a = date(2022, 1, 1)  # 默认起始日期
 
     # get date from agent_b
     agent_b_events = sort_events_by_time(agent_b_events)
     curr_count = 0
     stop_date_b = None
+    event_date = None  # 初始化 event_date
+    
     for e in agent_b_events:
-        # event_date = datetime.strptime(e['date'], "%d %B, %Y")
         event_date = catch_date(e['date'])
         if prev_date:
             if event_date >= prev_date:
@@ -303,7 +316,22 @@ def get_session_date(events, args, prev_date = None):
         if curr_count == stop_count:
             stop_date_b = event_date
             break
-    stop_date_b = event_date
+    
+    # 确保 stop_date_b 有值
+    if stop_date_b is None and event_date is not None:
+        stop_date_b = event_date
+    elif stop_date_b is None:
+        # 如果 agent_b 也没有事件（不应该发生），使用 prev_date 或默认日期
+        if prev_date:
+            stop_date_b = prev_date
+        else:
+            stop_date_b = date(2022, 1, 1)
+
+    # 确保 stop_date_a 和 stop_date_b 都有值
+    if stop_date_a is None:
+        stop_date_a = date(2022, 1, 1)
+    if stop_date_b is None:
+        stop_date_b = date(2022, 1, 1)
 
     # return max(stop_date_a, stop_date_b) + timedelta(days=1)
     return min(stop_date_a, stop_date_b) + timedelta(days=random.choice([1, 2]))

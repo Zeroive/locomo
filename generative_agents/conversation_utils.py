@@ -303,7 +303,7 @@ def get_persona(args, attributes, target='human', ref_age=None):
     return output
 
 
-def get_datetime_string(input_time='', input_date=''):
+def get_datetime_string(input_time=None, input_date=None):
     """
     将输入的时间和日期格式化为可读的字符串。
     
@@ -323,20 +323,30 @@ def get_datetime_string(input_time='', input_date=''):
 
     assert input_time or input_date
 
+    # 处理日期部分
     if input_date:
         year, month, day = input_date
-    if input_time:
-        hour, min = input_time
-        time_mod = 'am' if hour <= 12 else 'pm'
-        hour = hour if hour <= 12 else hour-12
-        min = str(min).zfill(2)
-
-    if input_time and not input_date:
-        return str(hour) + ':' + min + ' ' + time_mod
-    elif input_date and not input_time:
-        return day + ' ' + month + ', ' + year
+        date_str = str(day) + ' ' + str(month) + ', ' + str(year)
     else:
-        return str(hour) + ':' + min + ' ' + time_mod + ' on ' + day + ' ' + month + ', ' + year 
+        date_str = ''
+    
+    # 处理时间部分
+    if input_time:
+        hour_int, min_int = input_time
+        time_mod = 'am' if hour_int <= 12 else 'pm'
+        display_hour = hour_int if hour_int <= 12 else hour_int - 12
+        min_str = str(min_int).zfill(2)
+        time_str = str(display_hour) + ':' + min_str + ' ' + time_mod
+    else:
+        time_str = ''
+
+    # 组合返回
+    if input_time and not input_date:
+        return time_str
+    elif input_date and not input_time:
+        return date_str
+    else:
+        return time_str + ' on ' + date_str 
 
 
 
