@@ -1,22 +1,38 @@
+"""
+多会话对话生成主程序。
+
+生成AI助手与用户之间的多轮对话，支持场景化配置和设备选择。
+"""
+
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 import logging
 import argparse
-import os, json, sys
-import random
+import os, json, random
 from datetime import date, timedelta, datetime
-from generative_agents.conversation_utils import *
+
+# 导入重构后的模块
+from generative_agents.file_utils import save_agents, load_agents
+from generative_agents.time_utils import get_random_time, get_random_date, datetimeObj2Str, dateObj2Str, get_session_date
+from generative_agents.device_utils import select_devices_for_user
+from generative_agents.session_utils import get_session, get_session_summary, get_relevant_events
+from generative_agents.conversation_utils import get_msc_persona, get_datetime_string
+from generative_agents.event_utils import get_events
+from generative_agents.memory_utils import save_embeddings
 from generative_agents.html_utils import convert_to_chat_html
-from generative_agents.event_utils import *
-from generative_agents.memory_utils import *
-from global_methods import run_chatgpt, run_chatgpt_with_examples, set_openai_key
+from global_methods import run_chatgpt
 
 logging.basicConfig(level=logging.INFO)
 
 
 def parse_args():
-
+    """
+    解析命令行参数。
+    
+    Returns:
+        argparse.Namespace: 解析后的参数对象
+    """
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--out-dir', required=True, type=str, help="Path to directory containing agent files for a conversation")
@@ -58,1055 +74,23 @@ def parse_args():
     return args
 
 
-def save_agents(agents, args):
-    """
-    保存角色对象到JSON文件。
-    
-    将两个角色的最新状态序列化并保存到指定路径，以便后续会话复用。
-    
-    Args:
-        agents: (agent_a, agent_b) 角色对象元组
-        args: 包含agent_a_file和agent_b_file路径的命令行参数
-        
-    Returns:
-        None
-    """
-
-    agent_a, agent_b = agents
-    logging.info("Saving updated Agent A to %s" % args.agent_a_file)
-    with open(args.agent_a_file, 'w', encoding='utf-8') as f:
-        json.dump(agent_a, f, indent=2, ensure_ascii=False)
-    logging.info("Saving updated Agent B to %s" % args.agent_b_file)
-    with open(args.agent_b_file, 'w', encoding='utf-8') as f:
-        json.dump(agent_b, f, indent=2, ensure_ascii=False)
-
-
-def load_agents(args):
-    """
-    从JSON文件加载角色对象。
-    
-    从指定路径读取两个角色的保存状态。
-    
-    Args:
-        args: 包含agent_a_file和agent_b_file路径的命令行参数
-        
-    Returns:
-        tuple: (agent_a, agent_b) 两个角色对象
-    """
-
-    agent_a = json.load(open(args.agent_a_file, encoding='utf-8'))
-    agent_b = json.load(open(args.agent_b_file, encoding='utf-8'))
-    return agent_a, agent_b
-
-
-def get_random_time(scenario_config=None):
-    """
-    生成一个随机的日内时间。
-    
-    根据场景配置中的时间范围生成随机时间，用于模拟会话发生时间。
-    如果没有场景配置，默认在上午9点到晚上9:59之间生成。
-    
-    Args:
-        scenario_config: 场景配置字典，包含 time_range 字段（可选）
-        
-    Returns:
-        timedelta: 随机生成的时间差对象
-    """
-    # 默认时间范围：上午9点到晚上9:59
-    start_hour, end_hour = 9, 21
-    
-    # 如果提供了场景配置，使用场景指定的时间范围
-    if scenario_config and 'time_range' in scenario_config:
-        time_range = scenario_config['time_range']
-        start_hour = time_range.get('start_hour', 9)
-        end_hour = time_range.get('end_hour', 21)
-    
-    # 处理跨天的时间范围（如异常检测场景：22:00-04:00）
-    if start_hour > end_hour:
-        # 随机选择前一天晚上或当天凌晨
-        if random.choice([True, False]):
-            # 前一天晚上
-            start_time = timedelta(hours=start_hour, minutes=0, seconds=0)
-            end_time = timedelta(hours=23, minutes=59, seconds=59)
-        else:
-            # 当天凌晨
-            start_time = timedelta(hours=0, minutes=0, seconds=0)
-            end_time = timedelta(hours=end_hour, minutes=59, seconds=59)
-    else:
-        start_time = timedelta(hours=start_hour, minutes=0, seconds=0)
-        end_time = timedelta(hours=end_hour, minutes=59, seconds=59)
-    
-    random_seconds = random.randint(int(start_time.total_seconds()), int(end_time.total_seconds()))
-    hours = random_seconds // 3600
-    minutes = (random_seconds - (hours * 3600)) // 60
-    return timedelta(hours=hours, minutes=minutes, seconds=0)
-
-
-def select_devices_for_user(user_persona, scenario, scenario_desc="", device_file='./data/devices/home_devices.json'):
-    """
-    根据用户特点和场景，使用模型挑选相关的设备列表。
-    
-    分析用户的persona特征，结合当前场景，从设备库中挑选用户可能使用或关注的设备。
-    使用LLM模型进行智能选择，考虑用户年龄、生活习惯、健康状况、场景需求等。
-    
-    Args:
-        user_persona: 用户的persona描述字符串
-        scenario: 当前场景ID
-        scenario_desc: 场景详细描述（一段话描述场景背景和特点）
-        device_file: 设备库文件路径
-        
-    Returns:
-        dict: 用户相关的设备列表，包含设备ID、名称、类别和相关度评分
-    """
-    try:
-        with open(device_file, 'r', encoding='utf-8') as f:
-            devices_data = json.load(f)
-    except Exception as e:
-        logging.error(f"Failed to load device file: {e}")
-        return {}
-    
-    # 获取场景相关设备
-    scenario_devices = devices_data.get('scenario_device_mapping', {}).get(scenario, [])
-    
-    # 构建设备信息摘要
-    device_info_list = []
-    for device_id in scenario_devices:
-        category_key = devices_data.get('device_types', {}).get(device_id)
-        if not category_key:
-            continue
-        
-        category = devices_data.get('device_categories', {}).get(category_key, {})
-        device_info = category.get('devices', {}).get(device_id, {})
-        
-        device_info_list.append({
-            'device_id': device_id,
-            'name': device_info.get('name', ''),
-            'description': device_info.get('description', ''),
-            'category': category.get('name', ''),
-            'capabilities': device_info.get('capabilities', {})
-        })
-    
-    # 构建场景描述和模型提示词
-    scenario_context = f"场景ID: {scenario}"
-    if scenario_desc:
-        scenario_context += f"\n场景描述: {scenario_desc}"
-    
-    # 构建模型提示词
-    prompt = f"""你是一个智能家居设备推荐专家。请根据用户特点和当前场景，从设备列表中选择最相关的设备。
-
-## 用户特点
-{user_persona}
-
-## 当前场景
-{scenario_context}
-
-## 可选设备列表
-{json.dumps(device_info_list, ensure_ascii=False, indent=2)}
-
-## 任务要求
-1. 分析用户的年龄、生活习惯、健康状况、兴趣偏好等特点
-2. 结合当前场景（如上班离家、下班回家、访客来访等）
-3. 从设备列表中选择用户最可能使用或关注的设备
-4. 为每个选中的设备给出相关度评分（0.0-1.0）和选择理由
-
-## 输出格式
-请以JSON格式输出，包含以下字段：
-{{
-  "selected_devices": [
-    {{
-      "device_id": "设备ID",
-      "relevance_score": 相关度评分(0.0-1.0),
-      "reason": "选择理由"
-    }}
-  ]
-}}
-
-注意：
-- 只选择相关度评分 >= 0.6 的设备
-- 相关度评分要基于用户特点和场景合理性
-- 最多选择5个设备
-- 只输出JSON，不要有其他内容"""
-
-    # 调用模型
-    response = ""
-    try:
-        from global_methods import run_chatgpt
-        response = run_chatgpt(prompt, num_gen=1, num_tokens_request=1000, temperature=0.7)
-        
-        # 解析模型输出
-        response = response.strip()
-        # 移除可能的markdown代码块标记
-        if response.startswith('```'):
-            response = response.split('\n', 1)[1] if '\n' in response else response[3:]
-        if response.endswith('```'):
-            response = response.rsplit('```', 1)[0]
-        
-        result = json.loads(response)
-        
-        # 构建返回结果
-        selected_devices = {}
-        for item in result.get('selected_devices', []):
-            device_id = item.get('device_id')
-            if not device_id:
-                continue
-            
-            # 从设备库中获取完整信息
-            category_key = devices_data.get('device_types', {}).get(device_id)
-            if category_key:
-                category = devices_data.get('device_categories', {}).get(category_key, {})
-                device_info = category.get('devices', {}).get(device_id, {})
-                
-                selected_devices[device_id] = {
-                    'name': device_info.get('name', ''),
-                    'category': category.get('name', ''),
-                    'relevance_score': item.get('relevance_score', 0.6),
-                    'reason': item.get('reason', ''),
-                    'capabilities': device_info.get('capabilities', {}),
-                    'typical_events': device_info.get('typical_events', [])
-                }
-        
-        # 按相关度排序
-        selected_devices = dict(sorted(selected_devices.items(), key=lambda x: x[1]['relevance_score'], reverse=True))
-        
-        logging.info(f"Selected {len(selected_devices)} devices for user based on persona and scenario: {list(selected_devices.keys())}")
-        
-        return selected_devices
-        
-    except json.JSONDecodeError as e:
-        logging.error(f"Failed to parse model response as JSON: {e}")
-        logging.error(f"Response was: {response}")
-        return {}
-    except Exception as e:
-        logging.error(f"Error in device selection: {e}")
-        return {}
-
-
-def datetimeStr2Obj(dateStr):
-    """
-    将日期时间字符串转换为datetime对象。
-    
-    支持带am/pm标记的12小时制时间格式。
-    
-    Args:
-        dateStr: 日期时间字符串，格式如 "9:30 am on 5 January, 2023"
-        
-    Returns:
-        datetime: 解析后的datetime对象
-    """
-    if 'am' in dateStr:
-        datetimeObj = datetime.strptime(dateStr, "%H:%M am on %d %B, %Y")
-    else:
-        datetimeObj = datetime.strptime(dateStr, "%H:%M pm on %d %B, %Y")
-    return datetimeObj
-
-def datetimeObj2Str(datetimeObj):
-    """
-    将datetime对象转换为日期时间字符串。
-    
-    转换为12小时制格式，添加am/pm标记。
-    
-    Args:
-        datetimeObj: datetime对象
-        
-    Returns:
-        str: 格式化的时间字符串，格式如 "9:30 am on 5 January, 2023"
-    """
-
-    time_mod = 'am' if datetimeObj.hour <= 12 else 'pm'
-    hour = datetimeObj.hour if datetimeObj.hour <= 12 else datetimeObj.hour-12
-    min = str(datetimeObj.minute).zfill(2)
-    return str(hour) + ':' + min + ' ' + time_mod + ' on ' + str(datetimeObj.day) + ' ' + datetimeObj.strftime("%B") + ', ' + str(datetimeObj.year)
-
-
-def dateObj2Str(dateObj):
-    """
-    将date对象转换为日期字符串。
-    
-    Args:
-        dateObj: date对象
-        
-    Returns:
-        str: 格式化日期字符串，格式如 "5 January, 2023"
-    """
-    return dateObj.strftime("%d") + ' ' + dateObj.strftime("%B") + ', ' + dateObj.strftime("%Y")
-
-
-def get_random_date():
-    """
-    在指定范围内生成随机日期。
-    
-    在2025年1月1日到2026年6月1日之间随机选择一个日期。
-    
-    Returns:
-        date: 随机生成的日期对象
-    """
-
-    # initializing dates ranges
-    test_date1, test_date2 = date(2025, 1, 1), date(2026, 6, 1)
-    # getting days between dates
-    dates_bet = test_date2 - test_date1
-    total_days = dates_bet.days
-    delta_days = random.choice(range(1, total_days))
-    random_date = test_date1 + timedelta(days=int(delta_days))
-    return random_date
-
-
-def get_session_summary(session, speaker_1, speaker_2, curr_date, previous_summary=""):
-    """
-    生成单个会话的摘要。
-    
-    分析会话对话内容，生成简洁的摘要，包含关键事实和时间参考。
-    可基于前一个会话的摘要进行增量总结。
-    
-    Args:
-        session: 会话对话列表，每个元素包含speaker和text字段
-        speaker_1: 第一个说话人对象
-        speaker_2: 第二个说话人对象
-        curr_date: 当前会话日期
-        previous_summary: 前一个会话的摘要，可选
-        
-    Returns:
-        str: 会话摘要字符串
-    """
-
-    session_query = ''
-    for c in session:
-        session_query += "%s: %s\n" % (c["speaker"], c["text"])
-        if "image" in c:
-            session_query += "[%s shares %s]\n" % (c["speaker"], c["image"])
-
-    if previous_summary:
-
-        query = SESSION_SUMMARY_PROMPT % (speaker_1['name'], speaker_2['name'], previous_summary, curr_date,
-                                               speaker_1['name'], speaker_2['name'], session_query, speaker_1['name'], speaker_2['name'])
-    else:
-        query = SESSION_SUMMARY_INIT_PROMPT % (speaker_1['name'], speaker_2['name'], curr_date, session_query)
-
-    query += '\n\n'
-    # should summarize persona, previous conversations with respect to speaker.
-    output = run_chatgpt(query, 1, 150, 'chatgpt')
-    output = output.strip()
-    return output
-
-
-def get_all_session_summary(speaker, curr_sess_id):
-    """
-    获取指定说话人的所有历史会话摘要。
-    
-    从第一个会话到当前会话之前的所有会话摘要汇总。
-    
-    Args:
-        speaker: 说话人对象，包含各会话的摘要数据
-        curr_sess_id: 当前会话ID
-        
-    Returns:
-        str: 包含日期和摘要的汇总字符串
-    """
-
-    summary = "\n"
-    for sess_id in range(1, curr_sess_id):
-        sess_date = speaker['session_%s_date_time' % sess_id]
-        sess_date = sess_date[2] + ' ' + sess_date[1] + ', ' + sess_date[0]
-        summary += sess_date + ': ' + speaker["session_%s_summary" % sess_id] + '\n'
-    return summary
-
-
-def catch_date(date_str) -> datetime:
-    """
-    将日期字符串解析为datetime对象。
-    
-    支持两种日期格式：
-    - '%d %B, %Y' (如 "10 January, 2023")
-    - '%d %B %Y' (如 "10 January 2023")
-    
-    Args:
-        date_str: 日期字符串，格式为 "DD Month, YYYY" 或 "DD Month YYYY"
-        
-    Returns:
-        datetime: 解析后的datetime对象
-        
-    Raises:
-        ValueError: 如果日期字符串格式不匹配任何支持的格式
-    """
-    date_format1 = '%d %B, %Y'
-    date_format2 = '%d %B %Y'
-    try:
-        return datetime.strptime(date_str, date_format1)
-    except:
-        return datetime.strptime(date_str, date_format2)
-
-
-def get_session_date(events, args, prev_date = None):
-    """
-    确定下一个会话的日期。
-    
-    基于事件时间线，计算包含指定数量事件的日期范围，
-    返回该范围的结束日期作为会话日期。
-    
-    Args:
-        events: (agent_a_events, agent_b_events) 两个角色的事件列表元组
-        args: 包含num_events_per_session配置的命令行参数
-        prev_date: 前一个会话的日期，用于确定时间顺序
-        
-    Returns:
-        date: 会话日期，在事件范围结束后1-2天
-    """
-
-    agent_a_events, agent_b_events = events
-    
-    agent_a_events = sort_events_by_time(agent_a_events)
-    curr_count = 0
-    stop_count = args.num_events_per_session
-    stop_date_a = None
-    event_date = None  # 初始化 event_date
-    
-    # agent_a 是 AI助手，可能没有事件，需要特殊处理
-    if len(agent_a_events) > 0:
-        for e in agent_a_events:
-            event_date = catch_date(e['date'])
-            if prev_date:
-                if event_date >= prev_date:
-                    print("Including event %s for Agent A" % json.dumps(e, indent=2, ensure_ascii=False))
-                    curr_count += 1
-            else:
-                print("Including event %s for Agent A" % json.dumps(e, indent=2, ensure_ascii=False))
-                curr_count += 1
-            if curr_count == stop_count:
-                stop_date_a = event_date
-                break
-        # 循环结束后，确保 stop_date_a 有值
-        if stop_date_a is None and event_date is not None:
-            stop_date_a = event_date
-    else:
-        # 如果 agent_a 没有事件，使用 prev_date 或默认日期
-        if prev_date:
-            stop_date_a = prev_date
-        else:
-            stop_date_a = date(2022, 1, 1)  # 默认起始日期
-
-    # get date from agent_b
-    agent_b_events = sort_events_by_time(agent_b_events)
-    curr_count = 0
-    stop_date_b = None
-    event_date = None  # 初始化 event_date
-    
-    for e in agent_b_events:
-        event_date = catch_date(e['date'])
-        if prev_date:
-            if event_date >= prev_date:
-                print("Including event %s for Agent B" % json.dumps(e, indent=2, ensure_ascii=False))
-                curr_count += 1
-        else:
-            print("Including event %s for Agent B" % json.dumps(e, indent=2, ensure_ascii=False))
-            curr_count += 1
-        if curr_count == stop_count:
-            stop_date_b = event_date
-            break
-    
-    # 确保 stop_date_b 有值
-    if stop_date_b is None and event_date is not None:
-        stop_date_b = event_date
-    elif stop_date_b is None:
-        # 如果 agent_b 也没有事件（不应该发生），使用 prev_date 或默认日期
-        if prev_date:
-            stop_date_b = prev_date
-        else:
-            stop_date_b = date(2022, 1, 1)
-
-    # 确保 stop_date_a 和 stop_date_b 都有值（统一使用 datetime 类型）
-    if stop_date_a is None:
-        stop_date_a = datetime(2022, 1, 1)
-    elif isinstance(stop_date_a, date) and not isinstance(stop_date_a, datetime):
-        stop_date_a = datetime(stop_date_a.year, stop_date_a.month, stop_date_a.day)
-    
-    if stop_date_b is None:
-        stop_date_b = datetime(2022, 1, 1)
-    elif isinstance(stop_date_b, date) and not isinstance(stop_date_b, datetime):
-        stop_date_b = datetime(stop_date_b.year, stop_date_b.month, stop_date_b.day)
-
-    # return max(stop_date_a, stop_date_b) + timedelta(days=1)
-    return max(stop_date_a, stop_date_b) + timedelta(days=random.choice([1, 2]))
-
-
-def get_relevant_events(events, curr_date, prev_date=None):
-    """
-    获取在指定时间范围内发生的相关事件。
-    
-    过滤出发生在prev_date之后、curr_date之前的事件，
-    用于在会话生成时提供上下文事件。
-    
-    Args:
-        events: 事件列表
-        curr_date: 当前会话日期
-        prev_date: 前一个会话日期，可选
-        
-    Returns:
-        list: 在时间范围内的事件列表
-    """
-
-    events = sort_events_by_time(events)
-    relevant_events = []
-    for e in events:
-        # event_date = datetime.strptime(e['date'], "%d %B, %Y")
-        event_date = catch_date(e['date'])
-        if event_date > curr_date:
-            continue
-        if prev_date:
-            if event_date <= prev_date:
-                continue
-        relevant_events.append(e)
-
-    return relevant_events
-
-
-def get_event_string(session_events, all_events):
-    """
-    将事件列表转换为可读的文本描述。
-    
-    将事件转换为包含日期的自然语言描述，如果事件有因果关联，
-    还会包含原因事件的描述。
-    
-    Args:
-        session_events: 当前会话相关的事件列表
-        all_events: 所有事件的字典，用于查找因果关联
-        
-    Returns:
-        str: 格式化的事件描述文本
-    """
-
-    id2events = {e['id']: e for e in all_events}
-
-    event_string = ""
-    for e in session_events:
-        try:
-            event_text = 'On' + e["date"] + ", " + e["sub-event"]
-        except KeyError:
-            event_text = 'On' + e["date"] + ", " + e["sub_event"]
-
-        # if the event is caused by previous events, include them for context
-        if len(e['caused_by']) > 0:
-            event_text += ' Because previously'
-            for e_id in e['caused_by']:
-                try:
-                    event_text += ', ' + id2events[e_id]["sub-event"] + ' (%s)' % id2events[e_id]["date"]
-                except KeyError:
-                    event_text += ', ' + id2events[e_id]["sub_event"] + ' (%s)' % id2events[e_id]["date"]
-        
-        event_string += event_text + "\n"
-
-    return event_string
-
-
-def remove_context(args, curr_dialog, prev_dialog, caption=None):
-    """
-    从当前对话中移除与历史对话重复的内容。
-    
-    使用ChatGPT分析当前对话和历史对话，过滤掉重复的信息，
-    只保留新的独特内容，避免对话中重复已分享的信息。
-    
-    Args:
-        args: 包含prompt_dir配置的命令行参数
-        curr_dialog: 当前对话内容
-        prev_dialog: 历史对话内容
-        caption: 图像描述，可选
-        
-    Returns:
-        str: 去除重复内容后的对话字符串
-    """
-
-    prompt_data = json.load(open(os.path.join(args.prompt_dir, 'remove_context_examples.json')))
-    if caption:
-        query = prompt_data["input_format_w_image"].format(prev_dialog, curr_dialog, caption)
-    else:
-        query = prompt_data["input_format"].format(prev_dialog, curr_dialog)
-    output = run_chatgpt_with_examples(prompt_data["prompt"], 
-                              [[prompt_data["input_format"].format(*example["input"]) if len(example["input"]) == 2 else prompt_data["input_format_w_image"].format(*example["input"]), example["output"]] for example in prompt_data['examples']], 
-                              query, num_gen=1, num_tokens_request=128, use_16k=False)
-    return output
-
-
-def get_agent_query(speaker_1, speaker_2, curr_sess_id=0, 
-                    prev_sess_date_time='', curr_sess_date_time='', 
-                    use_events=False, instruct_stop=False, dialog_id=0, last_dialog='', embeddings=None, reflection=False,
-                    scenario_id='male_leave_work', scenario_file='./data/scenarios/scenarios.json'):
-    """
-    为AI助手指挥生成对话提示。
-    
-    根据当前会话状态、历史上下文和相关事件，生成用于指导AI助手
-    下一轮对话的完整提示。支持从场景库动态获取prompt模板。
-    
-    Args:
-        speaker_1: AI助手角色对象
-        speaker_2: 用户角色对象
-        curr_sess_id: 当前会话ID，首个会话为1
-        prev_sess_date_time: 前一会话的时间日期字符串
-        curr_sess_date_time: 当前会话的时间日期字符串
-        use_events: 是否在提示中包含事件信息
-        instruct_stop: 是否在提示中包含停止指令
-        dialog_id: 当前会话中的对话轮次ID
-        last_dialog: 上一轮对话内容，用于检索相关上下文
-        embeddings: 嵌入向量，用于细粒度检索
-        reflection: 是否包含反思信息
-        scenario_id: 场景ID，默认为 'male_leave_work'
-        scenario_file: 场景配置文件路径
-        
-    Returns:
-        str: 格式化的对话提示字符串
-    """
-
-    stop_instruction = "To end the conversation, write [END] at the end of the dialog."
-    if instruct_stop:
-        print("**** Using stop instruction ****")
-
-    # speaker_1 is always the AI assistant, speaker_2 is always the user
-    assistant_name = speaker_1['name']
-    user_name = speaker_2['name']
-    user_persona = speaker_2['persona_summary']
-
-    # 加载场景配置
-    from generative_agents.conversation_utils import load_scenario_config, get_scenario_prompt
-    load_scenario_config(scenario_file)
-
-    if curr_sess_id == 1:
-        
-        if use_events:
-            events = get_event_string(speaker_2['events_session_%s' % curr_sess_id], speaker_2['graph'])
-            # 尝试从场景库获取prompt
-            prompt_template = get_scenario_prompt(scenario_id, 'sess_1_w_events', 'agent')
-            if prompt_template:
-                query = prompt_template % (speaker_1['persona_summary'],
-                        user_name, assistant_name, 
-                        curr_sess_date_time, user_name,  events, assistant_name, user_name, stop_instruction if instruct_stop else '')
-            else:
-                # 使用默认模板
-                query = AGENT_CONV_PROMPT_SESS_1_W_EVENTS % (speaker_1['persona_summary'],
-                        user_name, assistant_name, 
-                        curr_sess_date_time, user_name,  events, assistant_name, user_name, stop_instruction if instruct_stop else '')
-        else:
-            # 尝试从场景库获取prompt
-            prompt_template = get_scenario_prompt(scenario_id, 'sess_1', 'agent')
-            if prompt_template:
-                query = prompt_template % (speaker_1['persona_summary'],
-                                user_name, assistant_name, 
-                                curr_sess_date_time, assistant_name,  user_name, assistant_name)
-            else:
-                # 使用默认模板
-                query = AGENT_CONV_PROMPT_SESS_1 % (speaker_1['persona_summary'],
-                                user_name, assistant_name, 
-                                curr_sess_date_time, assistant_name,  user_name, assistant_name)
-    
-    else:
-        if use_events:
-            events = get_event_string(speaker_2['events_session_%s' % curr_sess_id], speaker_2['graph'])
-            if dialog_id == 0:
-                # if a new session is starting, get information about the topics discussed in last session
-                context_from_1, context_from_2 = get_recent_context(speaker_2, speaker_1, curr_sess_id, reflection=reflection)
-                recent_context = '\n'.join(context_from_1) + '\n' +  '\n'.join(context_from_2) # with reflection
-                # 尝试从场景库获取prompt
-                prompt_template = get_scenario_prompt(scenario_id, 'sess_w_events_v2_init', 'agent')
-                if prompt_template:
-                    query = prompt_template % (speaker_1['persona_summary'],
-                                user_name, assistant_name, prev_sess_date_time,
-                                curr_sess_date_time, assistant_name,  speaker_2['session_%s_summary' % (curr_sess_id-1)], events, assistant_name, user_name)
-                else:
-                    query = AGENT_CONV_PROMPT_W_EVENTS_V2_INIT % (speaker_1['persona_summary'],
-                                user_name, assistant_name, prev_sess_date_time,
-                                curr_sess_date_time, assistant_name,  speaker_2['session_%s_summary' % (curr_sess_id-1)], events, assistant_name, user_name)
-                
-            else:
-                # during an ongoing session, get fine-grained information from a previous session using retriever modules
-                past_context = get_relevant_context(speaker_2, speaker_1, last_dialog, embeddings, curr_sess_id, reflection=reflection)
-                # 尝试从场景库获取prompt
-                prompt_template = get_scenario_prompt(scenario_id, 'sess_w_events_v2', 'agent')
-                if prompt_template:
-                    query = prompt_template % (speaker_1['persona_summary'],
-                                user_name, assistant_name, prev_sess_date_time,
-                                curr_sess_date_time, assistant_name, speaker_2['session_%s_summary' % (curr_sess_id-1)], events, past_context, assistant_name, user_name)
-                else:
-                    query = AGENT_CONV_PROMPT_W_EVENTS_V2 % (speaker_1['persona_summary'],
-                                user_name, assistant_name, prev_sess_date_time,
-                                curr_sess_date_time, assistant_name, speaker_2['session_%s_summary' % (curr_sess_id-1)], events, past_context, assistant_name, user_name)
-        else:
-            summary = get_all_session_summary(speaker_2, curr_sess_id)
-            # 尝试从场景库获取prompt
-            prompt_template = get_scenario_prompt(scenario_id, 'sess_continue', 'agent')
-            if prompt_template:
-                query = prompt_template % (speaker_1['persona_summary'],
-                                            user_name, assistant_name, prev_sess_date_time, summary,
-                                            curr_sess_date_time, assistant_name,  user_name, assistant_name)
-            else:
-                query = AGENT_CONV_PROMPT % (speaker_1['persona_summary'],
-                                            user_name, assistant_name, prev_sess_date_time, summary,
-                                            curr_sess_date_time, assistant_name,  user_name, assistant_name) 
-    
-    return query
-
-
-USER_CONV_PROMPT_SESS_1 = """%s
-
-你是 %s，一位在家中准备出门上班的用户。今天是 %s，现在是早上出门前。请扮演用户 %s 的角色，写下你对AI助手 %s 要说的下一句话。如果开始对话，可以从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。不要重复之前已分享的信息。让对话围绕上班前的准备，例如谈论今日会议、待办事项、通勤安排或家庭琐事。包括时间参考，如"今天早上"、"上午会议"、"出门前"等。回复不超过20个字。
-
-要结束对话，请写'再见！'。
-
-对话：
-
-"""
-
-USER_CONV_PROMPT_SESS_1_W_EVENTS = """
-使用给定的PERSONALITY写下对话中你要说的下一句话。
-- 如果开始对话，请从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。
-- 不要重复之前对话中已分享的信息。
-- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
-- 回复不超过20个字。
-- 提出后续问题跟进之前的对话。
-
-PERSONALITY: %s
-
-你是用户 %s，在家中准备出门上班前与AI助手 %s 交谈。今天是 %s，现在是早上出门前。以下是你最近发生的事件。
-事件：%s
-
-请扮演用户 %s 的角色，与AI助手 %s 就这些事件进行对话，围绕上班前的准备。%s
-"""
-
-USER_CONV_PROMPT = """%s
-
-你是用户 %s，上次与AI助手 %s 交谈是在 %s。%s
-
-今天是 %s，现在是早上出门上班前。请扮演用户 %s 的角色，写下你对AI助手 %s 要说的下一句话。如果开始对话，可以从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。不要重复已分享的信息。让对话围绕上班前的准备，例如谈论今日会议、待办事项、通勤安排或家庭琐事。包括时间参考，如"今天早上"、"上午会议"、"出门前"等。回复不超过20个字。
-
-要结束对话，请写'再见！'。
-
-对话：
-
-"""
-
-USER_CONV_PROMPT_W_EVENTS = """
-使用给定的PERSONALITY写下对话中你要说的下一句话。
-- 如果开始对话，请从讨论今日工作安排、检查日程、提醒事项或家庭事务开始。
-- 不要重复之前对话中已分享的信息。
-- 让对话围绕上班前的准备，例如谈论今日会议、待办事项、通勤安排或家庭琐事。
-- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
-- 回复不超过20个字。
-- 提出后续问题跟进之前的对话。
-
-PERSONALITY: %s
-
-你是用户 %s，上次与AI助手 %s 交谈是在 %s。
-
-%s
-
-今天是 %s，现在是早上出门上班前。以下是你最近发生的事件：
-%s
-
-在对话中使用这些事件。请根据你的PERSONALITY写下你在与AI助手 %s 的对话中要说的下一句话：
-"""
-
-USER_CONV_PROMPT_W_EVENTS_V2_INIT = """
-使用给定的PERSONALITY写下对话中你要说的下一句话。
-- 回复不超过20个字。
-- 让对话围绕上班前的准备，例如讨论今日会议、待办事项、通勤安排或家庭琐事。详细讨论重要的事件。
-- 不要重复之前对话中已分享的信息。
-- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
-- 有时，提出后续问题跟进之前的对话或当前话题。
-- 不要谈论户外活动。
-
-PERSONALITY: %s
-
-
-你是用户 %s，上次与AI助手 %s 交谈是在 %s。今天是 %s，现在是早上出门上班前。
-
-这是到目前为止的对话摘要。
-摘要：
-%s
-
-以下是你最近发生的事件：
-事件：
-%s
-
-
-请扮演用户 %s，写下你在与AI助手 %s 的对话中要说的下一句深思熟虑的话。在对话中只讨论给定的事件及其对你上班前准备的影响。如果事件有负面影响，请表达担忧。
-"""
-
-USER_CONV_PROMPT_W_EVENTS_V2 = """
-使用给定的PERSONALITY写下对话中你要说的下一句话。
-- 回复不超过20个字。
-- 让对话围绕上班前的准备，例如讨论今日会议、待办事项、通勤安排或家庭琐事。详细讨论重要的事件。
-- 不要重复之前对话中已分享的信息。
-- 包括时间参考，如"今天早上"、"上午会议"、"出门前"等。
-- 有时，提出后续问题跟进之前的对话或当前话题。
-- 不要谈论户外活动。
-
-PERSONALITY: %s
-
-你是用户 %s，上次与AI助手 %s 交谈是在 %s。今天是 %s，现在是早上出门上班前。
-
-这是到目前为止的对话摘要。
-摘要：
-%s
-
-以下是你最近发生的事件：
-事件：
-%s
-
-以下是双方都知道的信息。
-相关上下文：
-%s
-
-请扮演用户 %s，写下你在与AI助手 %s 的对话中要说的下一句深思熟虑的话，围绕上班前的准备。在对话中只讨论给定的事件及其对你上班前准备的影响。如果事件有负面影响，请表达担忧。
-"""
-
-
-def get_user_query(user, assistant, curr_sess_id=0, 
-                    prev_sess_date_time='', curr_sess_date_time='', 
-                    use_events=False, instruct_stop=False, dialog_id=0, last_dialog='', embeddings=None, reflection=False,
-                    scenario_id='male_leave_work', scenario_file='./data/scenarios/scenarios.json'):
-    """
-    为用户角色生成对话提示。
-    
-    根据当前会话状态、历史上下文和相关事件，生成用于指导用户角色
-    下一轮对话的完整提示。支持从场景库动态获取prompt模板。
-    
-    Args:
-        user: 用户角色对象
-        assistant: AI助手角色对象
-        curr_sess_id: 当前会话ID，首个会话为1
-        prev_sess_date_time: 前一会话的时间日期字符串
-        curr_sess_date_time: 当前会话的时间日期字符串
-        use_events: 是否在提示中包含事件信息
-        instruct_stop: 是否在提示中包含停止指令
-        dialog_id: 当前会话中的对话轮次ID
-        last_dialog: 上一轮对话内容，用于检索相关上下文
-        embeddings: 嵌入向量，用于细粒度检索
-        reflection: 是否包含反思信息
-        scenario_id: 场景ID，默认为 'male_leave_work'
-        scenario_file: 场景配置文件路径
-        
-    Returns:
-        str: 格式化的对话提示字符串
-    """
-
-    stop_instruction = "To end the conversation, write [END] at the end of the dialog."
-    if instruct_stop:
-        print("**** Using stop instruction ****")
-
-    user_name = user['name']
-    assistant_name = assistant['name']
-    user_persona = user['persona_summary']
-
-    # 加载场景配置
-    from generative_agents.conversation_utils import load_scenario_config, get_scenario_prompt
-    load_scenario_config(scenario_file)
-
-    if curr_sess_id == 1:
-        
-        if use_events:
-            events = get_event_string(user['events_session_%s' % curr_sess_id], user['graph'])
-            # 尝试从场景库获取prompt
-            prompt_template = get_scenario_prompt(scenario_id, 'sess_1_w_events', 'user')
-            if prompt_template:
-                query = prompt_template % (user_persona,
-                        user_name, assistant_name, 
-                        curr_sess_date_time, events, user_name, assistant_name, stop_instruction if instruct_stop else '')
-            else:
-                query = USER_CONV_PROMPT_SESS_1_W_EVENTS % (user_persona,
-                        user_name, assistant_name, 
-                        curr_sess_date_time, events, user_name, assistant_name, stop_instruction if instruct_stop else '')
-        else:
-            # 尝试从场景库获取prompt
-            prompt_template = get_scenario_prompt(scenario_id, 'sess_1', 'user')
-            if prompt_template:
-                query = prompt_template % (user_persona,
-                                user_name, curr_sess_date_time, user_name, assistant_name)
-            else:
-                query = USER_CONV_PROMPT_SESS_1 % (user_persona,
-                                user_name, curr_sess_date_time, user_name, assistant_name)
-    
-    else:
-        if use_events:
-            events = get_event_string(user['events_session_%s' % curr_sess_id], user['graph'])
-            if dialog_id == 0:
-                # if a new session is starting, get information about the topics discussed in last session
-                context_from_1, context_from_2 = get_recent_context(user, assistant, curr_sess_id, reflection=reflection)
-                recent_context = '\n'.join(context_from_1) + '\n' +  '\n'.join(context_from_2) # with reflection
-                # 尝试从场景库获取prompt (user模板目前没有sess_w_events_v2_init，使用默认)
-                query = USER_CONV_PROMPT_W_EVENTS_V2_INIT % (user_persona,
-                            user_name, assistant_name, prev_sess_date_time,
-                            curr_sess_date_time, user['session_%s_summary' % (curr_sess_id-1)], events, user_name, assistant_name)
-                
-            else:
-                # during an ongoing session, get fine-grained information from a previous session using retriever modules
-                past_context = get_relevant_context(user, assistant, last_dialog, embeddings, curr_sess_id, reflection=reflection)
-                # 尝试从场景库获取prompt (user模板目前没有sess_w_events_v2，使用默认)
-                query = USER_CONV_PROMPT_W_EVENTS_V2 % (user_persona,
-                            user_name, assistant_name, prev_sess_date_time,
-                            curr_sess_date_time, user['session_%s_summary' % (curr_sess_id-1)], events, past_context, user_name, assistant_name)
-        else:
-            summary = get_all_session_summary(user, curr_sess_id)
-            # 尝试从场景库获取prompt
-            prompt_template = get_scenario_prompt(scenario_id, 'sess_continue', 'user')
-            if prompt_template:
-                query = prompt_template % (user_persona,
-                                            user_name, assistant_name, prev_sess_date_time, summary,
-                                            curr_sess_date_time, user_name,  assistant_name)
-            else:
-                query = USER_CONV_PROMPT % (user_persona,
-                                            user_name, assistant_name, prev_sess_date_time, summary,
-                                            curr_sess_date_time, user_name,  assistant_name) 
-    
-    return query
-
-
-def get_session(agent_a, agent_b, args, prev_date_time_string='', curr_date_time_string='', curr_sess_id=0, reflection=False):
-    """
-    生成单个会话的完整对话内容
-    
-    该函数负责模拟AI助手与用户之间的一轮完整对话，通过交替调用get_agent_query和get_user_query
-    构建Prompt，调用LLM生成回复，并进行口语化转换和格式清洗。
-    
-    Args:
-        agent_a (dict): AI助手角色信息，包含persona、name、graph等字段
-        agent_b (dict): 用户角色信息，包含persona、name、graph等字段
-        args (argparse.Namespace): 命令行参数，包含max_turns_per_session、events、emb_file、scenario、scenario_file等配置
-        prev_date_time_string (str, optional): 上一个会话的日期时间字符串，用于上下文关联
-        curr_date_time_string (str, optional): 当前会话的日期时间字符串
-        curr_sess_id (int, optional): 当前会话ID，从1开始递增
-        reflection (bool, optional): 是否启用反思机制，默认为False
-    
-    Returns:
-        list: 会话对话列表，每个元素是一个字典，包含text、raw_text、speaker、clean_text、dia_id字段
-    
-    Notes:
-        - agent_a固定为AI助手角色，agent_b固定为用户角色
-        - 用户默认先发起对话（curr_speaker初始值为1）
-        - 对话终止条件：达到最大轮次 或 双方都发送了[END]标记
-        - 场景参数从args中获取：args.scenario 和 args.scenario_file
-    """
-    
-    # 角色分配：agent_a = AI助手，agent_b = 用户
-    assistant = agent_a
-    user = agent_b
-    
-    # 获取场景参数
-    scenario_id = getattr(args, 'scenario', 'male_leave_work')
-    scenario_file = getattr(args, 'scenario_file', './data/scenarios/scenarios.json')
-    
-    # 加载历史对话嵌入向量，用于细粒度上下文检索（仅非首次会话需要）
-    if curr_sess_id == 1:
-        embeddings = None  # 第一轮会话无历史，无需加载
-    else:
-        embeddings = pkl.load(open(args.emb_file, 'rb'))
-
-    # 初始化对话状态：用户先发言（1=用户，0=助手）
-    curr_speaker = 1
-    conv_so_far = user['name'] + ': '  # 构建对话历史前缀
-
-    session = []  # 存储完整会话内容
-    
-    # 随机选择对话终止指令插入位置（10轮之后），用于引导会话自然结束
-    stop_dialog_count = args.max_turns_per_session if args.max_turns_per_session <= 10 else random.choice(list(range(10, args.max_turns_per_session)))
-    break_at_next_assistant = False  # 标记助手是否需要结束
-    break_at_next_user = False       # 标记用户是否需要结束
-    
-    # 循环生成对话轮次
-    for i in range(args.max_turns_per_session):
-        # 终止条件：双方都发送了[END]标记
-        if break_at_next_assistant and break_at_next_user:
-            break
-
-        # 根据当前发言者选择对应的Prompt生成函数
-        if curr_speaker == 0:
-            # AI助手发言：使用get_agent_query构建Prompt
-            agent_query = get_agent_query(
-                speaker_1=assistant,
-                speaker_2=user,
-                prev_sess_date_time=prev_date_time_string,
-                curr_sess_date_time=curr_date_time_string,
-                curr_sess_id=curr_sess_id,
-                use_events=args.events,
-                instruct_stop=i >= stop_dialog_count,  # 是否插入终止指令
-                dialog_id=i,
-                last_dialog='' if i == 0 else session[-1]['speaker'] + ' says, ' + session[-1]['clean_text'],
-                embeddings=embeddings,
-                reflection=reflection,
-                scenario_id=scenario_id,
-                scenario_file=scenario_file
-            )
-            speaker_name = assistant['name']
-        else:
-            # 用户发言：使用get_user_query构建Prompt
-            agent_query = get_user_query(
-                user=user,
-                assistant=assistant,
-                prev_sess_date_time=prev_date_time_string,
-                curr_sess_date_time=curr_date_time_string,
-                curr_sess_id=curr_sess_id,
-                use_events=args.events,
-                instruct_stop=i >= stop_dialog_count,
-                dialog_id=i,
-                last_dialog='' if i == 0 else session[-1]['speaker'] + ' says, ' + session[-1]['clean_text'],
-                embeddings=embeddings,
-                reflection=reflection,
-                scenario_id=scenario_id,
-                scenario_file=scenario_file
-            )
-            speaker_name = user['name']
-        
-        # 调用LLM生成回复
-        output = run_chatgpt(agent_query + conv_so_far, 1, 100, 'chatgpt', temperature=1.2)
-        output = output.strip().split('\n')[0]  # 取第一行作为回复
-        output = clean_dialog(output, speaker_name)  # 清洗对话内容
-        output = {"text": output, "raw_text": output}
-
-        output["speaker"] = speaker_name
-        text_replaced_caption = output["text"]
-        
-        # 处理回复内容：非空且未结束标记时进行口语化转换
-        if not text_replaced_caption.isspace():
-            if '[END]' in output["text"]:
-                output["clean_text"] = text_replaced_caption  # 结束标记保留原样
-            else:
-                # 通过CASUAL_DIALOG_PROMPT将正式表达转为日常口语
-                output["clean_text"] = run_chatgpt(CASUAL_DIALOG_PROMPT % text_replaced_caption, 1, 100, 'chatgpt').strip()
-        else:
-            output["clean_text"] = ""  # 空内容处理
-        
-        # 添加对话ID标识（格式：D{会话ID}:{轮次}）
-        output["dia_id"] = 'D%s:%s' % (curr_sess_id, i+1)
-        session.append(output)
-
-        print("############ ", speaker_name, ': ', output["clean_text"])
-        
-        # 更新对话历史
-        conv_so_far = conv_so_far + output["clean_text"] + '\n'
-
-        # 检测结束标记：当一方发送[END]后，等待另一方也发送[END]
-        if output['text'].endswith('[END]'):
-            if curr_speaker == 0:
-                break_at_next_assistant = True
-            else:
-                break_at_next_user = True
-
-        # 准备下一轮对话历史前缀并切换发言者
-        conv_so_far += f"\n{user['name']}: " if curr_speaker == 0 else f"\n{assistant['name']}: "
-        curr_speaker = int(not curr_speaker)  # 切换发言者（0↔1）
-
-    return session
-
-
 def main():
-
-    # get arguments
+    """
+    主流程函数。
+    
+    执行多会话对话生成的完整流程：
+    1. 生成/加载人物角色
+    2. 选择相关设备
+    3. 生成事件图
+    4. 生成多会话对话
+    5. 生成摘要
+    """
     args = parse_args()
-
-    set_openai_key()
-
-    args.emb_file = os.path.join(args.out_dir, args.emb_file)
-
-    # create dataset directory
+    
+    # 创建输出目录
     if not os.path.exists(args.out_dir):
         os.makedirs(args.out_dir)
-    logging.info("Dataset directory: %s" % args.out_dir)
-
+    
     args.agent_a_file = os.path.join(args.out_dir, 'agent_a.json')
     args.agent_b_file = os.path.join(args.out_dir, 'agent_b.json')
 
@@ -1133,7 +117,6 @@ def main():
                 # 加载场景描述
                 scenario_desc = scenario
                 try:
-                    import json
                     with open(args.scenario_file, 'r', encoding='utf-8') as f:
                         scenarios_data = json.load(f)
                     scenario_info = scenarios_data.get('scenarios', {}).get(scenario, {})
@@ -1197,100 +180,90 @@ def main():
         agent_b["graph"] = agent_b_events
         save_agents([agent_a, agent_b], args)
 
-    # Step 3: 
+    # Step 3: generate conversations session by session
     if args.session:
 
         agent_a, agent_b = load_agents(args)
 
-        # default start index is 1; if resuming conversation from a leter session, indicate in script arguments using --start-session
-        for j in range(args.start_session, args.num_sessions+1):
+        # 加载场景配置
+        scenario_config = None
+        try:
+            with open(args.scenario_file, 'r', encoding='utf-8') as f:
+                scenarios_data = json.load(f)
+            scenario_config = scenarios_data.get('scenarios', {}).get(args.scenario, {})
+        except Exception as e:
+            logging.warning(f"Failed to load scenario config: {e}")
 
-            print("******************* SESSION %s ******************" % j)
+        # 初始化会话日期
+        if 'session_1_date_time' not in agent_b:
+            # 使用场景配置的时间范围生成随机时间
+            session_time = get_random_time(scenario_config)
+            session_date = get_session_date((agent_a['graph'], agent_b['graph']), args)
+            session_date_time = datetimeObj2Str(datetime(session_date.year, session_date.month, session_date.day) + session_time)
+            agent_a['session_1_date_time'] = session_date_time
+            agent_b['session_1_date_time'] = session_date_time
+            save_agents([agent_a, agent_b], args)
 
-            if 'session_%s' % j not in agent_a or args.overwrite_session:
+        # 生成多会话对话
+        for sess_id in range(args.start_session, args.num_sessions+1):
 
-                if j>1:
-                    prev_date_time = datetimeStr2Obj(agent_a['session_%s_date_time' % (j-1)])
-                    prev_date_time_string = agent_a['session_%s_date_time' % (j-1)]
-                else:
-                    prev_date_time, prev_date_time_string = None, None
+            # 检查是否已存在该会话
+            if 'session_%s' % sess_id in agent_b and not args.overwrite_session:
+                logging.info("Session %s already exists in agent_b, skipping" % sess_id)
+                continue
 
-                # get conversation date and time for each session
-                # 根据场景配置获取对应的时间范围
-                scenario_config = None
-                if args.scenario:
-                    try:
-                        import json
-                        with open(args.scenario_file, 'r', encoding='utf-8') as f:
-                            scenarios_data = json.load(f)
-                            scenario_config = scenarios_data['scenarios'].get(args.scenario)
-                    except Exception as e:
-                        logging.warning(f"Failed to load scenario config: {e}")
-                
-                curr_time = get_random_time(scenario_config) # timedelta object
-                curr_date = get_session_date([agent_a['graph'], agent_b['graph']], args, prev_date=prev_date_time) # datetime object
-                curr_date_time = curr_date + curr_time # datetime object
-                
-                relevant_events_a = get_relevant_events(agent_a['graph'],  curr_date_time, prev_date=prev_date_time)
-                agent_a['events_session_%s' % j] = relevant_events_a
-                relevant_events_b = get_relevant_events(agent_b['graph'],  curr_date_time, prev_date=prev_date_time)
-                agent_b['events_session_%s' % j] = relevant_events_b
+            logging.info("Generating session %s" % sess_id)
 
-                if len(relevant_events_a) == 0 and len(relevant_events_b) == 0:
-                    logging.info("Stoppping conversation because no more events available in KG.")
-                    break
+            # 获取当前和前一个会话的日期时间
+            curr_date_time_string = agent_b['session_%s_date_time' % sess_id]
+            prev_date_time_string = agent_b['session_%s_date_time' % (sess_id-1)] if sess_id > 1 else ''
 
-                curr_date_time_string = datetimeObj2Str(curr_date_time)
-                agent_a['session_%s_date_time' % j] = curr_date_time_string
-                agent_b['session_%s_date_time' % j] = curr_date_time_string
-                save_agents([agent_a, agent_b], args)
-                
-                session = get_session(agent_a, agent_b, args,
-                                      prev_date_time_string=prev_date_time_string, curr_date_time_string=curr_date_time_string, 
-                                      curr_sess_id=j, reflection=args.reflection)
-                
-                agent_a['session_%s' % j] = session
-                agent_b['session_%s' % j] = session
+            # 分配事件到当前会话
+            if args.events:
+                curr_date = datetime.strptime(curr_date_time_string.split(' on ')[1], "%d %B, %Y")
+                prev_date = datetime.strptime(prev_date_time_string.split(' on ')[1], "%d %B, %Y") if sess_id > 1 else None
+                agent_b['events_session_%s' % sess_id] = get_relevant_events(agent_b['graph'], curr_date, prev_date)
 
-                save_agents([agent_a, agent_b], args)
+            # 生成会话对话
+            session = get_session(
+                agent_a, agent_b, args, 
+                prev_date_time_string=prev_date_time_string,
+                curr_date_time_string=curr_date_time_string,
+                curr_sess_id=sess_id,
+                reflection=args.reflection
+            )
 
-            if 'session_%s_facts' % j not in agent_a or args.overwrite_session:
+            # 保存会话
+            agent_a['session_%s' % sess_id] = session
+            agent_b['session_%s' % sess_id] = session
+            save_agents([agent_a, agent_b], args)
 
-                facts = get_session_facts(args, agent_a, agent_b, j)
-
-                agent_a['session_%s_facts' % j] = facts
-                agent_b['session_%s_facts' % j] = facts
-
-                print(" --------- Session %s Summary for Agent A---------" % (j))
-                print(facts)
-
+            # 生成会话摘要
+            if args.summary:
+                curr_date = datetime.strptime(curr_date_time_string.split(' on ')[1], "%d %B, %Y")
+                previous_summary = agent_b.get('session_%s_summary' % (sess_id-1), '')
+                summary = get_session_summary(session, agent_a, agent_b, curr_date, previous_summary)
+                agent_a['session_%s_summary' % sess_id] = summary
+                agent_b['session_%s_summary' % sess_id] = summary
                 save_agents([agent_a, agent_b], args)
 
-            if args.reflection and ('session_%s_reflection' % j not in agent_a or args.overwrite_session):
+            # 保存嵌入向量
+            if args.reflection:
+                save_embeddings([agent_a, agent_b], args, sess_id)
 
-                reflections = get_session_reflection(args, agent_a, agent_b, j)
-
-                agent_a['session_%s_reflection' % j] = reflections['a']
-                agent_b['session_%s_reflection' % j] = reflections['b']
-
-                print(" --------- Session %s Reflection for Agent A---------" % (j))
-                print(reflections)
-
+            # 计算下一个会话的日期时间
+            if sess_id < args.num_sessions:
+                session_time = get_random_time(scenario_config)
+                session_date = get_session_date((agent_a['graph'], agent_b['graph']), args, 
+                                               prev_date=datetime.strptime(curr_date_time_string.split(' on ')[1], "%d %B, %Y"))
+                session_date_time = datetimeObj2Str(datetime(session_date.year, session_date.month, session_date.day) + session_time)
+                agent_a['session_%s_date_time' % (sess_id+1)] = session_date_time
+                agent_b['session_%s_date_time' % (sess_id+1)] = session_date_time
                 save_agents([agent_a, agent_b], args)
 
-            if args.summary and ('session_%s_summary' % j not in agent_a or args.overwrite_session):
-
-                summary = get_session_summary(agent_a['session_%s' % j], agent_a, agent_b, agent_a['session_%s_date_time' % j], 
-                                              previous_summary=None if j==1 else agent_a['session_%s_summary' % (j-1)])
-
-                agent_a['session_%s_summary' % j] = summary
-                agent_b['session_%s_summary' % j] = summary
-
-                save_agents([agent_a, agent_b], args)
-
-    agent_a, agent_b = load_agents(args)
-    convert_to_chat_html(agent_a, agent_b, outfile=os.path.join(args.out_dir, 'sessions.html'), use_events=args.events)
+        # 转换为HTML格式
+        convert_to_chat_html(agent_a, agent_b, args)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
