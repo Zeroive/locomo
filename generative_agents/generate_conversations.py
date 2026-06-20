@@ -1133,6 +1133,7 @@ def main():
                 # 加载场景描述
                 scenario_desc = scenario
                 try:
+                    import json
                     with open(args.scenario_file, 'r', encoding='utf-8') as f:
                         scenarios_data = json.load(f)
                     scenario_info = scenarios_data.get('scenarios', {}).get(scenario, {})
