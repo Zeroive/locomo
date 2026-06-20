@@ -93,21 +93,46 @@ def load_agents(args):
     return agent_a, agent_b
 
 
-def get_random_time():
+def get_random_time(scenario_config=None):
     """
     生成一个随机的日内时间。
     
-    在上午9点到晚上9:59之间的随机时间点，用于模拟会话发生时间。
+    根据场景配置中的时间范围生成随机时间，用于模拟会话发生时间。
+    如果没有场景配置，默认在上午9点到晚上9:59之间生成。
     
+    Args:
+        scenario_config: 场景配置字典，包含 time_range 字段（可选）
+        
     Returns:
         timedelta: 随机生成的时间差对象
     """
-
-    start_time = timedelta(hours=9, minutes=0, seconds=0)
-    end_time = timedelta(hours=21, minutes=59, seconds=59)
+    # 默认时间范围：上午9点到晚上9:59
+    start_hour, end_hour = 9, 21
+    
+    # 如果提供了场景配置，使用场景指定的时间范围
+    if scenario_config and 'time_range' in scenario_config:
+        time_range = scenario_config['time_range']
+        start_hour = time_range.get('start_hour', 9)
+        end_hour = time_range.get('end_hour', 21)
+    
+    # 处理跨天的时间范围（如异常检测场景：22:00-04:00）
+    if start_hour > end_hour:
+        # 随机选择前一天晚上或当天凌晨
+        if random.choice([True, False]):
+            # 前一天晚上
+            start_time = timedelta(hours=start_hour, minutes=0, seconds=0)
+            end_time = timedelta(hours=23, minutes=59, seconds=59)
+        else:
+            # 当天凌晨
+            start_time = timedelta(hours=0, minutes=0, seconds=0)
+            end_time = timedelta(hours=end_hour, minutes=59, seconds=59)
+    else:
+        start_time = timedelta(hours=start_hour, minutes=0, seconds=0)
+        end_time = timedelta(hours=end_hour, minutes=59, seconds=59)
+    
     random_seconds = random.randint(int(start_time.total_seconds()), int(end_time.total_seconds()))
-    hours = random_seconds//3600
-    minutes = (random_seconds - (hours*3600))//60
+    hours = random_seconds // 3600
+    minutes = (random_seconds - (hours * 3600)) // 60
     return timedelta(hours=hours, minutes=minutes, seconds=0)
 
 
@@ -1009,7 +1034,18 @@ def main():
                     prev_date_time, prev_date_time_string = None, None
 
                 # get conversation date and time for each session
-                curr_time = get_random_time() # timedelta object
+                # 根据场景配置获取对应的时间范围
+                scenario_config = None
+                if args.scenario:
+                    try:
+                        import json
+                        with open(args.scenario_file, 'r', encoding='utf-8') as f:
+                            scenarios_data = json.load(f)
+                            scenario_config = scenarios_data['scenarios'].get(args.scenario)
+                    except Exception as e:
+                        logging.warning(f"Failed to load scenario config: {e}")
+                
+                curr_time = get_random_time(scenario_config) # timedelta object
                 curr_date = get_session_date([agent_a['graph'], agent_b['graph']], args, prev_date=prev_date_time) # datetime object
                 curr_date_time = curr_date + curr_time # datetime object
                 
