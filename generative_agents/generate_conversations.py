@@ -47,6 +47,12 @@ def parse_args():
                         help="指定对话场景类型，默认为 male_leave_work (男主人上班离家)")
     parser.add_argument('--scenario-file', type=str, default='./data/scenarios/scenarios.json',
                         help="场景配置文件路径，默认为 ./data/scenarios/scenarios.json")
+    
+    # 设备相关参数
+    parser.add_argument('--device', action="store_true", 
+                        help="Set flag to select relevant devices based on user persona and scenario")
+    parser.add_argument('--device-file', type=str, default='./data/devices/home_devices.json',
+                        help="家庭设备库文件路径，默认为 ./data/devices/home_devices.json")
 
     args = parser.parse_args()
     return args
@@ -1114,8 +1120,8 @@ def main():
             user_persona = agent_b['persona_summary']
             scenario = args.scenario if hasattr(args, 'scenario') else 'male_leave_work'
             
-            # 挑选与用户相关的设备
-            user_devices = select_devices_for_user(user_persona, scenario)
+            # 挑选与用户相关的设备（使用模型智能选择）
+            user_devices = select_devices_for_user(user_persona, scenario, args.device_file)
             
             # 记录到 agent_b 中
             agent_b['devices'] = user_devices
