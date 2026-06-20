@@ -276,10 +276,10 @@ def get_session_date(events, args, prev_date = None):
         event_date =  catch_date(e['date'])
         if prev_date:
             if event_date >= prev_date:
-                print("Including event %s for Agent A" % json.dumps(e, indent=2))
+                print("Including event %s for Agent A" % json.dumps(e, indent=2, ensure_ascii=False))
                 curr_count += 1
         else:
-            print("Including event %s for Agent A" % json.dumps(e, indent=2))
+            print("Including event %s for Agent A" % json.dumps(e, indent=2, ensure_ascii=False))
             curr_count += 1
         if curr_count == stop_count:
             stop_date_a = event_date
@@ -295,10 +295,10 @@ def get_session_date(events, args, prev_date = None):
         event_date = catch_date(e['date'])
         if prev_date:
             if event_date >= prev_date:
-                print("Including event %s for Agent B" % json.dumps(e, indent=2))
+                print("Including event %s for Agent B" % json.dumps(e, indent=2, ensure_ascii=False))
                 curr_count += 1
         else:
-            print("Including event %s for Agent B" % json.dumps(e, indent=2))
+            print("Including event %s for Agent B" % json.dumps(e, indent=2, ensure_ascii=False))
             curr_count += 1
         if curr_count == stop_count:
             stop_date_b = event_date
