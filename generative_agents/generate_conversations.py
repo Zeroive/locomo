@@ -16,6 +16,7 @@ from datetime import date, timedelta, datetime
 from generative_agents.file_utils import save_agents, load_agents
 from generative_agents.time_utils import get_random_time, get_random_date, datetimeObj2Str, dateObj2Str, get_session_date
 from generative_agents.device_utils import select_devices_for_user
+from generative_agents.device_events_utils import generate_all_device_events, save_device_events, get_device_events_summary
 from generative_agents.session_utils import get_session, get_session_summary, get_relevant_events
 from generative_agents.conversation_utils import get_msc_persona, get_datetime_string
 from generative_agents.event_utils import get_events
@@ -69,6 +70,8 @@ def parse_args():
                         help="Set flag to select relevant devices based on user persona and scenario")
     parser.add_argument('--device-file', type=str, default='./data/devices/home_devices.json',
                         help="家庭设备库文件路径，默认为 ./data/devices/home_devices.json")
+    parser.add_argument('--device-events', action="store_true",
+                        help="Set flag to generate device events based on dialogue and scenario")
 
     args = parser.parse_args()
     return args
@@ -104,6 +107,7 @@ def main():
     # Step 1.1: Get device records for the agents
     if args.device:
         agent_a, agent_b = load_agents(args)
+        user_devices = agent_b.get('devices', {})  # 初始化 user_devices
         
         # 根据用户特点挑选相关设备
         if agent_b and 'persona_summary' in agent_b:
@@ -262,8 +266,39 @@ def main():
                 save_agents([agent_a, agent_b], args)
 
         # 转换为HTML格式
-        convert_to_chat_html(agent_a, agent_b, args)
+        html_outfile = os.path.join(args.out_dir, 'conversation.html')
+        convert_to_chat_html(agent_a, agent_b, html_outfile)
 
+    # Step 4: 根据场景以及对话的内容生成设备events记录
+    if args.device_events:
+        logging.info("Generating device events based on dialogue and scenario...")
+        
+        # 加载 agent 数据
+        agent_a, agent_b = load_agents(args)
+        
+        # 检查是否已有设备
+        if not agent_b.get('devices'):
+            logging.warning("No devices found in agent_b. Please run with --device flag first.")
+        else:
+            # 检查是否已生成过设备事件（存在 session_1_device_events）
+            if 'session_1_device_events' in agent_b and not args.overwrite_events:
+                logging.info("Device events already exist in agent_b, skipping. Use --overwrite-events to regenerate.")
+            else:
+                # 生成所有会话的设备事件
+                device_events = generate_all_device_events([agent_a, agent_b], args)
+                
+                if device_events and device_events.get('sessions'):
+                    # 保存设备事件到文件
+                    save_device_events([agent_a, agent_b], args, device_events)
+                    
+                    # 保存更新到 agent 对象
+                    save_agents([agent_a, agent_b], args)
+                    
+                    # 输出摘要
+                    summary = get_device_events_summary(device_events)
+                    logging.info(f"Device events generation complete:\n{summary}")
+                else:
+                    logging.warning("No device events were generated.")
 
 if __name__ == '__main__':
     main()
