@@ -532,11 +532,13 @@ def get_session(agent_a, agent_b, args, prev_date_time_string='', curr_date_time
     scenario_id = getattr(args, 'scenario', 'male_leave_work')
     scenario_file = getattr(args, 'scenario_file', './data/scenarios/scenarios.json')
     
-    # 加载历史对话嵌入向量，用于细粒度上下文检索（仅非首次会话需要）
+    # 加载历史对话嵌入向量，用于细粒度上下文检索（仅非首次会话且文件存在时需要）
     if curr_sess_id == 1:
         embeddings = None  # 第一轮会话无历史，无需加载
-    else:
+    elif os.path.exists(args.emb_file):
         embeddings = pkl.load(open(args.emb_file, 'rb'))
+    else:
+        embeddings = None  # 嵌入文件不存在时设为 None
 
     # 初始化对话状态：用户先发言（1=用户，0=助手）
     curr_speaker = 1
