@@ -191,18 +191,32 @@ def get_recent_context(agent_a, agent_b, sess_id, context_length=2, reflection=F
     """
 
     speaker_1_facts = []
-    for i in range(1, sess_id):
-        speaker_1_facts += [agent_a['session_%s_date_time' % i] + ': ' + f for f, _ in agent_a['session_%s_facts' % i][agent_a["name"]]]
     speaker_2_facts = []
-    for i in range(1, sess_id):
-        speaker_2_facts += [agent_a['session_%s_date_time' % i] + ': ' + f for f, _ in agent_a['session_%s_facts' % i][agent_b["name"]]]
+    
+    # 检查是否有可用的 facts 数据
+    has_facts = 'session_1_facts' in agent_a
+    
+    if has_facts:
+        for i in range(1, sess_id):
+            session_key = 'session_%s_facts' % i
+            if session_key in agent_a:
+                session_time = agent_a.get('session_%s_date_time' % i, '')
+                facts_data = agent_a[session_key]
+                if agent_a["name"] in facts_data:
+                    speaker_1_facts += [session_time + ': ' + f for f, _ in facts_data[agent_a["name"]]]
+                if agent_b["name"] in facts_data:
+                    speaker_2_facts += [session_time + ': ' + f for f, _ in facts_data[agent_b["name"]]]
     
     if reflection:
-        print(speaker_1_facts[-context_length:])
-        print(agent_a['session_%s_reflection' % (sess_id-1)]['self'])
-        return speaker_1_facts[-context_length:] + agent_a['session_%s_reflection' % (sess_id-1)]['self'], speaker_2_facts[-context_length:] + agent_a['session_%s_reflection' % (sess_id-1)]['other']
+        # 检查是否有可用的 reflection 数据
+        if 'session_%s_reflection' % (sess_id-1) in agent_a:
+            print(speaker_1_facts[-context_length:])
+            print(agent_a['session_%s_reflection' % (sess_id-1)]['self'])
+            return speaker_1_facts[-context_length:] + agent_a['session_%s_reflection' % (sess_id-1)]['self'], speaker_2_facts[-context_length:] + agent_a['session_%s_reflection' % (sess_id-1)]['other']
+        else:
+            return speaker_1_facts[-context_length:] if speaker_1_facts else [], speaker_2_facts[-context_length:] if speaker_2_facts else []
     else:
-        return speaker_1_facts[-context_length:], speaker_2_facts[-context_length:]
+        return speaker_1_facts[-context_length:] if speaker_1_facts else [], speaker_2_facts[-context_length:] if speaker_2_facts else []
 
 
 def get_relevant_context(agent_a, agent_b, input_dialogue, embeddings, sess_id, context_length=2, reflection=False):
@@ -226,7 +240,14 @@ def get_relevant_context(agent_a, agent_b, input_dialogue, embeddings, sess_id, 
     """
 
     logging.info("Getting relevant context for response to %s (session %s)" % (input_dialogue, sess_id))
+    
+    # 获取基础上下文（现在会安全处理缺失的 facts）
     contexts_a, context_b = get_recent_context(agent_a, agent_b, sess_id, 10000)
+    
+    # 如果没有嵌入向量或上下文为空，返回空结果
+    if embeddings is None or not contexts_a:
+        return [], []
+    
     # embeddings = pkl.load(open(emb_file, 'rb'))
     input_embedding = get_embedding([input_dialogue])
     sims_with_context_a = np.dot(embeddings[agent_a['name']], input_embedding[0])
@@ -235,9 +256,13 @@ def get_relevant_context(agent_a, agent_b, input_dialogue, embeddings, sess_id, 
     top_k_sims_b = np.argsort(sims_with_context_b)[::-1][:context_length]
     # print(sims_with_context_a, sims_with_context_b)
     if reflection:
-        print([contexts_a[idx] for idx in top_k_sims_a])
-        print( agent_a['session_%s_reflection' % (sess_id-1)]['self'])
-        return [contexts_a[idx] for idx in top_k_sims_a] + random.sample(agent_a['session_%s_reflection' % (sess_id-1)]['self'], k=context_length//2), [context_b[idx] for idx in top_k_sims_b] + random.sample(agent_a['session_%s_reflection' % (sess_id-1)]['other'], k=context_length//2)
+        # 检查是否有 reflection 数据
+        if 'session_%s_reflection' % (sess_id-1) in agent_a:
+            print([contexts_a[idx] for idx in top_k_sims_a])
+            print(agent_a['session_%s_reflection' % (sess_id-1)]['self'])
+            return [contexts_a[idx] for idx in top_k_sims_a] + random.sample(agent_a['session_%s_reflection' % (sess_id-1)]['self'], k=context_length//2), [context_b[idx] for idx in top_k_sims_b] + random.sample(agent_a['session_%s_reflection' % (sess_id-1)]['other'], k=context_length//2)
+        else:
+            return [contexts_a[idx] for idx in top_k_sims_a], [context_b[idx] for idx in top_k_sims_b]
     else:
         return [contexts_a[idx] for idx in top_k_sims_a], [context_b[idx] for idx in top_k_sims_b]
 
