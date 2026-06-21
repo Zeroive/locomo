@@ -254,6 +254,7 @@ def main():
             # 保存嵌入向量
             if args.reflection:
                 save_embeddings([agent_a, agent_b], args, sess_id)
+                save_agents([agent_a, agent_b], args)
 
             # 计算下一个会话的日期时间
             if sess_id < args.num_sessions:
