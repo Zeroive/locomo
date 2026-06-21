@@ -241,3 +241,25 @@ def get_relevant_context(agent_a, agent_b, input_dialogue, embeddings, sess_id, 
     else:
         return [contexts_a[idx] for idx in top_k_sims_a], [context_b[idx] for idx in top_k_sims_b]
 
+
+def save_embeddings(agents, args, sess_id):
+    """
+    保存会话嵌入向量到文件。
+    
+    从会话对话中提取事实信息，生成嵌入向量，并保存到指定文件。
+    嵌入向量用于后续的细粒度检索记忆模块。
+    
+    Args:
+        agents: 包含两个说话人对象的列表 [agent_a, agent_b]
+        args: 包含emb_file等配置的命令行参数
+        sess_id: 当前会话索引
+    """
+    agent_a, agent_b = agents[0], agents[1]
+    
+    # 获取会话事实并生成嵌入
+    facts = get_session_facts(args, agent_a, agent_b, sess_id, return_embeddings=True)
+    
+    # 保存事实到agent对象
+    agent_a['session_%s_facts' % sess_id] = facts
+    agent_b['session_%s_facts' % sess_id] = facts
+
