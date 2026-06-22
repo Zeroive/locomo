@@ -215,11 +215,23 @@ def ensure_session_dates(profile, args, sess_id, prev_date_time_string=""):
     return date_time
 
 
-def make_session_datetime_for_event(profile, sess_id, event):
-    key = f"session_{sess_id}_date_time"
-    if key in profile:
-        return profile[key]
+def make_session_datetime_for_event(profile, event_session_id, event, overwrite=False):
+    key = f"event_session_{event_session_id}_date_time"
     event_date = catch_date(event["date"])
+    if key in profile and not overwrite:
+        try:
+            cached_date = datetime.strptime(profile[key].split(" on ")[1], "%d %B, %Y")
+            if cached_date.date() == event_date.date():
+                return profile[key]
+            logging.info(
+                "Regenerating %s because cached date %s differs from event %s date %s",
+                key,
+                cached_date.strftime("%d %B, %Y"),
+                event.get("id"),
+                event.get("date"),
+            )
+        except (IndexError, ValueError):
+            logging.info("Regenerating %s because cached datetime is invalid: %s", key, profile[key])
     session_time = get_random_time({"time_range": {"start_hour": 9, "end_hour": 21}})
     date_time = datetimeObj2Str(datetime(event_date.year, event_date.month, event_date.day) + session_time)
     profile[key] = date_time
@@ -329,7 +341,12 @@ def generate_session_step(args, profile):
     sess_id = 1
     for event_session_id, session_plan in enumerate(session_plans, start=1):
         event = event_by_id.get(session_plan.get("event_id"))
-        event_session_date_time = make_session_datetime_for_event(profile, event_session_id, event) if event else ""
+        event_session_date_time = make_session_datetime_for_event(
+            profile,
+            event_session_id,
+            event,
+            overwrite=args.overwrite_session,
+        ) if event else ""
         for conversation_plan in session_plan["conversations"]:
             current_user_id = conversation_plan["current_user_id"]
             if sess_id in existing_session_ids and not args.overwrite_session:
