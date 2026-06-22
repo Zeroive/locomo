@@ -17,20 +17,9 @@ import os
 import re
 from typing import Dict, List, Any
 
-# 导入模型调用函数
-try:
-    from global_methods import run_chatgpt
-except ImportError:
-    # 如果无法导入，使用模拟函数
-    def run_chatgpt(prompt, model="gpt-4", temperature=0.7, max_tokens=2000, **kwargs):
-        """模拟模型响应"""
-        return json.dumps({
-            "choices": [{
-                "message": {
-                    "content": generate_simulated_trajectory(prompt)
-                }
-            }]
-        })
+
+from global_methods import run_chatgpt
+
 
 
 def generate_simulated_trajectory(prompt: str) -> str:
@@ -232,7 +221,7 @@ def generate_trajectory_for_scenario(scenario: str, user_profile: str, user_devi
     prompt = build_trajectory_prompt(scenario, user_profile, user_devices, tools_schema, num_turns)
     
     # 调用模型
-    response = run_chatgpt(prompt, temperature=0.8, max_tokens=2000)
+    response = run_chatgpt(prompt, temperature=0.8)
     
     # 解析响应
     try:
