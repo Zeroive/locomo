@@ -87,8 +87,41 @@ def get_session_facts(args, agent_a, agent_b, session_idx, return_embeddings=Tru
     if not return_embeddings:
         return facts
 
-    agent_a_embeddings = get_embedding([agent_a['session_%s_date_time' % session_idx] + ', ' + f for f, _ in facts[agent_a['name']]])
-    agent_b_embeddings = get_embedding([agent_b['session_%s_date_time' % session_idx] + ', ' + f for f, _ in facts[agent_b['name']]])
+    # 防御性检查：确保facts字典包含正确的说话人名称
+    agent_a_name = agent_a.get('name', 'agent_a')
+    agent_b_name = agent_b.get('name', 'agent_b')
+    
+    # 检查facts是否为字典类型
+    if not isinstance(facts, dict):
+        logging.error(f"facts is not a dict: {type(facts)}")
+        # 如果facts不是字典，返回空的事实字典
+        return {}
+    
+    # 检查agent_a的事实是否存在
+    if agent_a_name not in facts:
+        logging.warning(f"facts does not contain key '{agent_a_name}'. Available keys: {list(facts.keys())}")
+        # 尝试获取第一个可用的键作为备选
+        if facts:
+            agent_a_name = next(iter(facts.keys()))
+            logging.warning(f"Using '{agent_a_name}' instead")
+        else:
+            logging.error("facts dictionary is empty")
+            return {}
+    
+    # 检查agent_b的事实是否存在
+    if agent_b_name not in facts:
+        logging.warning(f"facts does not contain key '{agent_b_name}'. Available keys: {list(facts.keys())}")
+        # 尝试获取另一个可用的键作为备选
+        available_keys = [k for k in facts.keys() if k != agent_a_name]
+        if available_keys:
+            agent_b_name = available_keys[0]
+            logging.warning(f"Using '{agent_b_name}' instead")
+        else:
+            logging.error("No available keys for agent_b")
+            return {}
+
+    agent_a_embeddings = get_embedding([agent_a['session_%s_date_time' % session_idx] + ', ' + f for f, _ in facts[agent_a_name]])
+    agent_b_embeddings = get_embedding([agent_b['session_%s_date_time' % session_idx] + ', ' + f for f, _ in facts[agent_b_name]])
 
     if session_idx > 1:
         with open(args.emb_file, 'rb') as f:
