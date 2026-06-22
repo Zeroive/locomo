@@ -1,5 +1,6 @@
 import json, re, os, logging
 import random
+import secrets
 from global_methods import run_chatgpt, run_chatgpt_with_examples
 
 # 全局场景配置缓存
@@ -244,7 +245,7 @@ def get_msc_persona(args):
             logging.warning("No available personas in msc_speakers_single.json")
             return None, None
         
-        selected_idx = random.choice(available_indices)
+        selected_idx = secrets.choice(available_indices)
         attributes = all_personas['train'][selected_idx]
         
         # 使用 Speaker 字段生成用户角色
