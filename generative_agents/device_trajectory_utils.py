@@ -224,16 +224,9 @@ def generate_trajectory_for_scenario(scenario: str, user_profile: str, user_devi
     response = run_chatgpt(prompt, temperature=0.8)
     
     # 解析响应
-    try:
-        response_data = json.loads(response)
-        content = response_data['choices'][0]['message']['content']
-    except (json.JSONDecodeError, KeyError, IndexError):
-        content = response
+    content = json.loads(response)
     
-    # 解析轨迹
-    trajectory = parse_model_response(content)
-    
-    return trajectory
+    return content
 
 
 def generate_all_device_trajectories(agents: List[dict], args) -> Dict[int, List[dict]]:
