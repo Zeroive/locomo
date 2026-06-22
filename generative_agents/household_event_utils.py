@@ -28,6 +28,20 @@ WEEKEND_SCENARIOS = [
 ]
 
 
+SCENARIO_LABELS = {
+    "weekend_family_outing": "周末全家外出",
+    "weekend_home_relaxation": "周末居家休息",
+    "family_meal_plan": "家庭聚餐/做饭/外卖",
+    "child_weekend_activity": "孩子兴趣班/作业/玩耍",
+    "elderly_weekend_activity": "老人散步/买菜/社区活动",
+    "pet_weekend_care": "遛狗/喂猫/宠物看护",
+    "couple_leisure_plan": "夫妻二人休闲安排",
+    "visit_relatives": "探亲/亲友来访",
+    "conflicting_plans": "家庭成员计划冲突",
+    "changed_weekend_plan": "周末计划变更",
+}
+
+
 SCENARIO_DIMENSIONS = {
     "weekend_family_outing": ["weekend_plan", "family_outing", "cross_member_reference"],
     "weekend_home_relaxation": ["weekend_plan", "home_activity", "leisure_activity"],
@@ -159,6 +173,9 @@ def build_event_scenario_sequence(profile, num_events):
     for scenario in required:
         if scenario_is_applicable(profile, scenario):
             sequence.append(scenario)
+    for scenario in candidates:
+        if scenario not in sequence:
+            sequence.append(scenario)
     while len(sequence) < num_events:
         sequence.append(random.choice(candidates or ["weekend_home_relaxation"]))
     # Keep changed_weekend_plan after at least one event so it can refer backward.
@@ -184,11 +201,69 @@ def build_event_plan(profile, idx, scenario_type, start_date, num_days, num_even
         "id": f"E{idx}",
         "date": dateObj2Str(event_date),
         "scenario_type": scenario_type,
+        "scenario_category": scenario_type,
+        "scenario_label": SCENARIO_LABELS[scenario_type],
         "scenario_guidance": SCENARIO_GUIDANCE.get(scenario_type, ""),
         "participants": participants,
         "mentioned_members": mentioned,
         "caused_by": caused_by,
         "memory_dimensions": SCENARIO_DIMENSIONS[scenario_type],
+    }
+
+
+def compact_member_for_event(member):
+    return {
+        "person_id": member["person_id"],
+        "name": member["name"],
+        "age": member.get("age"),
+        "life_stage": member.get("life_stage"),
+        "family_role_label": member.get("family_role_label"),
+        "persona_summary": member.get("persona_summary", "")[:180],
+        "traits": member.get("traits", {}),
+    }
+
+
+def build_event_prompt_context(profile, event_plan, previous_events):
+    relevant_ids = set(event_plan.get("participants", [])) | set(event_plan.get("mentioned_members", []))
+    members = [
+        compact_member_for_event(member)
+        for member in profile.get("members", [])
+        if member["person_id"] in relevant_ids
+    ]
+    relations = [
+        rel for rel in profile.get("relations", [])
+        if rel.get("from") in relevant_ids and rel.get("to") in relevant_ids
+    ]
+    pets = [
+        pet for pet in profile.get("pets", [])
+        if pet.get("caretaker_id") in relevant_ids
+    ]
+    responsibilities = [
+        item for item in profile.get("role_responsibilities", [])
+        if item.get("person_id") in relevant_ids
+    ]
+    previous_event_summaries = [
+        {
+            "id": event["id"],
+            "date": event["date"],
+            "scenario_type": event["scenario_type"],
+            "sub-event": event["sub-event"],
+        }
+        for event in previous_events[-3:]
+        if event["id"] in event_plan.get("caused_by", []) or event_plan.get("scenario_type") in {"changed_weekend_plan", "conflicting_plans"}
+    ]
+    return {
+        "family": {
+            "family_id": profile.get("family", {}).get("family_id"),
+            "family_name": profile.get("family", {}).get("family_name"),
+            "household_type": profile.get("family", {}).get("household_type"),
+            "weekend_context": profile.get("family", {}).get("weekend_context"),
+        },
+        "relevant_members": members,
+        "relevant_relations": relations,
+        "relevant_pets": pets,
+        "relevant_responsibilities": responsibilities,
+        "previous_events": previous_event_summaries,
     }
 
 
@@ -218,41 +293,43 @@ def generate_template_household_events(profile, num_events, num_days=60, start_d
         start_date = get_random_date()
     end_date = start_date + timedelta(days=num_days)
 
-    scenario_pool = list(WEEKEND_SCENARIOS)
-    while len(scenario_pool) < num_events:
-        scenario_pool.extend(WEEKEND_SCENARIOS)
-
-    selected_scenarios = scenario_pool[:num_events]
-    random.shuffle(selected_scenarios)
-    if num_events >= 2:
-        selected_scenarios[0] = "conflicting_plans"
-        selected_scenarios[1] = "changed_weekend_plan"
-
     graph = []
+    selected_scenarios = build_event_scenario_sequence(profile, num_events)
     for idx, scenario_type in enumerate(selected_scenarios[:num_events], start=1):
-        participants = choose_participants(profile, scenario_type)
-        mentioned = [
-            member["person_id"] for member in profile["members"]
-            if member["person_id"] not in participants and random.random() < 0.35
-        ]
-        event_date = start_date + timedelta(days=min(num_days, idx * max(1, num_days // max(1, num_events))))
-        caused_by = []
-        if idx > 1 and scenario_type in {"changed_weekend_plan", "conflicting_plans"}:
-            caused_by = [f"E{max(1, idx - 1)}"]
+        event_plan = build_event_plan(profile, idx, scenario_type, start_date, num_days, num_events, graph)
         graph.append({
-            "id": f"E{idx}",
-            "sub-event": render_event(profile, scenario_type, participants),
-            "date": dateObj2Str(event_date),
-            "caused_by": caused_by,
+            "id": event_plan["id"],
+            "sub-event": render_event(profile, scenario_type, event_plan["participants"]),
+            "date": event_plan["date"],
+            "caused_by": event_plan["caused_by"],
             "scenario_type": scenario_type,
-            "participants": participants,
-            "mentioned_members": mentioned,
+            "scenario_category": scenario_type,
+            "scenario_label": SCENARIO_LABELS[scenario_type],
+            "participants": event_plan["participants"],
+            "mentioned_members": event_plan["mentioned_members"],
             "memory_dimensions": SCENARIO_DIMENSIONS[scenario_type],
         })
 
     profile["events_start_date"] = dateObj2Str(start_date)
     profile["graph"] = graph
     profile["events_end_date"] = dateObj2Str(end_date)
+    applicable_scenarios = [scenario for scenario in WEEKEND_SCENARIOS if scenario_is_applicable(profile, scenario)]
+    generated_scenarios = [event["scenario_type"] for event in graph]
+    profile["event_scenario_catalog"] = {
+        scenario: {
+            "label": SCENARIO_LABELS[scenario],
+            "memory_dimensions": SCENARIO_DIMENSIONS[scenario],
+            "guidance": SCENARIO_GUIDANCE[scenario],
+            "applicable": scenario in applicable_scenarios,
+        }
+        for scenario in WEEKEND_SCENARIOS
+    }
+    profile["event_scenario_coverage"] = {
+        "generated": generated_scenarios,
+        "covered": sorted(set(generated_scenarios)),
+        "applicable": applicable_scenarios,
+        "missing_applicable": [scenario for scenario in applicable_scenarios if scenario not in generated_scenarios],
+    }
     return graph
 
 
@@ -332,6 +409,8 @@ def normalize_single_event(raw_event, event_plan, profile):
     event["mentioned_members"] = [pid for pid in event_plan["mentioned_members"] if pid in member_ids and pid not in event["participants"]]
     event["caused_by"] = list(event_plan.get("caused_by", []))
     event["memory_dimensions"] = SCENARIO_DIMENSIONS[event_plan["scenario_type"]]
+    event["scenario_category"] = event_plan["scenario_type"]
+    event["scenario_label"] = SCENARIO_LABELS[event_plan["scenario_type"]]
     event.pop("scenario_guidance", None)
     return event
 
@@ -370,22 +449,27 @@ def generate_household_events(profile, num_events, num_days=60, start_date=None,
 
     graph = []
     scenario_sequence = build_event_scenario_sequence(profile, num_events)
+    applicable_scenarios = [scenario for scenario in WEEKEND_SCENARIOS if scenario_is_applicable(profile, scenario)]
     profile["events_start_date"] = dateObj2Str(start_date)
     profile["events_end_date"] = dateObj2Str(end_date)
     profile["event_generation_mode"] = "planned_single_event_llm"
+    profile["event_scenario_catalog"] = {
+        scenario: {
+            "label": SCENARIO_LABELS[scenario],
+            "memory_dimensions": SCENARIO_DIMENSIONS[scenario],
+            "guidance": SCENARIO_GUIDANCE[scenario],
+            "applicable": scenario in applicable_scenarios,
+        }
+        for scenario in WEEKEND_SCENARIOS
+    }
     profile["graph"] = []
 
     for idx, scenario_type in enumerate(scenario_sequence, start=1):
         event_plan = build_event_plan(profile, idx, scenario_type, start_date, num_days, num_events, graph)
+        prompt_context = build_event_prompt_context(profile, event_plan, graph)
         prompt = HOUSEHOLD_SINGLE_EVENT_PROMPT.format(
-            profile=json.dumps({
-                "family": profile.get("family", {}),
-                "members": profile.get("members", []),
-                "relations": profile.get("relations", []),
-                "pets": profile.get("pets", []),
-                "role_responsibilities": profile.get("role_responsibilities", []),
-            }, ensure_ascii=False, indent=2),
-            previous_events=json.dumps(graph, ensure_ascii=False, indent=2),
+            profile=json.dumps(prompt_context, ensure_ascii=False, indent=2),
+            previous_events=json.dumps(prompt_context["previous_events"], ensure_ascii=False, indent=2),
             event_plan=json.dumps(event_plan, ensure_ascii=False, indent=2),
         )
         logging.info(
@@ -423,6 +507,13 @@ def generate_household_events(profile, num_events, num_days=60, start_date=None,
     profile["events_start_date"] = dateObj2Str(start_date)
     profile["graph"] = graph
     profile["events_end_date"] = dateObj2Str(end_date)
+    generated_scenarios = [event["scenario_type"] for event in graph]
+    profile["event_scenario_coverage"] = {
+        "generated": generated_scenarios,
+        "covered": sorted(set(generated_scenarios)),
+        "applicable": applicable_scenarios,
+        "missing_applicable": [scenario for scenario in applicable_scenarios if scenario not in generated_scenarios],
+    }
     validate_event_timeline(graph, profile)
     return graph
 
