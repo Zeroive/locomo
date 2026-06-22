@@ -1,0 +1,33 @@
+{
+  "description": "家庭画像萃取输入数据格式",
+  "family": {
+    "family_id": "family_test_001",
+    "family_name": "测试家庭"
+  },
+  "members": [
+    {"person_id": "person_王大爷", "name": "王大爷", "gender": "男", "age_range": "65-70", "person_type": "family_member"},
+    {"person_id": "person_王大妈", "name": "王大妈", "gender": "女", "age_range": "63-68", "person_type": "family_member"},
+    {"person_id": "person_王小明", "name": "王小明", "gender": "男", "age_range": "35-40", "person_type": "family_member"},
+    {"person_id": "person_张小丽", "name": "张小丽", "gender": "女", "age_range": "33-38", "person_type": "family_member"},
+    {"person_id": "person_王小宝", "name": "王小宝", "gender": "男", "age_range": "8-10", "person_type": "family_member"}
+  ],
+  "relations": [
+    {"from": "person_王小明", "to": "person_王大爷", "type": "FATHER_OF"},
+    {"from": "person_王小明", "to": "person_王大妈", "type": "MOTHER_OF"},
+    {"from": "person_王小明", "to": "person_张小丽", "type": "SPOUSE_OF"},
+    {"from": "person_王小宝", "to": "person_王小明", "type": "FATHER_OF"},
+    {"from": "person_王小宝", "to": "person_张小丽", "type": "MOTHER_OF"},
+    {"from": "person_王大爷", "to": "person_王大妈", "type": "SPOUSE_OF"}
+  ],
+  "QA": [
+    {
+      "time": "",
+      "entity_id": "person_王大爷",
+      "QA_details":
+      {
+        "user":"",
+        "assistant": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,1262 @@
+{
+  "name": "张强",
+  "persona_summary": "张强是一名32岁的男性工厂工人，工作认真负责，尤其是在他负责的流水线岗位上，总能按时完成任务，是同事和主管都信赖的员工。他性格内向，不善社交，下班后喜欢独自待在家中，一整天都在床上睡觉，几乎不参加任何社交活动。他不认为自己懒惰，但在工作以外的生活中却显得有些颓废，家务几乎不做，也不关心个人形象。张强已婚，妻子王丽是一名小学老师，经常劝他培养一些兴趣爱好，但效果甚微。他与妻子的关系还算和睦，但生活缺乏激情。他唯一的爱好就是工作时听收音机里的新闻节目，以此打发时间。",
+  "msc_prompt": [
+    "I can't eat well.",
+    "I sleep all day.",
+    "I am not social.",
+    "I work in a factory.",
+    "I am reliable in my job.",
+    "I am not reliable in other things.",
+    "I am not lazy at my job.",
+    "I am lazy at home."
+  ],
+  "devices": {
+    "smart_lock": {
+      "name": "智能门锁",
+      "category": "感知类设备",
+      "relevance_score": 0.85,
+      "reason": "张强每天早上上班前需要锁门，智能门锁能提供便捷的关门自动落锁和远程确认门锁状态的功能，适合他内向、不善社交且生活规律的特点。",
+      "capabilities": {
+        "control": [
+          "远程解锁（需二次确认）",
+          "关门自动落锁"
+        ],
+        "query": [
+          "当前电量",
+          "门状态（开/关/虚掩）",
+          "开锁日志（谁在何时用什么方式）"
+        ],
+        "config": [
+          "生成临时密码（一次性/周期/限时）",
+          "下发指纹/IC卡",
+          "防撬报警开关"
+        ]
+      },
+      "typical_events": [
+        {
+          "event_type": "lock_unlock",
+          "description": "门锁{操作}",
+          "trigger": "指纹/密码/远程解锁"
+        },
+        {
+          "event_type": "door_status",
+          "description": "门{状态}",
+          "trigger": "开门/关门/虚掩"
+        },
+        {
+          "event_type": "temp_password",
+          "description": "生成临时密码",
+          "trigger": "创建一次性/周期密码"
+        },
+        {
+          "event_type": "tamper_alert",
+          "description": "防撬报警",
+          "trigger": "异常开锁尝试"
+        }
+      ]
+    },
+    "wifi_router": {
+      "name": "WiFi AP / 路由器",
+      "category": "感知类设备",
+      "relevance_score": 0.7,
+      "reason": "路由器可用于检测张强的手机是否已离家网络，判断其出门状态，符合场景中AI助手与用户交互的需求，便于触发离家模式或其他自动化操作。",
+      "capabilities": {
+        "query": [
+          "连接设备列表",
+          "MAC地址",
+          "RSSI信号强度",
+          "在线状态"
+        ],
+        "control": [
+          "踢出设备",
+          "开启/关闭访客网络",
+          "儿童上网时间段限制"
+        ],
+        "config": [
+          "设备别名绑定",
+          "回家/离家地理围栏触发阈值"
+        ]
+      },
+      "typical_events": [
+        {
+          "event_type": "device_online",
+          "description": "{设备名称}上线",
+          "trigger": "手机连接WiFi"
+        },
+        {
+          "event_type": "device_offline",
+          "description": "{设备名称}离线",
+          "trigger": "手机离开WiFi覆盖范围"
+        },
+        {
+          "event_type": "network_block",
+          "description": "设备{设备名称}被踢出网络",
+          "trigger": "家长控制操作"
+        },
+        {
+          "event_type": "guest_network",
+          "description": "访客网络{状态}",
+          "trigger": "开启/关闭访客网络"
+        }
+      ]
+    },
+    "air_conditioner": {
+      "name": "空调",
+      "category": "执行设备",
+      "relevance_score": 0.65,
+      "reason": "张强早上出门前可能会检查家中的空调状态，确保离家后关闭或设置节能模式，符合其工作认真但生活较为被动的性格特点。",
+      "capabilities": {
+        "control": [
+          "开关",
+          "模式(制冷/热/除湿/送风)",
+          "目标温度",
+          "风速(低/中/高/自动)",
+          "扫风方向"
+        ],
+        "config": [
+          "节能模式",
+          "睡眠曲线",
+          "滤网清洗提醒重置"
+        ]
+      },
+      "typical_events": [
+        {
+          "event_type": "ac_switch",
+          "description": "空调{状态}",
+          "trigger": "手动/定时/温度联动"
+        },
+        {
+          "event_type": "mode_change",
+          "description": "空调模式切换为{模式}",
+          "trigger": "模式选择"
+        },
+        {
+          "event_type": "temp_adjust",
+          "description": "温度调整至{温度}℃",
+          "trigger": "语音/APP控制"
+        },
+        {
+          "event_type": "energy_save",
+          "description": "节能模式{状态}",
+          "trigger": "模式切换"
+        }
+      ]
+    },
+    "smart_speaker": {
+      "name": "智能音箱",
+      "category": "交互设备",
+      "relevance_score": 0.6,
+      "reason": "虽然张强不常主动使用娱乐设备，但智能音箱可以用于语音交互，如确认出门前的事项或播报天气信息，适合与AI助手进行简单对话的场景。",
+      "capabilities": {
+        "control": [
+          "音量调节",
+          "TTS文本播报（文字转语音，如\"饭做好了\"）",
+          "媒体播放控制"
+        ],
+        "config": [
+          "麦克风阵列静音（物理隐私）",
+          "蓝牙配对",
+          "声纹识别绑定"
+        ]
+      },
+      "typical_events": [
+        {
+          "event_type": "voice_command",
+          "description": "语音指令：{指令}",
+          "trigger": "唤醒词+命令"
+        },
+        {
+          "event_type": "tts_announcement",
+          "description": "播报：{内容}",
+          "trigger": "事件触发/定时"
+        },
+        {
+          "event_type": "media_play",
+          "description": "播放{内容}",
+          "trigger": "语音指令"
+        },
+        {
+          "event_type": "conversation_start",
+          "description": "对话开始",
+          "trigger": "唤醒词"
+        },
+        {
+          "event_type": "conversation_end",
+          "description": "对话结束",
+          "trigger": "超时/主动结束"
+        }
+      ]
+    }
+  },
+  "events_start_date": "20 February, 2025",
+  "graph": [
+    {
+      "sub-event": "张强连续两天加班，为了赶工期在工厂通宵工作。",
+      "date": "20 February, 2025",
+      "id": "E1",
+      "caused_by": []
+    },
+    {
+      "sub-event": "王丽再次劝说张强多注意个人卫生和锻炼身体，但张强敷衍回应。",
+      "date": "22 February, 2025",
+      "id": "E2",
+      "caused_by": []
+    },
+    {
+      "sub-event": "张强在工厂听收音机时了解到一个关于社区志愿者活动的新闻，但并未付诸行动。",
+      "date": "25 February, 2025",
+      "id": "E3",
+      "caused_by": [
+        "E1"
+      ]
+    },
+    {
+      "sub-event": "王丽在家中整理房间时发现张强的床铺已有数日未换洗床单，劝说他注意卫生习惯。",
+      "date": "23 February, 2025",
+      "id": "E4",
+      "caused_by": [
+        "E2"
+      ]
+    },
+    {
+      "sub-event": "张强连续熬夜加班后，在工厂里昏昏欲睡，被主管提醒注意工作安全。",
+      "date": "24 February, 2025",
+      "id": "E5",
+      "caused_by": [
+        "E1"
+      ]
+    },
+    {
+      "sub-event": "王丽独自带着邻居孩子去参加社区活动，归家后与张强谈起活动中孩子们的表现，张强仅简单回应。",
+      "date": "26 February, 2025",
+      "id": "E6",
+      "caused_by": [
+        "E3"
+      ]
+    },
+    {
+      "sub-event": "张强因连续加班后身体不适，当天请假休息，躺在床上整日未与妻子交流。",
+      "date": "27 February, 2025",
+      "id": "E7",
+      "caused_by": [
+        "E1",
+        "E5"
+      ]
+    }
+  ],
+  "session_1_date_time": "9:46 am on 3 January, 2022",
+  "events_session_1": [],
+  "session_1": [
+    {
+      "text": "刚起来，洗漱完就该走了，今天上午有检查。昨晚收音机听新闻到几点？",
+      "raw_text": "刚起来，洗漱完就该走了，今天上午有检查。昨晚收音机听新闻到几点？",
+      "speaker": "张强",
+      "clean_text": "刚醒，洗完就得出门，今天上午要检查。你昨晚听广播到几点？",
+      "dia_id": "D1:1"
+    },
+    {
+      "text": "昨晚的天气预报到9点，早上有雾，建议带伞。",
+      "raw_text": "昨晚的天气预报到9点，早上有雾，建议带伞。",
+      "speaker": "AI助手",
+      "clean_text": "昨晚预报说早上有雾，建议带伞。",
+      "dia_id": "D1:2"
+    },
+    {
+      "text": "我7点出门前检查雨伞，顺便确认会议时间对吗？",
+      "raw_text": "我7点出门前检查雨伞，顺便确认会议时间对吗？",
+      "speaker": "张强",
+      "clean_text": "我七点出门前看看伞和会议时间对不对？",
+      "dia_id": "D1:3"
+    },
+    {
+      "text": "七点提醒您检查伞和会议时间，并确认门锁已关闭。",
+      "raw_text": "七点提醒您检查伞和会议时间，并确认门锁已关闭。",
+      "speaker": "AI助手",
+      "clean_text": "七点提醒你检查伞、会议时间和门锁。",
+      "dia_id": "D1:4"
+    },
+    {
+      "text": "早餐不做了，出门前能锁好门吗？",
+      "raw_text": "早餐不做了，出门前能锁好门吗？",
+      "speaker": "张强",
+      "clean_text": "不做了，出门记得锁门哦。",
+      "dia_id": "D1:5"
+    }
+  ],
+  "session_1_summary": "张强在2022-01-03 00:00:00早晨准备出门，上午有检查。AI助手提醒他昨晚天气预报到9点，早上有雾，建议带伞。张强确认7点出门前会检查雨伞和会议时间，AI助手同时提醒关闭门锁。张强表示不准备早餐，并再次确认出门前门已锁好。",
+  "session_1_facts": {
+    "张强": [
+      [
+        "张强上午要进行检查，计划七点出门前检查伞和会议时间。",
+        "D1:1"
+      ],
+      [
+        "张强七点时需要检查伞、会议时间和门锁。",
+        "D1:3"
+      ],
+      [
+        "张强在离开前交代出门时要记得锁门。",
+        "D1:5"
+      ]
+    ],
+    "AI助手": [
+      [
+        "AI助手提醒张强昨晚预报早上有雾，建议带伞。",
+        "D1:2"
+      ],
+      [
+        "AI助手计划在七点提醒张强检查伞、会议时间和门锁。",
+        "D1:4"
+      ]
+    ]
+  },
+  "session_2_date_time": "6:28 am on 4 January, 2022",
+  "events_session_2": [],
+  "session_2": [
+    {
+      "text": "今天早上会议要提前十分钟到，检查下工具箱。",
+      "raw_text": "今天早上会议要提前十分钟到，检查下工具箱。",
+      "speaker": "张强",
+      "clean_text": "早上会议提前十分钟，记得带工具箱。",
+      "dia_id": "D2:1"
+    },
+    {
+      "text": "今天早上7:10会议，已为您准备工具箱和雨伞，门锁已确认关闭。需要帮您调整室温吗？",
+      "raw_text": "今天早上7:10会议，已为您准备工具箱和雨伞，门锁已确认关闭。需要帮您调整室温吗？",
+      "speaker": "AI助手",
+      "clean_text": "早上七点十分开会，工具箱和伞都备好了，门也锁好了。要帮你调下室温吗？",
+      "dia_id": "D2:2"
+    },
+    {
+      "text": "太冷了，调到22度吧，我再眯十分钟。",
+      "raw_text": "太冷了，调到22度吧，我再眯十分钟。",
+      "speaker": "张强",
+      "clean_text": "太冷了，调22度，我再眯十分钟。",
+      "dia_id": "D2:3"
+    },
+    {
+      "text": "好的，空调已调至22度，您眯到7点5分我会提醒您准备出门。需要帮您确认会议链接吗？",
+      "raw_text": "好的，空调已调至22度，您眯到7点5分我会提醒您准备出门。需要帮您确认会议链接吗？",
+      "speaker": "AI助手",
+      "clean_text": "空调调到22度了，7点5分叫你准备出门。需要我帮你看看会议链接吗？",
+      "dia_id": "D2:4"
+    },
+    {
+      "text": "七点五分提醒，会议链接不用了，今天早会现场见。",
+      "raw_text": "七点五分提醒，会议链接不用了，今天早会现场见。",
+      "speaker": "张强",
+      "clean_text": "七点五分提醒下，不用开链接了，今天早会现场见。",
+      "dia_id": "D2:5"
+    }
+  ],
+  "session_2_summary": "2022-01-03早晨，张强准备外出检查，AI助手提醒有雾并建议带伞、确认门锁。次日（2022-01-04）早上，张强告知会议需提前十分钟，AI助手已备好工具箱和雨伞，并确认门锁。张强要求调空调至22度，并希望7:05提醒出门。AI助手确认提醒时间，并询问是否需检查会议链接，张强表示早会现场进行。",
+  "session_2_facts": {
+    "张强": [
+      [
+        "张强早上会议提前十分钟，需要带工具箱。",
+        "D2:1"
+      ],
+      [
+        "张强要求将空调调至22度，并表示想再休息十分钟。",
+        "D2:3"
+      ],
+      [
+        "张强接受AI助手在7点5分提醒他准备出门，但他不需要会议链接，表示今天早会要现场出席。",
+        "D2:5"
+      ]
+    ],
+    "AI助手": [
+      [
+        "AI助手确认早上七点十分开会，已准备好工具箱、伞，并锁好门。",
+        "D2:2"
+      ],
+      [
+        "AI助手已将空调调至22度，并设定在7点5分提醒张强准备出门。",
+        "D2:4"
+      ]
+    ]
+  },
+  "session_3_date_time": "9:42 am on 6 January, 2022",
+  "events_session_3": [],
+  "session_3": [
+    {
+      "text": "今天早上早会，你记得提醒我带上报表。",
+      "raw_text": "今天早上早会，你记得提醒我带上报表。",
+      "speaker": "张强",
+      "clean_text": "早上开会记得提醒我带报表。",
+      "dia_id": "D3:1"
+    },
+    {
+      "text": "已备好报表，7:05提醒您出门检查。需要开启咖啡机吗？",
+      "raw_text": "已备好报表，7:05提醒您出门检查。需要开启咖啡机吗？",
+      "speaker": "AI助手",
+      "clean_text": "报表准备好了，7:05提醒你出门看看。要开咖啡机吗？",
+      "dia_id": "D3:2"
+    },
+    {
+      "text": "报表带齐了，早会用得上。出门前再提醒我一次。",
+      "raw_text": "报表带齐了，早会用得上。出门前再提醒我一次。",
+      "speaker": "张强",
+      "clean_text": "报表带上，早会用得上，出门前提醒我一下。",
+      "dia_id": "D3:3"
+    },
+    {
+      "text": "7:05提醒你带报表，空调已调至22度，门锁已关闭。需要检查早会座位安排吗？",
+      "raw_text": "7:05提醒你带报表，空调已调至22度，门锁已关闭。需要检查早会座位安排吗？",
+      "speaker": "AI助手",
+      "clean_text": "7:05提醒带报表，空调调好22度了，门也锁了。要看看早会座位吗？",
+      "dia_id": "D3:4"
+    },
+    {
+      "text": "今天座位要靠前，报表别忘放我桌上。",
+      "raw_text": "今天座位要靠前，报表别忘放我桌上。",
+      "speaker": "张强",
+      "clean_text": "座位往前点，报表放我桌上。",
+      "dia_id": "D3:5"
+    }
+  ],
+  "session_3_summary": "2022年1月3日早晨，AI助手提醒张强有雾并建议带伞和检查门锁。1月4日，AI助手为会议准备工具箱和雨伞，并确认门锁，按要求调整空调至22度。1月6日，张强指示AI助手准备早会报表并设置7:05提醒，AI助手确认已备好，并询问是否开启咖啡机和检查座位安排。张强要求报表放在桌上并安排靠前座位，AI助手已完成相关准备。",
+  "session_3_facts": {
+    "张强": [
+      [
+        "张强需要带报表去早会。",
+        "D3:1"
+      ],
+      [
+        "张强在7:05被提醒带报表和出门。",
+        "D3:2"
+      ],
+      [
+        "报表已经准备好了。",
+        "D3:2"
+      ],
+      [
+        "张强要求出门前提醒他带报表。",
+        "D3:3"
+      ],
+      [
+        "张强需要报表放在他的桌上。",
+        "D3:5"
+      ],
+      [
+        "张强要求座位往前一点。",
+        "D3:5"
+      ]
+    ],
+    "AI助手": [
+      [
+        "AI助手在9:42设置了一个提醒，以便张强7:05出门前带报表。",
+        "D3:2"
+      ],
+      [
+        "AI助手在7:05提醒张强带报表。",
+        "D3:4"
+      ],
+      [
+        "AI助手在9:42把空调调到22度。",
+        "D3:4"
+      ],
+      [
+        "AI助手在9:42确认门已锁。",
+        "D3:4"
+      ],
+      [
+        "AI助手在9:42主动提出查看早会座位安排。",
+        "D3:4"
+      ]
+    ]
+  },
+  "session_4_date_time": "7:43 am on 8 January, 2022",
+  "events_session_4": [],
+  "session_4": [
+    {
+      "text": "今天早上报表放在桌上了，你记得检查门锁。",
+      "raw_text": "今天早上报表放在桌上了，你记得检查门锁。",
+      "speaker": "张强",
+      "clean_text": "报表在桌上了，记得检查门锁。",
+      "dia_id": "D4:1"
+    },
+    {
+      "text": "门锁已确认关闭，上午会议需提前准备资料吗？",
+      "raw_text": "门锁已确认关闭，上午会议需提前准备资料吗？",
+      "speaker": "AI助手",
+      "clean_text": "门锁确认关了，上午的会要提前准备资料吗？",
+      "dia_id": "D4:2"
+    },
+    {
+      "text": "资料按顺序放好，我会上午会议前检查。",
+      "raw_text": "资料按顺序放好，我会上午会议前检查。",
+      "speaker": "张强",
+      "clean_text": "资料排好，我上午会前检查一下。",
+      "dia_id": "D4:3"
+    },
+    {
+      "text": "好的，我已整理好会议资料，今天早上8点前空调会保持22度，您出门前需要其他协助吗？",
+      "raw_text": "好的，我已整理好会议资料，今天早上8点前空调会保持22度，您出门前需要其他协助吗？",
+      "speaker": "AI助手",
+      "clean_text": "整理好会议资料了，空调今天早上8点前保持22度，出门前还需要我帮忙吗？",
+      "dia_id": "D4:4"
+    },
+    {
+      "text": "早点提醒我检查报表，别耽误早会。",
+      "raw_text": "早点提醒我检查报表，别耽误早会。",
+      "speaker": "张强",
+      "clean_text": "早点提醒我看看报表，别影响早会。",
+      "dia_id": "D4:5"
+    }
+  ],
+  "session_4_summary": "从2022年1月3日至1月6日，AI助手持续协助张强处理早会准备、门锁检查、空调调节及咖啡机启动。1月8日，张强再次提醒检查报表和门锁，AI助手确认门锁已关并主动询问是否需准备会议资料。张强要求资料按顺序摆放，并指示AI助手8点前保持22度空调。最后，张强要求早点提醒检查报表以确保早会顺利进行。AI助手已完成相关安排。",
+  "session_4_facts": {
+    "张强": [
+      [
+        "张强将报表放在了桌上，并叮嘱检查门锁。",
+        "D4:1"
+      ],
+      [
+        "张强表示会在上午会议前检查资料是否排好。",
+        "D4:3"
+      ],
+      [
+        "张强希望早点被提醒查看报表，以免影响早会。",
+        "D4:5"
+      ]
+    ],
+    "AI助手": [
+      [
+        "AI助手确认门锁已关闭，并询问是否需要提前准备上午会议的资料。",
+        "D4:2"
+      ],
+      [
+        "AI助手已整理好会议资料，并设定空调在早上8点前保持22度。",
+        "D4:4"
+      ]
+    ]
+  },
+  "session_5_date_time": "8:24 am on 9 January, 2022",
+  "events_session_5": [],
+  "session_5": [
+    {
+      "text": "今天早上报表放在桌上最上面了，出门前再确认下。",
+      "raw_text": "今天早上报表放在桌上最上面了，出门前再确认下。",
+      "speaker": "张强",
+      "clean_text": "报表放在桌上了，出门前再看看。",
+      "dia_id": "D5:1"
+    },
+    {
+      "text": "已提醒您7:05检查报表，空调保持22度，请确认门锁状态是否正常？",
+      "raw_text": "已提醒您7:05检查报表，空调保持22度，请确认门锁状态是否正常？",
+      "speaker": "AI助手",
+      "clean_text": "提醒你7:05查报表，空调22度，门锁好着吗？",
+      "dia_id": "D5:2"
+    },
+    {
+      "text": "门锁了，今天早上早会要汇报生产数据。",
+      "raw_text": "门锁了，今天早上早会要汇报生产数据。",
+      "speaker": "张强",
+      "clean_text": "门锁着呢，今天早会得汇报生产数据。",
+      "dia_id": "D5:3"
+    },
+    {
+      "text": "已备好会议资料，数据文件排在最上层。",
+      "raw_text": "已备好会议资料，数据文件排在最上层。",
+      "speaker": "AI助手",
+      "clean_text": "资料备好了，数据文件放在最上面。",
+      "dia_id": "D5:4"
+    },
+    {
+      "text": "上午会议重点讲数据波动，出门前再核对一次。",
+      "raw_text": "上午会议重点讲数据波动，出门前再核对一次。",
+      "speaker": "张强",
+      "clean_text": "上午会议讲数据波动，出门前再核对下。",
+      "dia_id": "D5:5"
+    }
+  ],
+  "session_5_summary": "从2022年1月3日至1月6日，AI助手持续协助张强准备早会、检查门锁、调节空调及启动咖啡机。1月8日，张强再次提醒检查报表和门锁，AI助手确认门锁已关并主动准备会议资料。当前时间为1月9日，AI助手已按要求将报表放在最上层并提醒检查，张强确认门锁状态，并指示上午会议重点为数据波动，AI助手已将数据文件置顶以确保顺利汇报。",
+  "session_5_facts": {
+    "张强": [
+      [
+        "张强把报表放在桌上了，出门前需要再看看。",
+        "D5:1"
+      ],
+      [
+        "张强提醒7:05查看报表，空调设置为22度，并确认门是否锁好。",
+        "D5:2"
+      ],
+      [
+        "张强已经锁好门，今天早会需要汇报生产数据。",
+        "D5:3"
+      ],
+      [
+        "张强确认资料已经准备好，数据文件放在最上面。",
+        "D5:4"
+      ],
+      [
+        "张强上午会议要讲解数据波动，出门前需要再核对。",
+        "D5:5"
+      ]
+    ],
+    "AI助手": [
+      [
+        "AI助手提醒7:05查看报表，空调设置为22度，并确认门是否锁好。",
+        "D5:2"
+      ],
+      [
+        "AI助手确认资料已经准备好，数据文件放在最上面。",
+        "D5:4"
+      ]
+    ]
+  },
+  "session_1_device_trajectory": [
+    {
+      "role": "user",
+      "content": "家里的空调开了吗？给我调成26度，风小点。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 air_conditioner.get_status(device_id=\"living_room_ac\")"
+    },
+    {
+      "role": "assistant",
+      "content": "空调当前温度26°C，风速为低速，制冷模式运行中。"
+    },
+    {
+      "role": "user",
+      "content": "行了，就这样吧，我得走了。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，祝您工作顺利，一路顺风！家里一切正常，有需要随时回来找我哦～"
+    },
+    {
+      "role": "user",
+      "content": "走了，家里注意别太冷。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 air_conditioner.get_status(device_id=\"living_room_ac\")"
+    },
+    {
+      "role": "assistant",
+      "content": "空调当前温度26°C，风速为低速，制冷模式运行中。"
+    }
+  ],
+  "session_2_device_trajectory": [
+    {
+      "role": "user",
+      "content": "家里的空调开了吗？"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 air_conditioner.get_status(device_id=\"living_room_ac\")"
+    },
+    {
+      "role": "assistant",
+      "content": "空调当前温度26°C，制冷模式运行中。"
+    },
+    {
+      "role": "user",
+      "content": "那先关了吧，别费电了。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 air_conditioner.set_power(device_id=\"living_room_ac\", power=\"False\")"
+    },
+    {
+      "role": "assistant",
+      "content": "空调已关闭，节省用电中。需要时随时为您开启。"
+    },
+    {
+      "role": "user",
+      "content": "门锁了没？"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 smart_lock.get_status(lock_id=\"main_door_lock\")"
+    },
+    {
+      "role": "assistant",
+      "content": "门锁当前状态：已上锁，安全状态良好。"
+    }
+  ],
+  "session_3_device_trajectory": [
+    {
+      "role": "user",
+      "content": "家里的门锁好了吗？"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 smart_lock.get_status(lock_id=\"main_door_lock\")"
+    },
+    {
+      "role": "assistant",
+      "content": "门锁当前状态：已上锁，门处于关闭状态，安全状态良好。"
+    },
+    {
+      "role": "user",
+      "content": "嗯，锁好了就行，我走了。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，门锁已经确认上锁，您放心出门吧！祝您工作顺利，一切顺利～"
+    },
+    {
+      "role": "user",
+      "content": "我走了，门锁好了就行。家里面没事吧？"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 home.get_mode()"
+    },
+    {
+      "role": "assistant",
+      "content": "当前家庭模式为“离家模式”，所有安防设备已启动，门窗状态正常，家中一切安全。您放心外出，有任何异常系统会及时通知您～"
+    }
+  ],
+  "session_4_device_trajectory": [
+    {
+      "role": "user",
+      "content": "家里的空调开了吗？有点热。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 air_conditioner.get_status(device_id=\"living_room_ac\")"
+    },
+    {
+      "role": "assistant",
+      "content": "空调当前温度26°C，制冷模式运行中。"
+    },
+    {
+      "role": "user",
+      "content": "那关了吧，上班呢，开着怪费电的。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 air_conditioner.set_power(device_id=\"living_room_ac\", power=\"False\")"
+    },
+    {
+      "role": "assistant",
+      "content": "空调已关闭，节省用电啦，您上班放心出门吧！"
+    },
+    {
+      "role": "user",
+      "content": "锁好门。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 smart_lock.lock(lock_id=\"front_door_lock\")"
+    },
+    {
+      "role": "assistant",
+      "content": "调用工具 smart_lock.lock(lock_id=\"front_door_lock\")  \n助手: 正门已上锁，请放心出门，家里安全有保障！"
+    }
+  ],
+  "session_5_device_trajectory": [
+    {
+      "role": "user",
+      "content": "家里的空调开了吗？有点热。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 air_conditioner.get_status(device_id=\"living_room_ac\")"
+    },
+    {
+      "role": "assistant",
+      "content": "空调当前温度26°C，制冷模式运行中。"
+    },
+    {
+      "role": "user",
+      "content": "那就关了吧，我不在家，没必要开。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 air_conditioner.set_power(device_id=\"living_room_ac\", power=\"False\")"
+    },
+    {
+      "role": "assistant",
+      "content": "空调已关闭，节省能源，注意安全。"
+    },
+    {
+      "role": "user",
+      "content": "家里没人吧？锁好门。"
+    },
+    {
+      "role": "assistant",
+      "content": "好的，我来帮你操作。"
+    },
+    {
+      "role": "tool",
+      "content": "调用工具 home.get_occupancy()"
+    },
+    {
+      "role": "assistant",
+      "content": "调用工具 home.get_occupancy()  \n助手: 当前家中无人，门锁状态：已上锁，安全无异常。"
+    }
+  ],
+  "session_1_device_events": {
+    "episode_id": "ep_001",
+    "scene": "男主人早上出门上班前与AI助手的对话",
+    "confidence": 0.9,
+    "annotated_events": [
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "checked",
+          "object_id": "umbrella_and_meeting_time"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-03T07:00:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "ready_to_leave",
+              "location": "entrance"
+            }
+          },
+          "devices": {
+            "door_lock_01": {
+              "state": "unlocked"
+            },
+            "router_01": {
+              "state": "zhang_qiang's phone online"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "locked",
+          "object_id": "door_lock_01"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-03T07:46:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "leaving",
+              "location": "outside"
+            }
+          },
+          "devices": {
+            "door_lock_01": {
+              "state": "locked"
+            },
+            "router_01": {
+              "state": "zhang_qiang's phone online"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "door_lock_01",
+          "predicate": "auto_locked",
+          "object_id": "door_lock_01"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-03T07:46:10+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "left_home",
+              "location": "outside"
+            }
+          },
+          "devices": {
+            "door_lock_01": {
+              "state": "locked"
+            },
+            "router_01": {
+              "state": "zhang_qiang's phone signal weak"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "session_2_device_events": {
+    "episode_id": "ep_002",
+    "scene": "男主人早上出门上班前与AI助手的对话",
+    "confidence": 0.93,
+    "annotated_events": [
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "adjusted",
+          "object_id": "air_conditioner"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-04T06:28:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "preparing_to_leave",
+              "location": "bedroom"
+            }
+          },
+          "devices": {
+            "air_conditioner": {
+              "state": "target_temperature_set_to_22"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "set",
+          "object_id": "smart_lock"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-04T06:28:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "preparing_to_leave",
+              "location": "bedroom"
+            }
+          },
+          "devices": {
+            "smart_lock": {
+              "state": "locked"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "set",
+          "object_id": "smart_speaker"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-04T06:28:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "preparing_to_leave",
+              "location": "bedroom"
+            }
+          },
+          "devices": {
+            "smart_speaker": {
+              "state": "scheduled_tts_at_07:05"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "left",
+          "object_id": "home"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-04T07:05:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "leaving",
+              "location": "outside"
+            }
+          },
+          "devices": {
+            "smart_lock": {
+              "state": "locked"
+            },
+            "air_conditioner": {
+              "state": "running_at_22"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "session_3_device_events": {
+    "episode_id": "ep_003",
+    "scene": "男主人早上出门上班前与AI助手的对话",
+    "confidence": 0.92,
+    "annotated_events": [
+      {
+        "event": {
+          "subject_id": "zhangqiang",
+          "predicate": "closed",
+          "object_id": "door_main"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-06T07:05:00+08:00",
+          "persons": {
+            "zhangqiang": {
+              "status": "leaving",
+              "location": "entrance"
+            }
+          },
+          "devices": {
+            "door_main": {
+              "state": "locked"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "zhangqiang",
+          "predicate": "activated",
+          "object_id": "aircon"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-06T07:04:30+08:00",
+          "persons": {
+            "zhangqiang": {
+              "status": "moving_to_entrance",
+              "location": "living_room"
+            }
+          },
+          "devices": {
+            "aircon": {
+              "state": "set_temperature_to_22"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "zhangqiang",
+          "predicate": "left",
+          "object_id": "home"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-06T07:06:20+08:00",
+          "persons": {
+            "zhangqiang": {
+              "status": "left_home",
+              "location": "outside"
+            }
+          },
+          "devices": {
+            "door_main": {
+              "state": "locked"
+            },
+            "aircon": {
+              "state": "set_temperature_to_22"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "session_4_device_events": {
+    "episode_id": "ep_004",
+    "scene": "男主人早上出门上班前与AI助手的对话",
+    "confidence": 0.94,
+    "annotated_events": [
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "checked",
+          "object_id": "door_lock_main"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-08T07:43:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "preparing_to_leave",
+              "location": "living_room"
+            }
+          },
+          "devices": {
+            "door_lock_main": {
+              "state": "locked"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "confirmed",
+          "object_id": "aircon_living_room"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-08T07:45:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "preparing_to_leave",
+              "location": "entrance"
+            }
+          },
+          "devices": {
+            "aircon_living_room": {
+              "state": "on",
+              "temperature_setpoint": "22"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "left",
+          "object_id": "home"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-08T07:50:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "left_home",
+              "location": "outside"
+            }
+          },
+          "devices": {
+            "door_lock_main": {
+              "state": "locked"
+            },
+            "aircon_living_room": {
+              "state": "on",
+              "temperature_setpoint": "22"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "system",
+          "predicate": "triggered",
+          "object_id": "away_mode"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-08T07:51:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "left_home",
+              "location": "outside"
+            }
+          },
+          "devices": {
+            "door_lock_main": {
+              "state": "locked_and_automatically_locked"
+            },
+            "aircon_living_room": {
+              "state": "on",
+              "temperature_setpoint": "22"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "session_5_device_events": {
+    "episode_id": "ep_005",
+    "scene": "男主人早上出门上班前与AI助手的对话",
+    "confidence": 0.92,
+    "annotated_events": [
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "check",
+          "object_id": "door_main"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-09T08:24:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "moving_to_entrance",
+              "location": "entrance"
+            }
+          },
+          "devices": {
+            "door_main": {
+              "state": "locked"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "check",
+          "object_id": "aircon_livingroom"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-09T08:24:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "moving_to_entrance",
+              "location": "entrance"
+            }
+          },
+          "devices": {
+            "aircon_livingroom": {
+              "state": "on",
+              "temperature": 22,
+              "mode": "cool"
+            }
+          }
+        }
+      },
+      {
+        "event": {
+          "subject_id": "zhang_qiang",
+          "predicate": "prepare_for_leaving",
+          "object_id": "entrance"
+        },
+        "state_snapshot": {
+          "timestamp": "2022-01-09T08:25:00+08:00",
+          "persons": {
+            "zhang_qiang": {
+              "status": "leaving",
+              "location": "outside"
+            }
+          },
+          "devices": {
+            "door_main": {
+              "state": "locked"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
