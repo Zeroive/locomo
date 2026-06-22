@@ -304,6 +304,7 @@ def generate_household_session(
     assistant,
     sess_id,
     curr_date_time,
+    current_user_id=None,
     prev_date_time="",
     previous_summary="",
     max_turns=8,
@@ -311,7 +312,8 @@ def generate_household_session(
     on_turn_generated=None,
 ):
     events = profile.get(f"events_session_{sess_id}", [])
-    current_user_id = choose_current_user(profile, events, sess_id)
+    if current_user_id is None:
+        current_user_id = choose_current_user(profile, events, sess_id)
     current_user = get_member(profile, current_user_id)
     related_event_ids = [event["id"] for event in events]
     logging.info(

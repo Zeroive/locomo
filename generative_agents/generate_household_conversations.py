@@ -38,7 +38,7 @@ from generative_agents.household_utils import (
     strip_generation_prompts,
     validate_household,
 )
-from generative_agents.time_utils import datetimeObj2Str, get_random_time
+from generative_agents.time_utils import catch_date, datetimeObj2Str, get_random_time
 
 
 logging.basicConfig(level=logging.INFO)
@@ -215,14 +215,59 @@ def ensure_session_dates(profile, args, sess_id, prev_date_time_string=""):
     return date_time
 
 
+def make_session_datetime_for_event(profile, sess_id, event):
+    key = f"session_{sess_id}_date_time"
+    if key in profile:
+        return profile[key]
+    event_date = catch_date(event["date"])
+    session_time = get_random_time({"time_range": {"start_hour": 9, "end_hour": 21}})
+    date_time = datetimeObj2Str(datetime(event_date.year, event_date.month, event_date.day) + session_time)
+    profile[key] = date_time
+    logging.info("Assigned %s=%s for event=%s", key, date_time, event.get("id"))
+    return date_time
+
+
+def build_session_plans(profile, requested_num_sessions):
+    plans = []
+    for event in profile.get("graph", []):
+        for participant_id in event.get("participants", []):
+            if any(member["person_id"] == participant_id and member.get("can_chat_with_ai", True) for member in profile.get("members", [])):
+                plans.append({
+                    "event_id": event["id"],
+                    "current_user_id": participant_id,
+                })
+
+    if not plans:
+        for sess_idx in range(requested_num_sessions):
+            plans.append({"event_id": "", "current_user_id": profile["members"][sess_idx % len(profile["members"])]["person_id"]})
+
+    base_plans = list(plans)
+    while len(plans) < requested_num_sessions and base_plans:
+        plans.append(dict(base_plans[len(plans) % len(base_plans)]))
+
+    if len(plans) > requested_num_sessions:
+        logging.info(
+            "Expanding sessions from requested=%s to required=%s so every event participant can chat with AI",
+            requested_num_sessions,
+            len(plans),
+        )
+    return plans
+
+
 def generate_session_step(args, profile):
     assistant = ensure_assistant(args.out_dir)
     if not profile.get("graph"):
         logging.warning("No household events found; sessions will be generated without event grounding")
 
+    session_plans = build_session_plans(profile, args.num_sessions)
+    profile["session_plans"] = [
+        {"session_id": idx, **plan}
+        for idx, plan in enumerate(session_plans, start=1)
+    ]
     logging.info(
-        "Starting session step: num_sessions=%s, max_turns=%s, use_llm=%s",
+        "Starting session step: requested_num_sessions=%s, planned_sessions=%s, max_turns=%s, use_llm=%s",
         args.num_sessions,
+        len(session_plans),
         args.max_turns_per_session,
         not args.no_llm,
     )
@@ -250,20 +295,23 @@ def generate_session_step(args, profile):
             len(session_data.get("turns", [])),
         )
 
-    for sess_id in range(1, args.num_sessions + 1):
+    event_by_id = {event["id"]: event for event in profile.get("graph", [])}
+    for sess_id, session_plan in enumerate(session_plans, start=1):
         if sess_id in existing_session_ids and not args.overwrite_session:
             prev_date_time_string = profile.get(f"session_{sess_id}_date_time", prev_date_time_string)
             continue
 
-        curr_date_time_string = ensure_session_dates(profile, args, sess_id, prev_date_time_string)
-        curr_date = datetime.strptime(curr_date_time_string.split(" on ")[1], "%d %B, %Y")
-        prev_date = datetime.strptime(prev_date_time_string.split(" on ")[1], "%d %B, %Y") if prev_date_time_string else None
-
-        relevant_events = get_relevant_household_events(profile.get("graph", []), curr_date, prev_date)
-        profile[f"events_session_{sess_id}"] = relevant_events[-1:] if relevant_events else []
+        event = event_by_id.get(session_plan.get("event_id"))
+        if event:
+            curr_date_time_string = make_session_datetime_for_event(profile, sess_id, event)
+            profile[f"events_session_{sess_id}"] = [event]
+        else:
+            curr_date_time_string = ensure_session_dates(profile, args, sess_id, prev_date_time_string)
+            profile[f"events_session_{sess_id}"] = []
         logging.info(
-            "Session %s current event: %s",
+            "Session %s plan: current_user=%s, current_event=%s",
             sess_id,
+            session_plan.get("current_user_id"),
             [event.get("id") for event in profile[f"events_session_{sess_id}"]],
         )
         previous_summary = profile.get(f"session_{sess_id - 1}_summary", "") if sess_id > 1 else ""
@@ -272,6 +320,7 @@ def generate_session_step(args, profile):
             assistant=assistant,
             sess_id=sess_id,
             curr_date_time=curr_date_time_string,
+            current_user_id=session_plan.get("current_user_id"),
             prev_date_time=prev_date_time_string,
             previous_summary=previous_summary,
             max_turns=args.max_turns_per_session,
