@@ -230,28 +230,54 @@ def make_session_datetime_for_event(profile, sess_id, event):
 def build_session_plans(profile, requested_num_sessions):
     plans = []
     for event in profile.get("graph", []):
+        conversations = []
         for participant_id in event.get("participants", []):
             if any(member["person_id"] == participant_id and member.get("can_chat_with_ai", True) for member in profile.get("members", [])):
-                plans.append({
-                    "event_id": event["id"],
+                conversations.append({
                     "current_user_id": participant_id,
                 })
+        if conversations:
+            plans.append({
+                "event_id": event["id"],
+                "conversations": conversations,
+            })
 
     if not plans:
-        for sess_idx in range(requested_num_sessions):
-            plans.append({"event_id": "", "current_user_id": profile["members"][sess_idx % len(profile["members"])]["person_id"]})
+        plans.append({
+            "event_id": "",
+            "conversations": [
+                {"current_user_id": profile["members"][sess_idx % len(profile["members"])]["person_id"]}
+                for sess_idx in range(requested_num_sessions)
+            ],
+        })
 
     base_plans = list(plans)
     while len(plans) < requested_num_sessions and base_plans:
         plans.append(dict(base_plans[len(plans) % len(base_plans)]))
 
-    if len(plans) > requested_num_sessions:
+    flat_count = sum(len(plan["conversations"]) for plan in plans)
+    if flat_count > requested_num_sessions:
         logging.info(
-            "Expanding sessions from requested=%s to required=%s so every event participant can chat with AI",
+            "Expanding conversations from requested_sessions=%s to required_conversations=%s so every event participant can chat with AI",
             requested_num_sessions,
-            len(plans),
+            flat_count,
         )
     return plans
+
+
+def rebuild_grouped_sessions(profile):
+    event_sessions = {}
+    for session in sorted(profile.get("flat_sessions", []), key=lambda item: item.get("session_id", 0)):
+        event_session_id = session.get("event_session_id") or session.get("session_id")
+        group = event_sessions.setdefault(event_session_id, {
+            "event_session_id": event_session_id,
+            "event_id": session.get("related_event_ids", [""])[0] if session.get("related_event_ids") else "",
+            "date_time": session.get("date_time", ""),
+            "conversations": [],
+        })
+        group["conversations"].append(session)
+    profile["sessions"] = [event_sessions[key] for key in sorted(event_sessions)]
+    return profile["sessions"]
 
 
 def generate_session_step(args, profile):
@@ -261,32 +287,36 @@ def generate_session_step(args, profile):
 
     session_plans = build_session_plans(profile, args.num_sessions)
     profile["session_plans"] = [
-        {"session_id": idx, **plan}
+        {"event_session_id": idx, **plan}
         for idx, plan in enumerate(session_plans, start=1)
     ]
+    planned_conversation_count = sum(len(plan["conversations"]) for plan in session_plans)
     logging.info(
-        "Starting session step: requested_num_sessions=%s, planned_sessions=%s, max_turns=%s, use_llm=%s",
+        "Starting session step: requested_num_sessions=%s, event_sessions=%s, planned_conversations=%s, max_turns=%s, use_llm=%s",
         args.num_sessions,
         len(session_plans),
+        planned_conversation_count,
         args.max_turns_per_session,
         not args.no_llm,
     )
     profile["sessions"] = [] if args.overwrite_session else profile.get("sessions", [])
-    existing_session_ids = {session.get("session_id") for session in profile.get("sessions", [])}
+    profile["flat_sessions"] = [] if args.overwrite_session else profile.get("flat_sessions", [])
+    existing_session_ids = {session.get("session_id") for session in profile.get("flat_sessions", [])}
 
     prev_date_time_string = ""
 
     def autosave_session(session_data):
         replaced = False
-        for idx, existing in enumerate(profile.get("sessions", [])):
+        for idx, existing in enumerate(profile.get("flat_sessions", [])):
             if existing.get("session_id") == session_data.get("session_id"):
-                profile["sessions"][idx] = session_data
+                profile["flat_sessions"][idx] = session_data
                 replaced = True
                 break
         if not replaced:
-            profile.setdefault("sessions", []).append(session_data)
+            profile.setdefault("flat_sessions", []).append(session_data)
         sess_id = session_data["session_id"]
         profile[f"session_{sess_id}"] = session_data.get("turns", [])
+        rebuild_grouped_sessions(profile)
         save_profile(profile, args.out_dir)
         save_json(profile.get("sessions", []), sessions_path(args.out_dir))
         logging.info(
@@ -296,61 +326,71 @@ def generate_session_step(args, profile):
         )
 
     event_by_id = {event["id"]: event for event in profile.get("graph", [])}
-    for sess_id, session_plan in enumerate(session_plans, start=1):
-        if sess_id in existing_session_ids and not args.overwrite_session:
-            prev_date_time_string = profile.get(f"session_{sess_id}_date_time", prev_date_time_string)
-            continue
-
+    sess_id = 1
+    for event_session_id, session_plan in enumerate(session_plans, start=1):
         event = event_by_id.get(session_plan.get("event_id"))
-        if event:
-            curr_date_time_string = make_session_datetime_for_event(profile, sess_id, event)
-            profile[f"events_session_{sess_id}"] = [event]
-        else:
-            curr_date_time_string = ensure_session_dates(profile, args, sess_id, prev_date_time_string)
-            profile[f"events_session_{sess_id}"] = []
-        logging.info(
-            "Session %s plan: current_user=%s, current_event=%s",
-            sess_id,
-            session_plan.get("current_user_id"),
-            [event.get("id") for event in profile[f"events_session_{sess_id}"]],
-        )
-        previous_summary = profile.get(f"session_{sess_id - 1}_summary", "") if sess_id > 1 else ""
-        session = generate_household_session(
-            profile=profile,
-            assistant=assistant,
-            sess_id=sess_id,
-            curr_date_time=curr_date_time_string,
-            current_user_id=session_plan.get("current_user_id"),
-            prev_date_time=prev_date_time_string,
-            previous_summary=previous_summary,
-            max_turns=args.max_turns_per_session,
-            use_llm=not args.no_llm,
-            on_turn_generated=autosave_session,
-        )
-        autosave_session(session)
-        profile[f"session_{sess_id}"] = session["turns"]
-        logging.info(
-            "Session %s generated: current_user=%s(%s), turns=%s, mode=%s",
-            sess_id,
-            session["current_user_name"],
-            session["current_user_id"],
-            len(session["turns"]),
-            session.get("turn_generation_mode"),
-        )
-        profile[f"session_{sess_id}_facts"] = extract_household_session_facts(profile, session, use_llm=not args.no_llm)
-        save_profile(profile, args.out_dir)
-        logging.info("Autosaved session %s facts to household_profile.json", sess_id)
-        logging.info(
-            "Session %s facts extracted for speakers=%s",
-            sess_id,
-            list(profile[f"session_{sess_id}_facts"].keys()) if isinstance(profile[f"session_{sess_id}_facts"], dict) else type(profile[f"session_{sess_id}_facts"]),
-        )
-        if args.summary:
-            profile[f"session_{sess_id}_summary"] = summarize_session(session)
-            logging.info("Session %s summary: %s", sess_id, profile[f"session_{sess_id}_summary"])
+        event_session_date_time = make_session_datetime_for_event(profile, event_session_id, event) if event else ""
+        for conversation_plan in session_plan["conversations"]:
+            current_user_id = conversation_plan["current_user_id"]
+            if sess_id in existing_session_ids and not args.overwrite_session:
+                prev_date_time_string = profile.get(f"session_{sess_id}_date_time", prev_date_time_string)
+                sess_id += 1
+                continue
 
-        prev_date_time_string = curr_date_time_string
-        logging.info("Generated household session %s for %s", sess_id, session["current_user_name"])
+            if event:
+                curr_date_time_string = event_session_date_time
+                profile[f"session_{sess_id}_date_time"] = curr_date_time_string
+                profile[f"events_session_{sess_id}"] = [event]
+            else:
+                curr_date_time_string = ensure_session_dates(profile, args, sess_id, prev_date_time_string)
+                profile[f"events_session_{sess_id}"] = []
+            logging.info(
+                "Conversation session %s plan: event_session=%s, current_user=%s, current_event=%s",
+                sess_id,
+                event_session_id,
+                current_user_id,
+                [event.get("id") for event in profile[f"events_session_{sess_id}"]],
+            )
+            previous_summary = profile.get(f"session_{sess_id - 1}_summary", "") if sess_id > 1 else ""
+            session = generate_household_session(
+                profile=profile,
+                assistant=assistant,
+                sess_id=sess_id,
+                curr_date_time=curr_date_time_string,
+                current_user_id=current_user_id,
+                prev_date_time=prev_date_time_string,
+                previous_summary=previous_summary,
+                max_turns=args.max_turns_per_session,
+                use_llm=not args.no_llm,
+                on_turn_generated=autosave_session,
+            )
+            session["event_session_id"] = event_session_id
+            autosave_session(session)
+            profile[f"session_{sess_id}"] = session["turns"]
+            logging.info(
+                "Session %s generated: current_user=%s(%s), turns=%s, mode=%s",
+                sess_id,
+                session["current_user_name"],
+                session["current_user_id"],
+                len(session["turns"]),
+                session.get("turn_generation_mode"),
+            )
+            profile[f"session_{sess_id}_facts"] = extract_household_session_facts(profile, session, use_llm=not args.no_llm)
+            rebuild_grouped_sessions(profile)
+            save_profile(profile, args.out_dir)
+            logging.info("Autosaved session %s facts to household_profile.json", sess_id)
+            logging.info(
+                "Session %s facts extracted for speakers=%s",
+                sess_id,
+                list(profile[f"session_{sess_id}_facts"].keys()) if isinstance(profile[f"session_{sess_id}_facts"], dict) else type(profile[f"session_{sess_id}_facts"]),
+            )
+            if args.summary:
+                profile[f"session_{sess_id}_summary"] = summarize_session(session)
+                logging.info("Session %s summary: %s", sess_id, profile[f"session_{sess_id}_summary"])
+
+            prev_date_time_string = curr_date_time_string
+            logging.info("Generated household session %s for %s", sess_id, session["current_user_name"])
+            sess_id += 1
 
     save_profile(profile, args.out_dir)
     save_json(profile.get("sessions", []), sessions_path(args.out_dir))

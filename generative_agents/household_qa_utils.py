@@ -132,7 +132,7 @@ def format_evidence_for_qa(profile):
                 f"- {event['id']} | {event['date']} | {event['scenario_type']} | "
                 f"参与={','.join(event.get('participants', []))} | {event['sub-event']}"
             )
-    for session in profile.get("sessions", []):
+    for session in profile.get("flat_sessions", profile.get("sessions", [])):
         sess_id = session.get("session_id")
         lines.append(f"\n会话 S{sess_id} | time={session.get('date_time')} | current_user={session.get('current_user_id')} | events={','.join(session.get('related_event_ids', []))}")
         for turn in session.get("turns", []):
@@ -152,7 +152,7 @@ def format_evidence_for_qa(profile):
 
 def build_qa_plans(profile):
     plans = []
-    for session in profile.get("sessions", []):
+    for session in profile.get("flat_sessions", profile.get("sessions", [])):
         event = event_for_session(profile, session)
         current_user_id = session.get("current_user_id")
         base = {
@@ -174,7 +174,7 @@ def build_qa_plans(profile):
 
 def format_single_qa_evidence(profile, plan):
     event = next((event for event in profile.get("graph", []) if event.get("id") == plan.get("event_id")), None)
-    session = next((item for item in profile.get("sessions", []) if item.get("session_id") == plan.get("session_id")), None)
+    session = next((item for item in profile.get("flat_sessions", profile.get("sessions", [])) if item.get("session_id") == plan.get("session_id")), None)
     lines = []
     if event:
         lines.append(
@@ -235,7 +235,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
         qa_plans = build_qa_plans(profile)
         logging.info(
             "Calling LLM for household QA generation: sessions=%s, events=%s, qa_plans=%s",
-            len(profile.get("sessions", [])),
+            len(profile.get("flat_sessions", profile.get("sessions", []))),
             len(profile.get("graph", [])),
             len(qa_plans),
         )
@@ -259,7 +259,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
 
     qa_items = []
     qa_id = 1
-    sessions = profile.get("sessions", [])
+    sessions = profile.get("flat_sessions", profile.get("sessions", []))
 
     for session in sessions:
         event = event_for_session(profile, session)
