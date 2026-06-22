@@ -1,0 +1,1175 @@
+{
+  "global_tools": {
+    "home.get_mode": {
+      "tool_name": "home.get_mode",
+      "category": "query",
+      "description": "查询当前家庭模式",
+      "parameters": {},
+      "returns": {
+        "mode": "home|away|sleep|movie|child_home|visitor|security_armed|emergency",
+        "updated_at": "string"
+      },
+      "risk_level": "low",
+      "confirmation_required": false,
+      "idempotent": true
+    },
+    "home.set_mode": {
+      "tool_name": "home.set_mode",
+      "category": "control",
+      "description": "设置家庭模式",
+      "parameters": {
+        "mode": {
+          "type": "string",
+          "enum": ["home", "away", "sleep", "movie", "child_home", "visitor", "security_armed", "emergency"],
+          "required": true,
+          "description": "家庭模式"
+        },
+        "reason": {
+          "type": "string",
+          "required": false,
+          "description": "设置原因"
+        }
+      },
+      "returns": {
+        "success": "boolean",
+        "mode": "string"
+      },
+      "risk_level": "medium",
+      "confirmation_required": false,
+      "idempotent": true,
+      "side_effects": ["可能触发多个设备联动"]
+    },
+    "home.get_occupancy": {
+      "tool_name": "home.get_occupancy",
+      "category": "query",
+      "description": "查询家庭成员是否在家",
+      "parameters": {
+        "user_id": {
+          "type": "string",
+          "required": false,
+          "description": "用户ID，不传则查询所有家庭成员"
+        }
+      },
+      "returns": {
+        "occupants": "array",
+        "all_away": "boolean",
+        "confidence": "number"
+      },
+      "risk_level": "low",
+      "confirmation_required": false,
+      "idempotent": true
+    },
+    "scene.activate": {
+      "tool_name": "scene.activate",
+      "category": "scene",
+      "description": "激活一个预设家庭场景",
+      "parameters": {
+        "scene_id": {
+          "type": "string",
+          "enum": ["go_home", "leave_home", "movie", "sleep", "wake_up", "visitor", "child_home", "security_arm"],
+          "required": true,
+          "description": "场景ID"
+        },
+        "room_id": {
+          "type": "string",
+          "required": false,
+          "description": "房间ID，可选"
+        }
+      },
+      "returns": {
+        "success": "boolean",
+        "executed_actions": "array",
+        "failed_actions": "array"
+      },
+      "risk_level": "medium",
+      "confirmation_required": false,
+      "idempotent": true,
+      "side_effects": ["可能同时控制多个设备"]
+    },
+    "scene.preview": {
+      "tool_name": "scene.preview",
+      "category": "query",
+      "description": "预览某个场景将会执行哪些设备动作",
+      "parameters": {
+        "scene_id": {
+          "type": "string",
+          "required": true,
+          "description": "场景ID"
+        }
+      },
+      "returns": {
+        "actions": "array"
+      },
+      "risk_level": "low",
+      "confirmation_required": false,
+      "idempotent": true
+    },
+    "automation.create_rule": {
+      "tool_name": "automation.create_rule",
+      "category": "config",
+      "description": "创建家庭自动化规则",
+      "parameters": {
+        "rule_name": {
+          "type": "string",
+          "required": true,
+          "description": "规则名称"
+        },
+        "trigger": {
+          "type": "object",
+          "required": true,
+          "description": "触发器配置"
+        },
+        "conditions": {
+          "type": "array",
+          "required": false,
+          "description": "条件列表"
+        },
+        "actions": {
+          "type": "array",
+          "required": true,
+          "description": "动作列表"
+        },
+        "enabled": {
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "是否启用"
+        }
+      },
+      "returns": {
+        "success": "boolean",
+        "rule_id": "string"
+      },
+      "risk_level": "medium",
+      "confirmation_required": true,
+      "idempotent": false
+    },
+    "automation.disable_rule": {
+      "tool_name": "automation.disable_rule",
+      "category": "config",
+      "description": "禁用自动化规则",
+      "parameters": {
+        "rule_id": {
+          "type": "string",
+          "required": true,
+          "description": "规则ID"
+        }
+      },
+      "returns": {
+        "success": "boolean"
+      },
+      "risk_level": "low",
+      "confirmation_required": false,
+      "idempotent": true
+    },
+    "automation.list_rules": {
+      "tool_name": "automation.list_rules",
+      "category": "query",
+      "description": "查询当前家庭自动化规则",
+      "parameters": {
+        "enabled_only": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "是否只返回启用的规则"
+        }
+      },
+      "returns": {
+        "rules": "array"
+      },
+      "risk_level": "low",
+      "confirmation_required": false,
+      "idempotent": true
+    }
+  },
+  "device_tools": {
+    "wifi_router": {
+      "list_connected_devices": {
+        "tool_name": "wifi_router.list_connected_devices",
+        "category": "query",
+        "description": "查询当前连接到家庭WiFi的设备列表",
+        "parameters": {
+          "router_id": {
+            "type": "string",
+            "required": true,
+            "description": "路由器ID"
+          }
+        },
+        "returns": {
+          "devices": [
+            {
+              "device_id": "string",
+              "alias": "string",
+              "mac": "string",
+              "rssi": "number",
+              "online": "boolean",
+              "connected_since": "string"
+            }
+          ]
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "get_presence_by_user": {
+        "tool_name": "wifi_router.get_presence_by_user",
+        "category": "query",
+        "description": "根据用户绑定终端判断家庭成员是否在家",
+        "parameters": {
+          "user_id": {
+            "type": "string",
+            "required": true,
+            "description": "用户ID"
+          }
+        },
+        "returns": {
+          "user_id": "string",
+          "presence": "home|away|unknown",
+          "matched_devices": "array",
+          "confidence": "number"
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "block_device": {
+        "tool_name": "wifi_router.block_device",
+        "category": "control",
+        "description": "将指定设备踢出网络或禁止联网",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "required": false,
+            "description": "阻塞时长（分钟），不传则永久阻塞"
+          },
+          "reason": {
+            "type": "string",
+            "required": false,
+            "description": "阻塞原因"
+          }
+        },
+        "risk_level": "medium",
+        "confirmation_required": true,
+        "idempotent": false
+      },
+      "set_guest_network": {
+        "tool_name": "wifi_router.set_guest_network",
+        "category": "control",
+        "description": "开启或关闭访客网络",
+        "parameters": {
+          "enabled": {
+            "type": "boolean",
+            "required": true,
+            "description": "是否启用"
+          },
+          "ssid": {
+            "type": "string",
+            "required": false,
+            "description": "访客网络SSID"
+          },
+          "expire_minutes": {
+            "type": "integer",
+            "required": false,
+            "description": "过期时间（分钟）"
+          }
+        },
+        "risk_level": "medium",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    },
+    "door_camera": {
+      "get_recent_events": {
+        "tool_name": "door_camera.get_recent_events",
+        "category": "query",
+        "description": "查询门口摄像头最近事件",
+        "parameters": {
+          "camera_id": {
+            "type": "string",
+            "required": true,
+            "description": "摄像头ID"
+          },
+          "event_types": {
+            "type": "array",
+            "required": false,
+            "items": ["motion_detected", "face_recognized", "intrusion_alert"],
+            "description": "事件类型过滤"
+          },
+          "since_minutes": {
+            "type": "integer",
+            "required": false,
+            "default": 30,
+            "description": "查询时间范围（分钟）"
+          }
+        },
+        "returns": {
+          "events": "array"
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "take_snapshot": {
+        "tool_name": "door_camera.take_snapshot",
+        "category": "control",
+        "description": "门口摄像头抓拍一张图片",
+        "parameters": {
+          "camera_id": {
+            "type": "string",
+            "required": true,
+            "description": "摄像头ID"
+          }
+        },
+        "returns": {
+          "image_url": "string",
+          "timestamp": "string"
+        },
+        "risk_level": "medium",
+        "confirmation_required": false,
+        "idempotent": false,
+        "privacy_sensitive": true
+      },
+      "start_recording": {
+        "tool_name": "door_camera.start_recording",
+        "category": "control",
+        "description": "录制门口短视频",
+        "parameters": {
+          "camera_id": {
+            "type": "string",
+            "required": true,
+            "description": "摄像头ID"
+          },
+          "duration_seconds": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 120,
+            "required": true,
+            "description": "录制时长（秒）"
+          }
+        },
+        "returns": {
+          "video_url": "string",
+          "duration_seconds": "integer"
+        },
+        "risk_level": "medium",
+        "confirmation_required": false,
+        "idempotent": false,
+        "privacy_sensitive": true
+      },
+      "play_preset_voice": {
+        "tool_name": "door_camera.play_preset_voice",
+        "category": "control",
+        "description": "对门口人员播放预设语音",
+        "parameters": {
+          "camera_id": {
+            "type": "string",
+            "required": true,
+            "description": "摄像头ID"
+          },
+          "preset_id": {
+            "type": "string",
+            "enum": ["please_leave_package", "owner_not_home", "please_wait", "do_not_disturb"],
+            "required": true,
+            "description": "预设语音ID"
+          }
+        },
+        "risk_level": "medium",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    },
+    "smart_lock": {
+      "get_status": {
+        "tool_name": "smart_lock.get_status",
+        "category": "query",
+        "description": "查询门锁状态和门状态",
+        "parameters": {
+          "lock_id": {
+            "type": "string",
+            "required": true,
+            "description": "门锁ID"
+          }
+        },
+        "returns": {
+          "lock_state": "locked|unlocked",
+          "door_state": "open|closed|ajar",
+          "battery_level": "integer",
+          "last_operation": "object"
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "lock": {
+        "tool_name": "smart_lock.lock",
+        "category": "control",
+        "description": "远程上锁",
+        "parameters": {
+          "lock_id": {
+            "type": "string",
+            "required": true,
+            "description": "门锁ID"
+          }
+        },
+        "risk_level": "medium",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "unlock": {
+        "tool_name": "smart_lock.unlock",
+        "category": "control",
+        "description": "远程解锁",
+        "parameters": {
+          "lock_id": {
+            "type": "string",
+            "required": true,
+            "description": "门锁ID"
+          },
+          "confirmation_token": {
+            "type": "string",
+            "required": true,
+            "description": "二次确认令牌"
+          },
+          "reason": {
+            "type": "string",
+            "required": true,
+            "description": "解锁原因"
+          }
+        },
+        "risk_level": "high",
+        "confirmation_required": true,
+        "idempotent": true
+      },
+      "create_temp_password": {
+        "tool_name": "smart_lock.create_temp_password",
+        "category": "config",
+        "description": "生成临时门锁密码",
+        "parameters": {
+          "lock_id": {
+            "type": "string",
+            "required": true,
+            "description": "门锁ID"
+          },
+          "valid_from": {
+            "type": "string",
+            "required": true,
+            "description": "生效时间"
+          },
+          "valid_until": {
+            "type": "string",
+            "required": true,
+            "description": "失效时间"
+          },
+          "usage_limit": {
+            "type": "integer",
+            "required": false,
+            "default": 1,
+            "description": "使用次数限制"
+          },
+          "visitor_name": {
+            "type": "string",
+            "required": false,
+            "description": "访客名称"
+          }
+        },
+        "returns": {
+          "temp_password_id": "string",
+          "masked_password": "string",
+          "valid_until": "string"
+        },
+        "risk_level": "high",
+        "confirmation_required": true,
+        "idempotent": false
+      },
+      "get_unlock_logs": {
+        "tool_name": "smart_lock.get_unlock_logs",
+        "category": "query",
+        "description": "查询开锁日志",
+        "parameters": {
+          "lock_id": {
+            "type": "string",
+            "required": true,
+            "description": "门锁ID"
+          },
+          "since_hours": {
+            "type": "integer",
+            "required": false,
+            "default": 24,
+            "description": "查询时间范围（小时）"
+          }
+        },
+        "returns": {
+          "logs": "array"
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    },
+    "temp_humidity_sensor": {
+      "get_reading": {
+        "tool_name": "temp_humidity_sensor.get_reading",
+        "category": "query",
+        "description": "读取温湿度数据",
+        "parameters": {
+          "sensor_id": {
+            "type": "string",
+            "required": true,
+            "description": "传感器ID"
+          }
+        },
+        "returns": {
+          "temperature": "number",
+          "humidity": "number",
+          "unit": "celsius|fahrenheit",
+          "timestamp": "string"
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_threshold": {
+        "tool_name": "temp_humidity_sensor.set_threshold",
+        "category": "config",
+        "description": "设置温湿度联动阈值",
+        "parameters": {
+          "sensor_id": {
+            "type": "string",
+            "required": true,
+            "description": "传感器ID"
+          },
+          "temp_high": {
+            "type": "number",
+            "required": false,
+            "description": "温度上限"
+          },
+          "temp_low": {
+            "type": "number",
+            "required": false,
+            "description": "温度下限"
+          },
+          "humidity_high": {
+            "type": "number",
+            "required": false,
+            "description": "湿度上限"
+          },
+          "humidity_low": {
+            "type": "number",
+            "required": false,
+            "description": "湿度下限"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    },
+    "light_sensor": {
+      "get_lux": {
+        "tool_name": "light_sensor.get_lux",
+        "category": "query",
+        "description": "读取光照强度",
+        "parameters": {
+          "sensor_id": {
+            "type": "string",
+            "required": true,
+            "description": "传感器ID"
+          }
+        },
+        "returns": {
+          "lux": "number",
+          "level": "dark|dim|bright",
+          "timestamp": "string"
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_dark_threshold": {
+        "tool_name": "light_sensor.set_dark_threshold",
+        "category": "config",
+        "description": "设置暗光触发阈值",
+        "parameters": {
+          "sensor_id": {
+            "type": "string",
+            "required": true,
+            "description": "传感器ID"
+          },
+          "lux_threshold": {
+            "type": "number",
+            "required": true,
+            "description": "光照阈值（lux）"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    },
+    "air_quality_sensor": {
+      "get_reading": {
+        "tool_name": "air_quality_sensor.get_reading",
+        "category": "query",
+        "description": "读取空气质量数据",
+        "parameters": {
+          "sensor_id": {
+            "type": "string",
+            "required": true,
+            "description": "传感器ID"
+          }
+        },
+        "returns": {
+          "pm25": "number",
+          "co2": "number",
+          "tvoc": "number",
+          "aqi_level": "good|moderate|poor",
+          "timestamp": "string"
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_threshold": {
+        "tool_name": "air_quality_sensor.set_threshold",
+        "category": "config",
+        "description": "设置空气质量联动阈值",
+        "parameters": {
+          "sensor_id": {
+            "type": "string",
+            "required": true,
+            "description": "传感器ID"
+          },
+          "pm25_threshold": {
+            "type": "number",
+            "required": false,
+            "description": "PM2.5阈值"
+          },
+          "co2_threshold": {
+            "type": "number",
+            "required": false,
+            "description": "CO2阈值"
+          },
+          "tvoc_threshold": {
+            "type": "number",
+            "required": false,
+            "description": "TVOC阈值"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    },
+    "smart_light": {
+      "set_power": {
+        "tool_name": "smart_light.set_power",
+        "category": "control",
+        "description": "开关灯光",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "power": {
+            "type": "string",
+            "enum": ["on", "off"],
+            "required": true,
+            "description": "开关状态"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_brightness": {
+        "tool_name": "smart_light.set_brightness",
+        "category": "control",
+        "description": "设置灯光亮度",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "brightness": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "required": true,
+            "description": "亮度值(0-100)"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_color_temperature": {
+        "tool_name": "smart_light.set_color_temperature",
+        "category": "control",
+        "description": "设置灯光色温",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "color_temp_k": {
+            "type": "integer",
+            "minimum": 2700,
+            "maximum": 6500,
+            "required": true,
+            "description": "色温值(K)"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "activate_scene": {
+        "tool_name": "smart_light.activate_scene",
+        "category": "control",
+        "description": "激活灯光场景",
+        "parameters": {
+          "room_id": {
+            "type": "string",
+            "required": true,
+            "description": "房间ID"
+          },
+          "scene": {
+            "type": "string",
+            "enum": ["bright", "warm", "night", "movie", "reading"],
+            "required": true,
+            "description": "灯光场景"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    },
+    "air_conditioner": {
+      "get_status": {
+        "tool_name": "air_conditioner.get_status",
+        "category": "query",
+        "description": "查询空调状态",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          }
+        },
+        "returns": {
+          "power": "on|off",
+          "mode": "cool|heat|dry|fan|auto",
+          "target_temp_c": "number",
+          "fan_speed": "low|medium|high|auto"
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_power": {
+        "tool_name": "air_conditioner.set_power",
+        "category": "control",
+        "description": "打开或关闭空调",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "power": {
+            "type": "string",
+            "enum": ["on", "off"],
+            "required": true,
+            "description": "开关状态"
+          }
+        },
+        "risk_level": "medium",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_mode": {
+        "tool_name": "air_conditioner.set_mode",
+        "category": "control",
+        "description": "设置空调模式",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["cool", "heat", "dry", "fan", "auto"],
+            "required": true,
+            "description": "空调模式"
+          }
+        },
+        "risk_level": "medium",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_target_temperature": {
+        "tool_name": "air_conditioner.set_target_temperature",
+        "category": "control",
+        "description": "设置目标温度",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "target_temp_c": {
+            "type": "number",
+            "minimum": 16,
+            "maximum": 30,
+            "required": true,
+            "description": "目标温度(℃)"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_fan_speed": {
+        "tool_name": "air_conditioner.set_fan_speed",
+        "category": "control",
+        "description": "设置空调风速",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "fan_speed": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "auto"],
+            "required": true,
+            "description": "风速档位"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    },
+    "smart_curtain": {
+      "get_position": {
+        "tool_name": "smart_curtain.get_position",
+        "category": "query",
+        "description": "查询窗帘开合位置",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          }
+        },
+        "returns": {
+          "position": "number",
+          "unit": "percentage"
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_position": {
+        "tool_name": "smart_curtain.set_position",
+        "category": "control",
+        "description": "设置窗帘位置",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "position": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "required": true,
+            "description": "开合百分比"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "stop": {
+        "tool_name": "smart_curtain.stop",
+        "category": "control",
+        "description": "暂停窗帘移动",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    },
+    "fresh_air_system": {
+      "get_status": {
+        "tool_name": "fresh_air_system.get_status",
+        "category": "query",
+        "description": "查询新风系统状态",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          }
+        },
+        "returns": {
+          "power": "on|off",
+          "speed": "low|medium|high|auto",
+          "mode": "inner|outer|auto",
+          "filter_life_percent": "integer"
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_power": {
+        "tool_name": "fresh_air_system.set_power",
+        "category": "control",
+        "description": "打开或关闭新风系统",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "power": {
+            "type": "string",
+            "enum": ["on", "off"],
+            "required": true,
+            "description": "开关状态"
+          }
+        },
+        "risk_level": "medium",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_speed": {
+        "tool_name": "fresh_air_system.set_speed",
+        "category": "control",
+        "description": "设置新风风速",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "speed": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "auto"],
+            "required": true,
+            "description": "风速档位"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "reset_filter_reminder": {
+        "tool_name": "fresh_air_system.reset_filter_reminder",
+        "category": "config",
+        "description": "重置滤网更换提醒",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": false
+      }
+    },
+    "tv_projector": {
+      "set_power": {
+        "tool_name": "tv_projector.set_power",
+        "category": "control",
+        "description": "开关电视/投影仪",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "power": {
+            "type": "string",
+            "enum": ["on", "off"],
+            "required": true,
+            "description": "开关状态"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_volume": {
+        "tool_name": "tv_projector.set_volume",
+        "category": "control",
+        "description": "调节音量",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "volume": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "required": true,
+            "description": "音量值"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_input_source": {
+        "tool_name": "tv_projector.set_input_source",
+        "category": "control",
+        "description": "切换输入源",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "source": {
+            "type": "string",
+            "enum": ["hdmi1", "hdmi2", "tv", "usb", "bluetooth"],
+            "required": true,
+            "description": "输入源"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "media_control": {
+        "tool_name": "tv_projector.media_control",
+        "category": "control",
+        "description": "媒体播放控制",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "action": {
+            "type": "string",
+            "enum": ["play", "pause", "stop", "fast_forward", "rewind"],
+            "required": true,
+            "description": "播放动作"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    },
+    "smart_speaker": {
+      "announce": {
+        "tool_name": "smart_speaker.announce",
+        "category": "control",
+        "description": "TTS播报文本",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "text": {
+            "type": "string",
+            "required": true,
+            "description": "播报文本"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "set_volume": {
+        "tool_name": "smart_speaker.set_volume",
+        "category": "control",
+        "description": "设置音量",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "volume": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "required": true,
+            "description": "音量值"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "play_media": {
+        "tool_name": "smart_speaker.play_media",
+        "category": "control",
+        "description": "播放媒体",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          },
+          "media_type": {
+            "type": "string",
+            "enum": ["music", "radio", "podcast", "audiobook"],
+            "required": true,
+            "description": "媒体类型"
+          },
+          "content_id": {
+            "type": "string",
+            "required": false,
+            "description": "内容ID或关键词"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      },
+      "stop_media": {
+        "tool_name": "smart_speaker.stop_media",
+        "category": "control",
+        "description": "停止媒体播放",
+        "parameters": {
+          "device_id": {
+            "type": "string",
+            "required": true,
+            "description": "设备ID"
+          }
+        },
+        "risk_level": "low",
+        "confirmation_required": false,
+        "idempotent": true
+      }
+    }
+  }
+}

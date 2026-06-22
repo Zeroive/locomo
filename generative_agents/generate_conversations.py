@@ -17,6 +17,7 @@ from generative_agents.file_utils import save_agents, load_agents
 from generative_agents.time_utils import get_random_time, get_random_date, datetimeObj2Str, dateObj2Str, get_session_date
 from generative_agents.device_utils import select_devices_for_user
 from generative_agents.device_events_utils import generate_all_device_events, save_device_events, get_device_events_summary
+from generative_agents.device_trajectory_utils import generate_all_device_trajectories
 from generative_agents.session_utils import get_session, get_session_summary, get_relevant_events
 from generative_agents.conversation_utils import get_msc_persona, get_datetime_string
 from generative_agents.event_utils import get_events
@@ -72,6 +73,8 @@ def parse_args():
                         help="家庭设备库文件路径，默认为 ./data/devices/home_devices.json")
     parser.add_argument('--device-events', action="store_true",
                         help="Set flag to generate device events based on dialogue and scenario")
+    parser.add_argument('--device-trajectory', action="store_true",
+                        help="Set flag to generate device operation trajectory with tool calls")
 
     args = parser.parse_args()
     return args
@@ -270,7 +273,38 @@ def main():
         html_outfile = os.path.join(args.out_dir, 'conversation.html')
         convert_to_chat_html(agent_a, agent_b, html_outfile)
 
-    # Step 4: 根据场景以及对话的内容生成设备events记录
+    # Step 4: 生成场景指令设备操作行为轨迹
+    if args.device_trajectory:
+        logging.info("Generating device operation trajectory with tool calls...")
+        
+        # 加载 agent 数据
+        agent_a, agent_b = load_agents(args)
+        
+        # 检查是否已有设备
+        if not agent_b.get('devices'):
+            logging.warning("No devices found in agent_b. Please run with --device flag first.")
+        else:
+            # 检查是否已生成过轨迹（存在 session_1_device_trajectory）
+            if 'session_1_device_trajectory' in agent_b and not args.overwrite_session:
+                logging.info("Device trajectory already exists in agent_b, skipping. Use --overwrite-session to regenerate.")
+            else:
+                # 生成所有会话的设备操作轨迹
+                device_trajectories = generate_all_device_trajectories([agent_a, agent_b], args)
+                
+                if device_trajectories:
+                    # 保存设备轨迹到 agent 对象
+                    for sess_id, trajectory in device_trajectories.items():
+                        agent_b[f'session_{sess_id}_device_trajectory'] = trajectory
+                    
+                    # 保存更新到 agent 对象
+                    save_agents([agent_a, agent_b], args)
+                    
+                    # 输出摘要
+                    logging.info(f"Device trajectory generation complete for {len(device_trajectories)} sessions")
+                else:
+                    logging.warning("No device trajectories were generated.")
+
+    # Step 5: 根据场景以及对话的内容生成设备events记录
     if args.device_events:
         logging.info("Generating device events based on dialogue and scenario...")
         
@@ -300,6 +334,8 @@ def main():
                     logging.info(f"Device events generation complete:\n{summary}")
                 else:
                     logging.warning("No device events were generated.")
+
+
 
 if __name__ == '__main__':
     main()

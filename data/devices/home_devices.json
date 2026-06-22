@@ -30,7 +30,13 @@
             "offline": ["online"],
             "blocked": ["unblocked"]
           },
-          "data_types": ["device_id", "timestamp", "rssi", "connection_duration"]
+          "data_types": ["device_id", "timestamp", "rssi", "connection_duration"],
+          "tools": [
+            "wifi_router.list_connected_devices",
+            "wifi_router.get_presence_by_user",
+            "wifi_router.block_device",
+            "wifi_router.set_guest_network"
+          ]
         },
         "door_camera": {
           "name": "门口摄像头",
@@ -59,7 +65,13 @@
             "motion_detected": ["face_recognized", "intrusion_alert", "idle"],
             "recording": ["idle"]
           },
-          "data_types": ["timestamp", "motion_type", "face_id", "image_url", "duration"]
+          "data_types": ["timestamp", "motion_type", "face_id", "image_url", "duration"],
+          "tools": [
+            "door_camera.get_recent_events",
+            "door_camera.take_snapshot",
+            "door_camera.start_recording",
+            "door_camera.play_preset_voice"
+          ]
         },
         "smart_lock": {
           "name": "智能门锁",
@@ -88,7 +100,14 @@
             "door_open": ["door_closed", "locked"],
             "low_battery": ["normal"]
           },
-          "data_types": ["timestamp", "operation_type", "user_id", "method", "battery_level"]
+          "data_types": ["timestamp", "operation_type", "user_id", "method", "battery_level"],
+          "tools": [
+            "smart_lock.get_status",
+            "smart_lock.lock",
+            "smart_lock.unlock",
+            "smart_lock.create_temp_password",
+            "smart_lock.get_unlock_logs"
+          ]
         }
       }
     },
@@ -120,7 +139,11 @@
             "temp_high": ["normal"],
             "temp_low": ["normal"]
           },
-          "data_types": ["timestamp", "temperature", "humidity", "comfort_level"]
+          "data_types": ["timestamp", "temperature", "humidity", "comfort_level"],
+          "tools": [
+            "temp_humidity_sensor.get_reading",
+            "temp_humidity_sensor.set_threshold"
+          ]
         },
         "light_sensor": {
           "name": "光照传感器",
@@ -144,7 +167,11 @@
             "dim": ["bright", "dark"],
             "dark": ["dim", "bright"]
           },
-          "data_types": ["timestamp", "lux", "trigger_status"]
+          "data_types": ["timestamp", "lux", "trigger_status"],
+          "tools": [
+            "light_sensor.get_lux",
+            "light_sensor.set_dark_threshold"
+          ]
         },
         "air_quality_sensor": {
           "name": "空气质量传感器",
@@ -170,7 +197,11 @@
             "moderate": ["good", "poor"],
             "poor": ["moderate", "good"]
           },
-          "data_types": ["timestamp", "pm25", "co2", "tvoc", "aqi"]
+          "data_types": ["timestamp", "pm25", "co2", "tvoc", "aqi"],
+          "tools": [
+            "air_quality_sensor.get_reading",
+            "air_quality_sensor.set_threshold"
+          ]
         }
       }
     },
@@ -203,7 +234,13 @@
             "on": ["off", "dimmed", "color_changed"],
             "dimmed": ["bright", "off"]
           },
-          "data_types": ["timestamp", "power_state", "brightness", "color_temp", "scene_id"]
+          "data_types": ["timestamp", "power_state", "brightness", "color_temp", "scene_id"],
+          "tools": [
+            "smart_light.set_power",
+            "smart_light.set_brightness",
+            "smart_light.set_color_temperature",
+            "smart_light.activate_scene"
+          ]
         },
         "air_conditioner": {
           "name": "空调",
@@ -230,7 +267,14 @@
             "cooling": ["off", "heating", "temp_changed"],
             "heating": ["off", "cooling", "temp_changed"]
           },
-          "data_types": ["timestamp", "power_state", "mode", "target_temp", "fan_speed", "energy_consumption"]
+          "data_types": ["timestamp", "power_state", "mode", "target_temp", "fan_speed", "energy_consumption"],
+          "tools": [
+            "air_conditioner.get_status",
+            "air_conditioner.set_power",
+            "air_conditioner.set_mode",
+            "air_conditioner.set_target_temperature",
+            "air_conditioner.set_fan_speed"
+          ]
         },
         "smart_curtain": {
           "name": "智能窗帘",
@@ -257,7 +301,12 @@
             "opening": ["open", "stopped"],
             "closing": ["closed", "stopped"]
           },
-          "data_types": ["timestamp", "position", "direction", "speed"]
+          "data_types": ["timestamp", "position", "direction", "speed"],
+          "tools": [
+            "smart_curtain.get_position",
+            "smart_curtain.set_position",
+            "smart_curtain.stop"
+          ]
         },
         "fresh_air_system": {
           "name": "新风系统",
@@ -285,7 +334,13 @@
             "low": ["medium", "high", "auto", "off"],
             "auto": ["low", "medium", "high", "off"]
           },
-          "data_types": ["timestamp", "power_state", "speed_level", "filter_life", "pm25_removal_rate"]
+          "data_types": ["timestamp", "power_state", "speed_level", "filter_life", "pm25_removal_rate"],
+          "tools": [
+            "fresh_air_system.get_status",
+            "fresh_air_system.set_power",
+            "fresh_air_system.set_speed",
+            "fresh_air_system.reset_filter_reminder"
+          ]
         },
         "tv_projector": {
           "name": "电视 / 投影仪",
@@ -310,7 +365,13 @@
             "on": ["off", "playing", "paused"],
             "playing": ["paused", "stopped"]
           },
-          "data_types": ["timestamp", "power_state", "input_source", "volume", "media_state"]
+          "data_types": ["timestamp", "power_state", "input_source", "volume", "media_state"],
+          "tools": [
+            "tv_projector.set_power",
+            "tv_projector.set_volume",
+            "tv_projector.set_input_source",
+            "tv_projector.media_control"
+          ]
         }
       }
     },
@@ -346,7 +407,13 @@
             "processing": ["speaking", "idle"],
             "playing": ["idle", "paused"]
           },
-          "data_types": ["timestamp", "interaction_type", "command_text", "tts_text", "duration"]
+          "data_types": ["timestamp", "interaction_type", "command_text", "tts_text", "duration"],
+          "tools": [
+            "smart_speaker.announce",
+            "smart_speaker.set_volume",
+            "smart_speaker.play_media",
+            "smart_speaker.stop_media"
+          ]
         }
       }
     }
