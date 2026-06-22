@@ -8,6 +8,9 @@ import random
 import json
 from datetime import date, timedelta, datetime
 
+# 默认起始日期（用于生成随机日期和会话日期）
+DEFAULT_START_DATE = date(2025, 1, 1)
+
 
 def get_random_time(scenario_config=None):
     """
@@ -112,7 +115,7 @@ def get_random_date():
         date: 随机生成的日期对象
     """
     # initializing dates ranges
-    test_date1, test_date2 = date(2025, 1, 1), date(2026, 6, 1)
+    test_date1, test_date2 = DEFAULT_START_DATE, date(2026, 6, 1)
     # getting days between dates
     dates_bet = test_date2 - test_date1
     total_days = dates_bet.days
@@ -193,7 +196,7 @@ def get_session_date(events, args, prev_date=None):
         if prev_date:
             stop_date_a = prev_date
         else:
-            stop_date_a = date(2022, 1, 1)  # 默认起始日期
+            stop_date_a = DEFAULT_START_DATE  # 默认起始日期
 
     # get date from agent_b
     agent_b_events = sort_events_by_time(agent_b_events)
