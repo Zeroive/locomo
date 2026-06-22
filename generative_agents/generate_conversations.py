@@ -117,6 +117,9 @@ def run_conversation(run_args):
     # 创建 args 的副本，避免并发执行时共享对象导致问题
     import copy
     local_args = copy.deepcopy(args)
+
+    # 更新 local_args 的嵌入文件路径
+    local_args.emb_file = os.path.join(run_out_dir, local_args.emb_file)
     
     # 更新 local_args 的输出目录
     local_args.out_dir = run_out_dir
