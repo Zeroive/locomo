@@ -18,7 +18,23 @@ import re
 from typing import Dict, List, Any
 
 # 导入模型调用函数
-from global_methods import run_chatgpt
+try:
+    from global_methods import run_chatgpt
+except (ImportError, ModuleNotFoundError) as e:
+    # 如果无法导入，使用模拟函数
+    print(f"Warning: Cannot import run_chatgpt from global_methods: {e}")
+    print("Using simulated response function instead.")
+    
+    def run_chatgpt(query, num_gen=1, num_tokens_request=1000, 
+                    model='chatgpt', use_16k=False, temperature=1.0, wait_time=1):
+        """模拟模型响应"""
+        return json.dumps({
+            "choices": [{
+                "message": {
+                    "content": generate_simulated_response(query)
+                }
+            }]
+        })
 
 
 
@@ -27,7 +43,40 @@ def generate_simulated_response(prompt: str) -> str:
     模拟生成单轮响应（当无法调用真实模型时使用）
     """
     # 根据prompt中包含的角色决定生成什么响应
-    if "你是用户" in prompt:
+    if "你是一个家庭智能助手，刚刚执行了一个工具调用" in prompt:
+        # 生成工具执行结果
+        # 从prompt中提取工具名称
+        tool_name_match = re.search(r'工具名称: ([\w.]+)', prompt)
+        tool_name = tool_name_match.group(1) if tool_name_match else "unknown_tool"
+        
+        # 从prompt中提取工具参数
+        params_match = re.search(r'工具参数: (.+)', prompt)
+        params_str = params_match.group(1) if params_match else ""
+        
+        # 生成模拟结果
+        if 'get_status' in tool_name or 'get_reading' in tool_name or 'get_position' in tool_name:
+            return f"查询完成。当前状态正常，设备运行良好。"
+        elif 'set_temperature' in tool_name or 'set_target_temperature' in tool_name:
+            temp_match = re.search(r'target_temp_c="(\d+)"', params_str)
+            temp = temp_match.group(1) if temp_match else "24"
+            return f"已将目标温度设置为{temp}°C，设备正在调整中。"
+        elif 'set_power' in tool_name:
+            if 'power="on"' in params_str:
+                return "设备已成功开启，正在运行中。"
+            else:
+                return "设备已成功关闭。"
+        elif 'set_brightness' in tool_name:
+            return "亮度已调整完成，当前亮度适中。"
+        elif 'set_position' in tool_name:
+            return "窗帘位置已调整完成。"
+        elif 'play_media' in tool_name:
+            return "开始播放音乐，音质良好。"
+        elif 'lock' in tool_name or 'unlock' in tool_name:
+            return "门锁操作已完成，安全状态良好。"
+        else:
+            return "操作已成功完成。"
+    
+    elif "你是用户" in prompt:
         # 生成用户响应
         user_responses = [
             "帮我检查一下空调状态",
@@ -41,6 +90,7 @@ def generate_simulated_response(prompt: str) -> str:
             "查看一下室内温度"
         ]
         return random.choice(user_responses)
+    
     elif "你是一个家庭智能助手" in prompt or "家庭智能助手" in prompt:
         # 生成助手响应（JSON格式）
         assistant_responses = [
@@ -53,6 +103,7 @@ def generate_simulated_response(prompt: str) -> str:
             {"thought": "用户想关闭灯光，需要调用 smart_light.set_power 工具", "action": "tool", "tool_name": "smart_light.set_power", "tool_params": {"device_id": "living_room_light", "power": "off"}}
         ]
         return json.dumps(random.choice(assistant_responses), ensure_ascii=False)
+    
     else:
         return "帮我检查一下空调状态"
 
@@ -205,83 +256,84 @@ def build_assistant_prompt(scenario: str, user_message: str, user_devices: List[
     return prompt.strip()
 
 
-def generate_tool_result(tool_name: str, tool_params: Dict[str, Any], tools_schema: Dict[str, dict]) -> str:
+def build_tool_result_prompt(tool_name: str, tool_params: Dict[str, Any], tool_description: str, conversation_history: str) -> str:
     """
-    生成工具调用后的结果
+    构建生成工具执行结果的prompt
+    
+    Args:
+        tool_name: 工具名称
+        tool_params: 工具参数
+        tool_description: 工具描述
+        conversation_history: 对话历史
+    
+    Returns:
+        完整的prompt字符串
+    """
+    params_str = ", ".join([f'{k}="{v}"' for k, v in tool_params.items()])
+    
+    prompt = f"""
+你是一个家庭智能助手，刚刚执行了一个工具调用。请根据工具信息生成一个自然、友好的执行结果回复。
+
+## 工具信息
+- 工具名称: {tool_name}
+- 工具参数: {params_str}
+- 工具描述: {tool_description}
+
+## 对话历史
+{conversation_history}
+
+## 你的任务
+生成工具执行后的结果回复，要求：
+1. 回复要自然友好，符合家庭智能助手的定位
+2. 结果要符合工具的功能描述
+3. 如果是查询类工具，返回具体的数值或状态
+4. 如果是控制类工具，确认操作已完成
+5. 只输出回复内容，不要包含其他信息
+
+## 输出示例
+- 查询空调状态: "空调当前温度26°C，制冷模式运行中。"
+- 设置空调温度: "已将空调目标温度设置为24°C，空调正在调整中。"
+- 打开灯光: "客厅灯光已打开，当前亮度为80%。"
+- 查询门锁状态: "门锁当前状态：已上锁，安全状态良好。"
+"""
+    
+    return prompt.strip()
+
+
+def generate_tool_result(tool_name: str, tool_params: Dict[str, Any], tools_schema: Dict[str, dict], conversation_history: str = "") -> str:
+    """
+    使用模型生成工具调用后的结果
     
     Args:
         tool_name: 工具名称
         tool_params: 工具参数
         tools_schema: 工具 schema
+        conversation_history: 对话历史
     
     Returns:
         工具执行结果描述
     """
-    results = {
-        'wifi_router.list_connected_devices': f'已查询到当前连接的设备：{", ".join(["手机", "电脑", "智能音箱"])}',
-        'wifi_router.get_presence_by_user': f'检测到{tool_params.get("user_id", "家人")}目前{"在家" if random.choice([True, False]) else "不在家"}',
-        'wifi_router.block_device': f'已将设备{tool_params.get("device_id", "")}加入黑名单',
-        'wifi_router.set_guest_network': '访客网络已成功开启',
-        
-        'door_camera.get_recent_events': '门口摄像头最近没有异常事件',
-        'door_camera.take_snapshot': '已完成抓拍，图片已保存',
-        'door_camera.start_recording': '开始录制短视频',
-        'door_camera.play_preset_voice': '已播放预设语音提醒',
-        
-        'smart_lock.get_status': '门锁当前状态：已上锁',
-        'smart_lock.lock': '已成功上锁',
-        'smart_lock.unlock': '已成功解锁，请及时进门',
-        'smart_lock.create_temp_password': '临时密码已生成：886622',
-        'smart_lock.get_unlock_logs': '最近24小时有3次开锁记录',
-        
-        'temp_humidity_sensor.get_reading': f'当前温度{random.randint(20, 30)}°C，湿度{random.randint(40, 70)}%',
-        'temp_humidity_sensor.set_threshold': '温湿度阈值已设置完成',
-        
-        'light_sensor.get_lux': f'当前光照强度为{random.randint(100, 1000)}勒克斯',
-        'light_sensor.set_dark_threshold': '暗光阈值已设置',
-        
-        'air_quality_sensor.get_reading': '空气质量良好，PM2.5指数为15',
-        'air_quality_sensor.set_threshold': '空气质量阈值已设置',
-        
-        'smart_light.set_power': f'灯光已{"打开" if tool_params.get("power") == "on" else "关闭"}',
-        'smart_light.set_brightness': f'亮度已调整至{tool_params.get("brightness", 50)}%',
-        'smart_light.set_color_temperature': '色温已调整为暖光模式',
-        'smart_light.activate_scene': '已激活阅读场景灯光',
-        
-        'air_conditioner.get_status': f'空调当前温度{random.randint(22, 28)}°C，制冷模式',
-        'air_conditioner.set_power': f'空调已{"打开" if tool_params.get("power") == "on" else "关闭"}',
-        'air_conditioner.set_mode': f'已切换为{tool_params.get("mode", "制冷")}模式',
-        'air_conditioner.set_target_temperature': f'目标温度已设置为{tool_params.get("target_temp_c", 24)}°C',
-        'air_conditioner.set_fan_speed': f'风速已调整为{tool_params.get("fan_speed", "中档")}',
-        
-        'smart_curtain.get_position': f'窗帘当前位置：{random.randint(0, 100)}%',
-        'smart_curtain.set_position': f'窗帘已调整到{tool_params.get("position", 50)}%',
-        'smart_curtain.stop': '窗帘已停止移动',
-        
-        'fresh_air_system.get_status': '新风系统正在运行',
-        'fresh_air_system.set_power': '新风系统已开启',
-        'fresh_air_system.set_speed': '新风风速已调整',
-        'fresh_air_system.reset_filter_reminder': '滤网提醒已重置',
-        
-        'tv_projector.set_power': f'电视已{"打开" if tool_params.get("power") == "on" else "关闭"}',
-        'tv_projector.set_volume': f'音量已调整至{tool_params.get("volume", 50)}%',
-        'tv_projector.set_input_source': '已切换输入源',
-        'tv_projector.media_control': f'已{tool_params.get("action", "暂停")}播放',
-        
-        'smart_speaker.announce': '已播报消息',
-        'smart_speaker.set_volume': '音量已调整',
-        'smart_speaker.play_media': '开始播放音乐',
-        'smart_speaker.stop_media': '已停止播放',
-        
-        'home.get_mode': '当前家庭模式为：居家模式',
-        'home.set_mode': '已切换为离家模式',
-        'home.get_occupancy': '检测到家中有2人',
-        
-        'scene.activate': '场景已激活，相关设备已按预设配置调整',
-        'scene.preview': '场景预览完成，将执行5个设备动作',
-    }
+    # 获取工具描述
+    tool_def = tools_schema.get(tool_name, {})
+    tool_description = tool_def.get('description', '执行设备操作')
     
-    return results.get(tool_name, '操作已完成')
+    # 构建prompt
+    prompt = build_tool_result_prompt(tool_name, tool_params, tool_description, conversation_history)
+    
+    # 调用模型生成结果
+    response = run_chatgpt(prompt, temperature=0.7, num_tokens_request=300)
+    
+    # 解析响应
+    try:
+        result_data = json.loads(response)
+        tool_result = result_data['choices'][0]['message']['content']
+    except (json.JSONDecodeError, KeyError, IndexError):
+        tool_result = response
+    
+    # 清理结果（移除可能的引号或多余空格）
+    tool_result = tool_result.strip().strip('"').strip("'")
+    
+    return tool_result
 
 
 def parse_assistant_response(response: str) -> dict:
@@ -338,7 +390,7 @@ def generate_trajectory_for_scenario(scenario: str, user_profile: str, user_devi
     for _ in range(num_turns):
         # 1. 生成用户消息
         user_prompt = build_user_prompt(scenario, user_profile, user_devices, tools_schema, conversation_history)
-        user_response = run_chatgpt(user_prompt, temperature=0.8)
+        user_response = run_chatgpt(user_prompt, temperature=0.8, num_tokens_request=500)
         
         try:
             user_data = json.loads(user_response)
@@ -354,7 +406,7 @@ def generate_trajectory_for_scenario(scenario: str, user_profile: str, user_devi
         
         # 2. 生成助手响应（包含工具调用决策）
         assistant_prompt = build_assistant_prompt(scenario, user_message, user_devices, tools_schema, conversation_history)
-        assistant_response = run_chatgpt(assistant_prompt, temperature=0.8)
+        assistant_response = run_chatgpt(assistant_prompt, temperature=0.7, num_tokens_request=1000)
         
         # 解析助手响应
         try:
@@ -378,8 +430,8 @@ def generate_trajectory_for_scenario(scenario: str, user_profile: str, user_devi
             tool_call_str = f"调用工具 {tool_name}({params_str})"
             trajectory.append({"role": "tool", "content": tool_call_str})
             
-            # 生成工具执行结果
-            tool_result = generate_tool_result(tool_name, tool_params, tools_schema)
+            # 生成工具执行结果（传入对话历史）
+            tool_result = generate_tool_result(tool_name, tool_params, tools_schema, conversation_history)
             trajectory.append({"role": "assistant", "content": tool_result})
             
             # 更新对话历史（包含完整的工具调用信息）
