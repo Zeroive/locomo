@@ -42,37 +42,44 @@ SCENARIO_DIMENSIONS = {
 }
 
 
-HOUSEHOLD_EVENT_PROMPT = """
+HOUSEHOLD_SINGLE_EVENT_PROMPT = """
 你是家庭多用户 AI 助手测评数据集的事件记忆点生成器。
 
-请根据给定 household_profile，为这个家庭生成周末/休闲主题的事件图。事件图后续会被用于生成用户与 AI 助手的对话，所以事件必须是可对话、可记忆、可追溯的家庭安排。
+请根据已经由程序规划好的 event_plan，为这个家庭生成一个周末/休闲主题事件。
 
 要求：
-- 输出必须是 JSON 数组，不要输出 markdown。
-- 数组长度必须是 {num_events}。
-- 每个事件必须包含字段：
-  - "id": "E1" 这种递增编号
-  - "sub-event": 中文短句，描述具体家庭记忆点
-  - "date": 日期，必须在 {start_date} 到 {end_date} 之间，格式如 "12 July, 2025"
-  - "caused_by": 事件 id 数组；如果无因果则为空数组
-  - "scenario_type": 必须从给定场景类型中选择
-  - "participants": 家庭成员 person_id 数组，不能包含宠物
-  - "mentioned_members": 被提及但非主要参与者的 person_id 数组
-  - "memory_dimensions": 覆盖维度数组
-- 必须至少包含一次 conflicting_plans 和一次 changed_weekend_plan。
-- 如果家庭有宠物，可以生成 pet_weekend_care；宠物不能进入 participants。
-- child / elderly / pet 相关事件必须匹配真实家庭成员和宠物信息。
-- 事件之间尽量有少量因果关系，但 caused_by 只能引用更早的事件。
+- 输出必须是 JSON 对象，不要输出 markdown。
+- 必须保留 event_plan 中的 id、date、scenario_type、participants、mentioned_members、caused_by、memory_dimensions，不要改动。
+- 只需要生成或补充 "sub-event"。
+- sub-event 使用中文，30-60字，必须具体、自然、可用于后续用户与 AI 助手对话。
+- sub-event 必须符合 scenario_type、参与成员角色、家庭关系、宠物信息和时间先后逻辑。
+- 如果 caused_by 非空，sub-event 要自然体现它是由 previous_events 中的前置事件引发或调整而来。
+- 不要引入 household_profile 中不存在的新成员。
+- 宠物只能作为照护对象，不能作为 participants。
 
-可选 scenario_type：
-{scenario_types}
-
-scenario_type 到 memory_dimensions 的参考映射：
-{dimension_map}
-
-household_profile：
+household_profile:
 {profile}
+
+previous_events:
+{previous_events}
+
+event_plan:
+{event_plan}
 """.strip()
+
+
+SCENARIO_GUIDANCE = {
+    "weekend_family_outing": "全家或多名成员外出，重点是地点、出门准备、交通或天气。",
+    "weekend_home_relaxation": "居家休息，重点是家庭成员休闲偏好和家务/娱乐安排。",
+    "family_meal_plan": "家庭聚餐、做饭、外食或外卖安排，体现责任分工。",
+    "child_weekend_activity": "孩子兴趣班、作业、玩耍或接送安排，必须有孩子或青少年参与。",
+    "elderly_weekend_activity": "老人散步、买菜、社区活动或探亲，必须有老人参与。",
+    "pet_weekend_care": "宠物喂养、遛宠、清洁或看护，只让照护人参与，宠物不作为用户。",
+    "couple_leisure_plan": "夫妻/伴侣二人休闲安排，体现与其他家庭事项的协调。",
+    "visit_relatives": "探亲或亲友来访，体现用餐、到达时间或接待准备。",
+    "conflicting_plans": "多个成员周末偏好或时间冲突，后续可能需要协调。",
+    "changed_weekend_plan": "已有安排发生变更，必须引用或承接一个更早事件。",
+}
 
 
 def parse_json_array(text):
@@ -86,6 +93,20 @@ def parse_json_array(text):
         data = json.loads(match.group())
     if not isinstance(data, list):
         raise ValueError("Expected a JSON array")
+    return data
+
+
+def parse_json_object(text):
+    text = text.strip().replace("```json", "").replace("```", "").strip()
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        match = re.search(r"\{.*\}", text, re.DOTALL)
+        if not match:
+            raise
+        data = json.loads(match.group())
+    if not isinstance(data, dict):
+        raise ValueError("Expected a JSON object")
     return data
 
 
@@ -117,6 +138,58 @@ def choose_participants(profile, scenario_type):
         return [m["person_id"] for m in random.sample(members, sample_size)]
     sample_size = min(random.choice([2, 3]), len(members))
     return [m["person_id"] for m in random.sample(members, sample_size)]
+
+
+def scenario_is_applicable(profile, scenario_type):
+    if scenario_type == "child_weekend_activity":
+        return bool(members_by_stage(profile, {"child", "teenager"}))
+    if scenario_type == "elderly_weekend_activity":
+        return bool(members_by_stage(profile, {"elderly"}))
+    if scenario_type == "pet_weekend_care":
+        return bool(profile.get("pets"))
+    if scenario_type == "couple_leisure_plan":
+        return len(members_by_stage(profile, {"adult"})) >= 2
+    return True
+
+
+def build_event_scenario_sequence(profile, num_events):
+    required = ["conflicting_plans", "changed_weekend_plan"] if num_events >= 2 else ["conflicting_plans"]
+    candidates = [scenario for scenario in WEEKEND_SCENARIOS if scenario_is_applicable(profile, scenario)]
+    sequence = []
+    for scenario in required:
+        if scenario_is_applicable(profile, scenario):
+            sequence.append(scenario)
+    while len(sequence) < num_events:
+        sequence.append(random.choice(candidates or ["weekend_home_relaxation"]))
+    # Keep changed_weekend_plan after at least one event so it can refer backward.
+    if "changed_weekend_plan" in sequence and sequence.index("changed_weekend_plan") == 0 and len(sequence) > 1:
+        sequence[0], sequence[1] = sequence[1], sequence[0]
+    return sequence[:num_events]
+
+
+def build_event_plan(profile, idx, scenario_type, start_date, num_days, num_events, previous_events):
+    spacing = max(2, num_days // max(1, num_events))
+    event_date = start_date + timedelta(days=min(num_days, idx * spacing))
+    participants = choose_participants(profile, scenario_type)
+    mentioned = [
+        member["person_id"] for member in profile["members"]
+        if member["person_id"] not in participants and random.random() < 0.35
+    ]
+    caused_by = []
+    if previous_events and scenario_type == "changed_weekend_plan":
+        caused_by = [previous_events[-1]["id"]]
+    elif previous_events and scenario_type == "conflicting_plans" and random.random() < 0.5:
+        caused_by = [previous_events[-1]["id"]]
+    return {
+        "id": f"E{idx}",
+        "date": dateObj2Str(event_date),
+        "scenario_type": scenario_type,
+        "scenario_guidance": SCENARIO_GUIDANCE.get(scenario_type, ""),
+        "participants": participants,
+        "mentioned_members": mentioned,
+        "caused_by": caused_by,
+        "memory_dimensions": SCENARIO_DIMENSIONS[scenario_type],
+    }
 
 
 def render_event(profile, scenario_type, participants):
@@ -248,7 +321,43 @@ def normalize_event_graph(raw_events, profile, num_events, start_date, end_date)
     return normalized[:num_events]
 
 
-def generate_household_events(profile, num_events, num_days=60, start_date=None, use_llm=True):
+def normalize_single_event(raw_event, event_plan, profile):
+    member_ids = {member["person_id"] for member in profile["members"]}
+    event = dict(event_plan)
+    if isinstance(raw_event, dict) and raw_event.get("sub-event"):
+        event["sub-event"] = raw_event["sub-event"]
+    else:
+        event["sub-event"] = render_event(profile, event_plan["scenario_type"], event_plan["participants"])
+    event["participants"] = [pid for pid in event_plan["participants"] if pid in member_ids]
+    event["mentioned_members"] = [pid for pid in event_plan["mentioned_members"] if pid in member_ids and pid not in event["participants"]]
+    event["caused_by"] = list(event_plan.get("caused_by", []))
+    event["memory_dimensions"] = SCENARIO_DIMENSIONS[event_plan["scenario_type"]]
+    event.pop("scenario_guidance", None)
+    return event
+
+
+def validate_event_timeline(graph, profile):
+    member_ids = {member["person_id"] for member in profile.get("members", [])}
+    event_dates = {}
+    previous_date = None
+    for event in graph:
+        event_date = catch_date(event["date"])
+        if previous_date and event_date < previous_date:
+            raise ValueError(f"Event dates are not non-decreasing at {event['id']}")
+        previous_date = event_date
+        event_dates[event["id"]] = event_date
+        unknown_participants = set(event.get("participants", [])) - member_ids
+        if unknown_participants:
+            raise ValueError(f"Event {event['id']} has unknown participants: {unknown_participants}")
+        for cause_id in event.get("caused_by", []):
+            if cause_id not in event_dates:
+                raise ValueError(f"Event {event['id']} caused_by references missing or future event: {cause_id}")
+            if event_dates[cause_id] > event_date:
+                raise ValueError(f"Event {event['id']} caused_by {cause_id} occurs after event date")
+    return True
+
+
+def generate_household_events(profile, num_events, num_days=60, start_date=None, use_llm=True, on_event_generated=None):
     if start_date is None:
         start_date = get_random_date()
     end_date = start_date + timedelta(days=num_days)
@@ -259,35 +368,62 @@ def generate_household_events(profile, num_events, num_days=60, start_date=None,
 
     from global_methods import run_chatgpt
 
-    prompt = HOUSEHOLD_EVENT_PROMPT.format(
-        num_events=num_events,
-        start_date=dateObj2Str(start_date),
-        end_date=dateObj2Str(end_date),
-        scenario_types=json.dumps(WEEKEND_SCENARIOS, ensure_ascii=False, indent=2),
-        dimension_map=json.dumps(SCENARIO_DIMENSIONS, ensure_ascii=False, indent=2),
-        profile=json.dumps(profile, ensure_ascii=False, indent=2),
-    )
-    try:
-        logging.info(
-            "Calling LLM for household event graph: family_id=%s, num_events=%s, date_range=%s~%s",
-            profile.get("family", {}).get("family_id"),
-            num_events,
-            dateObj2Str(start_date),
-            dateObj2Str(end_date),
+    graph = []
+    scenario_sequence = build_event_scenario_sequence(profile, num_events)
+    profile["events_start_date"] = dateObj2Str(start_date)
+    profile["events_end_date"] = dateObj2Str(end_date)
+    profile["event_generation_mode"] = "planned_single_event_llm"
+    profile["graph"] = []
+
+    for idx, scenario_type in enumerate(scenario_sequence, start=1):
+        event_plan = build_event_plan(profile, idx, scenario_type, start_date, num_days, num_events, graph)
+        prompt = HOUSEHOLD_SINGLE_EVENT_PROMPT.format(
+            profile=json.dumps({
+                "family": profile.get("family", {}),
+                "members": profile.get("members", []),
+                "relations": profile.get("relations", []),
+                "pets": profile.get("pets", []),
+                "role_responsibilities": profile.get("role_responsibilities", []),
+            }, ensure_ascii=False, indent=2),
+            previous_events=json.dumps(graph, ensure_ascii=False, indent=2),
+            event_plan=json.dumps(event_plan, ensure_ascii=False, indent=2),
         )
-        response = run_chatgpt(prompt, num_gen=1, num_tokens_request=3000, temperature=1.0)
-        logging.info("LLM household event response received: chars=%s", len(response or ""))
-        raw_events = parse_json_array(response)
-        graph = normalize_event_graph(raw_events, profile, num_events, start_date, end_date)
-        logging.info("Normalized LLM household events: %s", len(graph))
-    except Exception as exc:
-        logging.warning("LLM household event generation failed, using template fallback: %s", exc)
-        graph = generate_template_household_events(profile, num_events, num_days, start_date)
+        logging.info(
+            "Calling LLM for household event %s/%s: family_id=%s, scenario=%s, date=%s, caused_by=%s",
+            idx,
+            num_events,
+            profile.get("family", {}).get("family_id"),
+            scenario_type,
+            event_plan["date"],
+            event_plan["caused_by"],
+        )
+        try:
+            response = run_chatgpt(prompt, num_gen=1, num_tokens_request=700, temperature=0.9)
+            logging.info("LLM household event %s response received: chars=%s", event_plan["id"], len(response or ""))
+            raw_event = parse_json_object(response)
+            event = normalize_single_event(raw_event, event_plan, profile)
+        except Exception as exc:
+            logging.warning("LLM household event %s generation failed, using event fallback: %s", event_plan["id"], exc)
+            event = normalize_single_event({}, event_plan, profile)
+
+        event["generation_prompt"] = prompt
+        graph.append(event)
+        profile["graph"] = list(graph)
+        logging.info(
+            "Generated event %s [%s] date=%s participants=%s caused_by=%s",
+            event["id"],
+            event["scenario_type"],
+            event["date"],
+            event["participants"],
+            event["caused_by"],
+        )
+        if on_event_generated:
+            on_event_generated(profile, event)
 
     profile["events_start_date"] = dateObj2Str(start_date)
     profile["graph"] = graph
     profile["events_end_date"] = dateObj2Str(end_date)
-    profile["event_generation_prompt"] = prompt
+    validate_event_timeline(graph, profile)
     return graph
 
 

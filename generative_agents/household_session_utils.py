@@ -199,7 +199,17 @@ def make_turn(sess_id, turn_idx, speaker_name, speaker_id, text, current_user_id
     }
 
 
-def generate_household_session(profile, assistant, sess_id, curr_date_time, prev_date_time="", previous_summary="", max_turns=8, use_llm=True):
+def generate_household_session(
+    profile,
+    assistant,
+    sess_id,
+    curr_date_time,
+    prev_date_time="",
+    previous_summary="",
+    max_turns=8,
+    use_llm=True,
+    on_turn_generated=None,
+):
     events = profile.get(f"events_session_{sess_id}", [])
     current_user_id = choose_current_user(profile, events, sess_id)
     current_user = get_member(profile, current_user_id)
@@ -260,6 +270,17 @@ def generate_household_session(profile, assistant, sess_id, curr_date_time, prev
             session.append(make_turn(sess_id, turn_idx, speaker_name, speaker_id, output, current_user_id, profile, related_event_ids))
             conv_so_far += f"{speaker_name}: {output}\n"
             logging.info("Session %s turn %s [%s]: %s", sess_id, turn_idx, speaker_name, output)
+            if on_turn_generated:
+                on_turn_generated({
+                    "session_id": sess_id,
+                    "date_time": curr_date_time,
+                    "current_user_id": current_user_id,
+                    "current_user_name": current_user["name"],
+                    "related_event_ids": related_event_ids,
+                    "generation_prompt": initial_prompt,
+                    "turn_generation_mode": "iterative_partial",
+                    "turns": list(session),
+                })
 
             if output.endswith("再见！") and turn_idx >= 4:
                 logging.info("Session %s ended early at turn %s", sess_id, turn_idx)

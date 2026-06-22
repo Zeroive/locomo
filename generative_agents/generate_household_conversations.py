@@ -131,12 +131,19 @@ def generate_persona_step(args):
         args.with_pet,
         not args.no_llm,
     )
+
+    def autosave_profile(profile, reason):
+        save_profile(profile, args.out_dir)
+        save_members(profile, args.out_dir)
+        logging.info("Autosaved household profile during persona step: reason=%s", reason)
+
     profile = sample_household_profile(
         household_type=args.household_type,
         persona_source=args.persona_source,
         family_id="family_001",
         with_pet=args.with_pet,
         use_llm=not args.no_llm,
+        on_profile_updated=autosave_profile,
     )
     save_profile(profile, args.out_dir)
     save_members(profile, args.out_dir)
@@ -160,7 +167,18 @@ def generate_events_step(args, profile):
         args.num_days,
         not args.no_llm,
     )
-    generate_household_events(profile, args.num_events, num_days=args.num_days, use_llm=not args.no_llm)
+
+    def autosave_event(profile_data, event):
+        save_profile(profile_data, args.out_dir)
+        logging.info("Autosaved household events after %s", event.get("id"))
+
+    generate_household_events(
+        profile,
+        args.num_events,
+        num_days=args.num_days,
+        use_llm=not args.no_llm,
+        on_event_generated=autosave_event,
+    )
     save_profile(profile, args.out_dir)
     logging.info("Generated %s household events", len(profile.get("graph", [])))
     for event in profile.get("graph", []):
@@ -210,6 +228,26 @@ def generate_session_step(args, profile):
     existing_session_ids = {session.get("session_id") for session in profile.get("sessions", [])}
 
     prev_date_time_string = ""
+
+    def autosave_session(session_data):
+        replaced = False
+        for idx, existing in enumerate(profile.get("sessions", [])):
+            if existing.get("session_id") == session_data.get("session_id"):
+                profile["sessions"][idx] = session_data
+                replaced = True
+                break
+        if not replaced:
+            profile.setdefault("sessions", []).append(session_data)
+        sess_id = session_data["session_id"]
+        profile[f"session_{sess_id}"] = session_data.get("turns", [])
+        save_profile(profile, args.out_dir)
+        save_json(profile.get("sessions", []), sessions_path(args.out_dir))
+        logging.info(
+            "Autosaved session %s after turn_count=%s",
+            sess_id,
+            len(session_data.get("turns", [])),
+        )
+
     for sess_id in range(1, args.num_sessions + 1):
         if sess_id in existing_session_ids and not args.overwrite_session:
             prev_date_time_string = profile.get(f"session_{sess_id}_date_time", prev_date_time_string)
@@ -235,8 +273,9 @@ def generate_session_step(args, profile):
             previous_summary=previous_summary,
             max_turns=args.max_turns_per_session,
             use_llm=not args.no_llm,
+            on_turn_generated=autosave_session,
         )
-        profile["sessions"].append(session)
+        autosave_session(session)
         profile[f"session_{sess_id}"] = session["turns"]
         logging.info(
             "Session %s generated: current_user=%s(%s), turns=%s, mode=%s",
@@ -247,6 +286,8 @@ def generate_session_step(args, profile):
             session.get("turn_generation_mode"),
         )
         profile[f"session_{sess_id}_facts"] = extract_household_session_facts(profile, session, use_llm=not args.no_llm)
+        save_profile(profile, args.out_dir)
+        logging.info("Autosaved session %s facts to household_profile.json", sess_id)
         logging.info(
             "Session %s facts extracted for speakers=%s",
             sess_id,

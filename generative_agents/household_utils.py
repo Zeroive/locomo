@@ -25,26 +25,65 @@ HOUSEHOLD_TYPES = [
 ]
 
 
-HOUSEHOLD_PROFILE_ENRICH_PROMPT = """
+MEMBER_PERSONA_ENRICH_PROMPT = """
 你是家庭多用户 AI 助手测评数据集的人物画像生成器。
 
-给定一个已经通过规则校验的 household_profile。请只润色和补充自然语言字段，不要改变结构约束。
+请只为一个家庭成员生成 persona_summary，不要生成其他成员。
 
 要求：
 - 输出必须是 JSON 对象，不要输出 markdown。
-- 必须保留所有 person_id、family_role、life_stage、relations、pets、can_chat_with_ai。
-- 可以改写：
-  - family.shared_background
-  - family.weekend_context
-  - members[].persona_summary
-  - role_responsibilities[].responsibility
-- persona_summary 应体现年龄、家庭角色、个人特征、周末休闲/照护偏好。
-- 人物特征要影响家庭责任和后续可对话主题。
-- 宠物不是用户，不能设置 can_chat_with_ai。
-- 不要引入 household_profile 中不存在的新家庭成员。
+- 只包含字段 "persona_summary"。
+- persona_summary 使用中文，120-180字。
+- 必须体现姓名、年龄、家庭角色、个人特征、周末休闲/照护偏好。
+- 要把 member.traits 和 msc_prompt 映射到家庭责任、关系和后续可对话主题。
+- 不要改变 person_id、年龄、角色，不要引入不存在的家庭成员。
 
-household_profile:
-{profile}
+家庭背景摘要：
+{family_context}
+
+当前成员：
+{member}
+""".strip()
+
+
+HOUSEHOLD_BACKGROUND_PROMPT = """
+你是家庭多用户 AI 助手测评数据集的家庭背景生成器。
+
+请根据成员、关系、宠物和责任分工，生成家庭共享背景和周末上下文。
+
+要求：
+- 输出必须是 JSON 对象，不要输出 markdown。
+- 只包含字段 "shared_background" 和 "weekend_context"。
+- shared_background 80-140字，描述家庭结构、主要关系和共同生活背景。
+- weekend_context 80-140字，描述周末/休闲/照护安排的总体特点。
+- 不要引入不存在的新成员。
+- 宠物只能作为照护对象，不是用户。
+
+家庭信息：
+{household}
+""".strip()
+
+
+RESPONSIBILITY_ENRICH_PROMPT = """
+你是家庭多用户 AI 助手测评数据集的家庭责任分工生成器。
+
+请为指定家庭成员生成一条周末/休闲/照护相关责任。
+
+要求：
+- 输出必须是 JSON 对象，不要输出 markdown。
+- 只包含字段 "responsibility"。
+- responsibility 使用中文，20-45字。
+- 结合成员角色、个人特征、宠物或孩子/老人照护需求。
+- 不要改变结构字段，不要引入不存在的新成员。
+
+家庭背景：
+{family_context}
+
+成员：
+{member}
+
+已有责任：
+{current_responsibility}
 """.strip()
 
 
@@ -395,38 +434,130 @@ def validate_household(profile):
     return True
 
 
-def enrich_household_profile_with_llm(profile):
+def build_family_context(profile):
+    compact = {
+        "family": profile.get("family", {}),
+        "members": [
+            {
+                "person_id": member["person_id"],
+                "name": member["name"],
+                "age": member["age"],
+                "gender": member["gender"],
+                "family_role": member["family_role"],
+                "family_role_label": member["family_role_label"],
+                "life_stage": member["life_stage"],
+            }
+            for member in profile.get("members", [])
+        ],
+        "relations": profile.get("relations", []),
+        "pets": profile.get("pets", []),
+    }
+    return json.dumps(compact, ensure_ascii=False, indent=2)
+
+
+def enrich_member_persona_with_llm(profile, member):
     from global_methods import run_chatgpt
 
-    prompt = HOUSEHOLD_PROFILE_ENRICH_PROMPT.format(profile=json.dumps(profile, ensure_ascii=False, indent=2))
-    logging.info(
-        "Calling LLM for household profile enrichment: family_id=%s, members=%s",
-        profile.get("family", {}).get("family_id"),
-        len(profile.get("members", [])),
+    prompt = MEMBER_PERSONA_ENRICH_PROMPT.format(
+        family_context=build_family_context(profile),
+        member=json.dumps(member, ensure_ascii=False, indent=2),
     )
-    response = run_chatgpt(prompt, num_gen=1, num_tokens_request=3500, temperature=0.8)
-    logging.info("LLM household profile response received: chars=%s", len(response or ""))
-    enriched = parse_json_object(response)
-
-    original_member_ids = {member["person_id"] for member in profile.get("members", [])}
-    enriched_member_ids = {member.get("person_id") for member in enriched.get("members", [])}
-    if original_member_ids != enriched_member_ids:
-        raise ValueError("LLM changed household member ids")
-
-    enriched["relations"] = profile["relations"]
-    enriched["pets"] = profile.get("pets", [])
-    for member in enriched.get("members", []):
-        original = next(m for m in profile["members"] if m["person_id"] == member["person_id"])
-        for key in ["family_role", "life_stage", "person_type", "can_chat_with_ai"]:
-            member[key] = original[key]
-
-    validate_household(enriched)
-    enriched["profile_generation_prompt"] = prompt
-    logging.info("LLM household profile enrichment parsed and validated")
-    return enriched
+    logging.info(
+        "Calling LLM for member persona: person_id=%s, name=%s, role=%s",
+        member.get("person_id"),
+        member.get("name"),
+        member.get("family_role"),
+    )
+    response = run_chatgpt(prompt, num_gen=1, num_tokens_request=700, temperature=0.8)
+    logging.info("LLM member persona response received for %s: chars=%s", member.get("person_id"), len(response or ""))
+    data = parse_json_object(response)
+    persona_summary = data.get("persona_summary")
+    if not persona_summary:
+        raise ValueError("Missing persona_summary")
+    member["persona_summary"] = persona_summary
+    member.setdefault("generation_prompts", {})["persona_summary"] = prompt
+    return member
 
 
-def sample_household_profile(household_type, persona_source, family_id="family_001", with_pet=False, use_llm=True):
+def enrich_household_background_with_llm(profile):
+    from global_methods import run_chatgpt
+
+    prompt = HOUSEHOLD_BACKGROUND_PROMPT.format(
+        household=json.dumps({
+            "family": profile.get("family", {}),
+            "members": profile.get("members", []),
+            "relations": profile.get("relations", []),
+            "pets": profile.get("pets", []),
+            "role_responsibilities": profile.get("role_responsibilities", []),
+        }, ensure_ascii=False, indent=2)
+    )
+    logging.info("Calling LLM for household background: family_id=%s", profile.get("family", {}).get("family_id"))
+    response = run_chatgpt(prompt, num_gen=1, num_tokens_request=900, temperature=0.7)
+    logging.info("LLM household background response received: chars=%s", len(response or ""))
+    data = parse_json_object(response)
+    if data.get("shared_background"):
+        profile["family"]["shared_background"] = data["shared_background"]
+    if data.get("weekend_context"):
+        profile["family"]["weekend_context"] = data["weekend_context"]
+    profile.setdefault("generation_prompts", {})["household_background"] = prompt
+    return profile
+
+
+def enrich_responsibility_with_llm(profile, responsibility):
+    from global_methods import run_chatgpt
+
+    member = next((m for m in profile.get("members", []) if m["person_id"] == responsibility.get("person_id")), None)
+    if member is None:
+        return responsibility
+    prompt = RESPONSIBILITY_ENRICH_PROMPT.format(
+        family_context=build_family_context(profile),
+        member=json.dumps(member, ensure_ascii=False, indent=2),
+        current_responsibility=responsibility.get("responsibility", ""),
+    )
+    logging.info("Calling LLM for responsibility: person_id=%s", member["person_id"])
+    response = run_chatgpt(prompt, num_gen=1, num_tokens_request=300, temperature=0.6)
+    logging.info("LLM responsibility response received for %s: chars=%s", member["person_id"], len(response or ""))
+    data = parse_json_object(response)
+    if data.get("responsibility"):
+        responsibility["responsibility"] = data["responsibility"]
+    responsibility.setdefault("generation_prompts", {})["responsibility"] = prompt
+    return responsibility
+
+
+def enrich_household_profile_with_llm(profile, on_profile_updated=None):
+    for idx, member in enumerate(profile.get("members", [])):
+        try:
+            profile["members"][idx] = enrich_member_persona_with_llm(profile, member)
+            validate_household(profile)
+            logging.info("Member persona enriched and validated: %s", member["person_id"])
+            if on_profile_updated:
+                on_profile_updated(profile, f"member_persona:{member['person_id']}")
+        except Exception as exc:
+            logging.warning("LLM member persona enrichment failed for %s, keeping rule persona: %s", member.get("person_id"), exc)
+
+    try:
+        profile = enrich_household_background_with_llm(profile)
+        validate_household(profile)
+        logging.info("Household background enriched and validated")
+        if on_profile_updated:
+            on_profile_updated(profile, "household_background")
+    except Exception as exc:
+        logging.warning("LLM household background enrichment failed, keeping rule background: %s", exc)
+
+    for idx, responsibility in enumerate(profile.get("role_responsibilities", [])):
+        try:
+            profile["role_responsibilities"][idx] = enrich_responsibility_with_llm(profile, responsibility)
+            validate_household(profile)
+            logging.info("Responsibility enriched and validated: %s", responsibility.get("person_id"))
+            if on_profile_updated:
+                on_profile_updated(profile, f"responsibility:{responsibility.get('person_id')}")
+        except Exception as exc:
+            logging.warning("LLM responsibility enrichment failed for %s, keeping rule responsibility: %s", responsibility.get("person_id"), exc)
+
+    return profile
+
+
+def sample_household_profile(household_type, persona_source, family_id="family_001", with_pet=False, use_llm=True, on_profile_updated=None):
     if household_type not in HOUSEHOLD_TYPES:
         raise ValueError(f"Unsupported household_type: {household_type}")
 
@@ -458,7 +589,7 @@ def sample_household_profile(household_type, persona_source, family_id="family_0
     validate_household(profile)
     if use_llm:
         try:
-            profile = enrich_household_profile_with_llm(profile)
+            profile = enrich_household_profile_with_llm(profile, on_profile_updated=on_profile_updated)
         except Exception as exc:
             logging.warning("LLM household profile enrichment failed, using rule profile: %s", exc)
     else:
