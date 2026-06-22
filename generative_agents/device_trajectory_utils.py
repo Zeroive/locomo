@@ -354,7 +354,7 @@ def generate_trajectory_for_scenario(scenario: str, user_profile: str, user_devi
         
         # 2. 生成助手响应（包含工具调用决策）
         assistant_prompt = build_assistant_prompt(scenario, user_message, user_devices, tools_schema, conversation_history)
-        assistant_response = run_chatgpt(assistant_prompt, temperature=0.7, max_tokens=1000)
+        assistant_response = run_chatgpt(assistant_prompt, temperature=0.8)
         
         # 解析助手响应
         try:
