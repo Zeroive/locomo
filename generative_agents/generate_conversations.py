@@ -9,8 +9,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 import logging
 import argparse
-import os, json, random
+import os, json, random, re
 from datetime import date, timedelta, datetime
+from multiprocessing import Pool
 
 # 导入重构后的模块
 from generative_agents.file_utils import save_agents, load_agents
@@ -23,6 +24,7 @@ from generative_agents.conversation_utils import get_msc_persona, get_datetime_s
 from generative_agents.event_utils import get_events
 from generative_agents.memory_utils import get_session_facts, save_embeddings
 from generative_agents.html_utils import convert_to_chat_html
+from generative_agents.qa_utils import generate_qa_pairs
 from global_methods import run_chatgpt
 
 logging.basicConfig(level=logging.INFO)
@@ -75,32 +77,63 @@ def parse_args():
                         help="Set flag to generate device events based on dialogue and scenario")
     parser.add_argument('--device-trajectory', action="store_true",
                         help="Set flag to generate device operation trajectory with tool calls")
+    parser.add_argument('--qa-pairs', action="store_true",
+                        help="Set flag to generate QA pairs from session facts")
 
+    # 并发执行相关参数
+    parser.add_argument('--parallel-runs', type=int, default=1, 
+                        help="Number of parallel conversation runs to execute (default: 1)")
+    parser.add_argument('--max-workers', type=int, default=4, 
+                        help="Maximum number of worker processes for parallel execution (default: 4)")
+    
     args = parser.parse_args()
     return args
 
 
-def main():
+def run_conversation(run_args):
     """
-    主流程函数。
+    执行单次对话生成任务（用于并发执行）
     
-    执行多会话对话生成的完整流程：
-    1. 生成/加载人物角色
-    2. 选择相关设备
-    3. 生成事件图
-    4. 生成多会话对话
-    5. 生成摘要
+    Args:
+        run_args: 包含运行参数的字典，包括 run_index, base_out_dir, 和原始 args 对象
     """
-    args = parse_args()
+    run_index = run_args['run_index']
+    base_out_dir = run_args['base_out_dir']
+    args = run_args['args']
     
-    # 创建输出目录
-    if not os.path.exists(args.out_dir):
-        os.makedirs(args.out_dir)
+    # 创建当前运行的输出目录
+    run_out_dir = os.path.join(base_out_dir, str(run_index))
+    if not os.path.exists(run_out_dir):
+        os.makedirs(run_out_dir)
     
-    args.agent_a_file = os.path.join(args.out_dir, 'agent_a.json')
-    args.agent_b_file = os.path.join(args.out_dir, 'agent_b.json')
+    # 创建 args 的副本，避免并发执行时共享对象导致问题
+    import copy
+    local_args = copy.deepcopy(args)
+    
+    # 更新 local_args 的输出目录
+    local_args.out_dir = run_out_dir
+    local_args.agent_a_file = os.path.join(run_out_dir, 'agent_a.json')
+    local_args.agent_b_file = os.path.join(run_out_dir, 'agent_b.json')
+    
+    logging.info(f"Starting conversation run {run_index} in directory: {run_out_dir}")
+    
+    try:
+        # 调用原始的对话生成逻辑
+        generate_conversation(local_args)
+        logging.info(f"Conversation run {run_index} completed successfully")
+        return (run_index, True, None)
+    except Exception as e:
+        logging.error(f"Conversation run {run_index} failed: {str(e)}")
+        return (run_index, False, str(e))
 
+
+def generate_conversation(args):
+    """
+    执行多会话对话生成的完整流程（抽取出来的核心逻辑）
     
+    Args:
+        args: 命令行参数对象
+    """
     # Step 1: Get personalities for the agents; get a randomly selected sample from the MSC dataset and expand the few-liner personas into detailed personas.
     if args.persona:
         agent_a, agent_b = get_msc_persona(args)
@@ -337,6 +370,82 @@ def main():
                 else:
                     logging.warning("No device events were generated.")
 
+    # Step 6: 生成QA对
+    if args.qa_pairs:
+        logging.info("Generating QA pairs...")
+        
+        # 加载 agent 数据
+        try:
+            agent_a, agent_b = load_agents(args)
+        except Exception as e:
+            logging.error(f"Failed to load agents: {e}")
+            return
+        
+        # 检查 agent 是否加载成功
+        if agent_a is None or agent_b is None:
+            logging.error("Failed to load agents: agent_a or agent_b is None")
+            return
+        
+        # 检查是否已有会话事实
+        has_facts = any(f'session_{i}_facts' in agent_a for i in range(1, args.num_sessions + 1))
+        if not has_facts:
+            logging.warning("No session facts found. Please run with session generation first.")
+        else:
+            # 检查是否已生成过QA对
+            qa_path = os.path.join(args.out_dir, 'qa_pairs.json')
+            if os.path.exists(qa_path) and not args.overwrite_session:
+                logging.info(f"QA pairs already exist at {qa_path}, skipping. Use --overwrite-session to regenerate.")
+            else:
+                # 生成QA对
+                generate_qa_pairs(agent_a, agent_b, args)
+
+
+def main():
+    """
+    主流程函数。
+    
+    支持并发执行多轮对话生成。
+    """
+    args = parse_args()
+    
+    # 创建基础输出目录
+    if not os.path.exists(args.out_dir):
+        os.makedirs(args.out_dir)
+    
+    # 如果需要并发执行多轮对话
+    if args.parallel_runs > 1:
+        logging.info(f"Starting {args.parallel_runs} parallel conversation runs...")
+        
+        # 准备任务参数
+        tasks = []
+        for i in range(1, args.parallel_runs + 1):
+            task_args = {
+                'run_index': i,
+                'base_out_dir': args.out_dir,
+                'args': args
+            }
+            tasks.append(task_args)
+        
+        # 使用进程池并发执行
+        with Pool(processes=min(args.parallel_runs, args.max_workers)) as pool:
+            results = pool.map(run_conversation, tasks)
+        
+        # 汇总结果
+        success_count = sum(1 for _, success, _ in results if success)
+        fail_count = args.parallel_runs - success_count
+        
+        logging.info(f"Parallel execution complete. Success: {success_count}, Failed: {fail_count}")
+        
+        # 输出失败的运行信息
+        for run_index, success, error in results:
+            if not success:
+                logging.error(f"Run {run_index} failed: {error}")
+    
+    else:
+        # 单轮执行，直接调用生成函数
+        args.agent_a_file = os.path.join(args.out_dir, 'agent_a.json')
+        args.agent_b_file = os.path.join(args.out_dir, 'agent_b.json')
+        generate_conversation(args)
 
 
 if __name__ == '__main__':
