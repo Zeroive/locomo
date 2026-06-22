@@ -162,10 +162,10 @@ FACT_EXTRACTION_PROMPT = """
 - 事实应客观、可作为记忆数据库使用，不要写抽象评价。
 
 当前会话可见上下文：
-{profile}
+{context}
 
 当前会话：
-{session}
+{conversation}
 """.strip()
 
 
@@ -178,6 +178,49 @@ def parse_json_value(text):
         if not match:
             raise
     return json.loads(match.group())
+
+
+def format_fact_context_text(profile, current_user, current_events):
+    lines = [
+        f"当前用户：{current_user['name']}，{current_user.get('age')}岁，{current_user.get('family_role_label')}，{current_user.get('life_stage')}。",
+        f"当前用户画像：{current_user.get('persona_summary', '')}",
+    ]
+    related_context = json.loads(scoped_family_context(profile, current_user, current_events))
+    related_members = related_context.get("current_user_related_members", [])
+    if related_members:
+        member_lines = []
+        for member in related_members:
+            if member["person_id"] == current_user["person_id"]:
+                continue
+            member_lines.append(
+                f"{member['name']}({member.get('age')}岁,{member.get('family_role_label')},{member.get('life_stage')})"
+            )
+        if member_lines:
+            lines.append("相关成员：" + "；".join(member_lines))
+    relations = related_context.get("current_user_related_relations", [])
+    if relations:
+        lines.append("相关关系：" + "；".join([f"{rel['from']}-{rel['type']}-{rel['to']}" for rel in relations]))
+    responsibilities = related_context.get("current_user_related_responsibilities", [])
+    if responsibilities:
+        lines.append("相关责任：" + "；".join([f"{item.get('person_id')}:{item.get('responsibility')}" for item in responsibilities]))
+    pets = related_context.get("current_user_related_pets", [])
+    if pets:
+        lines.append("相关宠物：" + "；".join([f"{pet.get('name')}({pet.get('species')}),照护人={pet.get('caretaker_id')}" for pet in pets]))
+    if current_events:
+        event_lines = [
+            f"{event['id']}({event['date']},{event['scenario_type']}): {event['sub-event']}"
+            for event in current_events
+        ]
+        lines.append("当前事件：" + "；".join(event_lines))
+    return "\n".join(lines)
+
+
+def format_conversation_for_facts(session):
+    lines = []
+    for turn in session.get("turns", []):
+        text = turn.get("clean_text") or turn.get("text", "")
+        lines.append(f"[{turn.get('dia_id')}] {turn.get('speaker')}: {text}")
+    return "\n".join(lines)
 
 
 def clean_turn_text(text, speaker_name):
@@ -397,13 +440,10 @@ def extract_household_session_facts(profile, session, use_llm=True):
             if event.get("id") in session.get("related_event_ids", [])
         ]
         prompt = FACT_EXTRACTION_PROMPT.format(
-            profile=json.dumps({
-                "current_user": current_user,
-                "current_user_related_family_context": json.loads(scoped_family_context(profile, current_user, current_events)),
-                "current_events": current_events,
-            }, ensure_ascii=False, indent=2),
-            session=json.dumps(session, ensure_ascii=False, indent=2),
+            context=format_fact_context_text(profile, current_user, current_events),
+            conversation=format_conversation_for_facts(session),
         )
+        logging.info("Session %s fact extraction prompt chars=%s", session.get("session_id"), len(prompt))
         response = run_chatgpt(prompt, num_gen=1, num_tokens_request=1800, temperature=0.5)
         logging.info("LLM fact extraction response received for session %s: chars=%s", session.get("session_id"), len(response or ""))
         facts = parse_json_value(response)
