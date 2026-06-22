@@ -86,7 +86,8 @@ def build_qa_prompt(session_facts: dict, dialog_turns: list = []) -> str:
 3. 不要生成常识题，除非类别是 open-domain。
 4. adversarial 问题的 evidence_turn_ids 必须为空数组。
 5. 不要问答案过于明显、无意义或重复的问题。
-6. 至少生成5个不同类别的QA对。
+6. 不要使用今天、昨天、明天等指代时间，而应使用具体的时间。
+7. 至少生成5个不同类别的QA对。
 
 ## 输出示例
 {{"qa_id": "QA_1", "category": "single-hop", "question": "张强计划几点出门？", "answer": "七点", "evidence_turn_ids": ["D1:1"], "source_fact_ids": ["F1"], "difficulty": "easy", "requires_temporal_reasoning": false, "requires_tool_use": false}}

@@ -135,6 +135,8 @@ def run_conversation(run_args):
         return (run_index, True, None)
     except Exception as e:
         logging.error(f"Conversation run {run_index} failed: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return (run_index, False, str(e))
 
 
@@ -465,6 +467,7 @@ def main():
         # 单轮执行，直接调用生成函数
         args.agent_a_file = os.path.join(args.out_dir, 'agent_a.json')
         args.agent_b_file = os.path.join(args.out_dir, 'agent_b.json')
+        args.emb_file = os.path.join(args.out_dir, args.emb_file)
         generate_conversation(args)
 
 

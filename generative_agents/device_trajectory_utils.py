@@ -346,7 +346,7 @@ def generate_trajectory_for_scenario(scenario: str, user_profile: str, user_devi
         except (json.JSONDecodeError, KeyError, IndexError):
             assistant_content = assistant_response
         
-        parsed_response = parse_assistant_response(assistant_content)
+        parsed_response = assistant_content
         
         if parsed_response.get("action") == "tool":
             # 调用工具
