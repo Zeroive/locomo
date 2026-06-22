@@ -58,7 +58,7 @@ def parse_args():
     parser.add_argument("--num-days", type=int, default=60)
     parser.add_argument("--num-events-per-session", type=int, default=2)
     parser.add_argument("--max-turns-per-session", type=int, default=8)
-    parser.add_argument("--with-pet", action="store_true")
+    parser.add_argument("--with-pet", "--with-pets", dest="with_pet", action="store_true")
     parser.add_argument("--persona", action="store_true")
     parser.add_argument("--events", action="store_true")
     parser.add_argument("--session", action="store_true")
