@@ -12,100 +12,12 @@
 ]
 """
 import json
-import random
 import os
 import re
 from typing import Dict, List, Any
 
 # 导入模型调用函数
-try:
-    from global_methods import run_chatgpt
-except (ImportError, ModuleNotFoundError) as e:
-    # 如果无法导入，使用模拟函数
-    print(f"Warning: Cannot import run_chatgpt from global_methods: {e}")
-    print("Using simulated response function instead.")
-    
-    def run_chatgpt(query, num_gen=1, num_tokens_request=1000, 
-                    model='chatgpt', use_16k=False, temperature=1.0, wait_time=1):
-        """模拟模型响应"""
-        return json.dumps({
-            "choices": [{
-                "message": {
-                    "content": generate_simulated_response(query)
-                }
-            }]
-        })
-
-
-
-def generate_simulated_response(prompt: str) -> str:
-    """
-    模拟生成单轮响应（当无法调用真实模型时使用）
-    """
-    # 根据prompt中包含的角色决定生成什么响应
-    if "你是一个家庭智能助手，刚刚执行了一个工具调用" in prompt:
-        # 生成工具执行结果
-        # 从prompt中提取工具名称
-        tool_name_match = re.search(r'工具名称: ([\w.]+)', prompt)
-        tool_name = tool_name_match.group(1) if tool_name_match else "unknown_tool"
-        
-        # 从prompt中提取工具参数
-        params_match = re.search(r'工具参数: (.+)', prompt)
-        params_str = params_match.group(1) if params_match else ""
-        
-        # 生成模拟结果
-        if 'get_status' in tool_name or 'get_reading' in tool_name or 'get_position' in tool_name:
-            return f"查询完成。当前状态正常，设备运行良好。"
-        elif 'set_temperature' in tool_name or 'set_target_temperature' in tool_name:
-            temp_match = re.search(r'target_temp_c="(\d+)"', params_str)
-            temp = temp_match.group(1) if temp_match else "24"
-            return f"已将目标温度设置为{temp}°C，设备正在调整中。"
-        elif 'set_power' in tool_name:
-            if 'power="on"' in params_str:
-                return "设备已成功开启，正在运行中。"
-            else:
-                return "设备已成功关闭。"
-        elif 'set_brightness' in tool_name:
-            return "亮度已调整完成，当前亮度适中。"
-        elif 'set_position' in tool_name:
-            return "窗帘位置已调整完成。"
-        elif 'play_media' in tool_name:
-            return "开始播放音乐，音质良好。"
-        elif 'lock' in tool_name or 'unlock' in tool_name:
-            return "门锁操作已完成，安全状态良好。"
-        else:
-            return "操作已成功完成。"
-    
-    elif "你是用户" in prompt:
-        # 生成用户响应
-        user_responses = [
-            "帮我检查一下空调状态",
-            "把客厅的灯打开",
-            "今天天气怎么样？",
-            "帮我把空调调到24度",
-            "检查一下门锁",
-            "播放音乐",
-            "打开窗帘",
-            "关闭电视",
-            "查看一下室内温度"
-        ]
-        return random.choice(user_responses)
-    
-    elif "你是一个家庭智能助手" in prompt or "家庭智能助手" in prompt:
-        # 生成助手响应（JSON格式）
-        assistant_responses = [
-            {"thought": "用户想查询空调状态，需要调用 air_conditioner.get_status 工具", "action": "tool", "tool_name": "air_conditioner.get_status", "tool_params": {"device_id": "living_room_ac"}},
-            {"thought": "用户想打开灯光，需要调用 smart_light.set_power 工具", "action": "tool", "tool_name": "smart_light.set_power", "tool_params": {"device_id": "living_room_light", "power": "on"}},
-            {"thought": "用户询问天气，这是一个简单问题，可以直接回答", "action": "answer", "content": "今天天气晴朗，气温28°C。"},
-            {"thought": "用户想调整空调温度，需要调用 air_conditioner.set_target_temperature 工具", "action": "tool", "tool_name": "air_conditioner.set_target_temperature", "tool_params": {"device_id": "living_room_ac", "target_temp_c": 24}},
-            {"thought": "用户想检查门锁状态，需要调用 smart_lock.get_status 工具", "action": "tool", "tool_name": "smart_lock.get_status", "tool_params": {"lock_id": "front_door_lock"}},
-            {"thought": "用户想播放音乐，需要调用 smart_speaker.play_media 工具", "action": "tool", "tool_name": "smart_speaker.play_media", "tool_params": {"device_id": "living_room_speaker", "media_type": "music"}},
-            {"thought": "用户想关闭灯光，需要调用 smart_light.set_power 工具", "action": "tool", "tool_name": "smart_light.set_power", "tool_params": {"device_id": "living_room_light", "power": "off"}}
-        ]
-        return json.dumps(random.choice(assistant_responses), ensure_ascii=False)
-    
-    else:
-        return "帮我检查一下空调状态"
+from global_methods import run_chatgpt
 
 
 def load_tools_schema(schema_path: str) -> Dict[str, dict]:
@@ -168,7 +80,7 @@ def build_user_prompt(scenario: str, user_profile: str, user_devices: List[str],
     
     Args:
         scenario: 场景描述
-        user_profile: 用户画像
+        user_profile: 用户画像（包含职业、性格、爱好、目标等详细信息）
         user_devices: 用户拥有的设备列表
         tools_schema: 工具 schema
         conversation_history: 对话历史
@@ -179,25 +91,32 @@ def build_user_prompt(scenario: str, user_profile: str, user_devices: List[str],
     tools_list = get_tools_list_for_prompt(user_devices, tools_schema)
     
     prompt = f"""
-你是用户{user_profile}，正在与家庭智能助手对话。
+你正在扮演一个真实的人类用户，正在与家庭智能助手进行自然对话。请根据以下信息生成符合该用户特点的回复。
 
-## 场景描述
+## 用户基本信息
+{user_profile}
+
+## 当前场景
 {scenario}
 
-## 可用设备和工具
+## 可用智能设备
 {tools_list}
 
-## 对话历史
-{conversation_history}
+## 对话历史（帮助你理解当前对话的上下文）
+{conversation_history if conversation_history else "这是对话的开始，还没有历史记录。"}
 
 ## 你的任务
-根据场景和对话历史，生成下一句用户的话。用户可以：
-1. 询问问题（如天气、设备状态）
-2. 下达命令（如打开空调、关闭灯光）
-3. 继续对话
+生成该用户可能会说的话。要求：
+1. **符合用户特点**：根据用户的职业、性格、爱好等特征选择合适的表达方式
+   - 年轻职场人可能更简洁直接
+   - 科技爱好者可能会尝试更多功能
+   - 注重生活品质的用户可能会关注环境调节
+2. **符合当前场景**：根据场景（下班回家、周末休息等）选择合适的请求
+3. **符合对话上下文**：如果是对话中途，要延续之前的对话主题
+4. **自然口语化**：用户说话应该自然、口语化，不生硬
 
 ## 输出要求
-只输出用户说的话，不要包含其他内容。
+只输出用户说的话，不要包含其他内容。语言要自然流畅。
 """
     
     return prompt.strip()
@@ -220,37 +139,48 @@ def build_assistant_prompt(scenario: str, user_message: str, user_devices: List[
     tools_list = get_tools_list_for_prompt(user_devices, tools_schema)
     
     prompt = f"""
-你是一个家庭智能助手，正在与用户对话。
+你是一个贴心的家庭智能助手，正在为用户提供服务。请根据用户的需求和上下文，做出最合适的响应。
 
-## 场景描述
+## 当前场景
 {scenario}
 
-## 用户消息
+## 用户当前消息
 {user_message}
 
-## 可用工具
+## 可用智能设备及工具
 {tools_list}
 
-## 对话历史
-{conversation_history}
+## 对话历史（帮助你理解当前对话的上下文）
+{conversation_history if conversation_history else "这是对话的开始，还没有历史记录。"}
 
 ## 你的任务
-分析用户的消息，决定是直接回答还是调用工具。
+分析用户的消息，决定是直接回答还是调用智能设备工具。
+
+## 决策原则
+1. **信息查询类**：询问天气、时间、设备状态等 → 调用对应工具获取信息
+2. **设备控制类**：开关灯、调温度、播放音乐等 → 调用设备控制工具
+3. **闲聊/问题类**：问候、闲聊、解释性提问等 → 直接友好回答
+4. **多步骤任务**：需要多个设备配合 → 按顺序调用多个工具
 
 ## 输出格式
 请输出JSON格式，包含以下字段：
-- thought: 思考过程，说明为什么选择直接回答或调用工具
+- thought: 思考过程，说明为什么选择直接回答或调用工具，以及调用哪个工具
 - action: "answer" 或 "tool"
-- content: 如果action是"answer"，这里是直接回答的内容
+- content: 如果action是"answer"，这里是直接回答的内容（要友好、自然、贴心）
 - tool_name: 如果action是"tool"，这里是工具名称
 - tool_params: 如果action是"tool"，这里是工具参数（JSON对象）
 
+## 回复风格
+- 友好、亲切、专业的语气
+- 如果是直接回答，回答要自然流畅，像和朋友聊天
+- 如果调用工具，先简单说明要做什么，再执行
+
 ## 输出示例
 直接回答:
-{{"thought": "用户询问天气，这是一个简单问题，可以直接回答", "action": "answer", "content": "今天天气晴朗，气温28°C。"}}
+{{"thought": "用户询问天气，这是一个简单的信息查询，可以直接回答", "action": "answer", "content": "今天天气很不错呢，晴天，气温28°C，很适合出门活动。"}}
 
 调用工具:
-{{"thought": "用户想查询空调状态，需要调用 air_conditioner.get_status 工具", "action": "tool", "tool_name": "air_conditioner.get_status", "tool_params": {{"device_id": "living_room_ac"}}}}
+{{"thought": "用户想调节空调温度，需要调用 air_conditioner.set_target_temperature 工具", "action": "tool", "tool_name": "air_conditioner.set_target_temperature", "tool_params": {{"device_id": "living_room_ac", "target_temp_c": 24}}}}
 """
     
     return prompt.strip()
