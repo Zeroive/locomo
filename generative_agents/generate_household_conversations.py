@@ -257,9 +257,10 @@ def generate_session_step(args, profile):
         curr_date = datetime.strptime(curr_date_time_string.split(" on ")[1], "%d %B, %Y")
         prev_date = datetime.strptime(prev_date_time_string.split(" on ")[1], "%d %B, %Y") if prev_date_time_string else None
 
-        profile[f"events_session_{sess_id}"] = get_relevant_household_events(profile.get("graph", []), curr_date, prev_date)
+        relevant_events = get_relevant_household_events(profile.get("graph", []), curr_date, prev_date)
+        profile[f"events_session_{sess_id}"] = relevant_events[-1:] if relevant_events else []
         logging.info(
-            "Session %s relevant events: %s",
+            "Session %s current event: %s",
             sess_id,
             [event.get("id") for event in profile[f"events_session_{sess_id}"]],
         )

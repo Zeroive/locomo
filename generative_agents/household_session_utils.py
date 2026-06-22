@@ -10,7 +10,7 @@ import logging
 import random
 import re
 
-from generative_agents.household_utils import get_member, summarize_relations
+from generative_agents.household_utils import get_member
 
 
 def detect_mentioned_member_ids(text, profile):
@@ -38,6 +38,50 @@ def event_brief(events):
     return "；".join([event["sub-event"] for event in events])
 
 
+def scoped_member_ids(profile, current_user, relevant_events):
+    ids = {current_user["person_id"]}
+    for event in relevant_events or []:
+        ids.update(event.get("participants", []))
+        ids.update(event.get("mentioned_members", []))
+    return ids
+
+
+def scoped_family_context(profile, current_user, relevant_events):
+    ids = scoped_member_ids(profile, current_user, relevant_events)
+    members = [
+        {
+            "person_id": member["person_id"],
+            "name": member["name"],
+            "age": member.get("age"),
+            "life_stage": member.get("life_stage"),
+            "family_role_label": member.get("family_role_label"),
+            "persona_summary": member.get("persona_summary"),
+        }
+        for member in profile.get("members", [])
+        if member["person_id"] in ids
+    ]
+    relations = [
+        rel for rel in profile.get("relations", [])
+        if rel.get("from") in ids and rel.get("to") in ids
+    ]
+    pets = [
+        pet for pet in profile.get("pets", [])
+        if pet.get("caretaker_id") in ids
+    ]
+    responsibilities = [
+        item for item in profile.get("role_responsibilities", [])
+        if item.get("person_id") in ids
+    ]
+    return json.dumps({
+        "family_name": profile.get("family", {}).get("family_name"),
+        "household_type": profile.get("family", {}).get("household_type"),
+        "current_user_related_members": members,
+        "current_user_related_relations": relations,
+        "current_user_related_pets": pets,
+        "current_user_related_responsibilities": responsibilities,
+    }, ensure_ascii=False, indent=2)
+
+
 def build_household_turn_prompt(
     profile,
     assistant,
@@ -54,7 +98,13 @@ def build_household_turn_prompt(
     role_instruction = (
         f"请扮演当前用户{current_user['name']}，生成你接下来对AI助手说的一句话。"
         if speaker_role == "user"
-        else f"请扮演AI助手{assistant['name']}，生成你接下来对{current_user['name']}说的一句话。"
+        else f"请扮演AI助手{assistant['name']}，只对{current_user['name']}刚才的请求或聊天做日常回复。"
+    )
+    assistant_style = (
+        "- AI助手回复时只做自然日常回应，不要主动补充额外事实、不要解释记忆维度、事件编号、家庭关系图或内部推理。\n"
+        "- AI助手可以确认、安慰、提醒、简单追问，但不要替用户扩展新的安排。"
+        if speaker_role == "assistant"
+        else ""
     )
     stop_instruction = "如果对话已经自然完成，可以只输出“再见！”。" if instruct_stop else ""
     return f"""
@@ -64,11 +114,11 @@ def build_household_turn_prompt(
 上次会话时间：{prev_date_time or "无"}
 AI助手：{assistant["persona_summary"]}
 当前用户：{current_user["name"]}，{current_user["persona_summary"]}
-家庭背景：{profile["family"]["shared_background"]}
-家庭关系：
-{summarize_relations(profile)}
-历史摘要：{previous_summary or "无"}
-当前相关事件：{event_brief(relevant_events)}
+当前事件：{event_brief(relevant_events)}
+当前交流人相关家庭上下文：
+{scoped_family_context(profile, current_user, relevant_events)}
+上一轮会话摘要：
+{previous_summary or "无"}
 已有对话：
 {conv_so_far or "无"}
 
@@ -76,10 +126,13 @@ AI助手：{assistant["persona_summary"]}
 - 当前应该发言的人是：{speaker_name}
 - {role_instruction}
 - 只输出一句话，不要输出 JSON，不要输出说话人名字。
-- 当前用户可以自然提及其他家庭成员。
+- 本 session 主要基于当前事件、当前交流人相关家庭上下文、上一轮会话摘要和已有对话生成。
+- AI助手只知道当前交流人相关的家庭信息，不能使用未提供的其他家庭关系。
+- 当前用户可以自然提及当前事件里的其他人，但AI助手只能按用户说法日常回应。
 - 宠物只能作为照护对象，不能作为发言人。
-- 对话必须围绕当前事件、时间和周末/休闲任务特征。
+- 对话必须围绕当前事件、当前时间和周末/休闲任务特征。
 - 每句自然口语化，不要超过 40 个中文字。
+{assistant_style}
 {stop_instruction}
 """.strip()
 
@@ -108,7 +161,7 @@ FACT_EXTRACTION_PROMPT = """
 - 来源ID 必须来自对话 dia_id 或相关 event id。
 - 事实应客观、可作为记忆数据库使用，不要写抽象评价。
 
-家庭背景：
+当前会话可见上下文：
 {profile}
 
 当前会话：
@@ -145,10 +198,8 @@ def user_opening(current_user, events):
 
 def assistant_response(profile, current_user, events):
     if not events:
-        return f"好的，{current_user['name']}，我会帮你整理周末安排。"
-    event = events[0]
-    dims = "、".join(event.get("memory_dimensions", [])[:2])
-    return f"好的，我记下了。这件事主要涉及{dims}。"
+        return "好的，我帮你留意一下。"
+    return "好的，我记下了。"
 
 
 def follow_up_user(profile, current_user, events):
@@ -166,15 +217,15 @@ def follow_up_user(profile, current_user, events):
 
 def assistant_memory_reply(profile, events):
     if not events:
-        return "没问题，我会按家庭成员的责任分工提醒。"
+        return "没问题，到时候提醒你。"
     event = events[0]
     if event["scenario_type"] == "changed_weekend_plan":
-        return "好的，我会把这次变更放到最新安排里。"
+        return "好的，我会按新的来提醒。"
     if event["scenario_type"] == "conflicting_plans":
-        return "我会标记成计划冲突，提醒大家再确认一次。"
+        return "嗯，那我晚点提醒你们再确认一下。"
     if event["scenario_type"] == "pet_weekend_care":
-        return "我会把宠物照护事项单独提醒。"
-    return "没问题，我会按周末计划提醒相关家人。"
+        return "好的，到时候我提醒你。"
+    return "没问题，到时候我提醒你。"
 
 
 def closing_user(current_user):
@@ -340,12 +391,16 @@ def extract_household_session_facts(profile, session, use_llm=True):
         from global_methods import run_chatgpt
 
         logging.info("Calling LLM for session %s fact extraction", session.get("session_id"))
+        current_user = get_member(profile, session["current_user_id"])
+        current_events = [
+            event for event in profile.get("graph", [])
+            if event.get("id") in session.get("related_event_ids", [])
+        ]
         prompt = FACT_EXTRACTION_PROMPT.format(
             profile=json.dumps({
-                "family": profile.get("family", {}),
-                "members": profile.get("members", []),
-                "relations": profile.get("relations", []),
-                "pets": profile.get("pets", []),
+                "current_user": current_user,
+                "current_user_related_family_context": json.loads(scoped_family_context(profile, current_user, current_events)),
+                "current_events": current_events,
             }, ensure_ascii=False, indent=2),
             session=json.dumps(session, ensure_ascii=False, indent=2),
         )
