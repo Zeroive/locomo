@@ -64,7 +64,15 @@ def parse_args():
     parser.add_argument('--scenario', type=str, default='male_leave_work', 
                         choices=['male_leave_work', 'elderly_outdoor', 'child_return', 'family_return', 
                                  'visitor_arrival', 'all_leave_arm', 'anomaly_detection'],
-                        help="指定对话场景类型，默认为 male_leave_work (男主人上班离家)")
+                        help="指定对话场景类型，默认为 male_leave_work\n"
+                             "场景说明：\n"
+                             "  male_leave_work    - 男主人上班离家：早上出门上班前与AI助手的对话\n"
+                             "  elderly_outdoor     - 老人独自外出：老人准备外出活动前与AI助手的对话\n"
+                             "  child_return        - 小孩放学回家：小孩放学回家后与AI助手的对话\n"
+                             "  family_return       - 家庭成员下班回家：家庭成员下班回家后与AI助手的对话\n"
+                             "  visitor_arrival     - 访客到家：访客到达家中时与AI助手的对话\n"
+                             "  all_leave_arm       - 全员离家布防：全员离家时启动安防模式的对话\n"
+                             "  anomaly_detection   - 异常活动检测：检测到异常活动时AI助手与用户的对话")
     parser.add_argument('--scenario-file', type=str, default='./data/scenarios/scenarios.json',
                         help="场景配置文件路径，默认为 ./data/scenarios/scenarios.json")
     
@@ -136,7 +144,16 @@ def generate_conversation(args):
     """
     # Step 1: Get personalities for the agents; get a randomly selected sample from the MSC dataset and expand the few-liner personas into detailed personas.
     if args.persona:
-        agent_a, agent_b = get_msc_persona(args)
+        # 加载场景配置（如果有），用于生成符合场景的人物角色
+        scenario_info = None
+        try:
+            with open(args.scenario_file, 'r', encoding='utf-8') as f:
+                scenarios_data = json.load(f)
+            scenario_info = scenarios_data.get('scenarios', {}).get(args.scenario, None)
+        except Exception as e:
+            logging.warning(f"Failed to load scenario config for persona generation: {e}")
+        
+        agent_a, agent_b = get_msc_persona(args, scenario_info)
         if agent_a is not None and agent_b is not None:
             save_agents([agent_a, agent_b], args)
 
