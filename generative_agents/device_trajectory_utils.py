@@ -117,7 +117,7 @@ def build_user_prompt(scenario: str, user_profile: str, user_devices: List[str],
 5. **简洁精炼**：语言简洁，不超过20字
 
 ## 输出要求
-只输出用户日常交流中说的话，不要包含其他内容。语言要自然流畅。
+只输出用户日常交流中会和与家庭智能助手说的话，不要包含其他内容，语言要自然流畅。
 """
     
     return prompt.strip()
