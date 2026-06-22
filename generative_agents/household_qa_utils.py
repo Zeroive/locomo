@@ -13,11 +13,11 @@ from generative_agents.household_utils import get_member, save_json, strip_gener
 HOUSEHOLD_QA_PROMPT = """
 你是长期家庭对话记忆 QA 数据集构造助手。
 
-请根据 household_profile、家庭事件、session facts 和原始对话 turns 生成测评 QA。
+请根据给定证据材料，只生成 1 条测评 QA。
 
 要求：
-- 输出必须是 JSON 数组，不要输出 markdown。
-- 每条 QA 必须包含：
+- 输出必须是 JSON 对象，不要输出 markdown。
+- QA 必须包含：
   - "category": single-hop | multi-hop | temporal | cross-member | pet-related | adversarial
   - "question"
   - "answer"
@@ -31,8 +31,11 @@ HOUSEHOLD_QA_PROMPT = """
 - 问题必须只能根据给定证据回答。
 - adversarial 的答案必须是“无法从对话中确定”，且 evidence_turn_ids 和 source_fact_ids 为空数组。
 - 不要使用今天、昨天、明天等相对时间，要使用具体日期或会话时间。
-- 至少覆盖 single-hop、cross-member、adversarial；如果存在计划冲突或变更，必须生成 temporal 或 multi-hop。
-- 如果存在宠物照护事件，必须生成 pet-related。
+- 必须严格生成 qa_plan 指定的 category。
+- 不要生成重复问题。
+
+qa_plan:
+{qa_plan}
 
 家庭与成员概况:
 {profile}
@@ -42,17 +45,17 @@ HOUSEHOLD_QA_PROMPT = """
 """.strip()
 
 
-def parse_json_array(text):
+def parse_json_object(text):
     text = text.strip().replace("```json", "").replace("```", "").strip()
     try:
         data = json.loads(text)
     except json.JSONDecodeError:
-        match = re.search(r"\[.*\]", text, re.DOTALL)
+        match = re.search(r"\{.*\}", text, re.DOTALL)
         if not match:
             raise
         data = json.loads(match.group())
-    if not isinstance(data, list):
-        raise ValueError("Expected a JSON array")
+    if not isinstance(data, dict):
+        raise ValueError("Expected a JSON object")
     return data
 
 
@@ -147,59 +150,110 @@ def format_evidence_for_qa(profile):
     return "\n".join(lines)
 
 
+def build_qa_plans(profile):
+    plans = []
+    for session in profile.get("sessions", []):
+        event = event_for_session(profile, session)
+        current_user_id = session.get("current_user_id")
+        base = {
+            "session_id": session.get("session_id"),
+            "time": session.get("date_time", ""),
+            "current_user_id": current_user_id,
+            "event_id": event.get("id") if event else "",
+        }
+        if event:
+            plans.append({**base, "category": "single-hop", "intent": "询问当前事件中明确提到的一项具体安排。"})
+            plans.append({**base, "category": "cross-member", "intent": "询问当前安排涉及哪些成员或谁需要被提醒。"})
+            if event.get("scenario_type") in {"changed_weekend_plan", "conflicting_plans"}:
+                plans.append({**base, "category": "temporal", "intent": "询问计划变更、冲突或后续确认事项。"})
+            if event.get("scenario_type") == "pet_weekend_care":
+                plans.append({**base, "category": "pet-related", "intent": "询问宠物照护对象或照护人。"})
+        plans.append({**base, "category": "adversarial", "intent": "询问证据中没有明确说明的信息，答案必须是无法从对话中确定。"})
+    return plans
+
+
+def format_single_qa_evidence(profile, plan):
+    event = next((event for event in profile.get("graph", []) if event.get("id") == plan.get("event_id")), None)
+    session = next((item for item in profile.get("sessions", []) if item.get("session_id") == plan.get("session_id")), None)
+    lines = []
+    if event:
+        lines.append(
+            f"事件 {event['id']} | {event['date']} | {event['scenario_type']} | "
+            f"参与={','.join(event.get('participants', []))} | {event['sub-event']}"
+        )
+    if session:
+        lines.append(f"会话 S{session.get('session_id')} | time={session.get('date_time')} | current_user={session.get('current_user_id')}")
+        for turn in session.get("turns", []):
+            text = turn.get("clean_text") or turn.get("text", "")
+            lines.append(f"[{turn.get('dia_id')}] {turn.get('speaker')}: {text}")
+        facts = profile.get(f"session_{session.get('session_id')}_facts", {})
+        if facts:
+            lines.append("Facts:")
+            for speaker, speaker_facts in facts.items():
+                for fact in speaker_facts:
+                    if isinstance(fact, (list, tuple)) and len(fact) >= 2:
+                        lines.append(f"- {speaker}: {fact[0]} (source={fact[1]})")
+                    else:
+                        lines.append(f"- {speaker}: {fact}")
+    return "\n".join(lines)
+
+
+def normalize_generated_qa(item, qa_id, plan):
+    category = item.get("category") or plan["category"]
+    return {
+        "qa_id": f"QA_{qa_id}",
+        "session_id": item.get("session_id", plan.get("session_id")),
+        "time": item.get("time", plan.get("time", "")),
+        "entity_id": item.get("entity_id", plan.get("current_user_id", "")),
+        "category": category,
+        "QA_details": {
+            "user": item.get("question", ""),
+            "assistant": item.get("answer", ""),
+        },
+        "evidence_turn_ids": item.get("evidence_turn_ids", []),
+        "source_fact_ids": item.get("source_fact_ids", []),
+        "difficulty": item.get("difficulty", "medium"),
+        "requires_temporal_reasoning": item.get("requires_temporal_reasoning", category == "temporal"),
+        "requires_tool_use": item.get("requires_tool_use", False),
+        "requires_cross_member_reference": item.get("requires_cross_member_reference", category in {"cross-member", "multi-hop"}),
+    }
+
+
 def generate_household_qa_pairs(profile, out_dir, use_llm=True):
     try:
         if not use_llm:
             raise ValueError("LLM disabled")
         from global_methods import run_chatgpt
 
+        output = {
+            "description": "家庭多用户与AI助手对话测评数据",
+            "family": profile.get("family", {}),
+            "members": profile.get("members", []),
+            "relations": profile.get("relations", []),
+            "QA": [],
+        }
+        qa_plans = build_qa_plans(profile)
         logging.info(
-            "Calling LLM for household QA generation: sessions=%s, events=%s",
+            "Calling LLM for household QA generation: sessions=%s, events=%s, qa_plans=%s",
             len(profile.get("sessions", [])),
             len(profile.get("graph", [])),
+            len(qa_plans),
         )
-        prompt = HOUSEHOLD_QA_PROMPT.format(
-            profile=format_family_for_qa(profile),
-            context=format_evidence_for_qa(profile),
-        )
-        logging.info("QA generation prompt chars=%s", len(prompt))
-        response = run_chatgpt(prompt, num_gen=1, num_tokens_request=4000, temperature=0.7)
-        logging.info("LLM QA response received: chars=%s", len(response or ""))
-        generated_items = parse_json_array(response)
-        qa_items = []
-        for idx, item in enumerate(generated_items, start=1):
-            if not isinstance(item, dict):
-                continue
-            category = item.get("category", "single-hop")
-            qa_items.append({
-                "qa_id": f"QA_{idx}",
-                "session_id": item.get("session_id"),
-                "time": item.get("time", ""),
-                "entity_id": item.get("entity_id", ""),
-                "category": category,
-                "QA_details": {
-                    "user": item.get("question", ""),
-                    "assistant": item.get("answer", ""),
-                },
-                "evidence_turn_ids": item.get("evidence_turn_ids", []),
-                "source_fact_ids": item.get("source_fact_ids", []),
-                "difficulty": item.get("difficulty", "medium"),
-                "requires_temporal_reasoning": item.get("requires_temporal_reasoning", category == "temporal"),
-                "requires_tool_use": item.get("requires_tool_use", False),
-                "requires_cross_member_reference": item.get("requires_cross_member_reference", category in {"cross-member", "multi-hop"}),
-            })
-        if qa_items:
-            logging.info("LLM QA parsed: %s items", len(qa_items))
-            output = {
-                "description": "家庭多用户与AI助手对话测评数据",
-                "family": profile.get("family", {}),
-                "members": profile.get("members", []),
-                "relations": profile.get("relations", []),
-                "QA": qa_items,
-            }
+        for idx, plan in enumerate(qa_plans, start=1):
+            prompt = HOUSEHOLD_QA_PROMPT.format(
+                qa_plan=json.dumps(plan, ensure_ascii=False, separators=(",", ":")),
+                profile=format_family_for_qa(profile),
+                context=format_single_qa_evidence(profile, plan),
+            )
+            logging.info("Calling LLM for QA %s/%s: category=%s, session=%s, prompt_chars=%s", idx, len(qa_plans), plan["category"], plan.get("session_id"), len(prompt))
+            response = run_chatgpt(prompt, num_gen=1, num_tokens_request=900, temperature=0.7)
+            logging.info("LLM QA %s response received: chars=%s", idx, len(response or ""))
+            item = parse_json_object(response)
+            qa = normalize_generated_qa(item, idx, plan)
+            output["QA"].append(qa)
             save_json(output, os.path.join(out_dir, "qa_pairs.json"))
-            return output
-        raise ValueError("No valid generated QA items")
+            logging.info("Autosaved QA %s/%s: %s", idx, len(qa_plans), qa["category"])
+        return output
     except Exception as exc:
         logging.warning("LLM household QA generation failed, using fallback QA: %s", exc)
 
