@@ -10,7 +10,7 @@ import logging
 import random
 import re
 
-from generative_agents.household_utils import get_member
+from generative_agents.household_utils import get_member, strip_generation_prompts
 
 
 def detect_mentioned_member_ids(text, profile):
@@ -47,6 +47,9 @@ def scoped_member_ids(profile, current_user, relevant_events):
 
 
 def scoped_family_context(profile, current_user, relevant_events):
+    profile = strip_generation_prompts(profile)
+    current_user = strip_generation_prompts(current_user)
+    relevant_events = strip_generation_prompts(relevant_events)
     ids = scoped_member_ids(profile, current_user, relevant_events)
     members = [
         {
@@ -181,6 +184,9 @@ def parse_json_value(text):
 
 
 def format_fact_context_text(profile, current_user, current_events):
+    profile = strip_generation_prompts(profile)
+    current_user = strip_generation_prompts(current_user)
+    current_events = strip_generation_prompts(current_events)
     lines = [
         f"当前用户：{current_user['name']}，{current_user.get('age')}岁，{current_user.get('family_role_label')}，{current_user.get('life_stage')}。",
         f"当前用户画像：{current_user.get('persona_summary', '')}",
@@ -371,7 +377,6 @@ def generate_household_session(
                     "current_user_id": current_user_id,
                     "current_user_name": current_user["name"],
                     "related_event_ids": related_event_ids,
-                    "generation_prompt": initial_prompt,
                     "turn_generation_mode": "iterative_partial",
                     "turns": list(session),
                 })
@@ -389,7 +394,6 @@ def generate_household_session(
             "current_user_id": current_user_id,
             "current_user_name": current_user["name"],
             "related_event_ids": related_event_ids,
-            "generation_prompt": initial_prompt,
             "turn_generation_mode": "iterative",
             "turns": session,
         }
@@ -415,7 +419,6 @@ def generate_household_session(
         "current_user_id": current_user_id,
         "current_user_name": current_user["name"],
         "related_event_ids": related_event_ids,
-        "generation_prompt": initial_prompt,
         "turn_generation_mode": "fallback",
         "turns": session,
     }
@@ -448,7 +451,6 @@ def extract_household_session_facts(profile, session, use_llm=True):
         logging.info("LLM fact extraction response received for session %s: chars=%s", session.get("session_id"), len(response or ""))
         facts = parse_json_value(response)
         if isinstance(facts, dict):
-            session["fact_generation_prompt"] = prompt
             logging.info("Session %s LLM facts parsed: speakers=%s", session.get("session_id"), list(facts.keys()))
             return facts
         raise ValueError("Facts response is not a JSON dict")

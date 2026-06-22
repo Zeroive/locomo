@@ -12,6 +12,7 @@ import re
 from datetime import timedelta
 
 from generative_agents.time_utils import catch_date, dateObj2Str, get_random_date
+from generative_agents.household_utils import strip_generation_prompts
 
 
 WEEKEND_SCENARIOS = [
@@ -212,6 +213,7 @@ def build_event_plan(profile, idx, scenario_type, start_date, num_days, num_even
 
 
 def compact_member_for_event(member):
+    member = strip_generation_prompts(member)
     traits = member.get("traits", {})
     preferences = "、".join(traits.get("preferences", [])[:2])
     routines = "、".join(traits.get("daily_routines", [])[:1])
@@ -227,6 +229,8 @@ def compact_member_for_event(member):
 
 
 def build_event_prompt_context(profile, event_plan, previous_events):
+    profile = strip_generation_prompts(profile)
+    previous_events = strip_generation_prompts(previous_events)
     relevant_ids = set(event_plan.get("participants", [])) | set(event_plan.get("mentioned_members", []))
     members = [
         compact_member_for_event(member)
@@ -553,7 +557,6 @@ def generate_household_events(profile, num_events, num_days=60, start_date=None,
             logging.warning("LLM household event %s generation failed, using event fallback: %s", event_plan["id"], exc)
             event = normalize_single_event({}, event_plan, profile)
 
-        event["generation_prompt"] = prompt
         graph.append(event)
         profile["graph"] = list(graph)
         logging.info(

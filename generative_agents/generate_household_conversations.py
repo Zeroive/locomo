@@ -35,6 +35,7 @@ from generative_agents.household_utils import (
     load_json,
     sample_household_profile,
     save_json,
+    strip_generation_prompts,
     validate_household,
 )
 from generative_agents.time_utils import datetimeObj2Str, get_random_time
@@ -91,10 +92,11 @@ def members_dir(out_dir):
 
 
 def load_profile(out_dir):
-    return load_json(household_profile_path(out_dir))
+    return strip_generation_prompts(load_json(household_profile_path(out_dir)))
 
 
 def save_profile(profile, out_dir):
+    profile = strip_generation_prompts(profile)
     validate_household(profile)
     save_json(profile, household_profile_path(out_dir))
     logging.info("Saved household profile: %s", household_profile_path(out_dir))
@@ -104,7 +106,7 @@ def save_members(profile, out_dir):
     target_dir = members_dir(out_dir)
     os.makedirs(target_dir, exist_ok=True)
     for member in profile.get("members", []):
-        save_json(member, os.path.join(target_dir, f"{member['person_id']}.json"))
+        save_json(strip_generation_prompts(member), os.path.join(target_dir, f"{member['person_id']}.json"))
     logging.info("Saved %s member files under %s", len(profile.get("members", [])), target_dir)
 
 

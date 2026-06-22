@@ -149,6 +149,25 @@ def save_json(data, path):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def strip_generation_prompts(value):
+    if isinstance(value, dict):
+        return {
+            key: strip_generation_prompts(item)
+            for key, item in value.items()
+            if key not in {
+                "generation_prompts",
+                "generation_prompt",
+                "profile_generation_prompt",
+                "event_generation_prompt",
+                "fact_generation_prompt",
+                "qa_generation_prompt",
+            }
+        }
+    if isinstance(value, list):
+        return [strip_generation_prompts(item) for item in value]
+    return value
+
+
 def load_persona_source(path):
     data = load_json(path)
     if isinstance(data, dict) and "train" in data:
@@ -475,7 +494,6 @@ def enrich_member_persona_with_llm(profile, member):
     if not persona_summary:
         raise ValueError("Missing persona_summary")
     member["persona_summary"] = persona_summary
-    member.setdefault("generation_prompts", {})["persona_summary"] = prompt
     return member
 
 
@@ -499,7 +517,6 @@ def enrich_household_background_with_llm(profile):
         profile["family"]["shared_background"] = data["shared_background"]
     if data.get("weekend_context"):
         profile["family"]["weekend_context"] = data["weekend_context"]
-    profile.setdefault("generation_prompts", {})["household_background"] = prompt
     return profile
 
 
@@ -520,7 +537,6 @@ def enrich_responsibility_with_llm(profile, responsibility):
     data = parse_json_object(response)
     if data.get("responsibility"):
         responsibility["responsibility"] = data["responsibility"]
-    responsibility.setdefault("generation_prompts", {})["responsibility"] = prompt
     return responsibility
 
 

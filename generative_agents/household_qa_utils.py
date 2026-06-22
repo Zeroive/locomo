@@ -7,7 +7,7 @@ import logging
 import os
 import re
 
-from generative_agents.household_utils import get_member, save_json
+from generative_agents.household_utils import get_member, save_json, strip_generation_prompts
 
 
 HOUSEHOLD_QA_PROMPT = """
@@ -34,10 +34,10 @@ HOUSEHOLD_QA_PROMPT = """
 - 至少覆盖 single-hop、cross-member、adversarial；如果存在计划冲突或变更，必须生成 temporal 或 multi-hop。
 - 如果存在宠物照护事件，必须生成 pet-related。
 
-household_profile:
+家庭与成员概况:
 {profile}
 
-sessions/facts/events:
+证据材料:
 {context}
 """.strip()
 
@@ -97,6 +97,56 @@ def make_qa(qa_id, session, entity_id, category, question, answer, evidence_turn
     }
 
 
+def format_family_for_qa(profile):
+    profile = strip_generation_prompts(profile)
+    lines = [
+        f"家庭：{profile.get('family', {}).get('family_name')}，类型={profile.get('family', {}).get('household_type')}。",
+    ]
+    if profile.get("family", {}).get("weekend_context"):
+        lines.append(f"周末背景：{profile['family']['weekend_context']}")
+    member_lines = [
+        f"{member['person_id']}={member['name']}({member.get('age')}岁,{member.get('family_role_label')},{member.get('life_stage')})"
+        for member in profile.get("members", [])
+    ]
+    if member_lines:
+        lines.append("成员：" + "；".join(member_lines))
+    if profile.get("pets"):
+        pet_lines = [
+            f"{pet.get('pet_id')}={pet.get('name')}({pet.get('species')}),照护人={pet.get('caretaker_id')}"
+            for pet in profile.get("pets", [])
+        ]
+        lines.append("宠物：" + "；".join(pet_lines))
+    return "\n".join(lines)
+
+
+def format_evidence_for_qa(profile):
+    profile = strip_generation_prompts(profile)
+    lines = []
+    if profile.get("graph"):
+        lines.append("事件：")
+        for event in profile.get("graph", []):
+            lines.append(
+                f"- {event['id']} | {event['date']} | {event['scenario_type']} | "
+                f"参与={','.join(event.get('participants', []))} | {event['sub-event']}"
+            )
+    for session in profile.get("sessions", []):
+        sess_id = session.get("session_id")
+        lines.append(f"\n会话 S{sess_id} | time={session.get('date_time')} | current_user={session.get('current_user_id')} | events={','.join(session.get('related_event_ids', []))}")
+        for turn in session.get("turns", []):
+            text = turn.get("clean_text") or turn.get("text", "")
+            lines.append(f"[{turn.get('dia_id')}] {turn.get('speaker')}: {text}")
+        facts = profile.get(f"session_{sess_id}_facts", {})
+        if facts:
+            lines.append("Facts:")
+            for speaker, speaker_facts in facts.items():
+                for fact in speaker_facts:
+                    if isinstance(fact, (list, tuple)) and len(fact) >= 2:
+                        lines.append(f"- {speaker}: {fact[0]} (source={fact[1]})")
+                    else:
+                        lines.append(f"- {speaker}: {fact}")
+    return "\n".join(lines)
+
+
 def generate_household_qa_pairs(profile, out_dir, use_llm=True):
     try:
         if not use_llm:
@@ -109,22 +159,10 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
             len(profile.get("graph", [])),
         )
         prompt = HOUSEHOLD_QA_PROMPT.format(
-            profile=json.dumps({
-                "family": profile.get("family", {}),
-                "members": profile.get("members", []),
-                "relations": profile.get("relations", []),
-                "pets": profile.get("pets", []),
-                "role_responsibilities": profile.get("role_responsibilities", []),
-            }, ensure_ascii=False, indent=2),
-            context=json.dumps({
-                "graph": profile.get("graph", []),
-                "sessions": profile.get("sessions", []),
-                "session_facts": {
-                    key: value for key, value in profile.items()
-                    if key.startswith("session_") and key.endswith("_facts")
-                },
-            }, ensure_ascii=False, indent=2),
+            profile=format_family_for_qa(profile),
+            context=format_evidence_for_qa(profile),
         )
+        logging.info("QA generation prompt chars=%s", len(prompt))
         response = run_chatgpt(prompt, num_gen=1, num_tokens_request=4000, temperature=0.7)
         logging.info("LLM QA response received: chars=%s", len(response or ""))
         generated_items = parse_json_array(response)
@@ -158,7 +196,6 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
                 "members": profile.get("members", []),
                 "relations": profile.get("relations", []),
                 "QA": qa_items,
-                "qa_generation_prompt": prompt,
             }
             save_json(output, os.path.join(out_dir, "qa_pairs.json"))
             return output
