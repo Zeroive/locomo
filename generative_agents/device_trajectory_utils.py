@@ -116,7 +116,7 @@ def build_user_prompt(scenario: str, user_profile: str, user_devices: List[str],
 4. **自然口语化**：用户说话应该自然、口语化，不生硬
 
 ## 输出要求
-只输出用户说的话，不要包含其他内容。语言要自然流畅。
+只输出用户日常交流中说的话，不要包含其他内容。语言要自然流畅。
 """
     
     return prompt.strip()

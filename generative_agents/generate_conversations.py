@@ -21,7 +21,7 @@ from generative_agents.device_trajectory_utils import generate_all_device_trajec
 from generative_agents.session_utils import get_session, get_session_summary, get_relevant_events
 from generative_agents.conversation_utils import get_msc_persona, get_datetime_string
 from generative_agents.event_utils import get_events
-from generative_agents.memory_utils import save_embeddings
+from generative_agents.memory_utils import get_session_facts, save_embeddings
 from generative_agents.html_utils import convert_to_chat_html
 from global_methods import run_chatgpt
 
@@ -254,9 +254,11 @@ def main():
                 agent_b['session_%s_summary' % sess_id] = summary
                 save_agents([agent_a, agent_b], args)
 
-            # 保存嵌入向量
-            if args.reflection:
-                save_embeddings([agent_a, agent_b], args, sess_id)
+            # 生成会话事实（每轮都生成，不受 reflection 参数控制）
+            if 'session_%s_facts' % sess_id not in agent_b or args.overwrite_session:
+                facts = get_session_facts(args, agent_a, agent_b, sess_id)
+                agent_a['session_%s_facts' % sess_id] = facts
+                agent_b['session_%s_facts' % sess_id] = facts
                 save_agents([agent_a, agent_b], args)
 
             # 计算下一个会话的日期时间
