@@ -71,8 +71,8 @@ HOUSEHOLD_SINGLE_EVENT_PROMPT = """
 - 不要引入 household_profile 中不存在的新成员。
 - 宠物只能作为照护对象，不能作为 participants。
 
-household_profile:
-{profile}
+关键信息:
+{context}
 
 previous_events:
 {previous_events}
@@ -212,14 +212,17 @@ def build_event_plan(profile, idx, scenario_type, start_date, num_days, num_even
 
 
 def compact_member_for_event(member):
+    traits = member.get("traits", {})
+    preferences = "、".join(traits.get("preferences", [])[:2])
+    routines = "、".join(traits.get("daily_routines", [])[:1])
     return {
         "person_id": member["person_id"],
         "name": member["name"],
         "age": member.get("age"),
         "life_stage": member.get("life_stage"),
         "family_role_label": member.get("family_role_label"),
-        "persona_summary": member.get("persona_summary", "")[:180],
-        "traits": member.get("traits", {}),
+        "summary": member.get("persona_summary", ""),
+        "traits": "；".join([item for item in [preferences, routines] if item]),
     }
 
 
@@ -264,6 +267,65 @@ def build_event_prompt_context(profile, event_plan, previous_events):
         "relevant_pets": pets,
         "relevant_responsibilities": responsibilities,
         "previous_events": previous_event_summaries,
+    }
+
+
+def format_event_context_text(prompt_context):
+    family = prompt_context["family"]
+    lines = [
+        f"家庭: {family.get('family_name')}，类型={family.get('household_type')}。",
+    ]
+    if family.get("weekend_context"):
+        lines.append(f"周末背景: {family['weekend_context']}")
+    if prompt_context["relevant_members"]:
+        member_text = []
+        for member in prompt_context["relevant_members"]:
+            desc = f"{member['person_id']}={member['name']}({member.get('age')}岁,{member.get('family_role_label')},{member.get('life_stage')})"
+            if member.get("traits"):
+                desc += f"，特征:{member['traits']}"
+            if member.get("summary"):
+                desc += f"，简介:{member['summary']}"
+            member_text.append(desc)
+        lines.append("相关成员: " + "；".join(member_text))
+    if prompt_context["relevant_relations"]:
+        relations = [
+            f"{rel['from']}-{rel['type']}-{rel['to']}"
+            for rel in prompt_context["relevant_relations"][:4]
+        ]
+        lines.append("相关关系: " + "；".join(relations))
+    if prompt_context["relevant_pets"]:
+        pets = [
+            f"{pet.get('pet_id')}={pet.get('name')}({pet.get('species')}),照护人={pet.get('caretaker_id')}"
+            for pet in prompt_context["relevant_pets"]
+        ]
+        lines.append("相关宠物: " + "；".join(pets))
+    if prompt_context["relevant_responsibilities"]:
+        responsibilities = [
+            f"{item.get('person_id')}:{item.get('responsibility', '')}"
+            for item in prompt_context["relevant_responsibilities"][:4]
+        ]
+        lines.append("相关责任: " + "；".join(responsibilities))
+    return "\n".join(lines)
+
+
+def compact_previous_events_for_prompt(previous_events):
+    return "\n".join([
+        f"{event['id']}({event['date']},{event['scenario_type']}): {event['sub-event']}"
+        for event in previous_events[-2:]
+    ]) or "无"
+
+
+def compact_event_plan_for_prompt(event_plan):
+    return {
+        "id": event_plan["id"],
+        "date": event_plan["date"],
+        "scenario_type": event_plan["scenario_type"],
+        "scenario_label": event_plan["scenario_label"],
+        "scenario_guidance": event_plan["scenario_guidance"],
+        "participants": event_plan["participants"],
+        "mentioned_members": event_plan["mentioned_members"],
+        "caused_by": event_plan["caused_by"],
+        "memory_dimensions": event_plan["memory_dimensions"],
     }
 
 
@@ -468,18 +530,19 @@ def generate_household_events(profile, num_events, num_days=60, start_date=None,
         event_plan = build_event_plan(profile, idx, scenario_type, start_date, num_days, num_events, graph)
         prompt_context = build_event_prompt_context(profile, event_plan, graph)
         prompt = HOUSEHOLD_SINGLE_EVENT_PROMPT.format(
-            profile=json.dumps(prompt_context, ensure_ascii=False, indent=2),
-            previous_events=json.dumps(prompt_context["previous_events"], ensure_ascii=False, indent=2),
-            event_plan=json.dumps(event_plan, ensure_ascii=False, indent=2),
+            context=format_event_context_text(prompt_context),
+            previous_events=compact_previous_events_for_prompt(prompt_context["previous_events"]),
+            event_plan=json.dumps(compact_event_plan_for_prompt(event_plan), ensure_ascii=False, separators=(",", ":")),
         )
         logging.info(
-            "Calling LLM for household event %s/%s: family_id=%s, scenario=%s, date=%s, caused_by=%s",
+            "Calling LLM for household event %s/%s: family_id=%s, scenario=%s, date=%s, caused_by=%s, prompt_chars=%s",
             idx,
             num_events,
             profile.get("family", {}).get("family_id"),
             scenario_type,
             event_plan["date"],
             event_plan["caused_by"],
+            len(prompt),
         )
         try:
             response = run_chatgpt(prompt, num_gen=1, num_tokens_request=700, temperature=0.9)
