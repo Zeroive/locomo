@@ -97,6 +97,7 @@ def load_profile(out_dir):
 def save_profile(profile, out_dir):
     validate_household(profile)
     save_json(profile, household_profile_path(out_dir))
+    logging.info("Saved household profile: %s", household_profile_path(out_dir))
 
 
 def save_members(profile, out_dir):
@@ -104,14 +105,17 @@ def save_members(profile, out_dir):
     os.makedirs(target_dir, exist_ok=True)
     for member in profile.get("members", []):
         save_json(member, os.path.join(target_dir, f"{member['person_id']}.json"))
+    logging.info("Saved %s member files under %s", len(profile.get("members", [])), target_dir)
 
 
 def ensure_assistant(out_dir, overwrite=False):
     path = agent_a_path(out_dir)
     if os.path.exists(path) and not overwrite:
+        logging.info("Loading existing assistant profile: %s", path)
         return load_json(path)
     assistant = create_assistant()
     save_json(assistant, path)
+    logging.info("Saved assistant profile: %s", path)
     return assistant
 
 
@@ -121,6 +125,12 @@ def generate_persona_step(args):
         logging.info("household_profile.json already exists, skipping persona step")
         return load_profile(args.out_dir)
 
+    logging.info(
+        "Starting persona/profile step: household_type=%s, with_pet=%s, use_llm=%s",
+        args.household_type,
+        args.with_pet,
+        not args.no_llm,
+    )
     profile = sample_household_profile(
         household_type=args.household_type,
         persona_source=args.persona_source,
@@ -131,7 +141,12 @@ def generate_persona_step(args):
     save_profile(profile, args.out_dir)
     save_members(profile, args.out_dir)
     ensure_assistant(args.out_dir, overwrite=args.overwrite_persona)
-    logging.info("Generated household profile with %s members", len(profile["members"]))
+    logging.info(
+        "Generated household profile: family_id=%s, members=%s, pets=%s",
+        profile["family"]["family_id"],
+        len(profile["members"]),
+        len(profile.get("pets", [])),
+    )
     return profile
 
 
@@ -139,9 +154,24 @@ def generate_events_step(args, profile):
     if profile.get("graph") and not args.overwrite_events:
         logging.info("Household events already exist, skipping events step")
         return profile
+    logging.info(
+        "Starting events step: num_events=%s, num_days=%s, use_llm=%s",
+        args.num_events,
+        args.num_days,
+        not args.no_llm,
+    )
     generate_household_events(profile, args.num_events, num_days=args.num_days, use_llm=not args.no_llm)
     save_profile(profile, args.out_dir)
     logging.info("Generated %s household events", len(profile.get("graph", [])))
+    for event in profile.get("graph", []):
+        logging.info(
+            "Event %s [%s] %s participants=%s date=%s",
+            event.get("id"),
+            event.get("scenario_type"),
+            event.get("sub-event"),
+            event.get("participants"),
+            event.get("date"),
+        )
     return profile
 
 
@@ -161,6 +191,7 @@ def ensure_session_dates(profile, args, sess_id, prev_date_time_string=""):
     session_time = get_random_time({"time_range": {"start_hour": 9, "end_hour": 21}})
     date_time = datetimeObj2Str(datetime(session_date.year, session_date.month, session_date.day) + session_time)
     profile[key] = date_time
+    logging.info("Assigned %s=%s", key, date_time)
     return date_time
 
 
@@ -169,6 +200,12 @@ def generate_session_step(args, profile):
     if not profile.get("graph"):
         logging.warning("No household events found; sessions will be generated without event grounding")
 
+    logging.info(
+        "Starting session step: num_sessions=%s, max_turns=%s, use_llm=%s",
+        args.num_sessions,
+        args.max_turns_per_session,
+        not args.no_llm,
+    )
     profile["sessions"] = [] if args.overwrite_session else profile.get("sessions", [])
     existing_session_ids = {session.get("session_id") for session in profile.get("sessions", [])}
 
@@ -183,6 +220,11 @@ def generate_session_step(args, profile):
         prev_date = datetime.strptime(prev_date_time_string.split(" on ")[1], "%d %B, %Y") if prev_date_time_string else None
 
         profile[f"events_session_{sess_id}"] = get_relevant_household_events(profile.get("graph", []), curr_date, prev_date)
+        logging.info(
+            "Session %s relevant events: %s",
+            sess_id,
+            [event.get("id") for event in profile[f"events_session_{sess_id}"]],
+        )
         previous_summary = profile.get(f"session_{sess_id - 1}_summary", "") if sess_id > 1 else ""
         session = generate_household_session(
             profile=profile,
@@ -196,15 +238,30 @@ def generate_session_step(args, profile):
         )
         profile["sessions"].append(session)
         profile[f"session_{sess_id}"] = session["turns"]
+        logging.info(
+            "Session %s generated: current_user=%s(%s), turns=%s, mode=%s",
+            sess_id,
+            session["current_user_name"],
+            session["current_user_id"],
+            len(session["turns"]),
+            session.get("turn_generation_mode"),
+        )
         profile[f"session_{sess_id}_facts"] = extract_household_session_facts(profile, session, use_llm=not args.no_llm)
+        logging.info(
+            "Session %s facts extracted for speakers=%s",
+            sess_id,
+            list(profile[f"session_{sess_id}_facts"].keys()) if isinstance(profile[f"session_{sess_id}_facts"], dict) else type(profile[f"session_{sess_id}_facts"]),
+        )
         if args.summary:
             profile[f"session_{sess_id}_summary"] = summarize_session(session)
+            logging.info("Session %s summary: %s", sess_id, profile[f"session_{sess_id}_summary"])
 
         prev_date_time_string = curr_date_time_string
         logging.info("Generated household session %s for %s", sess_id, session["current_user_name"])
 
     save_profile(profile, args.out_dir)
     save_json(profile.get("sessions", []), sessions_path(args.out_dir))
+    logging.info("Saved sessions file: %s", sessions_path(args.out_dir))
     return profile
 
 
@@ -212,13 +269,30 @@ def generate_qa_step(args, profile):
     if not profile.get("sessions"):
         logging.warning("No sessions found. Please run with --session before --qa-pairs.")
         return None
-    return generate_household_qa_pairs(profile, args.out_dir, use_llm=not args.no_llm)
+    logging.info("Starting QA step: sessions=%s, use_llm=%s", len(profile.get("sessions", [])), not args.no_llm)
+    output = generate_household_qa_pairs(profile, args.out_dir, use_llm=not args.no_llm)
+    if output:
+        logging.info("Generated QA pairs: %s", len(output.get("QA", [])))
+        logging.info("Saved QA file: %s", os.path.join(args.out_dir, "qa_pairs.json"))
+    return output
 
 
 def generate_household_conversation(args):
     os.makedirs(args.out_dir, exist_ok=True)
+    logging.info(
+        "Household generation started: out_dir=%s, household_type=%s, persona=%s, events=%s, session=%s, qa_pairs=%s, no_llm=%s",
+        args.out_dir,
+        args.household_type,
+        args.persona,
+        args.events,
+        args.session,
+        args.qa_pairs,
+        args.no_llm,
+    )
 
     profile = load_profile(args.out_dir) if os.path.exists(household_profile_path(args.out_dir)) else None
+    if profile:
+        logging.info("Loaded existing household profile: %s", household_profile_path(args.out_dir))
 
     if args.persona or profile is None:
         profile = generate_persona_step(args)
@@ -233,6 +307,8 @@ def generate_household_conversation(args):
 
     if args.qa_pairs:
         generate_qa_step(args, profile)
+
+    logging.info("Household generation finished: out_dir=%s", args.out_dir)
 
 
 def run_one(run_args):
@@ -250,6 +326,7 @@ def run_one(run_args):
 
 def main():
     args = parse_args()
+    logging.info("Parsed args: %s", vars(args))
     if args.num_households > 1 or args.parallel_runs > 1:
         total = max(args.num_households, args.parallel_runs)
         tasks = [{"run_index": idx, "args": args} for idx in range(1, total + 1)]

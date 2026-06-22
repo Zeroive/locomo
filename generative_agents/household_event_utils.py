@@ -254,6 +254,7 @@ def generate_household_events(profile, num_events, num_days=60, start_date=None,
     end_date = start_date + timedelta(days=num_days)
 
     if not use_llm:
+        logging.info("LLM disabled; generating household events with template fallback")
         return generate_template_household_events(profile, num_events, num_days, start_date)
 
     from global_methods import run_chatgpt
@@ -267,9 +268,18 @@ def generate_household_events(profile, num_events, num_days=60, start_date=None,
         profile=json.dumps(profile, ensure_ascii=False, indent=2),
     )
     try:
+        logging.info(
+            "Calling LLM for household event graph: family_id=%s, num_events=%s, date_range=%s~%s",
+            profile.get("family", {}).get("family_id"),
+            num_events,
+            dateObj2Str(start_date),
+            dateObj2Str(end_date),
+        )
         response = run_chatgpt(prompt, num_gen=1, num_tokens_request=3000, temperature=1.0)
+        logging.info("LLM household event response received: chars=%s", len(response or ""))
         raw_events = parse_json_array(response)
         graph = normalize_event_graph(raw_events, profile, num_events, start_date, end_date)
+        logging.info("Normalized LLM household events: %s", len(graph))
     except Exception as exc:
         logging.warning("LLM household event generation failed, using template fallback: %s", exc)
         graph = generate_template_household_events(profile, num_events, num_days, start_date)

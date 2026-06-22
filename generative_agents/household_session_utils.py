@@ -204,6 +204,14 @@ def generate_household_session(profile, assistant, sess_id, curr_date_time, prev
     current_user_id = choose_current_user(profile, events, sess_id)
     current_user = get_member(profile, current_user_id)
     related_event_ids = [event["id"] for event in events]
+    logging.info(
+        "Preparing session %s: current_user=%s(%s), related_events=%s, curr_time=%s",
+        sess_id,
+        current_user["name"],
+        current_user_id,
+        related_event_ids,
+        curr_date_time,
+    )
 
     initial_prompt = build_household_session_prompt(
         profile=profile,
@@ -224,6 +232,7 @@ def generate_household_session(profile, assistant, sess_id, curr_date_time, prev
         conv_so_far = ""
         curr_speaker = "user"
         stop_dialog_count = max_turns if max_turns <= 4 else random.choice(list(range(4, max_turns + 1)))
+        logging.info("Session %s iterative LLM generation started: max_turns=%s, stop_hint_from_turn=%s", sess_id, max_turns, stop_dialog_count)
 
         for turn_idx in range(1, max_turns + 1):
             speaker_name = current_user["name"] if curr_speaker == "user" else assistant["name"]
@@ -240,6 +249,7 @@ def generate_household_session(profile, assistant, sess_id, curr_date_time, prev
                 speaker_role=curr_speaker,
                 instruct_stop=turn_idx >= stop_dialog_count,
             )
+            logging.info("Session %s turn %s calling LLM for speaker=%s", sess_id, turn_idx, speaker_name)
             output = clean_turn_text(
                 run_chatgpt(turn_prompt, num_gen=1, num_tokens_request=120, temperature=1.1),
                 speaker_name,
@@ -249,8 +259,10 @@ def generate_household_session(profile, assistant, sess_id, curr_date_time, prev
 
             session.append(make_turn(sess_id, turn_idx, speaker_name, speaker_id, output, current_user_id, profile, related_event_ids))
             conv_so_far += f"{speaker_name}: {output}\n"
+            logging.info("Session %s turn %s [%s]: %s", sess_id, turn_idx, speaker_name, output)
 
             if output.endswith("再见！") and turn_idx >= 4:
+                logging.info("Session %s ended early at turn %s", sess_id, turn_idx)
                 break
             curr_speaker = "assistant" if curr_speaker == "user" else "user"
 
@@ -306,6 +318,7 @@ def extract_household_session_facts(profile, session, use_llm=True):
             raise ValueError("LLM disabled")
         from global_methods import run_chatgpt
 
+        logging.info("Calling LLM for session %s fact extraction", session.get("session_id"))
         prompt = FACT_EXTRACTION_PROMPT.format(
             profile=json.dumps({
                 "family": profile.get("family", {}),
@@ -316,9 +329,11 @@ def extract_household_session_facts(profile, session, use_llm=True):
             session=json.dumps(session, ensure_ascii=False, indent=2),
         )
         response = run_chatgpt(prompt, num_gen=1, num_tokens_request=1800, temperature=0.5)
+        logging.info("LLM fact extraction response received for session %s: chars=%s", session.get("session_id"), len(response or ""))
         facts = parse_json_value(response)
         if isinstance(facts, dict):
             session["fact_generation_prompt"] = prompt
+            logging.info("Session %s LLM facts parsed: speakers=%s", session.get("session_id"), list(facts.keys()))
             return facts
         raise ValueError("Facts response is not a JSON dict")
     except Exception as exc:

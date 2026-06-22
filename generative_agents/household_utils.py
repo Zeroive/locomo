@@ -399,7 +399,13 @@ def enrich_household_profile_with_llm(profile):
     from global_methods import run_chatgpt
 
     prompt = HOUSEHOLD_PROFILE_ENRICH_PROMPT.format(profile=json.dumps(profile, ensure_ascii=False, indent=2))
+    logging.info(
+        "Calling LLM for household profile enrichment: family_id=%s, members=%s",
+        profile.get("family", {}).get("family_id"),
+        len(profile.get("members", [])),
+    )
     response = run_chatgpt(prompt, num_gen=1, num_tokens_request=3500, temperature=0.8)
+    logging.info("LLM household profile response received: chars=%s", len(response or ""))
     enriched = parse_json_object(response)
 
     original_member_ids = {member["person_id"] for member in profile.get("members", [])}
@@ -416,6 +422,7 @@ def enrich_household_profile_with_llm(profile):
 
     validate_household(enriched)
     enriched["profile_generation_prompt"] = prompt
+    logging.info("LLM household profile enrichment parsed and validated")
     return enriched
 
 
@@ -454,6 +461,8 @@ def sample_household_profile(household_type, persona_source, family_id="family_0
             profile = enrich_household_profile_with_llm(profile)
         except Exception as exc:
             logging.warning("LLM household profile enrichment failed, using rule profile: %s", exc)
+    else:
+        logging.info("LLM disabled; using rule-based household profile")
     return profile
 
 

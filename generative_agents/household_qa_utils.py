@@ -103,6 +103,11 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
             raise ValueError("LLM disabled")
         from global_methods import run_chatgpt
 
+        logging.info(
+            "Calling LLM for household QA generation: sessions=%s, events=%s",
+            len(profile.get("sessions", [])),
+            len(profile.get("graph", [])),
+        )
         prompt = HOUSEHOLD_QA_PROMPT.format(
             profile=json.dumps({
                 "family": profile.get("family", {}),
@@ -120,7 +125,9 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
                 },
             }, ensure_ascii=False, indent=2),
         )
-        generated_items = parse_json_array(run_chatgpt(prompt, num_gen=1, num_tokens_request=4000, temperature=0.7))
+        response = run_chatgpt(prompt, num_gen=1, num_tokens_request=4000, temperature=0.7)
+        logging.info("LLM QA response received: chars=%s", len(response or ""))
+        generated_items = parse_json_array(response)
         qa_items = []
         for idx, item in enumerate(generated_items, start=1):
             if not isinstance(item, dict):
@@ -144,6 +151,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
                 "requires_cross_member_reference": item.get("requires_cross_member_reference", category in {"cross-member", "multi-hop"}),
             })
         if qa_items:
+            logging.info("LLM QA parsed: %s items", len(qa_items))
             output = {
                 "description": "家庭多用户与AI助手对话测评数据",
                 "family": profile.get("family", {}),
