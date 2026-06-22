@@ -375,14 +375,15 @@ def generate_trajectory_for_scenario(scenario: str, user_profile: str, user_devi
             
             # 生成工具调用字符串（包含参数）
             params_str = ", ".join([f'{k}="{v}"' for k, v in tool_params.items()])
-            trajectory.append({"role": "tool", "content": f"调用工具 {tool_name}({params_str})"})
+            tool_call_str = f"调用工具 {tool_name}({params_str})"
+            trajectory.append({"role": "tool", "content": tool_call_str})
             
             # 生成工具执行结果
             tool_result = generate_tool_result(tool_name, tool_params, tools_schema)
             trajectory.append({"role": "assistant", "content": tool_result})
             
-            # 更新对话历史
-            conversation_history += f"助手: 调用工具 {tool_name}\n"
+            # 更新对话历史（包含完整的工具调用信息）
+            conversation_history += f"助手: {tool_call_str}\n"
             conversation_history += f"助手: {tool_result}\n"
             
         else:
