@@ -463,7 +463,7 @@ def generate_all_device_trajectories(agents: List[dict], args) -> Dict[int, List
     agent_a, agent_b = agents
     
     # 获取用户信息
-    user_profile = agent_b.get('persona', {}).get('description', '一位普通用户')
+    user_profile = agent_b.get('persona_summary', {}).get('description', '一位普通用户')
     
     # 获取场景信息
     scenario_id = getattr(args, 'scenario', 'male_leave_work')
@@ -474,7 +474,7 @@ def generate_all_device_trajectories(agents: List[dict], args) -> Dict[int, List
     if os.path.exists(scenario_file):
         with open(scenario_file, 'r', encoding='utf-8') as f:
             scenarios = json.load(f)
-            scenario_description = scenarios.get(scenario_id, {}).get('description', scenario_id)
+            scenario_description = scenarios.get('scenarios', {}).get(scenario_id, {}).get('description', scenario_id)
     
     # 加载工具 schema
     schema_path = args.device_file.replace('home_devices.json', 'tools_schema.json')
