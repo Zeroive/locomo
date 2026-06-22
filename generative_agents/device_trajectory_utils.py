@@ -257,7 +257,7 @@ def generate_tool_result(tool_name: str, tool_params: Dict[str, Any], tools_sche
     # 解析响应
     try:
         result_data = json.loads(response)
-        tool_result = result_data['choices'][0]['message']['content']
+        tool_result = result_data
     except (json.JSONDecodeError, KeyError, IndexError):
         tool_result = response
     
@@ -325,7 +325,7 @@ def generate_trajectory_for_scenario(scenario: str, user_profile: str, user_devi
         
         try:
             user_data = json.loads(user_response)
-            user_message = user_data['choices'][0]['message']['content']
+            user_message = user_data
         except (json.JSONDecodeError, KeyError, IndexError):
             user_message = user_response
         
@@ -342,7 +342,7 @@ def generate_trajectory_for_scenario(scenario: str, user_profile: str, user_devi
         # 解析助手响应
         try:
             assistant_data = json.loads(assistant_response)
-            assistant_content = assistant_data['choices'][0]['message']['content']
+            assistant_content = assistant_data
         except (json.JSONDecodeError, KeyError, IndexError):
             assistant_content = assistant_response
         
