@@ -36,7 +36,7 @@ MEMBER_PERSONA_ENRICH_PROMPT = """
 - persona_summary 使用中文，120-180字。
 - 必须体现姓名、年龄、家庭角色、个人特征、周末休闲/照护偏好。
 - 要把 member.traits 和 msc_prompt 映射到家庭责任、关系和后续可对话主题。
-- 不要改变 person_id、年龄、角色，不要引入不存在的家庭成员。
+- 不要改变姓名、person_id、年龄、角色，不要引入不存在的家庭成员。
 
 家庭背景摘要：
 {family_context}
@@ -136,6 +136,7 @@ CHINESE_NAMES = {
 
 
 PET_NAMES = ["豆豆", "团团", "米粒", "花花", "雪球"]
+CHINESE_SURNAMES = ["王", "李", "张", "陈", "赵", "刘", "周", "孙"]
 
 
 def load_json(path):
@@ -254,22 +255,49 @@ def gender_for_role(role):
     return random.choice(["male", "female"])
 
 
-def name_for_role(role, gender, used_names):
+def choose_other_surname(primary_surname):
+    candidates = [surname for surname in CHINESE_SURNAMES if surname != primary_surname]
+    return random.choice(candidates)
+
+
+def build_surname_plan(roles):
+    primary_surname = random.choice(CHINESE_SURNAMES)
+    spouse_surname = choose_other_surname(primary_surname)
+    secondary_spouse_surname = choose_other_surname(spouse_surname)
+    surnames = []
+    spouse_count = 0
+
+    for role in roles:
+        if role in {"grandfather", "father", "single_parent", "adult_child", "child", "teenager", "adult_relative"}:
+            surnames.append(primary_surname)
+        elif role in {"grandmother", "mother"}:
+            surnames.append(spouse_surname)
+        elif role == "spouse":
+            surnames.append(primary_surname if spouse_count == 0 else secondary_spouse_surname)
+            spouse_count += 1
+        else:
+            surnames.append(primary_surname)
+    return surnames
+
+
+def name_for_role(role, gender, used_names, surname=None):
     if role in {"child", "teenager"}:
         pool = CHINESE_NAMES["child_male" if gender == "male" else "child_female"]
     else:
         pool = CHINESE_NAMES[gender]
+    if surname:
+        pool = [surname + name[1:] for name in pool]
     candidates = [name for name in pool if name not in used_names]
     name = random.choice(candidates or pool)
     used_names.add(name)
     return name
 
 
-def build_member(idx, role, persona_prompts, used_names):
+def build_member(idx, role, persona_prompts, used_names, surname=None):
     min_age, max_age = ROLE_AGE_RANGES[role]
     age = random.randint(min_age, max_age)
     gender = gender_for_role(role)
-    name = name_for_role(role, gender, used_names)
+    name = name_for_role(role, gender, used_names, surname=surname)
     msc_prompt = random.choice(persona_prompts) if persona_prompts else []
     traits = infer_traits(msc_prompt)
 
@@ -288,6 +316,8 @@ def build_member(idx, role, persona_prompts, used_names):
     return {
         "person_id": f"person_{idx:03d}",
         "name": name,
+        "surname": name[0],
+        "surname_dependency": "lineage" if role in {"grandfather", "father", "single_parent", "adult_child", "child", "teenager", "adult_relative"} else "spouse_origin",
         "gender": "男" if gender == "male" else "女",
         "age": age,
         "age_range": f"{max(0, age - 2)}-{age + 2}",
@@ -439,6 +469,16 @@ def validate_household(profile):
     for member in members:
         if member["life_stage"] in {"child", "teenager"} and member["family_role"] in {"father", "mother", "single_parent"}:
             errors.append(f"Child or teenager cannot be parent: {member['person_id']}")
+        if member.get("surname") and member["name"][0] != member["surname"]:
+            errors.append(f"Member surname does not match name: {member['person_id']}")
+
+    lineage_surnames = {
+        member.get("surname")
+        for member in members
+        if member.get("surname_dependency") == "lineage"
+    }
+    if len(lineage_surnames) > 1:
+        errors.append(f"Lineage members should share one surname: {sorted(lineage_surnames)}")
 
     pet_ids = {pet["pet_id"] for pet in profile.get("pets", [])}
     for session in profile.get("sessions", []):
@@ -460,6 +500,8 @@ def build_family_context(profile):
             {
                 "person_id": member["person_id"],
                 "name": member["name"],
+                "surname": member.get("surname"),
+                "surname_dependency": member.get("surname_dependency"),
                 "age": member["age"],
                 "gender": member["gender"],
                 "family_role": member["family_role"],
@@ -578,9 +620,13 @@ def sample_household_profile(household_type, persona_source, family_id="family_0
         raise ValueError(f"Unsupported household_type: {household_type}")
 
     roles = list(FAMILY_TEMPLATES[household_type])
+    surnames = build_surname_plan(roles)
     persona_prompts = load_persona_source(persona_source)
     used_names = set()
-    members = [build_member(i + 1, role, persona_prompts, used_names) for i, role in enumerate(roles)]
+    members = [
+        build_member(i + 1, role, persona_prompts, used_names, surname=surnames[i])
+        for i, role in enumerate(roles)
+    ]
     relations = build_relations(members)
     pets = build_pets(household_type, with_pet, members)
     responsibilities = build_role_responsibilities(members, pets)
