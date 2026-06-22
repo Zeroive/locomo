@@ -128,7 +128,7 @@ def run_chatgpt(query, num_gen=1, num_tokens_request=1000,
             completion = client.chat.completions.create(
                 model=CUSTOM_MODEL_NAME,
                 temperature=temperature,
-                max_tokens=num_tokens_request,
+                # max_tokens=num_tokens_request,
                 n=num_gen,
                 messages=messages,
                 extra_body={
