@@ -30,6 +30,15 @@ from global_methods import run_chatgpt
 logging.basicConfig(level=logging.INFO)
 
 
+def resolve_scenario_key(scenario):
+    return 'male_leave_work' if scenario == 'leave_work' else scenario
+
+
+def get_scenario_config(scenarios_data, scenario, default=None):
+    scenarios = scenarios_data.get('scenarios', {})
+    return scenarios.get(scenario, scenarios.get(resolve_scenario_key(scenario), default))
+
+
 def parse_args():
     """
     解析命令行参数。
@@ -61,15 +70,15 @@ def parse_args():
     parser.add_argument('--reflection', action="store_true", help="Set flag to use reflection module at the end of each session and include in the conversation generation prompt for context")
     
     # 场景相关参数
-    parser.add_argument('--scenario', type=str, default='male_leave_work', 
-                        choices=['male_leave_work', 'elderly_outdoor', 'child_return', 'family_return', 
+    parser.add_argument('--scenario', type=str, default='leave_work', 
+                        choices=['family_return', 'leave_work', 'elderly_outdoor', 'child_return',
                                  'visitor_arrival', 'all_leave_arm', 'anomaly_detection'],
-                        help="指定对话场景类型，默认为 male_leave_work\n"
+                        help="指定对话场景类型，默认为 leave_work\n"
                              "场景说明：\n"
-                             "  male_leave_work    - 男主人上班离家：早上出门上班前与AI助手的对话\n"
+                             "  family_return       - 家庭成员下班回家：家庭成员下班回家后与AI助手的对话\n"
+                             "  leave_work          - 上班离家：早上出门上班前与AI助手的对话\n"
                              "  elderly_outdoor     - 老人独自外出：老人准备外出活动前与AI助手的对话\n"
                              "  child_return        - 小孩放学回家：小孩放学回家后与AI助手的对话\n"
-                             "  family_return       - 家庭成员下班回家：家庭成员下班回家后与AI助手的对话\n"
                              "  visitor_arrival     - 访客到家：访客到达家中时与AI助手的对话\n"
                              "  all_leave_arm       - 全员离家布防：全员离家时启动安防模式的对话\n"
                              "  anomaly_detection   - 异常活动检测：检测到异常活动时AI助手与用户的对话")
@@ -154,7 +163,7 @@ def generate_conversation(args):
         try:
             with open(args.scenario_file, 'r', encoding='utf-8') as f:
                 scenarios_data = json.load(f)
-            scenario_info = scenarios_data.get('scenarios', {}).get(args.scenario, None)
+            scenario_info = get_scenario_config(scenarios_data, args.scenario, None)
         except Exception as e:
             logging.warning(f"Failed to load scenario config for persona generation: {e}")
         
@@ -174,14 +183,14 @@ def generate_conversation(args):
                 logging.info("Devices already exist in agent_b, skipping device selection")
             else:
                 user_persona = agent_b['persona_summary']
-                scenario = args.scenario if hasattr(args, 'scenario') else 'male_leave_work'
+                scenario = args.scenario if hasattr(args, 'scenario') else 'leave_work'
                 
                 # 加载场景描述
                 scenario_desc = scenario
                 try:
                     with open(args.scenario_file, 'r', encoding='utf-8') as f:
                         scenarios_data = json.load(f)
-                    scenario_info = scenarios_data.get('scenarios', {}).get(scenario, {})
+                    scenario_info = get_scenario_config(scenarios_data, scenario, {})
                     scenario_desc = scenario_info.get('description', scenario)
                 except Exception as e:
                     logging.warning(f"Failed to load scenario description: {e}")
@@ -252,7 +261,7 @@ def generate_conversation(args):
         try:
             with open(args.scenario_file, 'r', encoding='utf-8') as f:
                 scenarios_data = json.load(f)
-            scenario_config = scenarios_data.get('scenarios', {}).get(args.scenario, {})
+            scenario_config = get_scenario_config(scenarios_data, args.scenario, {})
         except Exception as e:
             logging.warning(f"Failed to load scenario config: {e}")
 

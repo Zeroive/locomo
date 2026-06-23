@@ -6,6 +6,10 @@ from global_methods import run_chatgpt, run_chatgpt_with_examples
 # 全局场景配置缓存
 SCENARIO_CONFIG = None
 
+
+def resolve_scenario_key(scenario_id):
+    return 'male_leave_work' if scenario_id == 'leave_work' else scenario_id
+
 def load_scenario_config(scenario_file='./data/scenarios/scenarios.json'):
     """
     加载场景配置文件。
@@ -39,11 +43,12 @@ def get_scenario_prompt(scenario_id, prompt_type, role='agent'):
         str: prompt模板字符串，如果场景不存在则返回默认模板
     """
     config = load_scenario_config()
-    if config is None or scenario_id not in config['scenarios']:
+    scenario_key = scenario_id if config and scenario_id in config['scenarios'] else resolve_scenario_key(scenario_id)
+    if config is None or scenario_key not in config['scenarios']:
         # 返回默认模板
         return get_default_prompt(prompt_type, role)
     
-    scenario = config['scenarios'][scenario_id]
+    scenario = config['scenarios'][scenario_key]
     template_key = 'agent_prompt_template' if role == 'agent' else 'user_prompt_template'
     
     try:
@@ -484,6 +489,5 @@ def find_indices(list_to_check, item_to_find):
         if value == item_to_find:
             indices.append(idx)
     return indices
-
 
 

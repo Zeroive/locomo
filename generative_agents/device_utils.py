@@ -33,7 +33,8 @@ def select_devices_for_user(user_persona, scenario, scenario_desc="", device_fil
         return {}
     
     # 获取场景相关设备
-    scenario_devices = devices_data.get('scenario_device_mapping', {}).get(scenario, [])
+    scenario_key = 'male_leave_work' if scenario == 'leave_work' else scenario
+    scenario_devices = devices_data.get('scenario_device_mapping', {}).get(scenario_key, [])
     
     # 构建设备信息摘要
     device_info_list = []

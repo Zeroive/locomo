@@ -8,6 +8,7 @@
 import os
 import json
 import logging
+import copy
 from datetime import datetime, timedelta, date
 import random
 
@@ -30,6 +31,10 @@ logging.basicConfig(level=logging.INFO)
 
 # ==================== 场景模板定义 ====================
 
+def canonicalize_scenario(scenario):
+    return scenario
+
+
 SCENE_TEMPLATES = {
     "family_return": {
         "name": "家庭成员下班回家",
@@ -40,6 +45,18 @@ SCENE_TEMPLATES = {
             "normal": {"start": "17:00", "end": "22:30"},
             "late": {"start": "23:00", "end": "01:00"}
         },
+        "primary_events": [
+            {"event_type": "return_home", "predicate": "returned", "object_id": "door_main",
+             "description": "男主人下班回家"}
+        ],
+        "related_events": [
+            {"event_type": "turn_on_living_room_light", "predicate": "activated", "object_id": "light_living_room",
+             "description": "客厅无人或光线较暗时打开客厅灯"},
+            {"event_type": "turn_on_living_room_ac", "predicate": "activated", "object_id": "ac_living_room",
+             "description": "客厅温度不舒适时打开客厅空调"},
+            {"event_type": "turn_on_living_room_tv", "predicate": "activated", "object_id": "tv_living_room",
+             "description": "男主人回到客厅休息时打开电视"}
+        ],
         "core_events": [
             # 核心回家行为
             {"event_type": "enter_home", "predicate": "entered", "object_id": "door_main", 
@@ -75,7 +92,7 @@ SCENE_TEMPLATES = {
              "description": "光照传感器触发"}
         ]
     },
-    "male_leave_work": {
+    "leave_work": {
         "name": "男主人上班离家",
         "description": "男主人早上出门上班前的一系列准备活动",
         "default_subject": "dad",
@@ -83,22 +100,22 @@ SCENE_TEMPLATES = {
         "time_window": {
             "normal": {"start": "07:00", "end": "09:00"}
         },
-        "core_events": [
-            {"event_type": "wake_up", "predicate": "woke_up", "object_id": "dad", 
-             "description": "起床"},
-            {"event_type": "light_on", "predicate": "activated", "object_id": "light_bedroom", 
-             "description": "打开卧室灯"},
-            {"event_type": "light_on", "predicate": "activated", "object_id": "light_bathroom", 
-             "description": "打开卫生间灯"},
-            {"event_type": "ac_off", "predicate": "deactivated", "object_id": "ac_bedroom", 
-             "description": "关闭卧室空调"},
-            {"event_type": "door_open", "predicate": "opened", "object_id": "door_main", 
-             "description": "开门"},
-            {"event_type": "light_off", "predicate": "deactivated", "object_id": "light_hallway", 
-             "description": "关闭玄关灯"},
-            {"event_type": "door_lock", "predicate": "locked", "object_id": "door_main", 
-             "description": "锁门"}
+        "primary_events": [],
+        "related_events": [
+            {"subject_id": "home_system", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
+             "description": "男主人离家后锁门"},
+            {"subject_id": "home_system", "event_type": "turn_off_living_room_light", "predicate": "deactivated", "object_id": "light_living_room",
+             "description": "客厅无人时关闭客厅灯"},
+            {"subject_id": "home_system", "event_type": "turn_off_living_room_tv", "predicate": "deactivated", "object_id": "tv_living_room",
+             "description": "客厅无人时关闭电视"},
+            {"subject_id": "home_system", "event_type": "turn_off_living_room_ac", "predicate": "deactivated", "object_id": "ac_living_room",
+             "description": "客厅无人时关闭客厅空调"},
+            {"subject_id": "home_system", "event_type": "turn_off_bedroom_light", "predicate": "deactivated", "object_id": "light_bedroom",
+             "description": "卧室无人时关闭卧室灯"},
+            {"subject_id": "home_system", "event_type": "turn_off_bedroom_ac", "predicate": "deactivated", "object_id": "ac_bedroom",
+             "description": "卧室无人时关闭卧室空调"}
         ],
+        "core_events": [],
         "noise_events": [
             {"event_type": "alarm_trigger", "predicate": "triggered", "object_id": "alarm_clock", 
              "description": "闹钟响起"},
@@ -118,6 +135,10 @@ SCENE_TEMPLATES = {
         "time_window": {
             "normal": {"start": "16:30", "end": "18:30"}
         },
+        "primary_events": [
+            {"event_type": "return_home", "predicate": "returned", "object_id": "door_main",
+             "description": "小孩放学回家"}
+        ],
         "core_events": [
             {"event_type": "enter_home", "predicate": "entered", "object_id": "door_main", 
              "description": "开门进入"},
@@ -145,6 +166,10 @@ SCENE_TEMPLATES = {
         "time_window": {
             "normal": {"start": "08:30", "end": "11:30"}
         },
+        "primary_events": [
+            {"event_type": "leave_home", "predicate": "left", "object_id": "door_main",
+             "description": "老人独自外出"}
+        ],
         "core_events": [
             {"event_type": "door_open", "predicate": "opened", "object_id": "door_main", 
              "description": "开门"},
@@ -170,6 +195,10 @@ SCENE_TEMPLATES = {
         "time_window": {
             "normal": {"start": "10:00", "end": "21:00"}
         },
+        "primary_events": [
+            {"event_type": "visitor_arrival", "predicate": "arrived", "object_id": "door_bell",
+             "description": "访客到家"}
+        ],
         "core_events": [
             {"event_type": "bell_ring", "predicate": "rang", "object_id": "door_bell", 
              "description": "门铃响起"},
@@ -195,6 +224,10 @@ SCENE_TEMPLATES = {
         "time_window": {
             "normal": {"start": "08:30", "end": "09:30"}
         },
+        "primary_events": [
+            {"event_type": "arm_away_mode", "predicate": "activated", "object_id": "security_system",
+             "description": "全员离家布防"}
+        ],
         "core_events": [
             {"event_type": "light_off_all", "predicate": "deactivated", "object_id": "all_lights", 
              "description": "关闭所有灯光"},
@@ -224,6 +257,10 @@ SCENE_TEMPLATES = {
         "time_window": {
             "normal": {"start": "00:00", "end": "24:00"}
         },
+        "primary_events": [
+            {"event_type": "anomaly_detected", "predicate": "detected", "object_id": "motion_sensor",
+             "description": "检测到异常活动"}
+        ],
         "core_events": [
             {"event_type": "motion_detected", "predicate": "detected", "object_id": "motion_sensor", 
              "description": "检测到移动"},
@@ -251,6 +288,15 @@ PERSON_ID_MAPPING = {
     "grandma": {"name": "奶奶", "role": "祖母", "age_range": "65-85"},
     "child": {"name": "孩子", "role": "子女", "age_range": "6-18"},
     "visitor": {"name": "访客", "role": "访客", "age_range": "unknown"}
+}
+
+DEFAULT_ROOM_DEVICE_LAYOUT = {
+    "entrance": ["door_main", "light_hallway"],
+    "living_room": ["light_living_room", "ac_living_room", "tv_living_room", "curtain_living_room"],
+    "bedroom": ["light_bedroom", "ac_bedroom", "tv_bedroom", "curtain_bedroom"],
+    "study": ["light_study"],
+    "bathroom": ["light_bathroom"],
+    "kitchen": []
 }
 
 # 设备状态机
@@ -306,10 +352,17 @@ LLM_EPISODE_GENERATION_PROMPT = """你是一个智能家居系统分析师。根
 ## 场景信息
 场景类型: {scenario}
 场景描述: {scenario_desc}
+当前场景主体: {subject_id}
 日期: {episode_date}
 
 ## 家庭成员
 {members_info}
+
+## 家庭关系
+{relations_info}
+
+## 房间与设备布局
+{room_device_layout}
 
 ## 可控设备
 {devices_info}
@@ -318,19 +371,27 @@ LLM_EPISODE_GENERATION_PROMPT = """你是一个智能家居系统分析师。根
 本日重点人物: {sampled_persons}
 本日重点设备: {sampled_devices}
 
+## 今日允许生成的场景事件
+{allowed_events_info}
+
 ## 任务要求
-1. 首先生成当天的家庭状态自然语言描述（daily_state_description），描述家庭在当前时间点的状态，包括：
+1. 首先生成当天的家庭状态自然语言描述（daily_state_description），描述当前场景开始前后的家庭状态，包括：
    - 家庭成员的位置和活动状态
+   - 每个相关房间是否有人，以及是谁
    - 主要设备的当前状态
    - 环境氛围（如安静、热闹、温馨等）
    - 任何特殊情况（如有人加班、有访客等）
 
-2. 然后基于家庭状态描述，生成围绕"男主人下班回家"场景的结构化设备事件：
-   - 核心事件：开门进入、回到玄关、开灯、调空调、锁门、进入客厅/卧室等
-   - 噪声事件：来自家庭状态，如家人在厨房、孩子写作业、老人休息、某个设备已开、传感器触发等
-   - 事件数量：核心事件 2-5 条，噪声事件 0-3 条
+2. 然后基于家庭状态描述，按时间顺序一个个推演当前场景接下来会发生的 annotated_events：
+   - 每一步都先看上一个 state_snapshot，再决定“今日允许生成的场景事件”中下一个是否会发生
+   - 相关设备事件根据当天家庭状态、房间占用和设备当前状态决定是否生成
+   - 例如：如果客厅有人看电视，就不要生成关闭客厅灯/电视；如果客厅无人，则可以生成关闭客厅灯/电视
+   - 不要生成候选列表之外的过程细节事件，例如解锁大门、打开门、进入玄关、进客厅等
+   - 不要把家庭成员活动、传感器触发、设备已开等背景信息本身生成为 annotated_events
+   - 背景信息只写入 daily_state_description，并通过 state_snapshot 影响相关设备事件是否发生
+   - 事件数量为 1 到“今日允许生成的场景事件”数量之间
 
-3. 事件必须围绕"男主人下班回家"场景，所有设备 ID 必须来自可控设备列表
+3. 事件必须围绕指定场景，event 的 subject_id、predicate、object_id、attributes.event_type 必须来自“今日允许生成的场景事件”，所有设备 ID 必须来自可控设备列表或房间设备布局
 
 4. 每个事件包含：
    - event: subject_id（人物ID）、predicate（操作类型）、object_id（对象ID）、attributes（事件类型和描述）
@@ -348,25 +409,25 @@ LLM_EPISODE_GENERATION_PROMPT = """你是一个智能家居系统分析师。根
     "annotated_events": [
         {{
             "event": {{
-                "subject_id": "dad",
-                "predicate": "entered",
-                "object_id": "door_main",
+                "subject_id": "home_system",
+                "predicate": "deactivated",
+                "object_id": "light_living_room",
                 "attributes": {{
-                    "event_type": "enter_home",
-                    "description": "开门进入"
+                    "event_type": "turn_off_living_room_light",
+                    "description": "客厅无人时关闭客厅灯"
                 }}
             }},
             "state_snapshot": {{
                 "timestamp": "2022-03-16T18:30:00+08:00",
                 "persons": {{
-                    "dad": {{"status": "entering", "location": "entrance"}},
+                    "dad": {{"status": "leaving", "location": "entrance"}},
                     "mom": {{"status": "at_home", "location": "kitchen"}},
                     "child": {{"status": "at_home", "location": "study"}}
                 }},
                 "devices": {{
-                    "door_main": {{"state": "open"}},
-                    "light_hallway": {{"state": "off"}},
-                    "ac_living_room": {{"state": "off"}}
+                    "door_main": {{"state": "locked"}},
+                    "light_living_room": {{"state": "on"}},
+                    "tv_living_room": {{"state": "off"}}
                 }},
                 "space_occupancy": {{
                     "entrance": ["dad"],
@@ -385,7 +446,8 @@ LLM_EPISODE_GENERATION_PROMPT = """你是一个智能家居系统分析师。根
 - 所有设备 ID 必须来自可控设备列表
 - state_snapshot 必须包含 persons、devices、space_occupancy 三个字段
 - 人物 ID 必须来自家庭成员列表
-- 事件之间需要有因果关系和时间顺序
+- 必须输出主事件；相关设备事件只在当天家庭状态支持时输出
+- 不要输出动作拆解细节，也不要输出候选列表之外的事件
 - 输出必须是合法的 JSON 格式
 
 请生成家庭状态描述和设备事件记录："""
@@ -572,13 +634,14 @@ def generate_device_events_for_session(agent_a, agent_b, args, sess_id):
     user_devices_info = get_user_devices_info(agent_b, device_file)
     
     # 获取场景信息
-    scenario = args.scenario if hasattr(args, 'scenario') else 'male_leave_work'
+    scenario = canonicalize_scenario(args.scenario if hasattr(args, 'scenario') else 'leave_work')
     scenario_config = None
     
     if hasattr(args, 'scenario_file') and os.path.exists(args.scenario_file):
         with open(args.scenario_file, 'r', encoding='utf-8') as f:
             scenarios_data = json.load(f)
-            scenario_config = scenarios_data.get('scenarios', {}).get(scenario, {})
+            scenarios = scenarios_data.get('scenarios', {})
+            scenario_config = scenarios.get(scenario, {}) or scenarios.get('male_leave_work', {})
     
     scene_type = scenario
     scene_desc = scenario_config.get('description', scenario) if scenario_config else scenario
@@ -756,7 +819,7 @@ def get_scene_templates(device_file=None):
 
 
 def generate_single_day_episode_llm(scenario, episode_date, day_offset, template,
-                                   household_profile, person_ids, device_file=None,
+                                   household_profile, person_ids, device_file=None, subject_id=None,
                                    max_retries=3):
     """
     使用 LLM 生成单日的设备事件episode。
@@ -781,9 +844,11 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
         return None
     
     # 获取默认参数
-    default_subject = template.get('default_subject', 'dad')
+    default_subject = subject_id or template.get('default_subject', 'dad')
     default_home = template.get('default_home', 'home_1')
     time_window = template.get('time_window', {})
+    primary_events = get_primary_events(template)
+    allowed_events = get_allowed_scene_events(template)
     
     # 确定时间窗口（是否是晚归日）
     is_late_day = is_late_work_day(day_offset, num_days=7)
@@ -791,13 +856,25 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
     
     # 准备家庭成员信息
     members_info = format_members_info(household_profile, person_ids)
+    relations_info = format_relations_info(household_profile)
+    room_device_layout = format_room_device_layout(household_profile)
     
     # 准备设备信息
     devices_info = format_devices_info(device_file)
+    primary_device_ids = [event.get('object_id') for event in allowed_events if event.get('object_id')]
+    if primary_device_ids:
+        devices_info += "\n\n## 场景候选事件设备对象\n"
+        devices_info += "\n".join(f"- {device_id}: 场景候选事件对象" for device_id in primary_device_ids)
     
     # 随机抽样部分人物和设备
     sampled_persons = random.sample(person_ids, min(3, len(person_ids)))
     available_devices = get_available_device_ids(device_file)
+    for device_id in get_layout_device_ids(household_profile):
+        if device_id not in available_devices:
+            available_devices.append(device_id)
+    for device_id in primary_device_ids:
+        if device_id not in available_devices:
+            available_devices.append(device_id)
     sampled_devices = random.sample(available_devices, min(5, len(available_devices)))
     
     # 构建 prompt
@@ -805,10 +882,14 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
         scenario=scenario,
         scenario_desc=template.get('description', ''),
         episode_date=episode_date.strftime('%Y-%m-%d'),
+        subject_id=default_subject,
         members_info=members_info,
+        relations_info=relations_info,
+        room_device_layout=room_device_layout,
         devices_info=devices_info,
         sampled_persons=', '.join(sampled_persons),
-        sampled_devices=', '.join(sampled_devices)
+        sampled_devices=', '.join(sampled_devices),
+        allowed_events_info=format_allowed_events_info(primary_events, allowed_events, default_subject)
     )
     
     # 使用 LLM 生成 episode
@@ -831,7 +912,10 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
                 default_home,
                 person_ids,
                 available_devices,
-                time_range
+                time_range,
+                primary_events,
+                allowed_events,
+                get_household_room_layout(household_profile)
             )
             
             # 添加 sampled_context
@@ -852,6 +936,53 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
     return None
 
 
+def get_primary_events(template):
+    """
+    获取场景级必选事件。未配置时返回空列表，避免回退到动作细节。
+    """
+    primary_events = template.get('primary_events') or []
+    if primary_events:
+        return [event.copy() for event in primary_events]
+    return []
+
+
+def get_allowed_scene_events(template):
+    """
+    获取场景期间允许出现的事件：主事件 + 由当天家庭状态触发的相关设备事件。
+    """
+    events = get_primary_events(template)
+    events.extend(event.copy() for event in template.get('related_events', []))
+    return events
+
+
+def format_allowed_events_info(primary_events, allowed_events, default_subject):
+    """
+    将主事件和可选相关事件格式化进 LLM prompt。
+    """
+    lines = []
+    primary_keys = {
+        (event.get('event_type'), event.get('predicate'), event.get('object_id'))
+        for event in primary_events
+    }
+    for idx, event in enumerate(allowed_events, start=1):
+        required = "必选主事件" if (
+            event.get('event_type'), event.get('predicate'), event.get('object_id')
+        ) in primary_keys else "按当天状态可选"
+        lines.append(
+            "- {idx}. {required}: subject_id={subject_id}, predicate={predicate}, object_id={object_id}, "
+            "event_type={event_type}, description={description}".format(
+                idx=idx,
+                required=required,
+                subject_id=event.get('subject_id', default_subject),
+                predicate=event.get('predicate', ''),
+                object_id=event.get('object_id', ''),
+                event_type=event.get('event_type', ''),
+                description=event.get('description', '')
+            )
+        )
+    return '\n'.join(lines) if lines else f"- 1. subject_id={default_subject}, predicate=occurred, object_id=door_main, event_type=scene_main, description=场景主要事件"
+
+
 def format_members_info(household_profile, person_ids):
     """
     格式化家庭成员信息。
@@ -865,12 +996,21 @@ def format_members_info(household_profile, person_ids):
     """
     members = household_profile.get('members', {})
     info_lines = []
+    member_map = {}
+    if isinstance(members, dict):
+        member_map = members
+    elif isinstance(members, list):
+        for member in members:
+            if isinstance(member, dict):
+                member_id = member.get('person_id') or member.get('id') or member.get('name')
+                if member_id:
+                    member_map[member_id] = member
     
     for person_id in person_ids:
-        if person_id in members:
-            member = members[person_id]
+        if person_id in member_map:
+            member = member_map[person_id]
             name = member.get('name', person_id)
-            role = member.get('role', '')
+            role = member.get('role') or member.get('family_role') or member.get('family_role_label') or ''
             age = member.get('age', '')
             info_lines.append(f"- {person_id}: {name}, 角色: {role}, 年龄: {age}")
         else:
@@ -880,6 +1020,80 @@ def format_members_info(household_profile, person_ids):
                 info_lines.append(f"- {person_id}: {mapping['name']}, 角色: {mapping['role']}, 年龄范围: {mapping['age_range']}")
     
     return '\n'.join(info_lines) if info_lines else "- dad: 父亲, 角色: 男主人, 年龄范围: 35-50\n- mom: 母亲, 角色: 女主人, 年龄范围: 35-50"
+
+
+def format_relations_info(household_profile):
+    """
+    格式化家庭成员关系。
+    """
+    relations = household_profile.get('relations', [])
+    if isinstance(relations, dict):
+        relation_items = []
+        for source, targets in relations.items():
+            if isinstance(targets, dict):
+                for target, relation_type in targets.items():
+                    relation_items.append(f"- {source} --{relation_type}--> {target}")
+            elif isinstance(targets, list):
+                for item in targets:
+                    relation_items.append(f"- {source}: {item}")
+        return '\n'.join(relation_items) if relation_items else "未提供显式家庭关系"
+    if isinstance(relations, list):
+        lines = []
+        for relation in relations:
+            if isinstance(relation, dict):
+                source = relation.get('from') or relation.get('source') or relation.get('subject') or ''
+                target = relation.get('to') or relation.get('target') or relation.get('object') or ''
+                relation_type = relation.get('type') or relation.get('relation') or ''
+                if source or target or relation_type:
+                    lines.append(f"- {source} --{relation_type}--> {target}")
+            else:
+                lines.append(f"- {relation}")
+        return '\n'.join(lines) if lines else "未提供显式家庭关系"
+    return "未提供显式家庭关系"
+
+
+def get_household_room_layout(household_profile):
+    """
+    获取家庭房间与设备布局，家庭画像未提供时使用默认布局。
+    """
+    for key in ('rooms', 'room_layout', 'spaces'):
+        layout = household_profile.get(key)
+        if isinstance(layout, dict) and layout:
+            normalized = {}
+            for room_id, room_data in layout.items():
+                if isinstance(room_data, dict):
+                    devices = room_data.get('devices') or room_data.get('device_ids') or []
+                elif isinstance(room_data, list):
+                    devices = room_data
+                else:
+                    devices = []
+                normalized[room_id] = list(devices)
+            if normalized:
+                return normalized
+    return copy.deepcopy(DEFAULT_ROOM_DEVICE_LAYOUT)
+
+
+def format_room_device_layout(household_profile):
+    """
+    格式化房间与设备布局。
+    """
+    layout = get_household_room_layout(household_profile)
+    lines = []
+    for room_id, devices in layout.items():
+        device_text = ', '.join(devices) if devices else '无固定设备'
+        lines.append(f"- {room_id}: {device_text}")
+    return '\n'.join(lines)
+
+
+def get_layout_device_ids(household_profile):
+    """
+    从房间设备布局中提取设备 ID。
+    """
+    layout = get_household_room_layout(household_profile)
+    device_ids = []
+    for devices in layout.values():
+        device_ids.extend(devices)
+    return list(dict.fromkeys(device_ids))
 
 
 def format_devices_info(device_file):
@@ -960,7 +1174,8 @@ def get_available_device_ids(device_file):
 
 
 def validate_llm_episode_result(result, scenario, episode_date, default_subject, 
-                                 default_home, person_ids, available_devices, time_range):
+                                 default_home, person_ids, available_devices, time_range,
+                                 primary_events=None, allowed_events=None, household_layout=None):
     """
     验证 LLM 生成的 episode 结果。
     
@@ -989,9 +1204,36 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
     
     annotated_events = result['annotated_events']
     
-    # 检查事件数量
-    if len(annotated_events) < 2 or len(annotated_events) > 8:
-        raise ValueError(f"Invalid number of events: {len(annotated_events)}, expected 2-8")
+    primary_events = primary_events or []
+    allowed_events = allowed_events or primary_events
+    min_event_count = len(primary_events) if primary_events else 1
+    max_event_count = len(allowed_events) if allowed_events else max(min_event_count, 1)
+    
+    # 检查事件数量：必须包含主事件，相关设备事件按当天家庭状态选择。
+    if len(annotated_events) < min_event_count or len(annotated_events) > max_event_count:
+        raise ValueError(
+            f"Invalid number of events: {len(annotated_events)}, expected {min_event_count}-{max_event_count} scene events"
+        )
+    
+    allowed_event_map = {
+        (
+            event.get('subject_id', default_subject),
+            event.get('event_type', ''),
+            event.get('predicate', ''),
+            event.get('object_id', '')
+        ): event
+        for event in allowed_events
+    }
+    required_event_keys = {
+        (
+            event.get('subject_id', default_subject),
+            event.get('event_type', ''),
+            event.get('predicate', ''),
+            event.get('object_id', '')
+        )
+        for event in primary_events
+    }
+    seen_event_keys = set()
     
     # 验证每个事件
     prev_timestamp = None
@@ -1009,14 +1251,22 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
             raise ValueError(f"Event {i} missing predicate")
         if 'object_id' not in event:
             raise ValueError(f"Event {i} missing object_id")
+        if 'attributes' not in event:
+            event['attributes'] = {}
         
-        # 验证 subject_id 在可用人员列表中
-        if event['subject_id'] not in person_ids:
+        # 验证 subject_id 在可用人员列表或系统执行主体中
+        if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_system', 'system'}:
             raise ValueError(f"Event {i} has invalid subject_id: {event['subject_id']}")
         
         # 验证 object_id 在可用设备列表中
         if event['object_id'] not in available_devices:
             raise ValueError(f"Event {i} has invalid object_id: {event['object_id']}")
+        
+        actual_type = event.get('attributes', {}).get('event_type', '')
+        event_key = (event['subject_id'], actual_type, event['predicate'], event['object_id'])
+        if allowed_event_map and event_key not in allowed_event_map:
+            raise ValueError(f"Event {i} is not an allowed scene event: {event_key}")
+        seen_event_keys.add(event_key)
         
         # 检查 state_snapshot 字段
         if 'state_snapshot' not in event_data:
@@ -1043,14 +1293,19 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
         except ValueError as e:
             raise ValueError(f"Event {i} has invalid timestamp format: {e}")
     
+    missing_required = required_event_keys - seen_event_keys
+    if missing_required:
+        raise ValueError(f"Missing required primary events: {sorted(missing_required)}")
+    
     # 构建完整的 episode
     episode = {
-        "episode_id": f"{scenario}_{episode_date.strftime('%Y%m%d')}",
+        "episode_id": f"{scenario}_{default_subject}_{episode_date.strftime('%Y%m%d')}",
         "home_id": default_home,
         "scene": scenario,
         "subject_id": default_subject,
         "confidence": round(0.85 + random.random() * 0.1, 2),
         "date": episode_date.isoformat(),
+        "household_layout": household_layout or get_household_room_layout({}),
         "daily_state_description": result['daily_state_description'],
         "annotated_events": annotated_events
     }
@@ -1059,7 +1314,8 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
 
 
 def generate_scenario_device_episodes(scenario, num_days=7, household_profile=None, 
-                                      scene_templates=None, device_file=None, use_llm=True):
+                                      scene_templates=None, device_file=None, use_llm=True,
+                                      subject_id=None, subject_profile=None):
     """
     生成连续多日的设备事件episodes。
     
@@ -1074,6 +1330,8 @@ def generate_scenario_device_episodes(scenario, num_days=7, household_profile=No
     Returns:
         list: episodes列表，每个episode包含annotated_events
     """
+    scenario = canonicalize_scenario(scenario)
+    
     if scene_templates is None:
         scene_templates = SCENE_TEMPLATES
     
@@ -1087,7 +1345,7 @@ def generate_scenario_device_episodes(scenario, num_days=7, household_profile=No
         return []
     
     # 获取默认参数
-    default_subject = template.get('default_subject', 'dad')
+    default_subject = subject_id or template.get('default_subject', 'dad')
     default_home = template.get('default_home', 'home_1')
     core_events = template.get('core_events', [])
     noise_events = template.get('noise_events', [])
@@ -1102,6 +1360,8 @@ def generate_scenario_device_episodes(scenario, num_days=7, household_profile=No
     
     # 获取家庭成员映射（结合家庭画像和默认映射）
     person_ids = get_person_ids_from_household(household_profile)
+    if default_subject not in person_ids:
+        person_ids.append(default_subject)
     
     # 确定起始日期（从今天往前推num_days天）
     start_date = datetime.now().date() - timedelta(days=num_days - 1)
@@ -1119,7 +1379,8 @@ def generate_scenario_device_episodes(scenario, num_days=7, household_profile=No
                 template=template,
                 household_profile=household_profile,
                 person_ids=person_ids,
-                device_file=device_file
+                device_file=device_file,
+                subject_id=default_subject
             )
             
             # 如果 LLM 生成失败，回退到规则模板生成
@@ -1155,6 +1416,8 @@ def generate_scenario_device_episodes(scenario, num_days=7, household_profile=No
             )
         
         if episode:
+            if subject_profile:
+                episode['subject_profile'] = subject_profile
             episodes.append(episode)
     
     logging.info(f"Generated {len(episodes)} episodes for scenario '{scenario}'")
@@ -1194,43 +1457,22 @@ def generate_single_day_episode_rule_based(scenario, episode_date, day_offset, t
     # 生成时间戳
     base_timestamp = generate_timestamp(episode_date, start_time, end_time)
     
-    # 根据家庭画像生成动态噪声事件
-    dynamic_noise_events = generate_dynamic_noise_events(
-        household_profile=household_profile,
-        scene=scenario,
-        episode_date=episode_date,
-        day_offset=day_offset
-    )
-    
-    # 合并预定义噪声事件和动态噪声事件
-    all_noise_events = noise_events + dynamic_noise_events
-    
-    # 选择核心事件数量（2-5条）
-    num_core_events = random.randint(2, min(5, len(core_events)))
-    
-    # 随机选择核心事件（保持顺序）
-    selected_core_events = select_core_events(core_events, num_core_events)
-    
-    # 选择噪声事件数量（0-3条）
-    num_noise_events = random.randint(0, min(3, len(all_noise_events)))
-    
-    # 随机选择噪声事件
-    selected_noise_events = random.sample(all_noise_events, num_noise_events) if num_noise_events > 0 else []
-    
-    # 合并并排序事件
-    all_events = merge_and_sort_events(selected_core_events, selected_noise_events)
+    current_state = initialize_state(person_ids)
+    all_events = get_primary_events(template)
+    all_events.extend(select_contextual_related_events(template, current_state))
     
     # 生成annotated_events
     annotated_events = []
-    current_state = initialize_state(person_ids)
     event_time = base_timestamp
     
     for event_data in all_events:
+        current_state = prepare_state_for_primary_event(current_state, event_data, default_subject)
         # 创建事件前的状态快照
         state_snapshot = create_state_snapshot(
             timestamp=event_time.isoformat(),
             persons=current_state['persons'],
-            devices=current_state['devices'].copy()
+            devices=current_state['devices'].copy(),
+            space_occupancy=current_state['space_occupancy'].copy()
         )
         
         # 创建事件对象
@@ -1258,13 +1500,14 @@ def generate_single_day_episode_rule_based(scenario, episode_date, day_offset, t
     
     # 生成episode
     episode = {
-        "episode_id": f"{scenario}_{episode_date.strftime('%Y%m%d')}",
+        "episode_id": f"{scenario}_{default_subject}_{episode_date.strftime('%Y%m%d')}",
         "home_id": default_home,
         "scene": scenario,
         "subject_id": default_subject,
         "confidence": round(0.85 + random.random() * 0.1, 2),
         "date": episode_date.isoformat(),
-        "daily_state_description": f"基于规则模板生成的{scenario}场景，包含{len(annotated_events)}个设备事件",
+        "household_layout": get_household_room_layout(household_profile),
+        "daily_state_description": f"基于规则模板生成的{template.get('name', scenario)}场景，只记录当天的场景主要事件和对应设备状态。",
         "annotated_events": annotated_events
     }
     
@@ -1287,8 +1530,16 @@ def get_person_ids_from_household(household_profile):
     
     # 如果有家庭成员定义，使用家庭画像中的成员
     if members:
-        for member_id, member_info in members.items():
-            person_ids.append(member_id)
+        if isinstance(members, dict):
+            for member_id, member_info in members.items():
+                person_ids.append(member_id)
+        elif isinstance(members, list):
+            for member in members:
+                if isinstance(member, dict):
+                    person_ids.append(member.get('person_id') or member.get('id') or member.get('name'))
+                else:
+                    person_ids.append(str(member))
+            person_ids = [person_id for person_id in person_ids if person_id]
     else:
         # 使用默认的人员映射
         person_ids = list(PERSON_ID_MAPPING.keys())
@@ -1708,7 +1959,57 @@ def initialize_state(person_ids):
     }
 
 
-def create_state_snapshot(timestamp, persons, devices):
+def select_contextual_related_events(template, current_state):
+    """
+    根据当天家庭状态选择会被场景触发的相关设备事件。
+    """
+    related_events = template.get('related_events', [])
+    if not related_events:
+        return []
+
+    selected = []
+    scenario_name = template.get('name', '')
+    living_room_occupied = random.random() < 0.35
+    bedroom_occupied = random.random() < 0.25
+    if '上班离家' in scenario_name:
+        current_state['space_occupancy']['living_room'] = 1 if living_room_occupied else 0
+        current_state['space_occupancy']['bedroom'] = 1 if bedroom_occupied else 0
+        if not living_room_occupied and 'grandpa' in current_state['persons']:
+            current_state['persons']['grandpa'] = {"status": "resting", "location": "bedroom"}
+        if living_room_occupied and 'grandpa' in current_state['persons']:
+            current_state['persons']['grandpa'] = {"status": "watching_tv", "location": "living_room"}
+
+    for event in related_events:
+        event_type = event.get('event_type', '')
+
+        if '上班离家' in scenario_name:
+            if event_type == 'lock_main_door':
+                selected.append(event.copy())
+            elif event_type in {
+                'turn_off_living_room_light',
+                'turn_off_living_room_tv',
+                'turn_off_living_room_ac',
+            } and not living_room_occupied:
+                selected.append(event.copy())
+            elif event_type in {
+                'turn_off_bedroom_light',
+                'turn_off_bedroom_ac',
+            } and not bedroom_occupied:
+                selected.append(event.copy())
+        elif '下班回家' in scenario_name:
+            if event_type == 'turn_on_living_room_light' and random.random() < 0.75:
+                selected.append(event.copy())
+            elif event_type == 'turn_on_living_room_ac' and random.random() < 0.55:
+                selected.append(event.copy())
+            elif event_type == 'turn_on_living_room_tv' and random.random() < 0.35:
+                selected.append(event.copy())
+        elif random.random() < 0.5:
+            selected.append(event.copy())
+
+    return selected
+
+
+def create_state_snapshot(timestamp, persons, devices, space_occupancy=None):
     """
     创建状态快照。
     
@@ -1716,15 +2017,56 @@ def create_state_snapshot(timestamp, persons, devices):
         timestamp: 时间戳字符串
         persons: 人员状态字典
         devices: 设备状态字典
+        space_occupancy: 空间占用字典
         
     Returns:
         dict: 状态快照
     """
     return {
         "timestamp": timestamp,
-        "persons": persons,
-        "devices": devices
+        "persons": copy.deepcopy(persons),
+        "devices": copy.deepcopy(devices),
+        "space_occupancy": copy.deepcopy(space_occupancy or {})
     }
+
+
+def prepare_state_for_primary_event(current_state, event_data, default_subject):
+    """
+    为场景级主事件准备快照状态，避免规则兜底沿用过细的过程状态。
+    """
+    state = {
+        "persons": copy.deepcopy(current_state['persons']),
+        "devices": copy.deepcopy(current_state['devices']),
+        "space_occupancy": copy.deepcopy(current_state['space_occupancy'])
+    }
+    subject_id = event_data.get('subject_id', default_subject)
+    event_type = event_data.get('event_type', '')
+    object_id = event_data.get('object_id', '')
+
+    if event_type in {'return_home', 'visitor_arrival'}:
+        if subject_id in state['persons']:
+            state['persons'][subject_id] = {"status": "arriving", "location": "entrance"}
+        if object_id in state['devices']:
+            state['devices'][object_id] = {"state": "closed" if object_id == "door_main" else state['devices'][object_id].get('state', 'idle')}
+        state['space_occupancy']['entrance'] = max(1, state['space_occupancy'].get('entrance', 0))
+    elif event_type == 'arm_away_mode':
+        for person_id in state['persons']:
+            state['persons'][person_id] = {"status": "outside", "location": "outside"}
+        if object_id in state['devices']:
+            state['devices'][object_id] = {"state": "armed"}
+        state['space_occupancy'] = {space: 0 for space in state['space_occupancy']}
+    elif event_type == 'anomaly_detected' and object_id in state['devices']:
+        state['devices'][object_id] = {"state": "detected"}
+    elif event_type == 'lock_main_door' and object_id in state['devices']:
+        state['devices'][object_id] = {"state": "closed"}
+        if 'dad' in state['persons']:
+            state['persons']['dad'] = {"status": "left_home", "location": "outside"}
+    elif event_data.get('predicate') == 'deactivated' and object_id in state['devices']:
+        state['devices'][object_id] = {"state": "on"}
+    elif event_data.get('predicate') == 'activated' and object_id in state['devices']:
+        state['devices'][object_id] = {"state": "off"}
+
+    return state
 
 
 def apply_event_to_state(current_state, event_data):
@@ -1739,9 +2081,9 @@ def apply_event_to_state(current_state, event_data):
         dict: 更新后的状态
     """
     new_state = {
-        "persons": current_state['persons'].copy(),
-        "devices": current_state['devices'].copy(),
-        "space_occupancy": current_state['space_occupancy'].copy()
+        "persons": copy.deepcopy(current_state['persons']),
+        "devices": copy.deepcopy(current_state['devices']),
+        "space_occupancy": copy.deepcopy(current_state['space_occupancy'])
     }
     
     predicate = event_data['predicate']
@@ -1751,7 +2093,7 @@ def apply_event_to_state(current_state, event_data):
     # 更新人员状态
     subject_id = event_data.get('subject_id', 'dad')
     if subject_id in new_state['persons']:
-        if predicate == 'entered':
+        if predicate in {'entered', 'returned', 'arrived'}:
             new_state['persons'][subject_id]['status'] = 'at_home'
             new_state['persons'][subject_id]['location'] = 'entrance'
         elif predicate == 'left':
@@ -1789,7 +2131,7 @@ def apply_event_to_state(current_state, event_data):
             device['state'] = 'recording'
     
     # 更新空间占用
-    if event_type == 'enter_home':
+    if event_type in {'enter_home', 'return_home', 'visitor_arrival'}:
         new_state['space_occupancy']['entrance'] += 1
     elif event_type == 'leave_home':
         new_state['space_occupancy']['entrance'] -= 1
