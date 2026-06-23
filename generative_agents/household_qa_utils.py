@@ -48,6 +48,10 @@ HOUSEHOLD_QA_PROMPT = """
 - open-domain 的 evidence_turn_ids 和 source_fact_ids 仍要标出触发该常识问题的对话证据。
 - adversarial 的答案必须是“无法从对话中确定”，且 evidence_turn_ids 和 source_fact_ids 为空数组。
 - 不要使用今天、昨天、明天等相对时间，要使用具体日期或会话时间。
+- question 必须客观、自包含，不能依赖读者查看上一条问题或上下文标题才能理解。
+- question 必须显式写出相关人物姓名；涉及会话时必须写出会话编号和具体会话时间；涉及事件时必须写出事件编号或具体日期。
+- question 中不要使用指代词或模糊指代，包括但不限于：他、她、他们、她们、这个、那个、这些、那些、这次、那次、上述、前面、当前用户、该成员、该事件、该会话。
+- question 不要写成“谁”“哪位成员”这类需要从指代中反推对象的问题；如果询问成员列表，要明确限定事件编号、日期和场景。
 - 必须严格生成 qa_plan 指定的 category。
 - 必须严格使用 qa_plan 指定或允许的 memory_dimension。
 - 不要生成重复问题。
@@ -88,6 +92,15 @@ def event_for_session(profile, session):
     return events[0] if events else None
 
 
+def get_member_safe(profile, person_id):
+    if not person_id:
+        return {}
+    try:
+        return get_member(profile, person_id)
+    except StopIteration:
+        return {"person_id": person_id, "name": person_id}
+
+
 def participants_answer(profile, event):
     names = [
         get_member(profile, person_id)["name"]
@@ -95,6 +108,14 @@ def participants_answer(profile, event):
         if any(member["person_id"] == person_id for member in profile["members"])
     ]
     return "、".join(names) if names else "无法从对话中确定"
+
+
+def participant_names(profile, person_ids):
+    names = []
+    for person_id in person_ids or []:
+        member = get_member_safe(profile, person_id)
+        names.append(member.get("name") or person_id)
+    return names
 
 
 def select_memory_dimension(dimensions, category):
@@ -198,11 +219,16 @@ def build_qa_plans(profile):
     for session in profile.get("flat_sessions", profile.get("sessions", [])):
         event = event_for_session(profile, session)
         current_user_id = session.get("current_user_id")
+        current_user = get_member_safe(profile, current_user_id)
         base = {
             "session_id": session.get("session_id"),
             "time": session.get("date_time", ""),
             "current_user_id": current_user_id,
+            "current_user_name": current_user.get("name", ""),
             "event_id": event.get("id") if event else "",
+            "event_date": event.get("date") if event else "",
+            "event_scenario_type": event.get("scenario_type") if event else "",
+            "event_participant_names": participant_names(profile, event.get("participants", [])) if event else [],
         }
         if event:
             dimensions = event.get("memory_dimensions", [])
@@ -230,13 +256,18 @@ def format_single_qa_evidence(profile, plan):
     session = next((item for item in profile.get("flat_sessions", profile.get("sessions", [])) if item.get("session_id") == plan.get("session_id")), None)
     lines = []
     if event:
+        participant_text = "、".join(participant_names(profile, event.get("participants", [])))
         lines.append(
             f"事件 {event['id']} | {event['date']} | {event['scenario_type']} | "
-            f"参与={','.join(event.get('participants', []))} | "
+            f"参与人={participant_text} | 参与人ID={','.join(event.get('participants', []))} | "
             f"memory_dimensions={','.join(event.get('memory_dimensions', []))} | {event['sub-event']}"
         )
     if session:
-        lines.append(f"会话 S{session.get('session_id')} | time={session.get('date_time')} | current_user={session.get('current_user_id')}")
+        current_user = get_member_safe(profile, session.get("current_user_id"))
+        lines.append(
+            f"会话 S{session.get('session_id')} | time={session.get('date_time')} | "
+            f"current_user={current_user.get('name')}({session.get('current_user_id')})"
+        )
         for turn in session.get("turns", []):
             text = turn.get("clean_text") or turn.get("text", "")
             lines.append(f"[{turn.get('dia_id')}] {turn.get('speaker')}: {text}")
@@ -324,7 +355,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
 
     for session in sessions:
         event = event_for_session(profile, session)
-        current_user = get_member(profile, session["current_user_id"])
+        current_user = get_member_safe(profile, session["current_user_id"])
         evidence = first_turn_id(session)
         dimensions = event.get("memory_dimensions", []) if event else []
 
@@ -334,7 +365,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
                 session,
                 current_user["person_id"],
                 "single-hop",
-                f"{current_user['name']}这次和AI助手主要记录了什么周末事项？",
+                f"在会话 S{session.get('session_id')}（{session.get('date_time')}）中，{current_user['name']}和AI助手围绕事件 {event.get('id')}（{event.get('date')}）主要记录了什么周末事项？",
                 event["sub-event"],
                 evidence,
                 [event["id"]],
@@ -348,7 +379,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
                 session,
                 current_user["person_id"],
                 "multi-hop",
-                "结合这些家庭对话，这个周末安排主要涉及哪些成员或责任分工？",
+                f"结合事件 {event.get('id')}（{event.get('date')}）和会话 S{session.get('session_id')}（{session.get('date_time')}），家庭周末安排主要涉及哪些成员或责任分工？",
                 f"主要涉及{participants_answer(profile, event)}。",
                 evidence,
                 [event["id"]],
@@ -361,7 +392,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
                 session,
                 current_user["person_id"],
                 "temporal",
-                "这次对话中有没有需要按具体时间后续确认或提醒的安排？",
+                f"在会话 S{session.get('session_id')}（{session.get('date_time')}）中，{current_user['name']}围绕事件 {event.get('id')}（{event.get('date')}）是否提到需要按具体时间后续确认或提醒的安排？",
                 "有，需要按对话中提到的具体周末安排再次提醒或确认。",
                 [turn["dia_id"] for turn in session.get("turns", [])[-2:]],
                 [event["id"]],
@@ -375,7 +406,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
                 session,
                 current_user["person_id"],
                 "open-domain",
-                f"从常识看，安排“{event['sub-event']}”时通常还需要提前确认什么？",
+                f"从常识看，家庭在安排事件 {event.get('id')}（{event.get('date')}，{event['sub-event']}）时通常还需要提前确认什么？",
                 "通常还需要提前确认时间、地点、参与人和必要物品。",
                 evidence,
                 [event["id"]],
@@ -389,7 +420,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
             session,
             current_user["person_id"],
             "adversarial",
-            f"{current_user['name']}在这次对话中明确说了具体外出交通费用是多少吗？",
+            f"在会话 S{session.get('session_id')}（{session.get('date_time')}）中，{current_user['name']}是否明确说明家庭外出交通费用的具体金额？",
             "无法从对话中确定",
             [],
             [],
