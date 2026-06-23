@@ -322,32 +322,9 @@ DEVICE_STATES = {
     "coffee_machine": ["brewing", "idle"]
 }
 
-DEVICE_TRANSITIONS = {
-    # (from_state, event, to_state)
-    ("closed", "opened", "open"),
-    ("open", "closed", "closed"),
-    ("closed", "locked", "locked"),
-    ("locked", "opened", "open"),
-    ("off", "activated", "on"),
-    ("on", "deactivated", "off"),
-    ("open", "closed", "closed"),
-    ("closed", "opened", "open"),
-    ("disarmed", "activated", "armed"),
-    ("armed", "deactivated", "disarmed"),
-    ("idle", "recording", "recording"),
-    ("recording", "idle", "idle"),
-    ("idle", "brewing", "brewing"),
-    ("brewing", "idle", "idle"),
-    ("clear", "detected", "detected"),
-    ("detected", "clear", "clear"),
-    ("silent", "ringing", "ringing"),
-    ("ringing", "silent", "silent")
-}
-
-
 # ==================== LLM 单日 Episode 生成 Prompt 模板 ====================
 
-LLM_EPISODE_GENERATION_PROMPT = """你是一个智能家居系统分析师。根据给定的家庭画像和场景，生成当天的家庭状态描述和设备事件记录。
+LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根据给定的家庭画像和场景，先判断当天该场景是否应该发生，并生成当天该场景下的家庭状态描述。
 
 ## 场景信息
 场景类型: {scenario}
@@ -371,74 +348,109 @@ LLM_EPISODE_GENERATION_PROMPT = """你是一个智能家居系统分析师。根
 本日重点人物: {sampled_persons}
 本日重点设备: {sampled_devices}
 
-## 今日允许生成的场景事件
-{allowed_events_info}
-
 ## 任务要求
-1. 首先生成当天的家庭状态自然语言描述（daily_state_description），描述当前场景开始前后的家庭状态，包括：
+1. 判断当天该场景是否应该发生：
+   - 如果是上班离家/下班回家，休息日、请假日、居家办公日可以不发生
+   - 如果场景主体当天不在家或不符合角色作息，也可以不发生
+2. 如果发生，生成 daily_state_description，描述当前场景开始前后的家庭状态：
    - 家庭成员的位置和活动状态
    - 每个相关房间是否有人，以及是谁
    - 主要设备的当前状态
    - 环境氛围（如安静、热闹、温馨等）
-   - 任何特殊情况（如有人加班、有访客等）
-
-2. 然后基于家庭状态描述，按时间顺序一个个推演当前场景接下来会发生的 annotated_events：
-   - 每一步都先看上一个 state_snapshot，再决定“今日允许生成的场景事件”中下一个是否会发生
-   - 相关设备事件根据当天家庭状态、房间占用和设备当前状态决定是否生成
-   - 例如：如果客厅有人看电视，就不要生成关闭客厅灯/电视；如果客厅无人，则可以生成关闭客厅灯/电视
-   - 不要生成候选列表之外的过程细节事件，例如解锁大门、打开门、进入玄关、进客厅等
-   - 不要把家庭成员活动、传感器触发、设备已开等背景信息本身生成为 annotated_events
-   - 背景信息只写入 daily_state_description，并通过 state_snapshot 影响相关设备事件是否发生
-   - 事件数量为 1 到“今日允许生成的场景事件”数量之间
-
-3. 事件必须围绕指定场景，event 的 subject_id、predicate、object_id、attributes.event_type 必须来自“今日允许生成的场景事件”，所有设备 ID 必须来自可控设备列表或房间设备布局
-
-4. 每个事件包含：
-   - event: subject_id（人物ID）、predicate（操作类型）、object_id（对象ID）、attributes（事件类型和描述）
-   - state_snapshot: timestamp（时间戳）、persons（人物状态）、devices（设备状态）、space_occupancy（空间占用）
+   - 任何特殊情况（如休息日、请假、加班、有访客等）
+3. 如果不发生，daily_state_description 仍需解释不发生的原因。
 
 ## 输出格式
 请严格按照以下 JSON 格式输出，不要包含其他解释文字：
 
 {{
+    "scenario_should_happen": true,
+    "skip_reason": "",
     "daily_state_description": "当天的家庭状态自然语言描述，50-100字",
     "sampled_context": {{
         "persons": ["本日重点人物ID列表"],
         "devices": ["本日重点设备ID列表"]
-    }},
-    "annotated_events": [
-        {{
-            "event": {{
-                "subject_id": "home_system",
-                "predicate": "deactivated",
-                "object_id": "light_living_room",
-                "attributes": {{
-                    "event_type": "turn_off_living_room_light",
-                    "description": "客厅无人时关闭客厅灯"
-                }}
+    }}
+}}
+
+## 重要约束
+- 输出必须是合法的 JSON 格式
+- scenario_should_happen 必须是布尔值
+- daily_state_description 必须是自然语言描述
+
+请生成场景发生判断和家庭状态描述："""
+
+
+LLM_EVENT_ITEM_PROMPT = """你是一个智能家居系统分析师。请基于当天家庭状态描述和已经生成的事件，判断候选事件是否应该成为下一个 annotated_events item。
+
+## 场景信息
+场景类型: {scenario}
+场景描述: {scenario_desc}
+当前场景主体: {subject_id}
+日期: {episode_date}
+
+## 家庭成员
+{members_info}
+
+## 家庭关系
+{relations_info}
+
+## 房间与设备布局
+{room_device_layout}
+
+## 可控设备
+{devices_info}
+
+## 当天家庭状态描述
+{daily_state_description}
+
+## 已生成的 annotated_events
+{previous_events}
+
+## 当前候选事件
+{candidate_event_info}
+
+## 任务要求
+1. 只判断“当前候选事件”是否应该在该场景下发生。
+2. 如果不应该发生，输出 should_generate=false，并说明 reason。
+3. 如果应该发生，输出 should_generate=true，并生成一个 annotated_event。
+4. annotated_event.event 的 subject_id、predicate、object_id、attributes.event_type 必须和当前候选事件完全一致。
+5. state_snapshot 表示该候选事件发生前/发生瞬间的全局状态切片，必须与 daily_state_description 和 previous_events 的时间顺序一致。
+6. 不要生成候选事件之外的动作拆解细节。
+
+## 输出格式
+请严格按照以下 JSON 格式输出，不要包含其他解释文字：
+
+{{
+    "should_generate": true,
+    "reason": "为什么该候选事件在当天状态下应该/不应该发生",
+    "annotated_event": {{
+        "event": {{
+            "subject_id": "home_system",
+            "predicate": "deactivated",
+            "object_id": "light_living_room",
+            "attributes": {{
+                "event_type": "turn_off_living_room_light",
+                "description": "客厅无人时关闭客厅灯"
+            }}
+        }},
+        "state_snapshot": {{
+            "timestamp": "2022-03-16T18:30:00+08:00",
+            "persons": {{
+                "dad": {{"status": "leaving", "location": "entrance"}},
+                "mom": {{"status": "at_home", "location": "kitchen"}}
             }},
-            "state_snapshot": {{
-                "timestamp": "2022-03-16T18:30:00+08:00",
-                "persons": {{
-                    "dad": {{"status": "leaving", "location": "entrance"}},
-                    "mom": {{"status": "at_home", "location": "kitchen"}},
-                    "child": {{"status": "at_home", "location": "study"}}
-                }},
-                "devices": {{
-                    "door_main": {{"state": "locked"}},
-                    "light_living_room": {{"state": "on"}},
-                    "tv_living_room": {{"state": "off"}}
-                }},
-                "space_occupancy": {{
-                    "entrance": ["dad"],
-                    "kitchen": ["mom"],
-                    "study": ["child"],
-                    "living_room": [],
-                    "bedroom": []
-                }}
+            "devices": {{
+                "light_living_room": {{"state": "on"}},
+                "tv_living_room": {{"state": "off"}}
+            }},
+            "space_occupancy": {{
+                "entrance": ["dad"],
+                "kitchen": ["mom"],
+                "living_room": []
             }}
         }}
-    ]
+    }}
 }}
 
 ## 重要约束
@@ -446,11 +458,10 @@ LLM_EPISODE_GENERATION_PROMPT = """你是一个智能家居系统分析师。根
 - 所有设备 ID 必须来自可控设备列表
 - state_snapshot 必须包含 persons、devices、space_occupancy 三个字段
 - 人物 ID 必须来自家庭成员列表
-- 必须输出主事件；相关设备事件只在当天家庭状态支持时输出
-- 不要输出动作拆解细节，也不要输出候选列表之外的事件
+- should_generate=false 时 annotated_event 可以为 null
 - 输出必须是合法的 JSON 格式
 
-请生成家庭状态描述和设备事件记录："""
+请判断并生成当前候选事件 item："""
 
 # ==================== 设备事件生成 Prompt 模板 ====================
 
@@ -877,8 +888,18 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
             available_devices.append(device_id)
     sampled_devices = random.sample(available_devices, min(5, len(available_devices)))
     
-    # 构建 prompt
-    prompt = LLM_EPISODE_GENERATION_PROMPT.format(
+    common_prompt_args = {
+        "scenario": scenario,
+        "scenario_desc": template.get('description', ''),
+        "episode_date": episode_date.strftime('%Y-%m-%d'),
+        "subject_id": default_subject,
+        "members_info": members_info,
+        "relations_info": relations_info,
+        "room_device_layout": room_device_layout,
+        "devices_info": devices_info,
+    }
+
+    state_prompt = LLM_STATE_DESCRIPTION_PROMPT.format(
         scenario=scenario,
         scenario_desc=template.get('description', ''),
         episode_date=episode_date.strftime('%Y-%m-%d'),
@@ -888,22 +909,49 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
         room_device_layout=room_device_layout,
         devices_info=devices_info,
         sampled_persons=', '.join(sampled_persons),
-        sampled_devices=', '.join(sampled_devices),
-        allowed_events_info=format_allowed_events_info(primary_events, allowed_events, default_subject)
+        sampled_devices=', '.join(sampled_devices)
     )
     
-    # 使用 LLM 生成 episode
     for attempt in range(max_retries):
         try:
-            logging.info(f"Generating episode for {episode_date} (attempt {attempt + 1}/{max_retries})")
+            logging.info(f"Generating state description for {episode_date} (attempt {attempt + 1}/{max_retries})")
             
-            # 调用 LLM
-            llm_result = run_json_trials_func(prompt, num_gen=1, num_tokens_request=2000, temperature=0.8)
+            state_result = run_json_trials_func(state_prompt, num_gen=1, num_tokens_request=1000, temperature=0.8)
             
-            if not llm_result:
-                raise ValueError("LLM returned empty result")
+            state_result = validate_llm_state_result(state_result)
+            if not state_result['scenario_should_happen']:
+                logging.info(
+                    "Skipping episode for %s %s: %s",
+                    scenario,
+                    episode_date,
+                    state_result.get('skip_reason', '')
+                )
+                return {"_skip": True}
+
+            annotated_events = []
+            for candidate_event in allowed_events:
+                item_prompt = LLM_EVENT_ITEM_PROMPT.format(
+                    **common_prompt_args,
+                    daily_state_description=state_result['daily_state_description'],
+                    previous_events=json.dumps(annotated_events, ensure_ascii=False, indent=2),
+                    candidate_event_info=format_candidate_event_info(candidate_event, default_subject),
+                )
+                item_result = run_json_trials_func(item_prompt, num_gen=1, num_tokens_request=1600, temperature=0.7)
+                annotated_event = validate_llm_event_item_result(
+                    item_result,
+                    candidate_event,
+                    default_subject,
+                    person_ids,
+                    available_devices,
+                    annotated_events,
+                )
+                if annotated_event:
+                    annotated_events.append(annotated_event)
             
-            # 验证结果
+            llm_result = {
+                'daily_state_description': state_result['daily_state_description'],
+                'annotated_events': annotated_events,
+            }
             validated_result = validate_llm_episode_result(
                 llm_result, 
                 scenario, 
@@ -920,8 +968,8 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
             
             # 添加 sampled_context
             validated_result['sampled_context'] = {
-                'persons': sampled_persons,
-                'devices': sampled_devices
+                'persons': state_result.get('sampled_context', {}).get('persons', sampled_persons),
+                'devices': state_result.get('sampled_context', {}).get('devices', sampled_devices)
             }
             
             logging.info(f"Successfully generated episode for {episode_date}")
@@ -981,6 +1029,80 @@ def format_allowed_events_info(primary_events, allowed_events, default_subject):
             )
         )
     return '\n'.join(lines) if lines else f"- 1. subject_id={default_subject}, predicate=occurred, object_id=door_main, event_type=scene_main, description=场景主要事件"
+
+
+def format_candidate_event_info(event, default_subject):
+    return json.dumps({
+        "subject_id": event.get('subject_id', default_subject),
+        "predicate": event.get('predicate', ''),
+        "object_id": event.get('object_id', ''),
+        "attributes": {
+            "event_type": event.get('event_type', ''),
+            "description": event.get('description', ''),
+        }
+    }, ensure_ascii=False, indent=2)
+
+
+def validate_llm_state_result(result):
+    if not isinstance(result, dict):
+        raise ValueError(f"State description result must be a dict, got {type(result)}")
+    if 'scenario_should_happen' not in result:
+        raise ValueError("Missing scenario_should_happen")
+    if 'daily_state_description' not in result:
+        raise ValueError("Missing daily_state_description")
+    return {
+        "scenario_should_happen": bool(result.get('scenario_should_happen')),
+        "skip_reason": result.get('skip_reason', ''),
+        "daily_state_description": result.get('daily_state_description', ''),
+        "sampled_context": result.get('sampled_context', {}),
+    }
+
+
+def validate_llm_event_item_result(result, candidate_event, default_subject, person_ids, available_devices, previous_events):
+    if not isinstance(result, dict):
+        raise ValueError(f"Event item result must be a dict, got {type(result)}")
+    if not result.get('should_generate', False):
+        return None
+    annotated_event = result.get('annotated_event')
+    if not isinstance(annotated_event, dict):
+        raise ValueError("should_generate=true but annotated_event is missing")
+
+    event = annotated_event.get('event')
+    snapshot = annotated_event.get('state_snapshot')
+    if not isinstance(event, dict) or not isinstance(snapshot, dict):
+        raise ValueError("annotated_event must contain event and state_snapshot")
+
+    expected_subject = candidate_event.get('subject_id', default_subject)
+    expected_type = candidate_event.get('event_type', '')
+    if event.get('subject_id') != expected_subject:
+        raise ValueError(f"Invalid subject_id: {event.get('subject_id')}, expected {expected_subject}")
+    if event.get('predicate') != candidate_event.get('predicate'):
+        raise ValueError(f"Invalid predicate: {event.get('predicate')}, expected {candidate_event.get('predicate')}")
+    if event.get('object_id') != candidate_event.get('object_id'):
+        raise ValueError(f"Invalid object_id: {event.get('object_id')}, expected {candidate_event.get('object_id')}")
+    event.setdefault('attributes', {})
+    if event['attributes'].get('event_type') != expected_type:
+        raise ValueError(f"Invalid event_type: {event['attributes'].get('event_type')}, expected {expected_type}")
+    event['attributes'].setdefault('description', candidate_event.get('description', ''))
+
+    if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_system', 'system', 'visitor'}:
+        raise ValueError(f"Invalid subject_id: {event['subject_id']}")
+    if event['object_id'] not in available_devices:
+        raise ValueError(f"Invalid object_id: {event['object_id']}")
+
+    for key in ('timestamp', 'persons', 'devices', 'space_occupancy'):
+        if key not in snapshot:
+            raise ValueError(f"state_snapshot missing {key}")
+
+    current_timestamp = datetime.fromisoformat(snapshot['timestamp'].replace('+08:00', ''))
+    if previous_events:
+        prev_timestamp = datetime.fromisoformat(
+            previous_events[-1]['state_snapshot']['timestamp'].replace('+08:00', '')
+        )
+        if current_timestamp <= prev_timestamp:
+            raise ValueError(f"timestamp is not increasing: {snapshot['timestamp']}")
+
+    return annotated_event
 
 
 def format_members_info(household_profile, person_ids):
@@ -1369,6 +1491,9 @@ def generate_scenario_device_episodes(scenario, num_days=7, household_profile=No
     # 为每一天生成一个episode
     for day_offset in range(num_days):
         episode_date = start_date + timedelta(days=day_offset)
+        if should_skip_scene_by_calendar(scenario, episode_date):
+            logging.info("Skipping %s for %s due to calendar constraints", scenario, episode_date)
+            continue
         
         if use_llm:
             # 使用 LLM 生成 episode
@@ -1382,6 +1507,8 @@ def generate_scenario_device_episodes(scenario, num_days=7, household_profile=No
                 device_file=device_file,
                 subject_id=default_subject
             )
+            if episode and episode.get('_skip'):
+                continue
             
             # 如果 LLM 生成失败，回退到规则模板生成
             if not episode:
@@ -1422,6 +1549,16 @@ def generate_scenario_device_episodes(scenario, num_days=7, household_profile=No
     
     logging.info(f"Generated {len(episodes)} episodes for scenario '{scenario}'")
     return episodes
+
+
+def should_skip_scene_by_calendar(scenario, episode_date):
+    """
+    规则兜底下的日历约束：周末不生成工作日/上学日强绑定场景。
+    LLM 路径会在状态描述阶段做更细判断。
+    """
+    if episode_date.weekday() >= 5 and scenario in {'leave_work', 'family_return', 'child_return'}:
+        return True
+    return False
 
 
 def generate_single_day_episode_rule_based(scenario, episode_date, day_offset, template,
