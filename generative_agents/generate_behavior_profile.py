@@ -17,6 +17,7 @@ from datetime import date, timedelta, datetime
 from generative_agents.file_utils import save_agents, load_agents
 from generative_agents.time_utils import get_random_time, datetimeObj2Str
 from generative_agents.device_events_utils import (
+    generate_daily_device_episodes,
     generate_scenario_device_episodes, 
     save_device_events, 
     get_device_events_summary,
@@ -240,23 +241,14 @@ def main():
         logging.info(f"Device events already exist at {device_events_path}, skipping. Use --overwrite-events to regenerate.")
         return
     
-    episodes = []
-    for plan_item in generation_plan:
-        logging.info(
-            "Generating behavior episodes: person_id=%s scenario=%s",
-            plan_item['person_id'],
-            plan_item['scenario'],
-        )
-        episodes.extend(generate_scenario_device_episodes(
-            scenario=plan_item['scenario'],
-            num_days=args.device_event_days,
-            household_profile=household_profile,
-            scene_templates=scene_templates,
-            device_file=args.device_file,
-            use_llm=use_llm,
-            subject_id=plan_item['person_id'],
-            subject_profile=plan_item['member'],
-        ))
+    episodes = generate_daily_device_episodes(
+        generation_plan=generation_plan,
+        num_days=args.device_event_days,
+        household_profile=household_profile,
+        scene_templates=scene_templates,
+        device_file=args.device_file,
+        use_llm=use_llm,
+    )
     
     if episodes:
         # 保存设备事件到文件

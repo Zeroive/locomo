@@ -100,7 +100,12 @@ SCENE_TEMPLATES = {
         "time_window": {
             "normal": {"start": "07:00", "end": "09:00"}
         },
-        "primary_events": [],
+        "primary_events": [
+            {"event_type": "open_main_door", "predicate": "opened", "object_id": "door_main",
+             "description": "上班离家时打开大门"},
+            {"event_type": "close_main_door", "predicate": "closed", "object_id": "door_main",
+             "description": "上班离家后关上大门"}
+        ],
         "related_events": [
             {"subject_id": "home_system", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
              "description": "男主人离家后锁门"},
@@ -342,6 +347,10 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 场景描述: {scenario_desc}
 当前场景主体: {subject_id}
 日期: {episode_date}
+计划发生时间: {planned_scene_time}
+
+## 当天已生成的其他情景描述
+{previous_scenario_descriptions}
 
 ## 家庭成员
 {members_info}
@@ -379,8 +388,9 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 
 {{
     "scenario_should_happen": true,
+    "scenario_time": "2022-03-16T08:00:00+08:00",
     "skip_reason": "",
-    "daily_state_description": "当天的家庭状态自然语言描述，50-100字",
+    "daily_state_description": "当天该情景下的家庭状态自然语言描述，50-120字，必须写明具体小时",
     "sampled_context": {{
         "persons": ["本日重点人物ID列表"],
         "devices": ["本日重点设备ID列表"]
@@ -390,7 +400,9 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 ## 重要约束
 - 输出必须是合法的 JSON 格式
 - scenario_should_happen 必须是布尔值
+- scenario_time 使用 ISO8601 格式，小时应与计划发生时间一致
 - daily_state_description 必须是自然语言描述
+- daily_state_description 不能与当天已生成的其他情景描述出现人物位置、设备状态或时间顺序冲突
 
 请生成场景发生判断和家庭状态描述："""
 
@@ -481,6 +493,97 @@ LLM_EVENT_ITEM_PROMPT = """你是一个智能家居系统分析师。请基于�
 - 输出必须是合法的 JSON 格式
 
 请判断并生成当前候选事件 item："""
+
+
+LLM_NEXT_EVENT_PROMPT = """你是一个智能家居系统分析师。请基于当天情景描述和已经生成的事件，生成当前情景下的下一个 annotated_events item，或判断当前情景事件已经结束。
+
+## 场景信息
+场景类型: {scenario}
+场景描述: {scenario_desc}
+当前场景主体: {subject_id}
+日期: {episode_date}
+情景发生时间: {scenario_time}
+
+## 家庭成员
+{members_info}
+
+## 家庭关系
+{relations_info}
+
+## 房间与设备布局
+{room_device_layout}
+
+## 人物房间状态枚举
+{person_room_status_schema}
+
+## 可控设备
+{devices_info}
+
+## 当天所有已生成的情景描述
+{all_scenario_descriptions}
+
+## 当前情景描述
+{daily_state_description}
+
+## 当前情景已生成的 annotated_events
+{previous_events}
+
+## 当前情景允许生成的事件集合
+{allowed_events_info}
+
+## 任务要求
+1. 每次只输出一个“下一个事件”；如果当前情景已经结束，输出 should_continue=false。
+2. 下一个事件必须来自“当前情景允许生成的事件集合”，不要生成集合之外的泛化事件或过程细节。
+3. 事件顺序由当前情景描述、已生成事件和 state_snapshot 推演决定，例如离家可能是开门、关灯、关门，也可能先关灯再开门关门。
+4. state_snapshot 表示该事件发生前/发生瞬间的全局状态切片，必须与当前情景描述和已生成事件连续一致。
+5. state_snapshot.persons 中每个人的 location 必须来自“人物房间状态枚举”的房间，status 必须来自该房间允许状态。
+6. 不要重复生成已经出现过的相同 subject_id/predicate/object_id/event_type 事件。
+
+## 输出格式
+请严格按照以下 JSON 格式输出，不要包含其他解释文字：
+
+{{
+    "should_continue": true,
+    "reason": "为什么继续生成该事件，或为什么当前情景已经结束",
+    "annotated_event": {{
+        "event": {{
+            "subject_id": "home_system",
+            "predicate": "deactivated",
+            "object_id": "light_living_room",
+            "attributes": {{
+                "event_type": "turn_off_living_room_light",
+                "description": "客厅无人时关闭客厅灯"
+            }}
+        }},
+        "state_snapshot": {{
+            "timestamp": "2022-03-16T08:05:00+08:00",
+            "persons": {{
+                "dad": {{"status": "leaving", "location": "entrance"}},
+                "mom": {{"status": "cooking", "location": "kitchen"}}
+            }},
+            "devices": {{
+                "door_main": {{"state": "closed"}},
+                "light_living_room": {{"state": "on"}}
+            }},
+            "space_occupancy": {{
+                "entrance": ["dad"],
+                "kitchen": ["mom"],
+                "living_room": []
+            }}
+        }}
+    }}
+}}
+
+## 重要约束
+- timestamp 使用 ISO8601 格式，必须从情景发生时间开始递增
+- event 的 subject_id、predicate、object_id、attributes.event_type 必须来自允许事件集合
+- state_snapshot 必须包含 persons、devices、space_occupancy 三个字段
+- 人物 ID 必须来自家庭成员列表
+- 人物 status/location 必须来自“人物房间状态枚举”
+- should_continue=false 时 annotated_event 可以为 null
+- 输出必须是合法的 JSON 格式
+
+请生成当前情景的下一个 annotated_event："""
 
 # ==================== 设备事件生成 Prompt 模板 ====================
 
@@ -883,6 +986,7 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
     # 确定时间窗口（是否是晚归日）
     is_late_day = is_late_work_day(day_offset, num_days=7)
     time_range = time_window.get('late' if is_late_day else 'normal', time_window.get('normal'))
+    planned_scene_time = build_scene_time(episode_date, time_range)
     
     # 准备家庭成员信息
     members_info = format_members_info(household_profile, person_ids)
@@ -925,6 +1029,8 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
         scenario_desc=template.get('description', ''),
         episode_date=episode_date.strftime('%Y-%m-%d'),
         subject_id=default_subject,
+        planned_scene_time=planned_scene_time,
+        previous_scenario_descriptions="无",
         members_info=members_info,
         relations_info=relations_info,
         room_device_layout=room_device_layout,
@@ -1006,6 +1112,212 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
     return None
 
 
+def generate_daily_device_episodes(generation_plan, num_days=7, household_profile=None,
+                                   scene_templates=None, device_file=None, use_llm=True):
+    """
+    按天生成所有情景：LLM 路径先生成当天所有情景描述，再逐情景生成事件。
+    rule-based 路径回退到原有按情景生成逻辑。
+    """
+    if scene_templates is None:
+        scene_templates = SCENE_TEMPLATES
+    if household_profile is None:
+        household_profile = {}
+
+    if not use_llm:
+        episodes = []
+        for plan_item in generation_plan:
+            episodes.extend(generate_scenario_device_episodes(
+                scenario=plan_item['scenario'],
+                num_days=num_days,
+                household_profile=household_profile,
+                scene_templates=scene_templates,
+                device_file=device_file,
+                use_llm=False,
+                subject_id=plan_item['person_id'],
+                subject_profile=plan_item.get('member'),
+            ))
+        return episodes
+
+    run_json_trials_func = get_run_json_trials()
+    if run_json_trials_func is None:
+        logging.warning("LLM not available, falling back to rule-based daily generation")
+        return generate_daily_device_episodes(
+            generation_plan,
+            num_days=num_days,
+            household_profile=household_profile,
+            scene_templates=scene_templates,
+            device_file=device_file,
+            use_llm=False,
+        )
+
+    person_ids = get_person_ids_from_household(household_profile)
+    layout_device_ids = get_layout_device_ids(household_profile)
+    available_devices = get_available_device_ids(device_file)
+    for device_id in layout_device_ids:
+        if device_id not in available_devices:
+            available_devices.append(device_id)
+
+    members_info = format_members_info(household_profile, person_ids)
+    relations_info = format_relations_info(household_profile)
+    room_device_layout = format_room_device_layout(household_profile)
+    person_room_status_schema = format_person_room_status_schema()
+    devices_info = format_devices_info(device_file)
+
+    start_date = datetime.now().date() - timedelta(days=num_days - 1)
+    episodes = []
+
+    for day_offset in range(num_days):
+        episode_date = start_date + timedelta(days=day_offset)
+        contexts = []
+
+        for plan_index, plan_item in enumerate(generation_plan):
+            scenario = canonicalize_scenario(plan_item['scenario'])
+            template = scene_templates.get(scenario)
+            if not template:
+                logging.warning("Unknown scenario in generation plan: %s", scenario)
+                continue
+
+            default_subject = plan_item.get('person_id') or template.get('default_subject', 'dad')
+            default_home = template.get('default_home', 'home_1')
+            time_window = template.get('time_window', {})
+            is_late_day = is_late_work_day(day_offset, num_days=7)
+            time_range = time_window.get('late' if is_late_day else 'normal', time_window.get('normal'))
+            planned_scene_time = build_scene_time(episode_date, time_range, fallback_hour=8 + plan_index)
+            primary_events = get_primary_events(template)
+            allowed_events = get_allowed_scene_events(template)
+
+            for event in allowed_events:
+                object_id = event.get('object_id')
+                if object_id and object_id not in available_devices:
+                    available_devices.append(object_id)
+            event_device_ids = list(dict.fromkeys(
+                event.get('object_id') for event in allowed_events if event.get('object_id')
+            ))
+            context_devices_info = devices_info
+            if event_device_ids:
+                context_devices_info += "\n\n## 场景候选事件设备对象\n"
+                context_devices_info += "\n".join(f"- {device_id}: 场景候选事件对象" for device_id in event_device_ids)
+
+            contexts.append({
+                'scenario': scenario,
+                'scenario_desc': template.get('description', ''),
+                'episode_date': episode_date,
+                'day_offset': day_offset,
+                'template': template,
+                'default_subject': default_subject,
+                'default_home': default_home,
+                'time_range': time_range,
+                'planned_scene_time': planned_scene_time,
+                'primary_events': primary_events,
+                'allowed_events': allowed_events,
+                'household_profile': household_profile,
+                'person_ids': person_ids,
+                'available_devices': available_devices,
+                'members_info': members_info,
+                'relations_info': relations_info,
+                'room_device_layout': room_device_layout,
+                'person_room_status_schema': person_room_status_schema,
+                'devices_info': context_devices_info,
+                'subject_profile': plan_item.get('member'),
+            })
+
+        contexts.sort(key=lambda item: item['planned_scene_time'])
+
+        generated_descriptions = []
+        active_contexts = []
+        for context in contexts:
+            sampled_persons = random.sample(person_ids, min(3, len(person_ids))) if person_ids else []
+            sampled_devices = random.sample(available_devices, min(5, len(available_devices))) if available_devices else []
+            state_prompt = LLM_STATE_DESCRIPTION_PROMPT.format(
+                scenario=context['scenario'],
+                scenario_desc=context['scenario_desc'],
+                episode_date=episode_date.strftime('%Y-%m-%d'),
+                subject_id=context['default_subject'],
+                planned_scene_time=context['planned_scene_time'],
+                previous_scenario_descriptions=format_previous_scenario_descriptions(generated_descriptions),
+                members_info=members_info,
+                relations_info=relations_info,
+                room_device_layout=room_device_layout,
+                person_room_status_schema=person_room_status_schema,
+                devices_info=context['devices_info'],
+                sampled_persons=', '.join(sampled_persons),
+                sampled_devices=', '.join(sampled_devices),
+            )
+
+            try:
+                state_result = run_json_trials_func(
+                    state_prompt,
+                    num_gen=1,
+                    num_tokens_request=1200,
+                    temperature=0.8,
+                )
+                state_result = validate_llm_state_result(state_result)
+            except Exception as e:
+                logging.warning(
+                    "State description generation failed for %s/%s: %s",
+                    context['scenario'],
+                    episode_date,
+                    e,
+                )
+                continue
+
+            if not state_result['scenario_should_happen']:
+                logging.info(
+                    "Skipping episode for %s %s: %s",
+                    context['scenario'],
+                    episode_date,
+                    state_result.get('skip_reason', ''),
+                )
+                continue
+
+            scenario_time = state_result.get('scenario_time') or context['planned_scene_time']
+            context['scenario_time'] = scenario_time
+            context['daily_state_description'] = state_result['daily_state_description']
+            context['sampled_context'] = {
+                'persons': state_result.get('sampled_context', {}).get('persons', sampled_persons),
+                'devices': state_result.get('sampled_context', {}).get('devices', sampled_devices),
+            }
+            generated_descriptions.append({
+                'scenario': context['scenario'],
+                'subject_id': context['default_subject'],
+                'scenario_time': scenario_time,
+                'daily_state_description': context['daily_state_description'],
+            })
+            active_contexts.append(context)
+
+        all_descriptions = format_previous_scenario_descriptions(generated_descriptions)
+        for context in active_contexts:
+            context['all_scenario_descriptions'] = all_descriptions
+            episode = generate_scenario_events_from_description_llm(context, run_json_trials_func)
+            if not episode:
+                logging.warning(
+                    "LLM event generation failed for %s/%s, falling back to rule-based episode",
+                    context['scenario'],
+                    episode_date,
+                )
+                template = context['template']
+                episode = generate_single_day_episode_rule_based(
+                    scenario=context['scenario'],
+                    episode_date=episode_date,
+                    day_offset=day_offset,
+                    template=template,
+                    core_events=template.get('core_events', []),
+                    noise_events=template.get('noise_events', []),
+                    time_window=template.get('time_window', {}),
+                    default_subject=context['default_subject'],
+                    default_home=context['default_home'],
+                    household_profile=household_profile,
+                    person_ids=person_ids,
+                )
+            if episode:
+                if context.get('subject_profile'):
+                    episode['subject_profile'] = context['subject_profile']
+                episodes.append(episode)
+
+    logging.info("Generated %s episodes for %s days with daily planning", len(episodes), num_days)
+    return episodes
+
+
 def get_primary_events(template):
     """
     获取场景级必选事件。未配置时返回空列表，避免回退到动作细节。
@@ -1018,11 +1330,64 @@ def get_primary_events(template):
 
 def get_allowed_scene_events(template):
     """
-    获取场景期间允许出现的事件：主事件 + 由当天家庭状态触发的相关设备事件。
+    获取场景期间允许出现的事件：主事件 + 可控设备核心事件 + 由当天家庭状态触发的相关设备事件。
     """
     events = get_primary_events(template)
+    known_device_ids = set(DEVICE_STATES.keys())
+    for devices in DEFAULT_ROOM_DEVICE_LAYOUT.values():
+        known_device_ids.update(devices)
+    seen_keys = {
+        (event.get('subject_id'), event.get('event_type'), event.get('predicate'), event.get('object_id'))
+        for event in events
+    }
+    for event in template.get('core_events', []):
+        if event.get('object_id') not in known_device_ids:
+            continue
+        event_key = (
+            event.get('subject_id'),
+            event.get('event_type'),
+            event.get('predicate'),
+            event.get('object_id'),
+        )
+        if event_key in seen_keys:
+            continue
+        events.append(event.copy())
+        seen_keys.add(event_key)
     events.extend(event.copy() for event in template.get('related_events', []))
     return events
+
+
+def build_scene_time(episode_date, time_range, fallback_hour=8):
+    """
+    根据场景时间窗生成一个 ISO8601 时间。只固定到小时，分钟默认为 00。
+    """
+    start = (time_range or {}).get('start') if isinstance(time_range, dict) else None
+    hour = fallback_hour
+    minute = 0
+    if isinstance(start, str) and ':' in start:
+        try:
+            hour, minute = [int(part) for part in start.split(':')[:2]]
+        except ValueError:
+            hour, minute = fallback_hour, 0
+    hour = hour % 24
+    scene_datetime = datetime.combine(episode_date, datetime.min.time()).replace(hour=hour, minute=minute)
+    return scene_datetime.strftime('%Y-%m-%dT%H:%M:%S+08:00')
+
+
+def format_previous_scenario_descriptions(descriptions):
+    if not descriptions:
+        return "无"
+    lines = []
+    for item in descriptions:
+        lines.append(
+            "- {time} {scenario}/{subject_id}: {description}".format(
+                time=item.get('scenario_time', ''),
+                scenario=item.get('scenario', ''),
+                subject_id=item.get('subject_id', ''),
+                description=item.get('daily_state_description', '')
+            )
+        )
+    return '\n'.join(lines)
 
 
 def format_allowed_events_info(primary_events, allowed_events, default_subject):
@@ -1074,6 +1439,7 @@ def validate_llm_state_result(result):
         raise ValueError("Missing daily_state_description")
     return {
         "scenario_should_happen": bool(result.get('scenario_should_happen')),
+        "scenario_time": result.get('scenario_time', ''),
         "skip_reason": result.get('skip_reason', ''),
         "daily_state_description": result.get('daily_state_description', ''),
         "sampled_context": result.get('sampled_context', {}),
@@ -1153,6 +1519,149 @@ def validate_person_states(snapshot, person_ids):
                 f"Invalid status for {person_id}: {status}; "
                 f"location {location} allows {', '.join(allowed_statuses)}"
             )
+
+
+def get_annotated_event_key(annotated_event):
+    event = annotated_event.get('event', {}) if isinstance(annotated_event, dict) else {}
+    attributes = event.get('attributes', {}) if isinstance(event.get('attributes'), dict) else {}
+    return (
+        event.get('subject_id', ''),
+        attributes.get('event_type', ''),
+        event.get('predicate', ''),
+        event.get('object_id', ''),
+    )
+
+
+def find_matching_allowed_event(annotated_event, allowed_events, default_subject):
+    key = get_annotated_event_key(annotated_event)
+    for candidate_event in allowed_events:
+        candidate_key = (
+            candidate_event.get('subject_id', default_subject),
+            candidate_event.get('event_type', ''),
+            candidate_event.get('predicate', ''),
+            candidate_event.get('object_id', ''),
+        )
+        if key == candidate_key:
+            return candidate_event
+    return None
+
+
+def validate_llm_next_event_result(result, allowed_events, default_subject, person_ids,
+                                   available_devices, previous_events):
+    if not isinstance(result, dict):
+        raise ValueError(f"Next event result must be a dict, got {type(result)}")
+    if not result.get('should_continue', False):
+        return None
+
+    annotated_event = result.get('annotated_event')
+    if not isinstance(annotated_event, dict):
+        raise ValueError("should_continue=true but annotated_event is missing")
+
+    candidate_event = find_matching_allowed_event(annotated_event, allowed_events, default_subject)
+    if not candidate_event:
+        raise ValueError(f"Generated event is not in allowed event set: {get_annotated_event_key(annotated_event)}")
+
+    current_key = get_annotated_event_key(annotated_event)
+    used_keys = {get_annotated_event_key(event) for event in previous_events}
+    if current_key in used_keys:
+        raise ValueError(f"Duplicate generated event: {current_key}")
+
+    return validate_llm_event_item_result(
+        {"should_generate": True, "annotated_event": annotated_event},
+        candidate_event,
+        default_subject,
+        person_ids,
+        available_devices,
+        previous_events,
+    )
+
+
+def generate_scenario_events_from_description_llm(context, run_json_trials_func, max_retries=3):
+    scenario = context['scenario']
+    episode_date = context['episode_date']
+    default_subject = context['default_subject']
+    default_home = context['default_home']
+    person_ids = context['person_ids']
+    available_devices = context['available_devices']
+    allowed_events = context['allowed_events']
+    primary_events = context['primary_events']
+    time_range = context['time_range']
+    household_profile = context['household_profile']
+    annotated_events = []
+
+    max_events = max(1, len(allowed_events))
+    all_scenario_descriptions = context.get('all_scenario_descriptions') or "无"
+
+    for attempt in range(max_retries):
+        annotated_events = []
+        try:
+            for _ in range(max_events):
+                next_prompt = LLM_NEXT_EVENT_PROMPT.format(
+                    scenario=scenario,
+                    scenario_desc=context['scenario_desc'],
+                    episode_date=episode_date.strftime('%Y-%m-%d'),
+                    subject_id=default_subject,
+                    scenario_time=context['scenario_time'],
+                    members_info=context['members_info'],
+                    relations_info=context['relations_info'],
+                    room_device_layout=context['room_device_layout'],
+                    person_room_status_schema=context['person_room_status_schema'],
+                    devices_info=context['devices_info'],
+                    all_scenario_descriptions=all_scenario_descriptions,
+                    daily_state_description=context['daily_state_description'],
+                    previous_events=json.dumps(annotated_events, ensure_ascii=False, indent=2),
+                    allowed_events_info=format_allowed_events_info(primary_events, allowed_events, default_subject),
+                )
+                next_result = run_json_trials_func(
+                    next_prompt,
+                    num_gen=1,
+                    num_tokens_request=1800,
+                    temperature=0.7,
+                )
+                annotated_event = validate_llm_next_event_result(
+                    next_result,
+                    allowed_events,
+                    default_subject,
+                    person_ids,
+                    available_devices,
+                    annotated_events,
+                )
+                if not annotated_event:
+                    break
+                annotated_events.append(annotated_event)
+
+            llm_result = {
+                'daily_state_description': context['daily_state_description'],
+                'annotated_events': annotated_events,
+            }
+            episode = validate_llm_episode_result(
+                llm_result,
+                scenario,
+                episode_date,
+                default_subject,
+                default_home,
+                person_ids,
+                available_devices,
+                time_range,
+                primary_events,
+                allowed_events,
+                get_household_room_layout(household_profile),
+            )
+            episode['scenario_time'] = context['scenario_time']
+            episode['sampled_context'] = context.get('sampled_context', {})
+            return episode
+        except Exception as e:
+            logging.warning(
+                "Event generation attempt %s failed for %s/%s: %s",
+                attempt + 1,
+                scenario,
+                episode_date,
+                e,
+            )
+            if attempt == max_retries - 1:
+                return None
+
+    return None
 
 
 def format_members_info(household_profile, person_ids):
@@ -1437,7 +1946,7 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
             event['attributes'] = {}
         
         # 验证 subject_id 在可用人员列表或系统执行主体中
-        if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_system', 'system'}:
+        if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_system', 'system', 'visitor'}:
             raise ValueError(f"Event {i} has invalid subject_id: {event['subject_id']}")
         
         # 验证 object_id 在可用设备列表中
@@ -1465,6 +1974,7 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
             raise ValueError(f"Event {i} missing devices in state_snapshot")
         if 'space_occupancy' not in snapshot:
             raise ValueError(f"Event {i} missing space_occupancy in state_snapshot")
+        validate_person_states(snapshot, person_ids)
         
         # 验证时间戳格式和递增性
         try:
