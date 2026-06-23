@@ -85,6 +85,13 @@ def scoped_family_context(profile, current_user, relevant_events):
     }, ensure_ascii=False, indent=2)
 
 
+def non_speaking_member_names(profile, current_user):
+    return [
+        member["name"] for member in profile.get("members", [])
+        if member.get("person_id") != current_user.get("person_id")
+    ]
+
+
 def build_household_turn_prompt(
     profile,
     assistant,
@@ -97,11 +104,11 @@ def build_household_turn_prompt(
     speaker_role="user",
     instruct_stop=False,
 ):
-    speaker_name = current_user["name"] if speaker_role == "user" else assistant["name"]
+    speaker_label = "当前用户" if speaker_role == "user" else "AI助手"
     role_instruction = (
-        f"请扮演当前用户{current_user['name']}，生成你接下来对AI助手说的一句话。"
+        f"你只能扮演当前用户{current_user['name']}，生成{current_user['name']}接下来对AI助手说的一句话。"
         if speaker_role == "user"
-        else f"请扮演AI助手{assistant['name']}，只对{current_user['name']}刚才的请求或聊天做日常回复。"
+        else f"你只能扮演AI助手{assistant['name']}，只对当前用户{current_user['name']}刚才的请求或聊天做日常回复。"
     )
     assistant_style = (
         "- AI助手回复时只做自然日常回应，不要主动补充额外事实、不要解释记忆维度、事件编号、家庭关系图或内部推理。\n"
@@ -109,6 +116,7 @@ def build_household_turn_prompt(
         if speaker_role == "assistant"
         else ""
     )
+    blocked_speakers = "、".join(non_speaking_member_names(profile, current_user)) or "无"
     stop_instruction = "如果对话已经自然完成，可以只输出“再见！”。" if instruct_stop else ""
     return f"""
 你正在生成家庭多用户与AI助手的逐轮对话。每次只生成一位说话人的下一句话。
@@ -126,9 +134,12 @@ AI助手：{assistant["persona_summary"]}
 {conv_so_far or "无"}
 
 要求：
-- 当前应该发言的人是：{speaker_name}
+- 当前轮次角色是：{speaker_label}
 - {role_instruction}
 - 只输出一句话，不要输出 JSON，不要输出说话人名字。
+- 本段对话只有两个发言方：当前用户{current_user['name']} 和 AI助手{assistant['name']}。
+- 其他家庭成员不能作为发言人，不能直接说话，不能写成“某某：……”的形式。
+- 不能发言的家庭成员包括：{blocked_speakers}。
 - 本 session 主要基于当前事件、当前交流人相关家庭上下文、上一轮会话摘要和已有对话生成。
 - AI助手只知道当前交流人相关的家庭信息，不能使用未提供的其他家庭关系。
 - 当前用户可以自然提及当前事件里的其他人，但AI助手只能按用户说法日常回应。
@@ -229,11 +240,22 @@ def format_conversation_for_facts(session):
     return "\n".join(lines)
 
 
-def clean_turn_text(text, speaker_name):
+def clean_turn_text(text, speaker_name, profile=None, allowed_speaker_names=None):
     text = text.strip().split("\n")[0].strip()
     text = text.replace("```", "").strip()
-    for prefix in [f"{speaker_name}：", f"{speaker_name}:", "用户：", "用户:", "AI助手：", "AI助手:", "助手：", "助手:"]:
+    allowed_speaker_names = allowed_speaker_names or [speaker_name]
+    speaker_prefixes = []
+    for name in allowed_speaker_names:
+        speaker_prefixes.extend([f"{name}：", f"{name}:"])
+    if profile:
+        for member in profile.get("members", []):
+            for label in [member.get("name"), member.get("family_role_label")]:
+                if label:
+                    speaker_prefixes.extend([f"{label}：", f"{label}:"])
+    for prefix in speaker_prefixes + ["用户：", "用户:", "AI助手：", "AI助手:", "助手：", "助手:"]:
         if text.startswith(prefix):
+            if not any(prefix.startswith(name) for name in allowed_speaker_names):
+                logging.warning("Removed non-current speaker prefix from generated turn: %s", prefix)
             text = text[len(prefix):].strip()
     return text.strip('"“” ')
 
@@ -365,6 +387,8 @@ def generate_household_session(
             output = clean_turn_text(
                 run_chatgpt(turn_prompt, num_gen=1, num_tokens_request=120, temperature=1.1),
                 speaker_name,
+                profile=profile,
+                allowed_speaker_names=[speaker_name],
             )
             if not output:
                 output = "再见！" if turn_idx >= 4 else ("好的。" if curr_speaker == "assistant" else "我知道了。")
