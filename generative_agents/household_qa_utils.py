@@ -22,6 +22,15 @@ MEMORY_DIMENSION_PREFERENCES = {
 HOUSEHOLD_QA_PROMPT = """
 你是长期家庭对话记忆 QA 数据集构造助手。
 
+qa_plan:
+{qa_plan}
+
+家庭与成员概况:
+{profile}
+
+证据材料:
+{context}
+
 请根据给定证据材料，只生成 1 条测评 QA。
 
 要求：
@@ -60,14 +69,10 @@ HOUSEHOLD_QA_PROMPT = """
 - 必须严格使用 qa_plan 指定或允许的 memory_dimension。
 - 不要生成重复问题。
 
-qa_plan:
-{qa_plan}
-
-家庭与成员概况:
-{profile}
-
-证据材料:
-{context}
+## 输出示例
+{{"category": "single-hop", "memory_dimension":"", "question": "张强计划几点出门？", "answer": "七点", "entity_id": "person_002,person_001", "evidence_turn_ids": ["D1:1"], "source_fact_ids": ["F1"], "difficulty": "easy", "requires_temporal_reasoning": false, "requires_tool_use": false, "requires_cross_member_reference": false}}
+{{"category": "multi-hop", "memory_dimension":"", "question": "张强出门前需要检查哪些事项？", "answer": "检查伞、会议时间和门锁", "entity_id": "person_002,person_001", "evidence_turn_ids": ["D1:1", "D1:3"], "source_fact_ids": ["F1", "F2"], "difficulty": "medium", "requires_temporal_reasoning": false, "requires_tool_use": false, "requires_cross_member_reference": false}}
+{{"category": "adversarial", "memory_dimension":"", "question": "张强的会议几点开始？", "answer": "无法从对话中确定", "entity_id": "person_002,person_001", "evidence_turn_ids": [], "source_fact_ids": [], "difficulty": "medium", "requires_temporal_reasoning": false, "requires_tool_use": false, "requires_cross_member_reference": false}}
 """.strip()
 
 
