@@ -10,6 +10,15 @@ import re
 from generative_agents.household_utils import get_member, save_json, strip_generation_prompts
 
 
+MEMORY_DIMENSION_PREFERENCES = {
+    "single-hop": (),
+    "multi-hop": ("cross_member_reference", "role_responsibility", "family_relationship"),
+    "temporal": ("temporary_schedule", "weekend_plan", "dining_time", "work_schedule"),
+    "open-domain": (),
+    "adversarial": (),
+}
+
+
 HOUSEHOLD_QA_PROMPT = """
 你是长期家庭对话记忆 QA 数据集构造助手。
 
@@ -18,7 +27,8 @@ HOUSEHOLD_QA_PROMPT = """
 要求：
 - 输出必须是 JSON 对象，不要输出 markdown。
 - QA 必须包含：
-  - "category": single-hop | multi-hop | temporal | cross-member | pet-related | adversarial
+  - "category": single-hop | multi-hop | temporal | open-domain | adversarial
+  - "memory_dimension": 从 qa_plan.allowed_memory_dimensions 中选择 1 个最相关的记忆维度
   - "question"
   - "answer"
   - "entity_id"
@@ -28,10 +38,18 @@ HOUSEHOLD_QA_PROMPT = """
   - "requires_temporal_reasoning": boolean
   - "requires_tool_use": boolean
   - "requires_cross_member_reference": boolean
-- 问题必须只能根据给定证据回答。
+- category 定义：
+  - single-hop：单跳问题，答案由单个会话中的一处证据直接提供。
+  - multi-hop：多跳推理问题，答案需要结合多个会话或多个事实后才能得到。
+  - temporal：时间推理问题，答案需要比较时间先后、计划变更、之前/之后、最近/最终安排等。
+  - open-domain：开放领域知识问题，需要结合对话证据和外部常识回答；不能脱离家庭对话凭空提问。
+  - adversarial：对抗性问题，问题看似相关，但上下文不存在足够信息，必须不回答。
+- 除 open-domain 可使用常识外，问题必须只能根据给定证据回答。
+- open-domain 的 evidence_turn_ids 和 source_fact_ids 仍要标出触发该常识问题的对话证据。
 - adversarial 的答案必须是“无法从对话中确定”，且 evidence_turn_ids 和 source_fact_ids 为空数组。
 - 不要使用今天、昨天、明天等相对时间，要使用具体日期或会话时间。
 - 必须严格生成 qa_plan 指定的 category。
+- 必须严格使用 qa_plan 指定或允许的 memory_dimension。
 - 不要生成重复问题。
 
 qa_plan:
@@ -79,13 +97,37 @@ def participants_answer(profile, event):
     return "、".join(names) if names else "无法从对话中确定"
 
 
+def select_memory_dimension(dimensions, category):
+    dimensions = dimensions or []
+    for preferred in MEMORY_DIMENSION_PREFERENCES.get(category, ()):
+        if preferred in dimensions:
+            return preferred
+    return dimensions[0] if dimensions else ""
+
+
+def pick_memory_dimension(plan=None, event=None, item=None):
+    item = item or {}
+    plan = plan or {}
+    candidates = plan.get("allowed_memory_dimensions") or plan.get("memory_dimensions") or []
+    if not candidates and event:
+        candidates = event.get("memory_dimensions", [])
+    value = item.get("memory_dimension") or plan.get("memory_dimension")
+    if isinstance(value, list):
+        value = value[0] if value else ""
+    if value and (not candidates or value in candidates):
+        return value
+    return select_memory_dimension(candidates, plan.get("category", ""))
+
+
 def make_qa(qa_id, session, entity_id, category, question, answer, evidence_turn_ids, source_fact_ids, **flags):
+    memory_dimension = flags.pop("memory_dimension", "")
     return {
         "qa_id": f"QA_{qa_id}",
         "session_id": session.get("session_id"),
         "time": session.get("date_time", ""),
         "entity_id": entity_id,
         "category": category,
+        "memory_dimension": memory_dimension,
         "QA_details": {
             "user": question,
             "assistant": answer,
@@ -95,7 +137,7 @@ def make_qa(qa_id, session, entity_id, category, question, answer, evidence_turn
         "difficulty": flags.pop("difficulty", "medium"),
         "requires_temporal_reasoning": flags.pop("requires_temporal_reasoning", category == "temporal"),
         "requires_tool_use": flags.pop("requires_tool_use", False),
-        "requires_cross_member_reference": flags.pop("requires_cross_member_reference", category in {"cross-member", "multi-hop"}),
+        "requires_cross_member_reference": flags.pop("requires_cross_member_reference", category == "multi-hop"),
         **flags,
     }
 
@@ -130,7 +172,8 @@ def format_evidence_for_qa(profile):
         for event in profile.get("graph", []):
             lines.append(
                 f"- {event['id']} | {event['date']} | {event['scenario_type']} | "
-                f"参与={','.join(event.get('participants', []))} | {event['sub-event']}"
+                f"参与={','.join(event.get('participants', []))} | "
+                f"memory_dimensions={','.join(event.get('memory_dimensions', []))} | {event['sub-event']}"
             )
     for session in profile.get("flat_sessions", profile.get("sessions", [])):
         sess_id = session.get("session_id")
@@ -162,13 +205,23 @@ def build_qa_plans(profile):
             "event_id": event.get("id") if event else "",
         }
         if event:
-            plans.append({**base, "category": "single-hop", "intent": "询问当前事件中明确提到的一项具体安排。"})
-            plans.append({**base, "category": "cross-member", "intent": "询问当前安排涉及哪些成员或谁需要被提醒。"})
-            if event.get("scenario_type") in {"changed_weekend_plan", "conflicting_plans"}:
-                plans.append({**base, "category": "temporal", "intent": "询问计划变更、冲突或后续确认事项。"})
-            if event.get("scenario_type") == "pet_weekend_care":
-                plans.append({**base, "category": "pet-related", "intent": "询问宠物照护对象或照护人。"})
-        plans.append({**base, "category": "adversarial", "intent": "询问证据中没有明确说明的信息，答案必须是无法从对话中确定。"})
+            dimensions = event.get("memory_dimensions", [])
+            base = {**base, "allowed_memory_dimensions": dimensions}
+            for category, intent in [
+                ("single-hop", "单跳问题（单个会话提供答案）：询问当前事件中明确提到的一项具体安排。"),
+                ("multi-hop", "多跳推理（需要结合多个会话提供答案）：比较或汇总同一家庭中不同会话提到的相关安排、成员责任或偏好。"),
+                ("temporal", "时间推理（通过时间推理）：询问计划先后、变更、冲突、最终安排或后续确认事项。"),
+                ("open-domain", "开放领域知识问题（外部知识如常识来回答）：围绕当前对话事项提出需要常识辅助回答的问题。"),
+                ("adversarial", "对抗性问题（上下文不存在信息，不回答）：询问证据中没有明确说明的信息，答案必须是无法从对话中确定。"),
+            ]:
+                plans.append({
+                    **base,
+                    "category": category,
+                    "memory_dimension": select_memory_dimension(dimensions, category),
+                    "intent": intent,
+                })
+        else:
+            plans.append({**base, "category": "adversarial", "intent": "对抗性问题（上下文不存在信息，不回答）：询问证据中没有明确说明的信息，答案必须是无法从对话中确定。"})
     return plans
 
 
@@ -179,7 +232,8 @@ def format_single_qa_evidence(profile, plan):
     if event:
         lines.append(
             f"事件 {event['id']} | {event['date']} | {event['scenario_type']} | "
-            f"参与={','.join(event.get('participants', []))} | {event['sub-event']}"
+            f"参与={','.join(event.get('participants', []))} | "
+            f"memory_dimensions={','.join(event.get('memory_dimensions', []))} | {event['sub-event']}"
         )
     if session:
         lines.append(f"会话 S{session.get('session_id')} | time={session.get('date_time')} | current_user={session.get('current_user_id')}")
@@ -198,6 +252,12 @@ def format_single_qa_evidence(profile, plan):
     return "\n".join(lines)
 
 
+def format_qa_evidence(profile, plan):
+    if plan.get("category") in {"multi-hop", "temporal"}:
+        return format_evidence_for_qa(profile)
+    return format_single_qa_evidence(profile, plan)
+
+
 def normalize_generated_qa(item, qa_id, plan):
     category = item.get("category") or plan["category"]
     return {
@@ -206,6 +266,7 @@ def normalize_generated_qa(item, qa_id, plan):
         "time": item.get("time", plan.get("time", "")),
         "entity_id": item.get("entity_id", plan.get("current_user_id", "")),
         "category": category,
+        "memory_dimension": pick_memory_dimension(plan=plan, item=item),
         "QA_details": {
             "user": item.get("question", ""),
             "assistant": item.get("answer", ""),
@@ -215,7 +276,7 @@ def normalize_generated_qa(item, qa_id, plan):
         "difficulty": item.get("difficulty", "medium"),
         "requires_temporal_reasoning": item.get("requires_temporal_reasoning", category == "temporal"),
         "requires_tool_use": item.get("requires_tool_use", False),
-        "requires_cross_member_reference": item.get("requires_cross_member_reference", category in {"cross-member", "multi-hop"}),
+        "requires_cross_member_reference": item.get("requires_cross_member_reference", category == "multi-hop"),
     }
 
 
@@ -243,7 +304,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
             prompt = HOUSEHOLD_QA_PROMPT.format(
                 qa_plan=json.dumps(plan, ensure_ascii=False, separators=(",", ":")),
                 profile=format_family_for_qa(profile),
-                context=format_single_qa_evidence(profile, plan),
+                context=format_qa_evidence(profile, plan),
             )
             logging.info("Calling LLM for QA %s/%s: category=%s, session=%s, prompt_chars=%s", idx, len(qa_plans), plan["category"], plan.get("session_id"), len(prompt))
             response = run_chatgpt(prompt, num_gen=1, num_tokens_request=900, temperature=0.7)
@@ -265,6 +326,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
         event = event_for_session(profile, session)
         current_user = get_member(profile, session["current_user_id"])
         evidence = first_turn_id(session)
+        dimensions = event.get("memory_dimensions", []) if event else []
 
         if event:
             qa_items.append(make_qa(
@@ -277,6 +339,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
                 evidence,
                 [event["id"]],
                 difficulty="easy",
+                memory_dimension=select_memory_dimension(dimensions, "single-hop"),
             ))
             qa_id += 1
 
@@ -284,42 +347,42 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
                 qa_id,
                 session,
                 current_user["person_id"],
-                "cross-member",
-                "这个安排涉及哪些家庭成员？",
-                participants_answer(profile, event),
+                "multi-hop",
+                "结合这些家庭对话，这个周末安排主要涉及哪些成员或责任分工？",
+                f"主要涉及{participants_answer(profile, event)}。",
                 evidence,
                 [event["id"]],
+                memory_dimension=select_memory_dimension(dimensions, "multi-hop"),
             ))
             qa_id += 1
 
-            if event["scenario_type"] in {"changed_weekend_plan", "conflicting_plans"}:
-                qa_items.append(make_qa(
-                    qa_id,
-                    session,
-                    current_user["person_id"],
-                    "temporal",
-                    "这次对话中有没有需要后续重新确认或提醒的安排？",
-                    "有，需要按最新周末安排再次提醒或确认。",
-                    [turn["dia_id"] for turn in session.get("turns", [])[-2:]],
-                    [event["id"]],
-                    requires_temporal_reasoning=True,
-                ))
-                qa_id += 1
+            qa_items.append(make_qa(
+                qa_id,
+                session,
+                current_user["person_id"],
+                "temporal",
+                "这次对话中有没有需要按具体时间后续确认或提醒的安排？",
+                "有，需要按对话中提到的具体周末安排再次提醒或确认。",
+                [turn["dia_id"] for turn in session.get("turns", [])[-2:]],
+                [event["id"]],
+                requires_temporal_reasoning=True,
+                memory_dimension=select_memory_dimension(dimensions, "temporal"),
+            ))
+            qa_id += 1
 
-            if event["scenario_type"] == "pet_weekend_care":
-                pet = profile.get("pets", [{}])[0]
-                qa_items.append(make_qa(
-                    qa_id,
-                    session,
-                    pet.get("pet_id", "pet_001"),
-                    "pet-related",
-                    "宠物照护事项由谁负责？",
-                    participants_answer(profile, event),
-                    evidence,
-                    [event["id"]],
-                    requires_cross_member_reference=True,
-                ))
-                qa_id += 1
+            qa_items.append(make_qa(
+                qa_id,
+                session,
+                current_user["person_id"],
+                "open-domain",
+                f"从常识看，安排“{event['sub-event']}”时通常还需要提前确认什么？",
+                "通常还需要提前确认时间、地点、参与人和必要物品。",
+                evidence,
+                [event["id"]],
+                difficulty="medium",
+                memory_dimension=select_memory_dimension(dimensions, "open-domain"),
+            ))
+            qa_id += 1
 
         qa_items.append(make_qa(
             qa_id,
@@ -332,6 +395,7 @@ def generate_household_qa_pairs(profile, out_dir, use_llm=True):
             [],
             difficulty="hard",
             requires_cross_member_reference=False,
+            memory_dimension=select_memory_dimension(dimensions, "adversarial"),
         ))
         qa_id += 1
 
