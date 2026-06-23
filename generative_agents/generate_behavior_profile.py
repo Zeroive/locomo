@@ -35,6 +35,16 @@ logging.basicConfig(level=logging.INFO)
 
 DEFAULT_PERSONA_SOURCE = str(Path(__file__).parent.parent / "data" / "msc_speakers_single.json")
 
+PRESET_SCENARIOS = [
+    "family_return",
+    "leave_work",
+    "elderly_outdoor",
+    "child_return",
+    "visitor_arrival",
+    "all_leave_arm",
+    "anomaly_detection",
+]
+
 
 def household_profile_path(out_dir):
     return os.path.join(out_dir, "household_profile.json")
@@ -108,34 +118,28 @@ def scenarios_for_member(member):
         return ['leave_work', 'family_return']
     if role in {'grandfather', 'grandmother'}:
         return ['elderly_outdoor']
+    if role in {'child', 'teenager'}:
+        return ['child_return']
     return []
 
 
-def build_generation_plan(household_profile, scenario_filter=None):
+def build_generation_plan(household_profile):
     plan = []
     for member in normalize_members(household_profile):
         person_id = member.get('person_id') or member.get('id') or member.get('name')
         if not person_id:
             continue
         for scenario in scenarios_for_member(member):
-            if scenario_filter and scenario != scenario_filter:
-                continue
             plan.append({
                 'person_id': person_id,
                 'scenario': scenario,
                 'member': member
             })
-    if scenario_filter == 'all_leave_arm':
-        plan.append({'person_id': 'home_system', 'scenario': 'all_leave_arm', 'member': {'person_id': 'home_system', 'name': '全屋系统'}})
-    if scenario_filter == 'anomaly_detection':
-        plan.append({'person_id': 'home_system', 'scenario': 'anomaly_detection', 'member': {'person_id': 'home_system', 'name': '全屋系统'}})
-    if scenario_filter == 'visitor_arrival':
-        plan.append({'person_id': 'visitor', 'scenario': 'visitor_arrival', 'member': {'person_id': 'visitor', 'name': '访客'}})
-    if scenario_filter == 'child_return':
-        for member in normalize_members(household_profile):
-            role = member.get('family_role') or member.get('role') or ''
-            if role in {'child', 'teenager'}:
-                plan.append({'person_id': member.get('person_id'), 'scenario': 'child_return', 'member': member})
+    plan.extend([
+        {'person_id': 'visitor', 'scenario': 'visitor_arrival', 'member': {'person_id': 'visitor', 'name': '访客'}},
+        {'person_id': 'home_system', 'scenario': 'all_leave_arm', 'member': {'person_id': 'home_system', 'name': '全屋系统'}},
+        {'person_id': 'home_system', 'scenario': 'anomaly_detection', 'member': {'person_id': 'home_system', 'name': '全屋系统'}},
+    ])
     return plan
 
 
@@ -153,20 +157,6 @@ def parse_args():
                         help="输出目录路径，用于保存生成的设备事件")
     parser.add_argument('--prompt-dir', type=str, default='./data/prompts',
                         help="Prompt模板目录路径")
-    
-    # 场景参数
-    parser.add_argument('--scenario', type=str, default=None, 
-                        choices=['family_return', 'leave_work', 'elderly_outdoor', 'child_return',
-                                 'visitor_arrival', 'all_leave_arm', 'anomaly_detection'],
-                        help="指定场景类型；不指定时根据家庭画像为每个成员生成其适用场景\n"
-                             "场景说明：\n"
-                             "  family_return       - 家庭成员下班回家\n"
-                             "  leave_work          - 上班离家\n"
-                             "  elderly_outdoor     - 老人独自外出\n"
-                             "  child_return        - 小孩放学回家\n"
-                             "  visitor_arrival     - 访客到家\n"
-                             "  all_leave_arm       - 全员离家布防\n"
-                             "  anomaly_detection   - 异常活动检测")
     
     # 时间参数
     parser.add_argument('--num-days', type=int, default=7, 
@@ -228,7 +218,7 @@ def main():
     # 加载场景模板
     scene_templates = get_scene_templates(args.device_file)
     
-    generation_plan = build_generation_plan(household_profile, args.scenario)
+    generation_plan = build_generation_plan(household_profile)
     if not generation_plan:
         logging.warning("No member/scenario generation plan found. Nothing to generate.")
         return
