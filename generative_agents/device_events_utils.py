@@ -1731,7 +1731,7 @@ def generate_scenario_events_from_description_llm(context, run_json_trials_func,
                     devices_info=context['devices_info'],
                     all_scenario_descriptions=all_scenario_descriptions,
                     daily_state_description=context['daily_state_description'],
-                    previous_events=json.dumps(annotated_events, ensure_ascii=False, indent=2),
+                    previous_events=json.dumps([i["event"] for i in annotated_events], ensure_ascii=False, indent=2),
                     allowed_events_info=format_allowed_events_info(primary_events, allowed_events, default_subject),
                 )
                 next_result = run_json_trials_func(
