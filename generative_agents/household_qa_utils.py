@@ -46,12 +46,16 @@ HOUSEHOLD_QA_PROMPT = """
   - adversarial：对抗性问题，问题看似相关，但上下文不存在足够信息，必须不回答。
 - 除 open-domain 可使用常识外，问题必须只能根据给定证据回答。
 - open-domain 的 evidence_turn_ids 和 source_fact_ids 仍要标出触发该常识问题的对话证据。
-- adversarial 的答案必须是“无法从对话中确定”，且 evidence_turn_ids 和 source_fact_ids 为空数组。
+- adversarial 的答案必须是"无法从对话中确定"，且 evidence_turn_ids 和 source_fact_ids 为空数组。
+- **【重要】question 禁止包含原文对话**：不要复制证据材料中的对话原文，应该用转述的方式表达问题。例如：
+  - ✗ 错误：""爸爸：我们可以去公园。"" 不要这样写
+  - ✓ 正确："爸爸是否提到了周末去公园的计划？"
+- **【重要】question 中不要使用原文对话片段**：如果需要表达对话内容，必须完全转述，不能出现"说""提到""表示""指出"等后面直接跟对话原文的情况。
 - 不要使用今天、昨天、明天等相对时间，要使用具体日期或会话时间。
 - question 必须客观、自包含，不能依赖读者查看上一条问题或上下文标题才能理解。
 - question 必须显式写出相关人物姓名；涉及会话或事件时必须写出具体时间、地点或生活场景，不要写会话编号、事件编号、turn 编号、fact 编号等内部编号。
 - question 中不要使用指代词、模糊指代或内部编号指代，包括但不限于：他、她、他们、她们、这个、那个、这些、那些、这次、那次、上述、前面、当前用户、该成员、该事件、该会话、会话S1、事件E1。
-- question 不要写成“谁”“哪位成员”这类需要从指代中反推对象的问题；如果询问成员列表，要明确限定日期、地点或生活场景和已知相关人物。
+- question 不要写成"谁""哪位成员"这类需要从指代中反推对象的问题；如果询问成员列表，要明确限定日期、地点或生活场景和已知相关人物。
 - 必须严格生成 qa_plan 指定的 category。
 - 必须严格使用 qa_plan 指定或允许的 memory_dimension。
 - 不要生成重复问题。
@@ -336,6 +340,16 @@ def sanitize_question(question):
     ]
     for pattern, replacement in replacements:
         question = re.sub(pattern, replacement, question, flags=re.IGNORECASE)
+    # 去除问题中残留的引号包裹的对话原文（包括中英文引号）
+    question = re.sub(r"[\u201C\u201D][^\u201C\u201D]*[\u201C\u201D]", "", question)
+    question = re.sub(r'"[^"]*"', "", question)
+    # 去除"speaker: text"或"speaker：text"格式的对话残留（保留到句末标点）
+    question = re.sub(r"[\u4e00-\u9fa5A-Za-z]+\s*[：:]\s*[^\u4e00-\u9fa5A-Za-z]*[\u4e00-\u9fa5A-Za-z]+[？?。！!]", "", question)
+    # 去除括号内的对话引用（包含"对话"或"说"的括号内容）
+    question = re.sub(r"（[^）]*对话[^）]*）", "", question)
+    question = re.sub(r"（[^）]*说[^）]*）", "", question)
+    # 去除冒号后的对话引用片段（清理后只剩冒号的情况）
+    question = re.sub(r"[：:]\s*[。！？!?,，；;]", "。", question)
     question = re.sub(r"\s+", " ", question)
     question = re.sub(r"（\s*）", "", question)
     question = re.sub(r"\(\s*\)", "", question)
