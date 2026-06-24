@@ -1801,6 +1801,32 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
     )
 
 
+def generate_split_annotated_event_with_retries(context, run_json_trials_func, previous_events, max_retries=3):
+    """
+    对单个 annotated_event 的分步生成做局部重试。
+    返回 None 表示模型明确判断当前情景结束；抛错才触发重试。
+    """
+    last_error = None
+    for attempt in range(max_retries):
+        try:
+            return generate_split_annotated_event_llm(
+                context,
+                run_json_trials_func,
+                previous_events,
+            )
+        except Exception as e:
+            last_error = e
+            logging.warning(
+                "Split annotated_event generation attempt %s/%s failed for %s/%s: %s",
+                attempt + 1,
+                max_retries,
+                context.get('scenario'),
+                context.get('episode_date'),
+                e,
+            )
+    raise last_error
+
+
 def generate_scenario_events_from_description_llm(context, run_json_trials_func, max_retries=3):
     scenario = context['scenario']
     episode_date = context['episode_date']
@@ -1821,10 +1847,11 @@ def generate_scenario_events_from_description_llm(context, run_json_trials_func,
         annotated_events = []
         try:
             for _ in range(max_events):
-                annotated_event = generate_split_annotated_event_llm(
+                annotated_event = generate_split_annotated_event_with_retries(
                     context,
                     run_json_trials_func,
                     annotated_events,
+                    max_retries=3,
                 )
                 if not annotated_event:
                     break
