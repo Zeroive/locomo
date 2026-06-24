@@ -1487,6 +1487,7 @@ def validate_llm_event_item_result(result, candidate_event, default_subject, per
             raise ValueError(f"state_snapshot missing {key}")
     validate_person_states(snapshot, person_ids)
     validate_device_states(snapshot)
+    validate_space_occupancy(snapshot)
 
     current_timestamp = datetime.fromisoformat(snapshot['timestamp'].replace('+08:00', ''))
     if previous_events:
@@ -1547,6 +1548,15 @@ def validate_device_states(snapshot):
             )
 
 
+def validate_space_occupancy(snapshot):
+    occupancy = snapshot.get('space_occupancy')
+    if not isinstance(occupancy, dict):
+        raise ValueError("state_snapshot.space_occupancy must be a dict")
+    for room_id, occupants in occupancy.items():
+        if not isinstance(occupants, list):
+            raise ValueError(f"space_occupancy.{room_id} must be a list, got {type(occupants)}")
+
+
 def build_space_occupancy_from_persons(persons):
     """
     根据 persons 的 location 推导 space_occupancy。
@@ -1558,6 +1568,11 @@ def build_space_occupancy_from_persons(persons):
         occupancy.setdefault(location, [])
         occupancy[location].append(person_id)
     return occupancy
+
+
+def refresh_space_occupancy_from_persons(state):
+    state['space_occupancy'] = build_space_occupancy_from_persons(state.get('persons', {}))
+    return state
 
 
 def get_annotated_event_key(annotated_event):
@@ -1808,6 +1823,7 @@ def generate_split_annotated_event_with_retries(context, run_json_trials_func, p
     """
     last_error = None
     for attempt in range(max_retries):
+        previous_events_backup = copy.deepcopy(previous_events)
         try:
             return generate_split_annotated_event_llm(
                 context,
@@ -1815,6 +1831,7 @@ def generate_split_annotated_event_with_retries(context, run_json_trials_func, p
                 previous_events,
             )
         except Exception as e:
+            previous_events[:] = previous_events_backup
             last_error = e
             logging.warning(
                 "Split annotated_event generation attempt %s/%s failed for %s/%s: %s",
@@ -2227,6 +2244,7 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
             raise ValueError(f"Event {i} missing space_occupancy in state_snapshot")
         validate_person_states(snapshot, person_ids)
         validate_device_states(snapshot)
+        validate_space_occupancy(snapshot)
         
         # 验证时间戳格式和递增性
         try:
@@ -2788,7 +2806,7 @@ def initialize_state(person_ids):
     return {
         "persons": persons,
         "devices": devices,
-        "space_occupancy": {"entrance": 0, "living_room": 1, "bedroom": 1, "study": 1, "kitchen": 1, "bathroom": 0}
+        "space_occupancy": build_space_occupancy_from_persons(persons)
     }
 
 
@@ -2805,12 +2823,11 @@ def select_contextual_related_events(template, current_state):
     living_room_occupied = random.random() < 0.35
     bedroom_occupied = random.random() < 0.25
     if '上班离家' in scenario_name:
-        current_state['space_occupancy']['living_room'] = 1 if living_room_occupied else 0
-        current_state['space_occupancy']['bedroom'] = 1 if bedroom_occupied else 0
         if not living_room_occupied and 'grandpa' in current_state['persons']:
             current_state['persons']['grandpa'] = {"status": "resting", "location": "bedroom"}
         if living_room_occupied and 'grandpa' in current_state['persons']:
             current_state['persons']['grandpa'] = {"status": "watching_tv", "location": "living_room"}
+        refresh_space_occupancy_from_persons(current_state)
 
     for event in related_events:
         event_type = event.get('event_type', '')
@@ -2881,19 +2898,20 @@ def prepare_state_for_primary_event(current_state, event_data, default_subject):
             state['persons'][subject_id] = {"status": "arriving", "location": "entrance"}
         if object_id in state['devices']:
             state['devices'][object_id] = {"state": "closed" if object_id == "door_main" else state['devices'][object_id].get('state', 'idle')}
-        state['space_occupancy']['entrance'] = max(1, state['space_occupancy'].get('entrance', 0))
+        refresh_space_occupancy_from_persons(state)
     elif event_type == 'arm_away_mode':
         for person_id in state['persons']:
             state['persons'][person_id] = {"status": "outside", "location": "outside"}
         if object_id in state['devices']:
             state['devices'][object_id] = {"state": "armed"}
-        state['space_occupancy'] = {space: 0 for space in state['space_occupancy']}
+        refresh_space_occupancy_from_persons(state)
     elif event_type == 'anomaly_detected' and object_id in state['devices']:
         state['devices'][object_id] = {"state": "detected"}
     elif event_type == 'lock_main_door' and object_id in state['devices']:
         state['devices'][object_id] = {"state": "closed"}
         if 'dad' in state['persons']:
             state['persons']['dad'] = {"status": "left_home", "location": "outside"}
+        refresh_space_occupancy_from_persons(state)
     elif event_data.get('predicate') == 'deactivated' and object_id in state['devices']:
         state['devices'][object_id] = {"state": "on"}
     elif event_data.get('predicate') == 'activated' and object_id in state['devices']:
@@ -2996,11 +3014,7 @@ def apply_event_to_state(current_state, event_data):
         elif predicate == 'recording':
             device['state'] = 'recording'
     
-    # 更新空间占用
-    if event_type in {'enter_home', 'return_home', 'visitor_arrival'}:
-        new_state['space_occupancy']['entrance'] += 1
-    elif event_type == 'leave_home':
-        new_state['space_occupancy']['entrance'] -= 1
+    refresh_space_occupancy_from_persons(new_state)
     
     return new_state
 
