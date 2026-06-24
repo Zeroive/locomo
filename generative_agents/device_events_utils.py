@@ -746,7 +746,7 @@ LLM_EVENT_TIMESTAMP_PROMPT = """你是一个智能家居系统分析师。请只
 ## 重要约束
 - timestamp 使用 ISO8601 格式
 - 第一条事件应从情景发生时间之后开始
-- 如果已有事件，timestamp 必须晚于上一条事件
+- 如果已有事件，timestamp 必须晚于最后一条annotated_events的timestamp
 
 请生成 timestamp："""
 
