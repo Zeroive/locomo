@@ -1694,7 +1694,7 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
     primary_events = context['primary_events']
     available_devices = context['available_devices']
     all_scenario_descriptions = context.get('all_scenario_descriptions') or "无"
-    previous_events_json = json.dumps(previous_events, ensure_ascii=False, indent=2)
+    previous_events_json = json.dumps([i["event"] for i in previous_events], ensure_ascii=False, indent=2)
 
     event_prompt = LLM_NEXT_EVENT_ONLY_PROMPT.format(
         scenario=scenario,
