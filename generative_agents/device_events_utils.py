@@ -1635,7 +1635,7 @@ def validate_llm_timestamp_result(result, previous_events):
 def validate_llm_persons_result(result, person_ids):
     if not isinstance(result, dict):
         raise ValueError(f"Persons result must be a dict, got {type(result)}")
-    persons = result
+    persons = result.get('persons')
     snapshot = {'persons': persons}
     validate_person_states(snapshot, person_ids)
     missing = set(person_ids) - set(persons.keys())
