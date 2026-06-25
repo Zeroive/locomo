@@ -667,11 +667,15 @@ def build_event_scenario_sequence(profile, num_events):
     for scenario in required:
         if scenario_is_applicable(profile, scenario):
             sequence.append(scenario)
-    for scenario in candidates:
-        if scenario not in sequence:
-            sequence.append(scenario)
+    remaining_slots = max(0, num_events - len(sequence))
+    remaining_candidates = [scenario for scenario in candidates if scenario not in sequence]
+    if remaining_slots:
+        if len(remaining_candidates) >= remaining_slots:
+            sequence.extend(random.sample(remaining_candidates, remaining_slots))
+        else:
+            sequence.extend(remaining_candidates)
     while len(sequence) < num_events:
-        sequence.append(random.choice(candidates or ["weekend_home_relaxation"]))
+        sequence.append(random.choice(remaining_candidates or candidates or ["weekend_home_relaxation"]))
     # Keep changed_weekend_plan after at least one event so it can refer backward.
     if "changed_weekend_plan" in sequence and sequence.index("changed_weekend_plan") == 0 and len(sequence) > 1:
         sequence[0], sequence[1] = sequence[1], sequence[0]
