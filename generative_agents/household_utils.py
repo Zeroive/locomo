@@ -293,10 +293,14 @@ def name_for_role(role, gender, used_names, surname=None):
     return name
 
 
-def build_member(idx, role, persona_prompts, used_names, surname=None):
+def opposite_gender(gender):
+    return "female" if gender == "male" else "male"
+
+
+def build_member(idx, role, persona_prompts, used_names, surname=None, gender_override=None):
     min_age, max_age = ROLE_AGE_RANGES[role]
     age = random.randint(min_age, max_age)
-    gender = gender_for_role(role)
+    gender = gender_override or gender_for_role(role)
     name = name_for_role(role, gender, used_names, surname=surname)
     msc_prompt = random.choice(persona_prompts) if persona_prompts else []
     traits = infer_traits(msc_prompt)
@@ -440,6 +444,7 @@ def build_role_responsibilities(members, pets):
 def validate_household(profile):
     members = profile.get("members", [])
     member_ids = {m["person_id"] for m in members}
+    members_by_id = {m["person_id"]: m for m in members}
     errors = []
 
     connected = set()
@@ -461,6 +466,11 @@ def validate_household(profile):
         expected_reverse = reverse_map.get(rel["type"])
         if expected_reverse and (rel["to"], rel["from"], expected_reverse) not in relation_keys:
             errors.append(f"Missing reverse relation for {rel}")
+        if rel["type"] == "SPOUSE_OF" and rel["from"] in members_by_id and rel["to"] in members_by_id:
+            from_gender = members_by_id[rel["from"]].get("gender")
+            to_gender = members_by_id[rel["to"]].get("gender")
+            if from_gender and to_gender and from_gender == to_gender:
+                errors.append(f"Spouses cannot have the same gender: {rel}")
 
     isolated = member_ids - connected
     if isolated:
@@ -623,10 +633,16 @@ def sample_household_profile(household_type, persona_source, family_id="family_0
     surnames = build_surname_plan(roles)
     persona_prompts = load_persona_source(persona_source)
     used_names = set()
-    members = [
-        build_member(i + 1, role, persona_prompts, used_names, surname=surnames[i])
-        for i, role in enumerate(roles)
-    ]
+    members = []
+    spouse_gender = None
+    for i, role in enumerate(roles):
+        gender_override = None
+        if role == "spouse" and spouse_gender is not None:
+            gender_override = opposite_gender(spouse_gender)
+        member = build_member(i + 1, role, persona_prompts, used_names, surname=surnames[i], gender_override=gender_override)
+        if role == "spouse" and spouse_gender is None:
+            spouse_gender = "male" if member["gender"] == "男" else "female"
+        members.append(member)
     relations = build_relations(members)
     pets = build_pets(household_type, with_pet, members)
     responsibilities = build_role_responsibilities(members, pets)
