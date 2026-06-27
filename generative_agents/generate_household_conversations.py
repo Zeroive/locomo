@@ -19,6 +19,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from generative_agents.household_event_utils import (
+    DEPENDENT_SCENARIOS,
+    SCENARIOS,
     generate_household_events,
     get_household_session_date,
     get_relevant_household_events,
@@ -47,6 +49,21 @@ logging.basicConfig(level=logging.INFO)
 DEFAULT_PERSONA_SOURCE = str(Path(__file__).parent.parent / "data" / "msc_speakers_single.json")
 
 
+def parse_dependent_scenarios(value):
+    if value is None:
+        return None
+    scenarios = [item.strip() for item in value.split(",") if item.strip()]
+    unknown = [scenario for scenario in scenarios if scenario not in SCENARIOS]
+    if unknown:
+        raise argparse.ArgumentTypeError(
+            "Unknown dependent scenario(s): "
+            + ", ".join(unknown)
+            + ". Valid scenarios: "
+            + ", ".join(SCENARIOS)
+        )
+    return scenarios
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True, type=str)
@@ -58,6 +75,15 @@ def parse_args():
     parser.add_argument("--num-events", type=int, default=10)
     parser.add_argument("--num-days", type=int, default=60)
     parser.add_argument("--num-events-per-session", type=int, default=2)
+    parser.add_argument(
+        "--dependent-scenarios",
+        type=parse_dependent_scenarios,
+        default=None,
+        help=(
+            "Comma-separated scenario names to force into event generation when num_events >= 2. "
+            f"Default: {','.join(DEPENDENT_SCENARIOS)}. Pass an empty string to disable forced scenarios."
+        ),
+    )
     parser.add_argument("--max-turns-per-session", type=int, default=8)
     parser.add_argument("--with-pet", "--with-pets", dest="with_pet", action="store_true")
     parser.add_argument("--persona", action="store_true")
@@ -164,10 +190,11 @@ def generate_events_step(args, profile):
         logging.info("Household events already exist, skipping events step")
         return profile
     logging.info(
-        "Starting events step: num_events=%s, num_days=%s, use_llm=%s",
+        "Starting events step: num_events=%s, num_days=%s, use_llm=%s, dependent_scenarios=%s",
         args.num_events,
         args.num_days,
         not args.no_llm,
+        DEPENDENT_SCENARIOS if args.dependent_scenarios is None else args.dependent_scenarios,
     )
 
     def autosave_event(profile_data, event):
@@ -180,6 +207,7 @@ def generate_events_step(args, profile):
         num_days=args.num_days,
         use_llm=not args.no_llm,
         on_event_generated=autosave_event,
+        dependent_scenarios=args.dependent_scenarios,
     )
     save_profile(profile, args.out_dir)
     logging.info("Generated %s household events", len(profile.get("graph", [])))

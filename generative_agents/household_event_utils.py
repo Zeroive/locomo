@@ -45,6 +45,13 @@ SCENARIOS = [
     "changed_weekend_plan",
     
     # 家庭属性 - 成员构成
+    "family_relationship_confirmation",
+    "family_member_presence_update",
+    "kinship_relation_reasoning",
+    "family_nickname_reference",
+    "family_interaction_pattern",
+    "caregiving_responsibility_update",
+    "recurring_family_event",
     "member_birthday_celebration",
     "family_member_health_event",
     "pet_adoption",
@@ -81,6 +88,14 @@ SCENARIOS = [
     "laundry_reminder",
     "grocery_shopping",
     # 生活作息 - 家庭娱乐
+    "leisure_activity_preference",
+    "leisure_time_preference",
+    "member_personal_leisure_preference",
+    "group_leisure_preference",
+    "leisure_comfort_constraint",
+    "leisure_dining_budget_preference",
+    "leisure_preference_change",
+    "leisure_conflict_compromise",
     "movie_night_planning",
     "game_activity_arrangement",
     "holiday_celebration",
@@ -118,6 +133,13 @@ SCENARIO_LABELS = {
     "changed_weekend_plan": "周末计划变更",
     
     # 家庭属性 - 成员构成
+    "family_relationship_confirmation": "家庭关系确认",
+    "family_member_presence_update": "家庭成员出现/居住状态变化",
+    "kinship_relation_reasoning": "亲属关系推理",
+    "family_nickname_reference": "家庭称谓/昵称指代",
+    "family_interaction_pattern": "家庭亲疏互动模式",
+    "caregiving_responsibility_update": "照顾责任分工",
+    "recurring_family_event": "固定家庭事件",
     "member_birthday_celebration": "家庭成员生日庆祝",
     "family_member_health_event": "家庭成员健康事件",
     "pet_adoption": "宠物领养/添置",
@@ -163,6 +185,14 @@ SCENARIO_LABELS = {
     "grocery_shopping": "采购/买菜",
     
     # 生活作息 - 家庭娱乐
+    "leisure_activity_preference": "休闲活动类型偏好",
+    "leisure_time_preference": "休闲时间偏好",
+    "member_personal_leisure_preference": "成员个人休闲偏好",
+    "group_leisure_preference": "家庭组合休闲偏好",
+    "leisure_comfort_constraint": "休闲舒适度约束",
+    "leisure_dining_budget_preference": "休闲餐饮/消费偏好",
+    "leisure_preference_change": "休闲偏好变化",
+    "leisure_conflict_compromise": "休闲偏好冲突与折中",
     "movie_night_planning": "家庭电影夜",
     "game_activity_arrangement": "家庭游戏活动",
     "holiday_celebration": "节日庆祝活动",
@@ -170,6 +200,7 @@ SCENARIO_LABELS = {
 
 # 需要至少2个事件才能触发的依赖场景
 DEPENDENT_SCENARIOS = [
+    "family_relationship_confirmation",
     "member_birthday_celebration", 
     "movie_night_planning", 
 ]
@@ -191,8 +222,12 @@ MEMORY_DIMENSIONS_BY_CATEGORY = {
         "family_composition",      # 家庭人口
         "member_count",            # 成员数量
         "member_info",             # 成员基本信息（姓名、年龄、性别）
+        "residence_status",        # 居住/临时到访状态
         "pet_info",                # 宠物信息
         "family_relationship",     # 家庭关系
+        "kinship_reasoning",       # 亲属关系推理
+        "nickname_reference",      # 昵称/称谓/指代
+        "interaction_pattern",     # 亲疏互动模式
     ],
     "居住房屋类型": [
         "home_property",           # 房屋属性（面积、户型）
@@ -218,7 +253,15 @@ MEMORY_DIMENSIONS_BY_CATEGORY = {
     ],
     "周末和休闲作息": [
         "weekend_plan",            # 周末计划
+        "weekend_routine",         # 周末习惯
         "leisure_activity",        # 休闲活动
+        "activity_preference",     # 活动类型偏好
+        "leisure_time_preference", # 休闲时间偏好
+        "personal_preference",     # 成员个人偏好
+        "group_preference",        # 家庭组合偏好
+        "comfort_constraint",      # 活动强度/舒适度约束
+        "preference_change",       # 偏好变化
+        "compromise_plan",         # 折中方案
         "family_outing",           # 家庭外出
         "rest_schedule",           # 休息安排
     ],
@@ -269,6 +312,7 @@ CROSS_DIMENSION_TAGS = {
     "role_responsibility",     # 角色责任
     "temporary_schedule",      # 临时安排
     "preference_conflict",     # 偏好冲突
+    "preference_priority",     # 偏好优先级
     "special_occasion",        # 特殊场合
     "health_status",           # 健康状况
     "care_arrangement",        # 照护安排
@@ -328,6 +372,41 @@ SCENARIO_DIMENSIONS = {
     ],
     
     # ==================== 家庭属性 - 家庭成员构成 ====================
+    "family_relationship_confirmation": [
+        "member_info",            # 成员信息
+        "family_relationship",    # 家庭关系（亲子/夫妻/祖孙等）
+        "cross_member_reference", # 跨成员引用（谁是谁的亲属）
+    ],
+    "family_member_presence_update": [
+        "family_composition",     # 家庭成员构成
+        "residence_status",       # 居住/临时到访状态
+        "temporary_schedule",     # 临时安排（回来/到访时间）
+    ],
+    "kinship_relation_reasoning": [
+        "family_relationship",    # 家庭关系
+        "kinship_reasoning",      # 亲属关系推理
+        "cross_member_reference", # 跨成员引用（爸爸的弟弟等）
+    ],
+    "family_nickname_reference": [
+        "member_info",            # 成员信息
+        "nickname_reference",     # 昵称/称谓/指代
+        "cross_member_reference", # 跨成员引用
+    ],
+    "family_interaction_pattern": [
+        "family_relationship",    # 家庭关系
+        "interaction_pattern",    # 亲疏互动模式
+        "preference_conflict",    # 沟通/偏好冲突
+    ],
+    "caregiving_responsibility_update": [
+        "family_relationship",    # 家庭关系
+        "role_responsibility",    # 角色责任
+        "care_arrangement",       # 照护安排
+    ],
+    "recurring_family_event": [
+        "family_composition",     # 家庭成员构成
+        "special_occasion",       # 固定家庭事件/特殊日期
+        "temporary_schedule",     # 时间安排
+    ],
     "member_birthday_celebration": [
         "member_info",            # 成员信息（生日对象）
         "family_relationship",    # 家庭关系
@@ -481,6 +560,46 @@ SCENARIO_DIMENSIONS = {
     ],
     
     # ==================== 生活作息 - 家庭娱乐活动 ====================
+    "leisure_activity_preference": [
+        "weekend_routine",        # 周末习惯
+        "activity_preference",    # 活动类型偏好
+        "leisure_activity",       # 休闲活动
+    ],
+    "leisure_time_preference": [
+        "weekend_routine",        # 周末习惯
+        "leisure_time_preference",# 活动时段/时长偏好
+        "rest_schedule",          # 休息缓冲
+    ],
+    "member_personal_leisure_preference": [
+        "personal_preference",    # 成员个人偏好
+        "leisure_activity",       # 休闲活动
+        "cross_member_reference", # 跨成员引用
+    ],
+    "group_leisure_preference": [
+        "group_preference",       # 家庭组合偏好
+        "family_entertainment",   # 家庭娱乐
+        "family_relationship",    # 家庭关系（组合关系）
+    ],
+    "leisure_comfort_constraint": [
+        "comfort_constraint",     # 强度/距离/噪声/天气约束
+        "leisure_activity",       # 休闲活动
+        "health_status",          # 身体或舒适度状态
+    ],
+    "leisure_dining_budget_preference": [
+        "dietary_preference",     # 餐饮偏好
+        "expense_plan",           # 消费预算
+        "leisure_activity",       # 休闲活动
+    ],
+    "leisure_preference_change": [
+        "preference_change",      # 偏好变化
+        "temporary_schedule",     # 短期状态/最近变化
+        "leisure_activity",       # 休闲活动
+    ],
+    "leisure_conflict_compromise": [
+        "preference_conflict",    # 偏好冲突
+        "preference_priority",    # 优先级
+        "compromise_plan",        # 折中方案
+    ],
     "movie_night_planning": [
         "movie_night",            # 电影夜
         "family_entertainment",   # 家庭娱乐
@@ -513,6 +632,13 @@ SCENARIO_GUIDANCE = {
     "changed_weekend_plan": "已有安排发生变更，必须引用或承接一个更早事件。",
     
     # 家庭属性 - 成员构成
+    "family_relationship_confirmation": "家庭关系确认，重点是明确成员之间的亲属称谓或监护关系，例如谁是谁的爸爸、妈妈、孩子或祖父母。",
+    "family_member_presence_update": "家庭成员出现或居住状态变化，重点是谁平时是否同住、这周末谁会回来或临时到访。",
+    "kinship_relation_reasoning": "亲属关系推理，重点是通过多跳关系表达称谓，例如爸爸的弟弟、妈妈的妈妈、孩子的外婆等。",
+    "family_nickname_reference": "家庭称谓、昵称或代词指代，重点是某个成员的小名、惯用称呼，或“她/孩子/老二”指向谁。",
+    "family_interaction_pattern": "家庭亲疏与互动模式，重点是谁和谁更亲近、容易冲突、沟通需要委婉，及其对安排的影响。",
+    "caregiving_responsibility_update": "照顾责任或家务分工，重点是谁负责照顾谁、接送谁、提醒谁或承担某项家庭任务。",
+    "recurring_family_event": "固定家庭事件或特殊日期，重点是每周固定活动、生日/纪念日/探亲等长期和短期时间记忆。",
     "member_birthday_celebration": "家庭成员生日或纪念日庆祝，重点是庆祝准备、礼物选择或家庭聚餐安排。",
     "family_member_health_event": "家庭成员健康问题或医疗事件，重点是看医生、用药提醒或照护安排。",
     "pet_adoption": "宠物领养或新宠物到来，重点是新宠物适应、家庭成员反应或宠物用品准备。",
@@ -558,6 +684,14 @@ SCENARIO_GUIDANCE = {
     "grocery_shopping": "采购或买菜，重点是购物清单、库存检查或预算控制。",
     
     # 生活作息 - 家庭娱乐
+    "leisure_activity_preference": "休闲活动类型偏好，重点是室内、户外、社交、文化娱乐或亲子活动中成员更喜欢哪类。",
+    "leisure_time_preference": "休闲时间偏好，重点是周末节奏、活动时段、活动时长、固定空闲时间和休息缓冲。",
+    "member_personal_leisure_preference": "成员个人休闲偏好，重点是用户、父母、孩子、老人或宠物相关的个性化活动偏好。",
+    "group_leisure_preference": "家庭组合休闲偏好，重点是全家、父母二人、兄弟姐妹、亲子、祖孙等组合的共同偏好。",
+    "leisure_comfort_constraint": "休闲舒适度约束，重点是体力强度、人群密度、距离、天气、噪声或健康限制。",
+    "leisure_dining_budget_preference": "休闲餐饮和消费偏好，重点是吃什么、忌口、预算、外食/在家、甜品饮品等。",
+    "leisure_preference_change": "休闲偏好变化，重点是长期偏好、近期新偏好、临时状态、季节性偏好或旧偏好被更新。",
+    "leisure_conflict_compromise": "休闲偏好冲突与折中，重点是成员偏好冲突、优先级、轮流机制、避免项和可兼顾的折中方案。",
     "movie_night_planning": "家庭电影夜，重点是影片选择、零食准备或时间安排。",
     "game_activity_arrangement": "家庭游戏活动，重点是游戏选择、参与人员或竞技规则。",
     "holiday_celebration": "节日庆祝活动，重点是节日装饰、礼物准备或节日传统活动。",
@@ -627,12 +761,30 @@ def members_by_stage(profile, stages):
     return [member for member in profile["members"] if member.get("life_stage") in stages]
 
 
+def parent_child_relation_pairs(profile):
+    member_ids = {member["person_id"] for member in profile.get("members", [])}
+    return [
+        (rel["from"], rel["to"])
+        for rel in profile.get("relations", [])
+        if (
+            rel.get("type") == "PARENT_OF"
+            and rel.get("from") in member_ids
+            and rel.get("to") in member_ids
+        )
+    ]
+
+
 def choose_participants(profile, scenario_type):
     adults = members_by_stage(profile, {"adult"})
     elders = members_by_stage(profile, {"elderly"})
     children = members_by_stage(profile, {"child", "teenager"})
     members = profile["members"]
 
+    if scenario_type in {"family_relationship_confirmation", "kinship_relation_reasoning"}:
+        relation_pairs = parent_child_relation_pairs(profile)
+        if relation_pairs:
+            parent_id, child_id = random.choice(relation_pairs)
+            return [parent_id, child_id]
     if scenario_type == "child_weekend_activity" and children:
         return [random.choice(children)["person_id"]] + [random.choice(adults or members)["person_id"]]
     if scenario_type == "elderly_weekend_activity" and elders:
@@ -649,6 +801,8 @@ def choose_participants(profile, scenario_type):
 
 
 def scenario_is_applicable(profile, scenario_type):
+    if scenario_type in {"family_relationship_confirmation", "kinship_relation_reasoning"}:
+        return bool(parent_child_relation_pairs(profile))
     if scenario_type == "child_weekend_activity":
         return bool(members_by_stage(profile, {"child", "teenager"}))
     if scenario_type == "elderly_weekend_activity":
@@ -660,8 +814,10 @@ def scenario_is_applicable(profile, scenario_type):
     return True
 
 
-def build_event_scenario_sequence(profile, num_events):
-    required = DEPENDENT_SCENARIOS if num_events >= 2 else []
+def build_event_scenario_sequence(profile, num_events, dependent_scenarios=None):
+    if dependent_scenarios is None:
+        dependent_scenarios = DEPENDENT_SCENARIOS
+    required = dependent_scenarios if num_events >= 2 else []
     candidates = [scenario for scenario in SCENARIOS if scenario_is_applicable(profile, scenario)]
     sequence = []
     for scenario in required:
@@ -837,6 +993,21 @@ def render_event(profile, scenario_type, participants):
     secondary = names[1] if len(names) > 1 else "其他家人"
 
     templates = {
+        "family_relationship_confirmation": f"{primary}和{secondary}确认家庭称谓和监护关系，方便之后准确提醒谁是谁的爸爸、妈妈或孩子。",
+        "family_member_presence_update": f"{primary}提到{secondary}这个周末会回家或来住几天，需要把家里临时多出的成员记下来。",
+        "kinship_relation_reasoning": f"{primary}向助手确认{secondary}和其他家人的亲属称谓，后续可以回答谁是谁的爸爸、妈妈或长辈。",
+        "family_nickname_reference": f"{primary}说明家里常用昵称或称呼习惯，例如{secondary}的小名，之后用昵称也能指到同一个人。",
+        "family_interaction_pattern": f"{primary}提醒安排活动时要考虑{secondary}的沟通习惯和亲疏关系，避免触发家庭成员间的小冲突。",
+        "caregiving_responsibility_update": f"{primary}和{secondary}重新确认照顾或家务分工，明确谁负责接送、提醒或照看家人。",
+        "recurring_family_event": f"{'、'.join(names)}确认一个固定家庭活动或特殊日期，之后提醒时要结合每周或纪念日安排。",
+        "leisure_activity_preference": f"{'、'.join(names)}讨论周末更喜欢室内、户外、社交或亲子活动，形成家庭休闲偏好记忆。",
+        "leisure_time_preference": f"{primary}说明周末活动更适合安排在某个时段，{secondary}也需要保留休息缓冲。",
+        "member_personal_leisure_preference": f"{primary}提到自己或{secondary}的个人休闲偏好，之后推荐周末活动时要个性化考虑。",
+        "group_leisure_preference": f"{'、'.join(names)}讨论不同成员组合适合的活动，例如全家、亲子或祖孙一起做什么更合适。",
+        "leisure_comfort_constraint": f"{primary}提醒周末活动要考虑{secondary}的体力、距离、天气、人群或噪声限制。",
+        "leisure_dining_budget_preference": f"{'、'.join(names)}讨论周末休闲时吃什么和花多少钱，包含餐饮口味、忌口或预算偏好。",
+        "leisure_preference_change": f"{primary}说明最近休闲偏好发生变化，过去喜欢的活动这段时间可能不再优先。",
+        "leisure_conflict_compromise": f"{'、'.join(names)}的休闲偏好不完全一致，需要按优先级或轮流机制找到折中方案。",
         "weekend_family_outing": f"{'、'.join(names)}计划周末上午一起去公园或商场，出门前需要确认天气和交通。",
         "weekend_home_relaxation": f"{primary}提议周末在家休息，{secondary}想安排电影、整理房间或简单运动。",
         "family_meal_plan": f"{'、'.join(names)}讨论周末家庭聚餐，决定提前准备食材或选择外卖。",
@@ -848,16 +1019,19 @@ def render_event(profile, scenario_type, participants):
         "conflicting_plans": f"{'、'.join(names)}的周末安排出现冲突，有人想外出，有人更想在家休息。",
         "changed_weekend_plan": f"{primary}临时改变周末计划，{secondary}需要重新调整家庭活动和提醒事项。",
     }
-    return templates[scenario_type]
+    return templates.get(
+        scenario_type,
+        f"{'、'.join(names) or '家人'}围绕{SCENARIO_LABELS.get(scenario_type, scenario_type)}进行安排，需要确认参与人员、时间和具体事项。",
+    )
 
 
-def generate_template_household_events(profile, num_events, num_days=60, start_date=None):
+def generate_template_household_events(profile, num_events, num_days=60, start_date=None, dependent_scenarios=None):
     if start_date is None:
         start_date = get_random_date()
     end_date = start_date + timedelta(days=num_days)
 
     graph = []
-    selected_scenarios = build_event_scenario_sequence(profile, num_events)
+    selected_scenarios = build_event_scenario_sequence(profile, num_events, dependent_scenarios=dependent_scenarios)
     for idx, scenario_type in enumerate(selected_scenarios[:num_events], start=1):
         event_plan = build_event_plan(profile, idx, scenario_type, start_date, num_days, num_events, graph)
         graph.append({
@@ -892,6 +1066,7 @@ def generate_template_household_events(profile, num_events, num_days=60, start_d
         "covered": sorted(set(generated_scenarios)),
         "applicable": applicable_scenarios,
         "missing_applicable": [scenario for scenario in applicable_scenarios if scenario not in generated_scenarios],
+        "dependent_scenarios": list(DEPENDENT_SCENARIOS if dependent_scenarios is None else dependent_scenarios),
     }
     return graph
 
@@ -999,23 +1174,24 @@ def validate_event_timeline(graph, profile):
     return True
 
 
-def generate_household_events(profile, num_events, num_days=60, start_date=None, use_llm=True, on_event_generated=None):
+def generate_household_events(profile, num_events, num_days=60, start_date=None, use_llm=True, on_event_generated=None, dependent_scenarios=None):
     if start_date is None:
         start_date = get_random_date()
     end_date = start_date + timedelta(days=num_days)
 
     if not use_llm:
         logging.info("LLM disabled; generating household events with template fallback")
-        return generate_template_household_events(profile, num_events, num_days, start_date)
+        return generate_template_household_events(profile, num_events, num_days, start_date, dependent_scenarios=dependent_scenarios)
 
     from global_methods import run_chatgpt
 
     graph = []
-    scenario_sequence = build_event_scenario_sequence(profile, num_events)
+    scenario_sequence = build_event_scenario_sequence(profile, num_events, dependent_scenarios=dependent_scenarios)
     applicable_scenarios = [scenario for scenario in SCENARIOS if scenario_is_applicable(profile, scenario)]
     profile["events_start_date"] = dateObj2Str(start_date)
     profile["events_end_date"] = dateObj2Str(end_date)
     profile["event_generation_mode"] = "planned_single_event_llm"
+    profile["dependent_scenarios"] = list(DEPENDENT_SCENARIOS if dependent_scenarios is None else dependent_scenarios)
     profile["event_scenario_catalog"] = {
         scenario: {
             "label": SCENARIO_LABELS[scenario],
@@ -1076,6 +1252,7 @@ def generate_household_events(profile, num_events, num_days=60, start_date=None,
         "covered": sorted(set(generated_scenarios)),
         "applicable": applicable_scenarios,
         "missing_applicable": [scenario for scenario in applicable_scenarios if scenario not in generated_scenarios],
+        "dependent_scenarios": list(DEPENDENT_SCENARIOS if dependent_scenarios is None else dependent_scenarios),
     }
     validate_event_timeline(graph, profile)
     return graph
