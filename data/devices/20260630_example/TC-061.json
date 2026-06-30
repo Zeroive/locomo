@@ -1,0 +1,192 @@
+{
+  "TC-061": {
+    "case_id": "TC-061",
+    "dimension_tags": {
+      "turn_count": "4-8轮",
+      "candidate_tool_count": "5-10",
+      "tool_call_mode": "顺序多工具",
+      "validity": "全部有效",
+      "same_device_across_rooms": "不涉及"
+    },
+    "scenario": "看电影",
+    "home_context": {
+      "rooms": [
+        {
+          "room": "客厅",
+          "devices": [
+            {
+              "device_id": "living_room_ceiling_light",
+              "device_type": "ceiling_light",
+              "device_name": "顶灯",
+              "category": "照明类",
+              "initial_state": {
+                "power": false,
+                "brightness": 45,
+                "color_temperature": 3500
+              }
+            },
+            {
+              "device_id": "living_room_speaker",
+              "device_type": "speaker",
+              "device_name": "音箱",
+              "category": "家电类",
+              "initial_state": {
+                "power": false,
+                "volume": 20,
+                "media_state": "stopped"
+              }
+            },
+            {
+              "device_id": "living_room_tv",
+              "device_type": "tv",
+              "device_name": "电视",
+              "category": "家电类",
+              "initial_state": {
+                "power": false,
+                "media_state": "stopped",
+                "volume": 25,
+                "input_source": "hdmi1"
+              }
+            }
+          ]
+        },
+        {
+          "room": "主卧",
+          "devices": [
+            {
+              "device_id": "master_bedroom_night_light",
+              "device_type": "night_light",
+              "device_name": "夜灯",
+              "category": "照明类",
+              "initial_state": {
+                "power": false,
+                "brightness": 15,
+                "motion_detection": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "candidate_tools": [
+      "tv.set_power",
+      "speaker.set_power",
+      "ceiling_light.set_brightness",
+      "scene.activate",
+      "ceiling_light.set_power",
+      "ceiling_light.set_color_temperature",
+      "night_light.set_power",
+      "night_light.set_brightness"
+    ],
+    "dialogue": [
+      {
+        "turn_id": 1,
+        "role": "user",
+        "content": "准备看电影，先打开客厅电视，再打开客厅音箱。"
+      },
+      {
+        "turn_id": 2,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "tv.set_power",
+              "arguments": "{\"room\":\"客厅\",\"tv_id\":\"living_room_tv\",\"power\":true}"
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "speaker.set_power",
+              "arguments": "{\"room\":\"客厅\",\"speaker_id\":\"living_room_speaker\",\"power\":true}"
+            }
+          }
+        ]
+      },
+      {
+        "turn_id": 3,
+        "role": "user",
+        "content": "准备看电影，打开客厅音箱。"
+      },
+      {
+        "turn_id": 4,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "speaker.set_power",
+              "arguments": "{\"room\":\"客厅\",\"speaker_id\":\"living_room_speaker\",\"power\":true}"
+            }
+          }
+        ]
+      },
+      {
+        "turn_id": 5,
+        "role": "user",
+        "content": "准备看电影，把客厅顶灯亮度调到20。"
+      },
+      {
+        "turn_id": 6,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "ceiling_light.set_brightness",
+              "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"brightness\":20}"
+            }
+          }
+        ]
+      },
+      {
+        "turn_id": 7,
+        "role": "user",
+        "content": "准备看电影，把客厅切到观影场景。"
+      },
+      {
+        "turn_id": 8,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "scene.activate",
+              "arguments": "{\"room\":\"客厅\",\"scene_id\":\"movie\",\"room_id\":\"living_room\"}"
+            }
+          }
+        ]
+      },
+      {
+        "turn_id": 9,
+        "role": "user",
+        "content": "准备看电影，打开客厅电视。"
+      },
+      {
+        "turn_id": 10,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "tv.set_power",
+              "arguments": "{\"room\":\"客厅\",\"tv_id\":\"living_room_tv\",\"power\":true}"
+            }
+          }
+        ]
+      }
+    ],
+    "expected_summary": {
+      "requires_clarification": false,
+      "execution_status": "success",
+      "valid_tool_call_count": 6,
+      "invalid_tool_call_count": 0
+    }
+  }
+}

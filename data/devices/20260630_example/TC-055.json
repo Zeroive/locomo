@@ -1,0 +1,201 @@
+{
+  "TC-055": {
+    "case_id": "TC-055",
+    "dimension_tags": {
+      "turn_count": "4-8轮",
+      "candidate_tool_count": "5-10",
+      "tool_call_mode": "单工具",
+      "validity": "全部有效",
+      "same_device_across_rooms": "不涉及"
+    },
+    "scenario": "来客",
+    "home_context": {
+      "rooms": [
+        {
+          "room": "其他",
+          "devices": [
+            {
+              "device_id": "front_door_doorbell",
+              "device_type": "doorbell",
+              "device_name": "门铃",
+              "category": "安防类",
+              "initial_state": {
+                "state": "idle",
+                "battery_level": 78,
+                "volume": 60
+              }
+            }
+          ]
+        },
+        {
+          "room": "客厅",
+          "devices": [
+            {
+              "device_id": "living_room_ceiling_light",
+              "device_type": "ceiling_light",
+              "device_name": "顶灯",
+              "category": "照明类",
+              "initial_state": {
+                "power": false,
+                "brightness": 45,
+                "color_temperature": 3500
+              }
+            },
+            {
+              "device_id": "living_room_speaker",
+              "device_type": "speaker",
+              "device_name": "音箱",
+              "category": "家电类",
+              "initial_state": {
+                "power": false,
+                "volume": 20,
+                "media_state": "stopped"
+              }
+            },
+            {
+              "device_id": "living_room_tv",
+              "device_type": "tv",
+              "device_name": "电视",
+              "category": "家电类",
+              "initial_state": {
+                "power": false,
+                "media_state": "stopped",
+                "volume": 25,
+                "input_source": "hdmi1"
+              }
+            }
+          ]
+        },
+        {
+          "room": "主卧",
+          "devices": [
+            {
+              "device_id": "master_bedroom_night_light",
+              "device_type": "night_light",
+              "device_name": "夜灯",
+              "category": "照明类",
+              "initial_state": {
+                "power": false,
+                "brightness": 15,
+                "motion_detection": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "candidate_tools": [
+      "ceiling_light.set_power",
+      "tv.set_power",
+      "doorbell.play_chime",
+      "speaker.set_volume",
+      "ceiling_light.set_brightness",
+      "ceiling_light.set_color_temperature",
+      "night_light.set_power",
+      "night_light.set_brightness"
+    ],
+    "dialogue": [
+      {
+        "turn_id": 1,
+        "role": "user",
+        "content": "客人快到了，打开客厅顶灯。"
+      },
+      {
+        "turn_id": 2,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "ceiling_light.set_power",
+              "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
+            }
+          }
+        ]
+      },
+      {
+        "turn_id": 3,
+        "role": "user",
+        "content": "客人快到了，打开客厅电视。"
+      },
+      {
+        "turn_id": 4,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "tv.set_power",
+              "arguments": "{\"room\":\"客厅\",\"tv_id\":\"living_room_tv\",\"power\":true}"
+            }
+          }
+        ]
+      },
+      {
+        "turn_id": 5,
+        "role": "user",
+        "content": "客人快到了，让门铃播放提示音。"
+      },
+      {
+        "turn_id": 6,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "doorbell.play_chime",
+              "arguments": "{\"room\":\"其他\",\"doorbell_id\":\"front_door_doorbell\"}"
+            }
+          }
+        ]
+      },
+      {
+        "turn_id": 7,
+        "role": "user",
+        "content": "客人快到了，把客厅音箱音量调到35。"
+      },
+      {
+        "turn_id": 8,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "speaker.set_volume",
+              "arguments": "{\"room\":\"客厅\",\"speaker_id\":\"living_room_speaker\",\"volume\":35}"
+            }
+          }
+        ]
+      },
+      {
+        "turn_id": 9,
+        "role": "user",
+        "content": "客人快到了，打开客厅顶灯。"
+      },
+      {
+        "turn_id": 10,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "ceiling_light.set_power",
+              "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
+            }
+          }
+        ]
+      }
+    ],
+    "expected_summary": {
+      "requires_clarification": false,
+      "execution_status": "success",
+      "valid_tool_call_count": 5,
+      "invalid_tool_call_count": 0
+    }
+  }
+}

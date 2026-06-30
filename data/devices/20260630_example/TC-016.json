@@ -1,0 +1,208 @@
+{
+  "TC-016": {
+    "case_id": "TC-016",
+    "dimension_tags": {
+      "turn_count": "1轮",
+      "candidate_tool_count": "16-20",
+      "tool_call_mode": "单工具",
+      "validity": "全部无效",
+      "same_device_across_rooms": "涉及且房间明确"
+    },
+    "scenario": "家庭聚会",
+    "home_context": {
+      "rooms": [
+        {
+          "room": "客厅",
+          "devices": [
+            {
+              "device_id": "living_room_air_conditioner",
+              "device_type": "air_conditioner",
+              "device_name": "空调",
+              "category": "环境类",
+              "initial_state": {
+                "power": false,
+                "mode": "cooling",
+                "target_temperature": 26,
+                "fan_speed": "auto"
+              }
+            },
+            {
+              "device_id": "living_room_air_purifier",
+              "device_type": "air_purifier",
+              "device_name": "空气净化器",
+              "category": "环境类",
+              "initial_state": {
+                "power": false,
+                "mode": "auto",
+                "speed": 2,
+                "pm25": 42
+              }
+            },
+            {
+              "device_id": "living_room_ceiling_light",
+              "device_type": "ceiling_light",
+              "device_name": "顶灯",
+              "category": "照明类",
+              "initial_state": {
+                "power": false,
+                "brightness": 45,
+                "color_temperature": 3500
+              }
+            },
+            {
+              "device_id": "living_room_fan",
+              "device_type": "fan",
+              "device_name": "风扇",
+              "category": "环境类",
+              "initial_state": {
+                "power": false,
+                "speed": 1,
+                "oscillation": false
+              }
+            },
+            {
+              "device_id": "living_room_robot_vacuum",
+              "device_type": "robot_vacuum",
+              "device_name": "扫地机器人",
+              "category": "机器人类",
+              "initial_state": {
+                "power": true,
+                "status": "docked",
+                "battery_level": 92
+              }
+            },
+            {
+              "device_id": "living_room_window",
+              "device_type": "smart_window",
+              "device_name": "智能窗户",
+              "category": "安防类",
+              "initial_state": {
+                "position": 0,
+                "lock_state": "unlocked",
+                "rain_sensor": false
+              }
+            }
+          ]
+        },
+        {
+          "room": "主卧",
+          "devices": [
+            {
+              "device_id": "master_bedroom_air_conditioner",
+              "device_type": "air_conditioner",
+              "device_name": "空调",
+              "category": "环境类",
+              "initial_state": {
+                "power": false,
+                "mode": "cooling",
+                "target_temperature": 28,
+                "fan_speed": "low"
+              }
+            },
+            {
+              "device_id": "master_bedroom_ceiling_light",
+              "device_type": "ceiling_light",
+              "device_name": "顶灯",
+              "category": "照明类",
+              "initial_state": {
+                "power": false,
+                "brightness": 30,
+                "color_temperature": 3000
+              }
+            },
+            {
+              "device_id": "master_bedroom_night_light",
+              "device_type": "night_light",
+              "device_name": "夜灯",
+              "category": "照明类",
+              "initial_state": {
+                "power": false,
+                "brightness": 15,
+                "motion_detection": true
+              }
+            }
+          ]
+        },
+        {
+          "room": "书房",
+          "devices": [
+            {
+              "device_id": "study_ceiling_light",
+              "device_type": "ceiling_light",
+              "device_name": "顶灯",
+              "category": "照明类",
+              "initial_state": {
+                "power": false,
+                "brightness": 55,
+                "color_temperature": 4200
+              }
+            },
+            {
+              "device_id": "study_desk_lamp",
+              "device_type": "desk_lamp",
+              "device_name": "台灯",
+              "category": "照明类",
+              "initial_state": {
+                "power": false,
+                "brightness": 50,
+                "color_temperature": 4000,
+                "mode": "normal"
+              }
+            }
+          ]
+        }
+      ],
+      "same_device_notes": [
+        "顶灯同时存在于客厅、主卧、书房，用户请求中明确指定房间",
+        "空调同时存在于客厅、主卧，用户请求中明确指定房间"
+      ]
+    },
+    "candidate_tools": [
+      "ceiling_light.set_power",
+      "ceiling_light.set_brightness",
+      "ceiling_light.set_color_temperature",
+      "night_light.set_power",
+      "night_light.set_brightness",
+      "desk_lamp.set_power",
+      "desk_lamp.set_brightness",
+      "air_conditioner.get_status",
+      "air_conditioner.set_power",
+      "air_conditioner.set_mode",
+      "air_conditioner.set_target_temperature",
+      "air_conditioner.set_fan_speed",
+      "fan.set_power",
+      "fan.set_speed",
+      "air_purifier.set_power",
+      "air_purifier.set_mode",
+      "smart_window.open",
+      "smart_window.close"
+    ],
+    "dialogue": [
+      {
+        "turn_id": 1,
+        "role": "user",
+        "content": "家里聚会前，打开客厅顶灯。"
+      },
+      {
+        "turn_id": 2,
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "robot_vacuum.clean_room",
+              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
+            }
+          }
+        ]
+      }
+    ],
+    "expected_summary": {
+      "requires_clarification": false,
+      "execution_status": "failed",
+      "valid_tool_call_count": 0,
+      "invalid_tool_call_count": 1
+    }
+  }
+}
