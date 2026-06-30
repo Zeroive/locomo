@@ -182,12 +182,12 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "先打开客厅顶灯，再把客厅顶灯亮度调到70。"
+        "content": "晚饭前先打开客厅顶灯，再把客厅顶灯亮度调到70。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "已按顺序打开客厅顶灯，并把亮度调到70。",
         "tool_calls": [
           {
             "type": "function",
@@ -208,12 +208,12 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "先打开客厅空气净化器，再把客厅空气净化器设为自动模式。"
+        "content": "再打开客厅空气净化器，并设为自动模式。"
       },
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
+        "content": "已打开客厅空气净化器，并设为自动模式。",
         "tool_calls": [
           {
             "type": "function",
@@ -234,12 +234,12 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "先打开主卧空调，再把主卧空调温度设到26度。"
+        "content": "主卧也提前准备一下，先打开主卧空调，再把温度设到26度。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
+        "content": "已打开主卧空调，并把温度设到26度。",
         "tool_calls": [
           {
             "type": "function",
@@ -252,7 +252,7 @@
             "type": "function",
             "function": {
               "name": "air_conditioner.set_target_temperature",
-              "arguments": "{\"room\":\"主卧\",\"air_conditioner_id\":\"master_bedroom_air_conditioner\",\"target_temperature\":26}"
+              "arguments": "{\"room\":\"主卧\",\"air_conditioner_id\":\"master_bedroom_air_conditioner\",\"temperature\":26}"
             }
           }
         ]
@@ -260,12 +260,12 @@
       {
         "turn_id": 7,
         "role": "user",
-        "content": "打开客厅窗户。"
+        "content": "客厅通一下风，打开客厅窗户。"
       },
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
+        "content": "已打开客厅窗户。",
         "tool_calls": [
           {
             "type": "function",

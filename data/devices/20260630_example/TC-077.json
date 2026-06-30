@@ -124,12 +124,12 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "回到家后，打开客厅顶灯。"
+        "content": "我回到家了，先打开客厅顶灯，再把门口智能门锁锁好。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "已按顺序打开客厅顶灯，并锁好门口智能门锁。",
         "tool_calls": [
           {
             "type": "function",
@@ -141,8 +141,8 @@
           {
             "type": "function",
             "function": {
-              "name": "smart_lock.open",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
+              "name": "smart_lock.lock",
+              "arguments": "{\"room\":\"其他\",\"smart_lock_id\":\"front_door_smart_lock\"}"
             }
           }
         ]
@@ -150,12 +150,12 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "回到家后，打开客厅空调。"
+        "content": "客厅有点热，把客厅空调打开。"
       },
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
+        "content": "已打开客厅空调。",
         "tool_calls": [
           {
             "type": "function",
@@ -169,31 +169,23 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "把客厅空调设为制冷。"
+        "content": "把客厅空调设成宠物看护模式。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "washing_machine.stop",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "客厅空调不支持“宠物看护模式”这个可设置模式，因此不执行工具调用。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
         "role": "user",
-        "content": "回到家后，把门口智能门锁锁好。"
+        "content": "门口再确认一下，把智能门锁锁好。"
       },
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
+        "content": "已锁好门口智能门锁。",
         "tool_calls": [
           {
             "type": "function",
@@ -207,18 +199,18 @@
       {
         "turn_id": 9,
         "role": "user",
-        "content": "我到家了，打开客厅顶灯。"
+        "content": "我到家了，再打开客厅顶灯。"
       },
       {
         "turn_id": 10,
         "role": "assistant",
-        "content": null,
+        "content": "已打开客厅顶灯。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
-              "name": "humidifier.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
+              "name": "ceiling_light.set_power",
+              "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
             }
           }
         ]
@@ -226,12 +218,12 @@
       {
         "turn_id": 11,
         "role": "user",
-        "content": "回到家后，打开客厅空调。"
+        "content": "客厅空调也再打开一次。"
       },
       {
         "turn_id": 12,
         "role": "assistant",
-        "content": null,
+        "content": "已打开客厅空调。",
         "tool_calls": [
           {
             "type": "function",
@@ -246,8 +238,8 @@
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "partial_success",
-      "valid_tool_call_count": 4,
-      "invalid_tool_call_count": 3
+      "valid_tool_call_count": 6,
+      "invalid_tool_call_count": 0
     }
   }
 }

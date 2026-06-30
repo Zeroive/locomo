@@ -4,11 +4,11 @@
     "dimension_tags": {
       "turn_count": "1轮",
       "candidate_tool_count": "5-10",
-      "tool_call_mode": "单工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "夜间起夜",
+    "scenario": "夜间起身去卫生间",
     "home_context": {
       "rooms": [
         {
@@ -138,28 +138,20 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "夜里起身时，打开卫生间夜灯。"
+        "content": "夜里起身去卫生间，帮我打开卫生间顶灯。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "tv.open_app",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有卫生间顶灯设备，无法执行打开卫生间顶灯的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 1
+      "invalid_tool_call_count": 0
     }
   }
 }

@@ -8,7 +8,7 @@
       "validity": "部分有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "宠物独自在家",
+    "scenario": "宠物独自在家时远程照看",
     "home_context": {
       "rooms": [
         {
@@ -181,25 +181,18 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "宠物独自在家时，让客厅摄像头开始录像。"
+        "content": "宠物独自在家时，让客厅摄像头开始录像，再打开客厅窗帘。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "当前没有客厅窗帘设备，无法执行打开客厅窗帘的操作；先让客厅摄像头开始录像。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "camera.start_recording",
               "arguments": "{\"room\":\"客厅\",\"camera_id\":\"living_room_camera\"}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "camera.enable_privacy",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
             }
           }
         ]
@@ -226,28 +219,20 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "把客厅空调设到26度。"
+        "content": "宠物独自在家时，把阳台顶灯打开。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "curtain.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台顶灯设备，无法执行打开阳台顶灯的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 2,
-      "invalid_tool_call_count": 2
+      "invalid_tool_call_count": 0
     }
   }
 }

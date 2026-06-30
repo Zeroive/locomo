@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "吃饭",
+    "scenario": "客厅用餐前准备照明",
     "home_context": {
       "rooms": [
         {
@@ -170,7 +170,7 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "准备在客厅吃饭，打开客厅顶灯。"
+        "content": "准备在客厅吃饭了，帮我打开客厅顶灯。"
       },
       {
         "turn_id": 2,

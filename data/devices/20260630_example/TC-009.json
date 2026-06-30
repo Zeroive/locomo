@@ -4,11 +4,11 @@
     "dimension_tags": {
       "turn_count": "1轮",
       "candidate_tool_count": "11-15",
-      "tool_call_mode": "单工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "做饭",
+    "scenario": "准备做饭但厨房未配置照明",
     "home_context": {
       "rooms": [
         {
@@ -108,28 +108,20 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "准备做饭了，打开厨房顶灯。"
+        "content": "准备做饭了，帮我打开厨房顶灯。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "washing_machine.stop",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有厨房顶灯设备，无法执行打开厨房顶灯的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 1
+      "invalid_tool_call_count": 0
     }
   }
 }

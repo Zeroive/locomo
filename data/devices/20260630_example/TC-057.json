@@ -4,11 +4,11 @@
     "dimension_tags": {
       "turn_count": "4-8轮",
       "candidate_tool_count": "5-10",
-      "tool_call_mode": "单工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "做饭",
+    "scenario": "做饭但厨房和餐厅照明未配置",
     "home_context": {
       "rooms": [
         {
@@ -136,16 +136,8 @@
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "smart_lock.open",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有厨房顶灯设备，无法执行打开厨房顶灯的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 3,
@@ -155,16 +147,8 @@
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "camera.enable_privacy",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有厨房顶灯设备，无法执行调节厨房顶灯亮度的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 5,
@@ -174,16 +158,8 @@
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "washing_machine.stop",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有厨房顶灯设备，无法执行调节厨房顶灯色温的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
@@ -193,23 +169,15 @@
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "curtain.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有餐厅顶灯设备，无法执行打开餐厅顶灯的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 4
+      "invalid_tool_call_count": 0
     }
   }
 }

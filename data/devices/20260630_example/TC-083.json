@@ -159,12 +159,12 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "打开客厅顶灯。"
+        "content": "周末要打扫客厅，先打开客厅顶灯。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "已打开客厅顶灯。",
         "tool_calls": [
           {
             "type": "function",
@@ -178,18 +178,18 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "把客厅扫地机器人吸力调高。"
+        "content": "把客厅扫地机器人吸力调到4档。"
       },
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
+        "content": "已把客厅扫地机器人吸力调到4档。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "robot_vacuum.set_suction",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
+              "arguments": "{\"room\":\"客厅\",\"robot_vacuum_id\":\"living_room_robot_vacuum\",\"level\":4}"
             }
           }
         ]
@@ -197,12 +197,12 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "让客厅扫地机器人回充。"
+        "content": "打扫差不多了，让客厅扫地机器人回充。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
+        "content": "已让客厅扫地机器人回充。",
         "tool_calls": [
           {
             "type": "function",
@@ -221,23 +221,15 @@
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "smart_lock.open",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前可用工具不包含智能门锁控制，因此不执行工具调用。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 3,
-      "invalid_tool_call_count": 1
+      "invalid_tool_call_count": 0
     }
   }
 }

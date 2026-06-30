@@ -4,11 +4,11 @@
     "dimension_tags": {
       "turn_count": "2-3轮",
       "candidate_tool_count": "11-15",
-      "tool_call_mode": "顺序多工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "工作学习",
+    "scenario": "书房工作但目标环境设备未配置",
     "home_context": {
       "rooms": [
         {
@@ -108,73 +108,42 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "准备工作学习，打开书房台灯。"
+        "content": "准备工作学习，帮我打开书房空调。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "washing_machine.stop",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "curtain.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有书房空调设备，无法执行打开书房空调的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 3,
         "role": "user",
-        "content": "准备工作学习，把书房台灯亮度调到80。"
+        "content": "那把书房空调温度设到25度。"
       },
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "humidifier.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有书房空调设备，无法执行设置书房空调温度的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 5,
         "role": "user",
-        "content": "准备工作学习，打开书房空调。"
+        "content": "再打开书房空气净化器。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "ceiling_light.set_color",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有书房空气净化器设备，无法执行打开书房空气净化器的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 4
+      "invalid_tool_call_count": 0
     }
   }
 }

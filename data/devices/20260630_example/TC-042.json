@@ -8,7 +8,7 @@
       "validity": "部分有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "寒冷天气",
+    "scenario": "寒冷天气下调整客厅照明和主卧空调",
     "home_context": {
       "rooms": [
         {
@@ -142,25 +142,18 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "天气有点冷，我先打开客厅顶灯找一下空调遥控器。"
+        "content": "天气有点冷，我先打开客厅顶灯找一下空调遥控器，再打开客厅窗帘。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "当前没有客厅窗帘设备，无法执行打开客厅窗帘的操作；先为你打开客厅顶灯。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "ceiling_light.set_power",
               "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "ceiling_light.set_color",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
             }
           }
         ]
@@ -187,28 +180,20 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "把主卧空调温度设到27度。"
+        "content": "再把阳台空调温度设到27度。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "tv.open_app",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台空调设备，无法执行设置阳台空调温度的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 2,
-      "invalid_tool_call_count": 2
+      "invalid_tool_call_count": 0
     }
   }
 }

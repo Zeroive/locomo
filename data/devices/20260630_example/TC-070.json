@@ -4,11 +4,11 @@
     "dimension_tags": {
       "turn_count": "4-8轮",
       "candidate_tool_count": "11-15",
-      "tool_call_mode": "单工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "儿童在家",
+    "scenario": "儿童在家但目标房间设备未配置",
     "home_context": {
       "rooms": [
         {
@@ -142,104 +142,64 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "孩子在家时，打开客厅顶灯。"
+        "content": "孩子在家时，帮我打开阳台顶灯。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "curtain.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台顶灯设备，无法执行打开阳台顶灯的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 3,
         "role": "user",
-        "content": "孩子在家时，把家庭模式切到儿童在家。"
+        "content": "那把阳台空调打开。"
       },
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "humidifier.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台空调设备，无法执行打开阳台空调的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 5,
         "role": "user",
-        "content": "孩子在家时，让客厅摄像头开始录像。"
+        "content": "再让阳台摄像头开始录像。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "ceiling_light.set_color",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台摄像头设备，无法执行开始录像的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
         "role": "user",
-        "content": "孩子在家时，打开客厅电视。"
+        "content": "孩子在家时，把阳台电视打开。"
       },
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "air_conditioner.set_temperature",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台电视设备，无法执行打开阳台电视的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 9,
         "role": "user",
-        "content": "孩子在家时，打开客厅顶灯。"
+        "content": "最后确认阳台顶灯打开。"
       },
       {
         "turn_id": 10,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "tv.open_app",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台顶灯设备，无法执行打开阳台顶灯的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 5
+      "invalid_tool_call_count": 0
     }
   }
 }

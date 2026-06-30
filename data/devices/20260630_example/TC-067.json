@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "通风换气",
+    "scenario": "客厅通风换气",
     "home_context": {
       "rooms": [
         {
@@ -114,7 +114,7 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "家里要通风，打开客厅顶灯。"
+        "content": "家里要通风，先打开客厅顶灯看一下窗边。"
       },
       {
         "turn_id": 2,
@@ -133,7 +133,7 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "家里要通风，打开客厅窗户。"
+        "content": "现在打开客厅窗户通风。"
       },
       {
         "turn_id": 4,
@@ -152,7 +152,7 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "家里要通风，打开客厅风扇。"
+        "content": "再打开客厅风扇，加快空气流动。"
       },
       {
         "turn_id": 6,
@@ -171,7 +171,7 @@
       {
         "turn_id": 7,
         "role": "user",
-        "content": "家里要通风，关闭客厅窗户。"
+        "content": "通风差不多了，把客厅窗户关上。"
       },
       {
         "turn_id": 8,
@@ -190,7 +190,7 @@
       {
         "turn_id": 9,
         "role": "user",
-        "content": "家里要通风，打开客厅顶灯。"
+        "content": "最后确认客厅顶灯保持打开。"
       },
       {
         "turn_id": 10,

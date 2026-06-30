@@ -8,7 +8,7 @@
       "validity": "部分有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "回家",
+    "scenario": "回家后开启客厅照明和厨房音乐",
     "home_context": {
       "rooms": [
         {
@@ -89,35 +89,28 @@
       "ceiling_light.set_power",
       "ceiling_light.set_brightness",
       "ceiling_light.set_color_temperature",
+      "speaker.set_power",
+      "speaker.play_media",
       "night_light.set_power",
       "night_light.set_brightness",
-      "desk_lamp.set_power",
-      "desk_lamp.set_brightness",
       "air_conditioner.get_status"
     ],
     "dialogue": [
       {
         "turn_id": 1,
         "role": "user",
-        "content": "回到家后，打开客厅顶灯。"
+        "content": "我回到家了，帮我打开客厅顶灯，再打开厨房音箱。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "厨房当前没有音箱设备，无法执行打开厨房音箱的操作；先为你打开客厅顶灯。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "ceiling_light.set_power",
               "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "speaker.set_playlist",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
             }
           }
         ]
@@ -127,7 +120,7 @@
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 1,
-      "invalid_tool_call_count": 1
+      "invalid_tool_call_count": 0
     }
   }
 }

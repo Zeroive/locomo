@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "通风换气",
+    "scenario": "客厅通风前准备",
     "home_context": {
       "rooms": [
         {
@@ -87,7 +87,7 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "家里要通风，我先打开客厅顶灯看一下窗边。"
+        "content": "家里要通风，我先打开客厅顶灯看一下窗边情况。"
       },
       {
         "turn_id": 2,

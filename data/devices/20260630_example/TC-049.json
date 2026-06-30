@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "起床",
+    "scenario": "起床后开启书房照明和客厅空气净化",
     "home_context": {
       "rooms": [
         {
@@ -158,7 +158,7 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "早上起床后，打开客厅空气净化器。"
+        "content": "空气净化器打开后，再把客厅顶灯打开。"
       },
       {
         "turn_id": 4,
@@ -168,8 +168,8 @@
           {
             "type": "function",
             "function": {
-              "name": "air_purifier.set_power",
-              "arguments": "{\"room\":\"客厅\",\"air_purifier_id\":\"living_room_air_purifier\",\"power\":true}"
+              "name": "ceiling_light.set_power",
+              "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
             }
           }
         ]

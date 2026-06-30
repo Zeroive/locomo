@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "远程照看",
+    "scenario": "远程看家时检查客厅和门口",
     "home_context": {
       "rooms": [
         {
@@ -141,7 +141,7 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "远程看家时，让客厅摄像头开始录像。"
+        "content": "远程看家时，先让客厅摄像头开始录像。"
       },
       {
         "turn_id": 2,
@@ -160,7 +160,7 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "远程看家时，让客厅摄像头拍一张照片。"
+        "content": "再让客厅摄像头拍一张照片。"
       },
       {
         "turn_id": 4,
@@ -179,7 +179,7 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "远程看家时，打开客厅顶灯。"
+        "content": "客厅有点暗，把客厅顶灯打开。"
       },
       {
         "turn_id": 6,
@@ -198,7 +198,7 @@
       {
         "turn_id": 7,
         "role": "user",
-        "content": "远程看家时，把门口智能门锁锁好。"
+        "content": "再把门口智能门锁锁好。"
       },
       {
         "turn_id": 8,
@@ -217,7 +217,7 @@
       {
         "turn_id": 9,
         "role": "user",
-        "content": "远程看家时，让客厅摄像头开始录像。"
+        "content": "继续让客厅摄像头保持录像。"
       },
       {
         "turn_id": 10,
@@ -236,7 +236,7 @@
       {
         "turn_id": 11,
         "role": "user",
-        "content": "远程看家时，让客厅摄像头拍一张照片。"
+        "content": "最后再让客厅摄像头拍一张照片。"
       },
       {
         "turn_id": 12,

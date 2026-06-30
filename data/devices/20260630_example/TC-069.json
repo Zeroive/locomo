@@ -4,11 +4,11 @@
     "dimension_tags": {
       "turn_count": "4-8轮",
       "candidate_tool_count": "11-15",
-      "tool_call_mode": "单工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "安防告警",
+    "scenario": "门口异常但安防设备未配置",
     "home_context": {
       "rooms": [
         {
@@ -113,16 +113,8 @@
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "washing_machine.stop",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有客厅摄像头设备，无法执行开始录像的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 3,
@@ -132,61 +124,37 @@
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "curtain.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有客厅摄像头设备，无法执行拍照的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 5,
         "role": "user",
-        "content": "发现门口异常，把门口智能门锁锁好。"
+        "content": "发现门口异常，把客厅智能门锁锁好。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "humidifier.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有客厅智能门锁设备，无法执行上锁操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
         "role": "user",
-        "content": "发现门口异常，打开客厅顶灯。"
+        "content": "发现门口异常，再打开门口顶灯。"
       },
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "ceiling_light.set_color",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有门口顶灯设备，无法执行打开门口顶灯的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 4
+      "invalid_tool_call_count": 0
     }
   }
 }

@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "远程照看",
+    "scenario": "远程看家时检查客厅环境",
     "home_context": {
       "rooms": [
         {
@@ -141,7 +141,7 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "远程看家时，让客厅摄像头开始录像。"
+        "content": "远程看家时，先帮我打开客厅顶灯。"
       },
       {
         "turn_id": 2,
@@ -151,8 +151,8 @@
           {
             "type": "function",
             "function": {
-              "name": "camera.start_recording",
-              "arguments": "{\"room\":\"客厅\",\"camera_id\":\"living_room_camera\"}"
+              "name": "ceiling_light.set_power",
+              "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
             }
           }
         ]
@@ -160,7 +160,7 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "远程看家时，让客厅摄像头拍一张照片。"
+        "content": "再把客厅空调打开。"
       },
       {
         "turn_id": 4,
@@ -170,8 +170,8 @@
           {
             "type": "function",
             "function": {
-              "name": "camera.take_snapshot",
-              "arguments": "{\"room\":\"客厅\",\"camera_id\":\"living_room_camera\"}"
+              "name": "air_conditioner.set_power",
+              "arguments": "{\"room\":\"客厅\",\"air_conditioner_id\":\"living_room_air_conditioner\",\"power\":true}"
             }
           }
         ]

@@ -198,12 +198,12 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "打开卫生间热水器。"
+        "content": "下班回家准备洗澡，先打开卫生间热水器。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "已打开卫生间热水器。",
         "tool_calls": [
           {
             "type": "function",
@@ -222,7 +222,7 @@
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
+        "content": "已把卫生间热水器温度设到45度。",
         "tool_calls": [
           {
             "type": "function",
@@ -241,7 +241,7 @@
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
+        "content": "已打开主卧顶灯。",
         "tool_calls": [
           {
             "type": "function",
@@ -260,13 +260,13 @@
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
+        "content": "已关闭客厅电视。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "tv.set_power",
-              "arguments": "{\"room\":\"客厅\",\"tv_id\":\"living_room_tv\",\"power\":true}"
+              "arguments": "{\"room\":\"客厅\",\"tv_id\":\"living_room_tv\",\"power\":false}"
             }
           }
         ]
@@ -274,9 +274,9 @@
     ],
     "expected_summary": {
       "requires_clarification": false,
-      "execution_status": "partial_success",
-      "valid_tool_call_count": 3,
-      "invalid_tool_call_count": 1
+      "execution_status": "success",
+      "valid_tool_call_count": 4,
+      "invalid_tool_call_count": 0
     }
   }
 }

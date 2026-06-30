@@ -4,11 +4,11 @@
     "dimension_tags": {
       "turn_count": "4-8轮",
       "candidate_tool_count": "5-10",
-      "tool_call_mode": "顺序多工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "家庭聚会",
+    "scenario": "家庭聚会但阳台设备未配置",
     "home_context": {
       "rooms": [
         {
@@ -192,111 +192,64 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "家里聚会前，打开客厅顶灯。"
+        "content": "家里聚会前，帮我打开阳台顶灯。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "tv.open_app",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "smart_lock.open",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台顶灯设备，无法执行打开阳台顶灯的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 3,
         "role": "user",
-        "content": "家里聚会前，打开客厅音箱。"
+        "content": "再打开阳台空调，客人可能会去阳台。"
       },
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "robot_vacuum.clean_room",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台空调设备，无法执行打开阳台空调的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 5,
         "role": "user",
-        "content": "家里聚会前，把客厅音箱音量调到45。"
+        "content": "把阳台空调温度设到25度。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "smart_lock.open",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台空调设备，无法执行设置阳台空调温度的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
         "role": "user",
-        "content": "家里聚会前，打开客厅空气净化器。"
+        "content": "再打开阳台空气净化器。"
       },
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "camera.enable_privacy",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台空气净化器设备，无法执行打开阳台空气净化器的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 9,
         "role": "user",
-        "content": "家里聚会前，打开客厅顶灯。"
+        "content": "最后把阳台顶灯再确认打开。"
       },
       {
         "turn_id": 10,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "washing_machine.stop",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台顶灯设备，无法执行打开阳台顶灯的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 6
+      "invalid_tool_call_count": 0
     }
   }
 }

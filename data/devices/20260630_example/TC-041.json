@@ -8,7 +8,7 @@
       "validity": "部分有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "炎热天气",
+    "scenario": "炎热天气下调整客厅空调",
     "home_context": {
       "rooms": [
         {
@@ -92,25 +92,18 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "天气有点热，我先打开客厅顶灯看一下空调面板。"
+        "content": "天气有点热，我先打开客厅顶灯看一下空调面板，再打开客厅加湿器。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "当前没有客厅加湿器设备，无法执行打开客厅加湿器的操作；先为你打开客厅顶灯。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "ceiling_light.set_power",
               "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "humidifier.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
             }
           }
         ]
@@ -139,7 +132,7 @@
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 2,
-      "invalid_tool_call_count": 1
+      "invalid_tool_call_count": 0
     }
   }
 }

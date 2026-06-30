@@ -144,7 +144,7 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "先打开客厅电视，再打开客厅音箱。"
+        "content": "周末看电影，先打开客厅电视，再打开客厅音箱。"
       },
       {
         "turn_id": 2,
@@ -170,7 +170,7 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "把客厅顶灯亮度调到20。"
+        "content": "把客厅顶灯亮度调到20，环境暗一点。"
       },
       {
         "turn_id": 4,
@@ -189,7 +189,7 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "把客厅切到观影场景。"
+        "content": "再把客厅切到观影场景。"
       },
       {
         "turn_id": 6,
@@ -208,7 +208,7 @@
       {
         "turn_id": 7,
         "role": "user",
-        "content": "打开客厅空气净化器。"
+        "content": "最后打开客厅空气净化器。"
       },
       {
         "turn_id": 8,

@@ -4,7 +4,7 @@
     "dimension_tags": {
       "turn_count": "4-8轮",
       "candidate_tool_count": "11-15",
-      "tool_call_mode": "顺序多工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "不涉及"
     },
@@ -151,23 +151,8 @@
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "speaker.set_playlist",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "smart_lock.open",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前主卧只有夜灯，没有空调，因此不执行工具调用。",
+        "tool_calls": []
       },
       {
         "turn_id": 3,
@@ -177,61 +162,37 @@
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "smart_lock.open",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前主卧没有空调，无法调节空调风速，因此不执行工具调用。",
+        "tool_calls": []
       },
       {
         "turn_id": 5,
         "role": "user",
-        "content": "准备午休，打开主卧夜灯。"
+        "content": "准备午休，打开主卧床头灯。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "camera.enable_privacy",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前主卧没有床头灯设备，因此不执行工具调用。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
         "role": "user",
-        "content": "准备午休，关闭客厅顶灯。"
+        "content": "准备午休，关闭次卧顶灯。"
       },
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "washing_machine.stop",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前房间列表里没有次卧，也没有可关闭的次卧顶灯，因此不执行工具调用。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 5
+      "invalid_tool_call_count": 0
     }
   }
 }

@@ -8,7 +8,7 @@
       "validity": "部分有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "清洁",
+    "scenario": "客厅打扫前后调整设备",
     "home_context": {
       "rooms": [
         {
@@ -115,25 +115,18 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "开始打扫前，打开客厅顶灯。"
+        "content": "开始打扫前，打开客厅顶灯，再停止客厅洗衣机。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "当前没有客厅洗衣机设备，无法执行停止客厅洗衣机的操作；先为你打开客厅顶灯。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "ceiling_light.set_power",
               "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "washing_machine.stop",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
             }
           }
         ]
@@ -152,7 +145,7 @@
             "type": "function",
             "function": {
               "name": "robot_vacuum.set_suction",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
+              "arguments": "{\"room\":\"客厅\",\"robot_vacuum_id\":\"living_room_robot_vacuum\",\"level\":4}"
             }
           }
         ]
@@ -160,21 +153,13 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "打开客厅顶灯。"
+        "content": "打扫时有点干，再打开客厅加湿器。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "humidifier.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有客厅加湿器设备，无法执行打开客厅加湿器的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
@@ -198,21 +183,13 @@
       {
         "turn_id": 9,
         "role": "user",
-        "content": "开始打扫，启动客厅扫地机器人。"
+        "content": "打扫结束后，再打开客厅空气净化器。"
       },
       {
         "turn_id": 10,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "air_conditioner.set_temperature",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有客厅空气净化器设备，无法执行打开客厅空气净化器的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 11,
@@ -228,7 +205,7 @@
             "type": "function",
             "function": {
               "name": "robot_vacuum.set_suction",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
+              "arguments": "{\"room\":\"客厅\",\"robot_vacuum_id\":\"living_room_robot_vacuum\",\"level\":4}"
             }
           }
         ]
@@ -238,7 +215,7 @@
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 4,
-      "invalid_tool_call_count": 3
+      "invalid_tool_call_count": 0
     }
   }
 }

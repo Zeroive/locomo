@@ -4,11 +4,11 @@
     "dimension_tags": {
       "turn_count": "2-3轮",
       "candidate_tool_count": "11-15",
-      "tool_call_mode": "单工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "洗衣",
+    "scenario": "洗衣但阳台照明未配置",
     "home_context": {
       "rooms": [
         {
@@ -153,21 +153,13 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "准备洗衣服，打开阳台顶灯。"
+        "content": "准备去阳台洗衣服，帮我打开阳台顶灯。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "tv.open_app",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台顶灯设备，无法执行打开阳台顶灯的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 3,
@@ -177,23 +169,15 @@
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "speaker.set_playlist",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台顶灯设备，无法执行调节阳台顶灯亮度的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 2
+      "invalid_tool_call_count": 0
     }
   }
 }

@@ -8,7 +8,7 @@
       "validity": "部分有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "寒冷天气",
+    "scenario": "寒冷天气下检查客厅和阳台照明",
     "home_context": {
       "rooms": [
         {
@@ -181,25 +181,18 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "天气有点冷，我先打开客厅顶灯找一下空调遥控器。"
+        "content": "天气有点冷，我先打开客厅顶灯找一下空调遥控器，再把阳台顶灯也打开。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "当前没有阳台顶灯设备，无法执行打开阳台顶灯的操作；先为你打开客厅顶灯。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "ceiling_light.set_power",
               "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "camera.enable_privacy",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
             }
           }
         ]
@@ -209,7 +202,7 @@
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 1,
-      "invalid_tool_call_count": 1
+      "invalid_tool_call_count": 0
     }
   }
 }

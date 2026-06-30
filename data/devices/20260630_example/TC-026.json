@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "睡前",
+    "scenario": "睡前客厅观影和主卧辅助照明",
     "home_context": {
       "rooms": [
         {
@@ -164,7 +164,7 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "准备回主卧休息，打开主卧夜灯。"
+        "content": "准备回主卧休息时，再把主卧顶灯打开。"
       },
       {
         "turn_id": 4,
@@ -174,8 +174,8 @@
           {
             "type": "function",
             "function": {
-              "name": "night_light.set_power",
-              "arguments": "{\"room\":\"主卧\",\"night_light_id\":\"master_bedroom_night_light\",\"power\":true}"
+              "name": "ceiling_light.set_power",
+              "arguments": "{\"room\":\"主卧\",\"ceiling_light_id\":\"master_bedroom_ceiling_light\",\"power\":true}"
             }
           }
         ]

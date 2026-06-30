@@ -4,7 +4,7 @@
     "dimension_tags": {
       "turn_count": "4-8轮",
       "candidate_tool_count": "11-15",
-      "tool_call_mode": "顺序多工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "涉及且房间明确"
     },
@@ -173,23 +173,8 @@
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "robot_vacuum.clean_room",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "camera.enable_privacy",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前房间列表里没有卫生间，也没有卫生间夜灯，因此不执行工具调用。",
+        "tool_calls": []
       },
       {
         "turn_id": 3,
@@ -199,54 +184,30 @@
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "camera.enable_privacy",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前房间列表里没有卫生间夜灯，无法设置亮度，因此不执行工具调用。",
+        "tool_calls": []
       },
       {
         "turn_id": 5,
         "role": "user",
-        "content": "夜里起身时，关闭主卧顶灯。"
+        "content": "夜里起身时，关闭卫生间顶灯。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "washing_machine.stop",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前房间列表里没有卫生间，也没有卫生间顶灯，因此不执行工具调用。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
         "role": "user",
-        "content": "夜里起身时，打开主卧夜灯。"
+        "content": "夜里起身时，打开走廊夜灯。"
       },
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "curtain.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前房间列表里没有走廊，也没有走廊夜灯，因此不执行工具调用。",
+        "tool_calls": []
       },
       {
         "turn_id": 9,
@@ -256,23 +217,15 @@
       {
         "turn_id": 10,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "humidifier.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前房间列表里没有卫生间，也没有卫生间夜灯，因此不执行工具调用。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 6
+      "invalid_tool_call_count": 0
     }
   }
 }

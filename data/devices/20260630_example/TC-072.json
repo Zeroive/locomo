@@ -153,12 +153,12 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "宠物独自在家时，让客厅摄像头开始录像。"
+        "content": "我出门后宠物会单独待在家里，让客厅摄像头开始录像。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "已让客厅摄像头开始录像。",
         "tool_calls": [
           {
             "type": "function",
@@ -166,25 +166,18 @@
               "name": "camera.start_recording",
               "arguments": "{\"room\":\"客厅\",\"camera_id\":\"living_room_camera\"}"
             }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "ceiling_light.set_color",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
           }
         ]
       },
       {
         "turn_id": 3,
         "role": "user",
-        "content": "宠物独自在家时，打开客厅顶灯。"
+        "content": "再把客厅顶灯打开，别让它太暗。"
       },
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
+        "content": "已打开客厅顶灯。",
         "tool_calls": [
           {
             "type": "function",
@@ -198,31 +191,23 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "把客厅空调设到26度。"
+        "content": "把客厅空调切到宠物看护模式。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "tv.open_app",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "客厅空调不支持“宠物看护模式”这个可设置模式，因此不执行工具调用。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
         "role": "user",
-        "content": "宠物独自在家时，打开客厅电视。"
+        "content": "最后把客厅电视打开，给宠物留点背景声音。"
       },
       {
         "turn_id": 8,
         "role": "assistant",
-        "content": null,
+        "content": "已打开客厅电视。",
         "tool_calls": [
           {
             "type": "function",
@@ -238,7 +223,7 @@
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 3,
-      "invalid_tool_call_count": 2
+      "invalid_tool_call_count": 0
     }
   }
 }

@@ -8,7 +8,7 @@
       "validity": "部分有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "洗澡",
+    "scenario": "洗澡前准备热水和客厅设备",
     "home_context": {
       "rooms": [
         {
@@ -142,25 +142,18 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "洗澡前，打开卫生间热水器。"
+        "content": "洗澡前，打开卫生间热水器，再打开客厅窗帘。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "当前没有客厅窗帘设备，无法执行打开客厅窗帘的操作；先为你打开卫生间热水器。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "water_heater.set_power",
               "arguments": "{\"room\":\"卫生间\",\"water_heater_id\":\"bathroom_water_heater\",\"power\":true}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "curtain.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
             }
           }
         ]
@@ -187,21 +180,13 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "打开卫生间夜灯。"
+        "content": "再打开卫生间顶灯。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "ceiling_light.set_color",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有卫生间顶灯设备，无法执行打开卫生间顶灯的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
@@ -227,7 +212,7 @@
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 3,
-      "invalid_tool_call_count": 2
+      "invalid_tool_call_count": 0
     }
   }
 }

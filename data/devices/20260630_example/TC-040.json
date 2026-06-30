@@ -4,11 +4,11 @@
     "dimension_tags": {
       "turn_count": "2-3轮",
       "candidate_tool_count": "11-15",
-      "tool_call_mode": "顺序多工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "家庭聚会",
+    "scenario": "家庭聚会但目标房间设备未配置",
     "home_context": {
       "rooms": [
         {
@@ -130,54 +130,31 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "家里聚会前，打开客厅顶灯。"
+        "content": "家里聚会前，帮我打开阳台顶灯。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "curtain.set_power",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "camera.enable_privacy",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台顶灯设备，无法执行打开阳台顶灯的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 3,
         "role": "user",
-        "content": "家里聚会前，打开客厅音箱。"
+        "content": "那把阳台空调打开，客人可能会去阳台。"
       },
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "ceiling_light.set_color",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台空调设备，无法执行打开阳台空调的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 3
+      "invalid_tool_call_count": 0
     }
   }
 }

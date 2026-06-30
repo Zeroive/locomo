@@ -8,7 +8,7 @@
       "validity": "部分有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "老人在家",
+    "scenario": "老人休息时调整照明和温度",
     "home_context": {
       "rooms": [
         {
@@ -148,25 +148,18 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "老人休息时，打开主卧夜灯。"
+        "content": "老人休息时，帮我打开主卧夜灯，再打开主卧空调。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "当前没有主卧空调设备，无法执行打开主卧空调的操作；先为你打开主卧夜灯。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "night_light.set_power",
               "arguments": "{\"room\":\"主卧\",\"night_light_id\":\"master_bedroom_night_light\",\"power\":true}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "smart_lock.open",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
             }
           }
         ]
@@ -185,7 +178,7 @@
             "type": "function",
             "function": {
               "name": "air_conditioner.set_target_temperature",
-              "arguments": "{\"room\":\"客厅\",\"air_conditioner_id\":\"living_room_air_conditioner\",\"temperature\":26}"
+              "arguments": "{\"room\":\"客厅\",\"air_conditioner_id\":\"living_room_air_conditioner\",\"target_temperature\":26}"
             }
           }
         ]
@@ -195,7 +188,7 @@
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 2,
-      "invalid_tool_call_count": 1
+      "invalid_tool_call_count": 0
     }
   }
 }

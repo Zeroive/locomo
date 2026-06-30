@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "吃饭",
+    "scenario": "客厅用餐观影调暗灯光",
     "home_context": {
       "rooms": [
         {
@@ -156,7 +156,7 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "电视画面有点反光，把客厅顶灯亮度调到20。"
+        "content": "电视画面还是有点反光，再把客厅顶灯亮度保持在20。"
       },
       {
         "turn_id": 4,

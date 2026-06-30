@@ -8,7 +8,7 @@
       "validity": "部分有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "炎热天气",
+    "scenario": "炎热天气下调整客厅环境",
     "home_context": {
       "rooms": [
         {
@@ -142,25 +142,18 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "天气有点热，我先打开客厅顶灯看一下空调面板。"
+        "content": "天气有点热，我先打开客厅顶灯看一下空调面板，再打开客厅加湿器。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "当前没有客厅加湿器设备，无法执行打开客厅加湿器的操作；先为你打开客厅顶灯。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "ceiling_light.set_power",
               "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "speaker.set_playlist",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
             }
           }
         ]
@@ -187,21 +180,13 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "把客厅空调温度设到24度。"
+        "content": "把阳台空调温度设到24度。"
       },
       {
         "turn_id": 6,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "smart_lock.open",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有阳台空调设备，无法执行设置阳台空调温度的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 7,
@@ -225,21 +210,13 @@
       {
         "turn_id": 9,
         "role": "user",
-        "content": "今天很热，打开客厅空调。"
+        "content": "今天很热，再打开客厅加湿器。"
       },
       {
         "turn_id": 10,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "washing_machine.stop",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有客厅加湿器设备，无法执行打开客厅加湿器的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 11,
@@ -265,7 +242,7 @@
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 4,
-      "invalid_tool_call_count": 3
+      "invalid_tool_call_count": 0
     }
   }
 }

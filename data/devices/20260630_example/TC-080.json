@@ -186,7 +186,7 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "让客厅摄像头开始录像。"
+        "content": "我已经出门了，让客厅摄像头开始录像。"
       },
       {
         "turn_id": 2,
@@ -205,7 +205,7 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "让客厅摄像头拍一张照片。"
+        "content": "再让客厅摄像头拍一张照片，我确认一下家里情况。"
       },
       {
         "turn_id": 4,
@@ -224,7 +224,7 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "打开客厅顶灯。"
+        "content": "远程打开客厅顶灯。"
       },
       {
         "turn_id": 6,
@@ -243,7 +243,7 @@
       {
         "turn_id": 7,
         "role": "user",
-        "content": "把门口智能门锁锁好。"
+        "content": "最后把门口智能门锁锁好。"
       },
       {
         "turn_id": 8,

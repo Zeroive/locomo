@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "空气差",
+    "scenario": "客厅空气质量差",
     "home_context": {
       "rooms": [
         {
@@ -170,7 +170,7 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "空气质量不好，我先打开客厅顶灯看一下净化器面板。"
+        "content": "客厅空气质量不好，我先打开客厅顶灯看一下净化器面板。"
       },
       {
         "turn_id": 2,
@@ -189,7 +189,7 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "把客厅空气净化器设为自动模式。"
+        "content": "再把客厅空气净化器设为自动模式。"
       },
       {
         "turn_id": 4,

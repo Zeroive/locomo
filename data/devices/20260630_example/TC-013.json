@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "看电影",
+    "scenario": "客厅观影准备",
     "home_context": {
       "rooms": [
         {
@@ -144,7 +144,7 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "准备看电影，打开客厅电视。"
+        "content": "准备在客厅看电影了，帮我打开客厅电视。"
       },
       {
         "turn_id": 2,

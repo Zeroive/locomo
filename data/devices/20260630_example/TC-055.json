@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "来客",
+    "scenario": "客人到访前准备客厅",
     "home_context": {
       "rooms": [
         {
@@ -98,7 +98,7 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "客人快到了，打开客厅顶灯。"
+        "content": "客人快到了，先打开客厅顶灯。"
       },
       {
         "turn_id": 2,
@@ -117,7 +117,7 @@
       {
         "turn_id": 3,
         "role": "user",
-        "content": "客人快到了，打开客厅电视。"
+        "content": "再打开客厅电视。"
       },
       {
         "turn_id": 4,
@@ -136,7 +136,7 @@
       {
         "turn_id": 5,
         "role": "user",
-        "content": "客人快到了，让门铃播放提示音。"
+        "content": "门口有人来时，让门铃播放提示音。"
       },
       {
         "turn_id": 6,
@@ -155,7 +155,7 @@
       {
         "turn_id": 7,
         "role": "user",
-        "content": "客人快到了，把客厅音箱音量调到35。"
+        "content": "把客厅音箱音量调到35，别太吵。"
       },
       {
         "turn_id": 8,
@@ -174,7 +174,7 @@
       {
         "turn_id": 9,
         "role": "user",
-        "content": "客人快到了，打开客厅顶灯。"
+        "content": "最后把客厅顶灯保持打开。"
       },
       {
         "turn_id": 10,

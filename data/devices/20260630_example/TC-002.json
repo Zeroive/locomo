@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "睡前",
+    "scenario": "睡前回主卧整理床铺",
     "home_context": {
       "rooms": [
         {
@@ -125,20 +125,21 @@
       ]
     },
     "candidate_tools": [
-      "tv.set_power",
       "ceiling_light.set_power",
+      "ceiling_light.get_status",
       "ceiling_light.set_brightness",
       "ceiling_light.set_color_temperature",
       "night_light.set_power",
       "night_light.set_brightness",
-      "desk_lamp.set_power",
-      "desk_lamp.set_brightness"
+      "air_conditioner.get_status",
+      "air_conditioner.set_power",
+      "tv.set_power"
     ],
     "dialogue": [
       {
         "turn_id": 1,
         "role": "user",
-        "content": "睡前想再看一会儿，打开客厅电视。"
+        "content": "睡前我回主卧整理一下床铺，帮我打开主卧顶灯。"
       },
       {
         "turn_id": 2,
@@ -148,8 +149,8 @@
           {
             "type": "function",
             "function": {
-              "name": "tv.set_power",
-              "arguments": "{\"room\":\"客厅\",\"tv_id\":\"living_room_tv\",\"power\":true}"
+              "name": "ceiling_light.set_power",
+              "arguments": "{\"room\":\"主卧\",\"ceiling_light_id\":\"master_bedroom_ceiling_light\",\"power\":true}"
             }
           }
         ]

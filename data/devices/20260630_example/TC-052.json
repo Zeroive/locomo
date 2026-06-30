@@ -4,11 +4,11 @@
     "dimension_tags": {
       "turn_count": "2-3轮",
       "candidate_tool_count": "16-20",
-      "tool_call_mode": "顺序多工具",
+      "tool_call_mode": "无工具",
       "validity": "全部无效",
       "same_device_across_rooms": "涉及且房间明确"
     },
-    "scenario": "夜间起夜",
+    "scenario": "夜间起身但卫生间照明未配置",
     "home_context": {
       "rooms": [
         {
@@ -182,54 +182,31 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "夜里起身时，打开卫生间夜灯。"
+        "content": "夜里起身去卫生间，帮我打开卫生间顶灯。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "ceiling_light.set_color",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "tv.open_app",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有卫生间顶灯设备，无法执行打开卫生间顶灯的操作。",
+        "tool_calls": []
       },
       {
         "turn_id": 3,
         "role": "user",
-        "content": "夜里起身时，把卫生间夜灯亮度调到20。"
+        "content": "那把卫生间顶灯亮度调到20。"
       },
       {
         "turn_id": 4,
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "tv.open_app",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
-            }
-          }
-        ]
+        "content": "当前没有卫生间顶灯设备，无法执行调节卫生间顶灯亮度的操作。",
+        "tool_calls": []
       }
     ],
     "expected_summary": {
       "requires_clarification": false,
       "execution_status": "failed",
       "valid_tool_call_count": 0,
-      "invalid_tool_call_count": 3
+      "invalid_tool_call_count": 0
     }
   }
 }

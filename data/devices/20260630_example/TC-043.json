@@ -8,7 +8,7 @@
       "validity": "全部有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "通风换气",
+    "scenario": "客厅通风换气",
     "home_context": {
       "rooms": [
         {

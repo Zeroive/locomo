@@ -8,7 +8,7 @@
       "validity": "部分有效",
       "same_device_across_rooms": "不涉及"
     },
-    "scenario": "清洁",
+    "scenario": "打扫前准备客厅",
     "home_context": {
       "rooms": [
         {
@@ -114,25 +114,18 @@
       {
         "turn_id": 1,
         "role": "user",
-        "content": "开始打扫前，打开客厅顶灯。"
+        "content": "开始打扫前，帮我打开客厅顶灯，再打开客厅香薰机。"
       },
       {
         "turn_id": 2,
         "role": "assistant",
-        "content": null,
+        "content": "当前没有客厅香薰机设备，无法执行打开客厅香薰机的操作；先为你打开客厅顶灯。",
         "tool_calls": [
           {
             "type": "function",
             "function": {
               "name": "ceiling_light.set_power",
               "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
-            }
-          },
-          {
-            "type": "function",
-            "function": {
-              "name": "speaker.set_playlist",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
             }
           }
         ]
@@ -151,7 +144,7 @@
             "type": "function",
             "function": {
               "name": "robot_vacuum.set_suction",
-              "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
+              "arguments": "{\"room\":\"客厅\",\"robot_vacuum_id\":\"living_room_robot_vacuum\",\"level\":4}"
             }
           }
         ]
@@ -161,7 +154,7 @@
       "requires_clarification": false,
       "execution_status": "partial_success",
       "valid_tool_call_count": 2,
-      "invalid_tool_call_count": 1
+      "invalid_tool_call_count": 0
     }
   }
 }
