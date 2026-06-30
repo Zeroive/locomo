@@ -1,444 +1,742 @@
 {
+  "spaces": {
+    "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "卫生间", "阳台", "其他"]
+  },
+  "actions": {
+    "switch": ["打开", "关闭"],
+    "adjust": ["调高", "调低", "设置数值"],
+    "media": ["播放", "暂停", "投屏"]
+  },
   "device_categories": {
-    "sensing_devices": {
-      "name": "感知类设备",
-      "description": "用于感知和检测环境及人员状态的设备",
+    "lighting": {
+      "name": "照明类",
+      "description": "用于基础照明、局部照明与夜间辅助照明的设备",
       "devices": {
-        "wifi_router": {
-          "name": "WiFi AP / 路由器",
-          "description": "用于检测家庭成员手机、手表等终端上线",
-          "scenarios": ["male_leave_work", "family_return", "all_leave_arm", "anomaly_detection"],
-          "typical_events": [
-            {"event_type": "device_online", "description": "{设备名称}上线", "trigger": "手机连接WiFi"},
-            {"event_type": "device_offline", "description": "{设备名称}离线", "trigger": "手机离开WiFi覆盖范围"},
-            {"event_type": "network_block", "description": "设备{设备名称}被踢出网络", "trigger": "家长控制操作"},
-            {"event_type": "guest_network", "description": "访客网络{状态}", "trigger": "开启/关闭访客网络"}
-          ],
-          "operation_probability": {
-            "male_leave_work": {"online": 0.05, "offline": 0.95},
-            "family_return": {"online": 0.95, "offline": 0.05},
-            "all_leave_arm": {"online": 0.05, "offline": 0.95},
-            "anomaly_detection": {"unusual_device": 0.1}
-          },
+        "ceiling_light": {
+          "name": "顶灯",
+          "description": "房间主照明设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "卫生间", "阳台", "其他"],
           "capabilities": {
-            "query": ["连接设备列表", "MAC地址", "RSSI信号强度", "在线状态"],
-            "control": ["踢出设备", "开启/关闭访客网络", "儿童上网时间段限制"],
-            "config": ["设备别名绑定", "回家/离家地理围栏触发阈值"]
-          },
-          "state_transitions": {
-            "online": ["offline"],
-            "offline": ["online"],
-            "blocked": ["unblocked"]
-          },
-          "data_types": ["device_id", "timestamp", "rssi", "connection_duration"],
-          "tools": [
-            "wifi_router.list_connected_devices",
-            "wifi_router.get_presence_by_user",
-            "wifi_router.block_device",
-            "wifi_router.set_guest_network"
-          ]
-        },
-        "door_camera": {
-          "name": "门口摄像头",
-          "description": "用于检测门口有人靠近",
-          "scenarios": ["visitor_arrival", "anomaly_detection", "family_return", "all_leave_arm"],
-          "typical_events": [
-            {"event_type": "motion_detected", "description": "检测到门口移动", "trigger": "人形进入监控区域"},
-            {"event_type": "face_recognized", "description": "识别到{人名}", "trigger": "人脸匹配成功"},
-            {"event_type": "snapshot", "description": "摄像头抓拍", "trigger": "手动/自动触发"},
-            {"event_type": "two_way_audio", "description": "双向对讲{状态}", "trigger": "发起/结束对讲"},
-            {"event_type": "intrusion_alert", "description": "逗留报警", "trigger": "超过逗留阈值"}
-          ],
-          "operation_probability": {
-            "visitor_arrival": {"motion": 1.0, "face_recognized": 0.7},
-            "anomaly_detection": {"motion": 0.3, "intrusion": 0.1},
-            "family_return": {"motion": 0.95, "face_recognized": 0.9},
-            "all_leave_arm": {"motion": 0.1, "intrusion": 0.05}
-          },
-          "capabilities": {
-            "control": ["抓拍", "录制短视频", "开启双向对讲", "播放预设语音"],
-            "query": ["当前画面流", "最近一次移动侦测时间"],
-            "config": ["人形检测灵敏度", "逗留报警时间阈值", "人脸库白名单比对"]
-          },
-          "state_transitions": {
-            "idle": ["motion_detected"],
-            "motion_detected": ["face_recognized", "intrusion_alert", "idle"],
-            "recording": ["idle"]
-          },
-          "data_types": ["timestamp", "motion_type", "face_id", "image_url", "duration"],
-          "tools": [
-            "door_camera.get_recent_events",
-            "door_camera.take_snapshot",
-            "door_camera.start_recording",
-            "door_camera.play_preset_voice"
-          ]
-        },
-        "smart_lock": {
-          "name": "智能门锁",
-          "description": "开锁、锁门、指纹开锁、关门",
-          "scenarios": ["male_leave_work", "family_return", "all_leave_arm", "visitor_arrival"],
-          "typical_events": [
-            {"event_type": "lock_unlock", "description": "门锁{操作}", "trigger": "指纹/密码/远程解锁"},
-            {"event_type": "door_status", "description": "门{状态}", "trigger": "开门/关门/虚掩"},
-            {"event_type": "temp_password", "description": "生成临时密码", "trigger": "创建一次性/周期密码"},
-            {"event_type": "tamper_alert", "description": "防撬报警", "trigger": "异常开锁尝试"}
-          ],
-          "operation_probability": {
-            "male_leave_work": {"lock": 0.95, "unlock": 0.05},
-            "family_return": {"unlock": 0.95, "lock": 0.05},
-            "all_leave_arm": {"lock": 1.0, "auto_lock": 0.9},
-            "visitor_arrival": {"temp_password": 0.5, "remote_unlock": 0.3}
-          },
-          "capabilities": {
-            "control": ["远程解锁（需二次确认）", "关门自动落锁"],
-            "query": ["当前电量", "门状态（开/关/虚掩）", "开锁日志（谁在何时用什么方式）"],
-            "config": ["生成临时密码（一次性/周期/限时）", "下发指纹/IC卡", "防撬报警开关"]
-          },
-          "state_transitions": {
-            "locked": ["unlocked"],
-            "unlocked": ["locked", "door_open"],
-            "door_open": ["door_closed", "locked"],
-            "low_battery": ["normal"]
-          },
-          "data_types": ["timestamp", "operation_type", "user_id", "method", "battery_level"],
-          "tools": [
-            "smart_lock.get_status",
-            "smart_lock.lock",
-            "smart_lock.unlock",
-            "smart_lock.create_temp_password",
-            "smart_lock.get_unlock_logs"
-          ]
-        }
-      }
-    },
-    "environmental_sensors": {
-      "name": "环境感知设备",
-      "description": "监测室内环境参数的传感器",
-      "devices": {
-        "temp_humidity_sensor": {
-          "name": "温湿度传感器",
-          "description": "监测室内冷暖干湿",
-          "scenarios": ["male_leave_work", "family_return", "elderly_outdoor", "child_return"],
-          "typical_events": [
-            {"event_type": "temp_threshold", "description": "温度{状态}", "trigger": "超过高低温阈值"},
-            {"event_type": "humidity_threshold", "description": "湿度{状态}", "trigger": "超过高低湿阈值"},
-            {"event_type": "climate_alert", "description": "舒适度提醒", "trigger": "温湿度组合触发"}
-          ],
-          "operation_probability": {
-            "male_leave_work": {"read": 0.3},
-            "family_return": {"read": 0.5},
-            "elderly_outdoor": {"alert": 0.2},
-            "child_return": {"read": 0.2}
-          },
-          "capabilities": {
-            "query": ["当前温度(℃)", "当前湿度(%)"],
-            "config": ["温度/湿度高低阈值报警", "数据采样上报频率"]
-          },
-          "state_transitions": {
-            "normal": ["temp_high", "temp_low", "humidity_high", "humidity_low"],
-            "temp_high": ["normal"],
-            "temp_low": ["normal"]
-          },
-          "data_types": ["timestamp", "temperature", "humidity", "comfort_level"],
-          "tools": [
-            "temp_humidity_sensor.get_reading",
-            "temp_humidity_sensor.set_threshold"
-          ]
-        },
-        "light_sensor": {
-          "name": "光照传感器",
-          "description": "监测环境亮度",
-          "scenarios": ["child_return", "family_return", "male_leave_work"],
-          "typical_events": [
-            {"event_type": "light_change", "description": "光照强度变化", "trigger": "亮度超过阈值"},
-            {"event_type": "dark_trigger", "description": "暗光触发", "trigger": "低于设定亮度"}
-          ],
-          "operation_probability": {
-            "child_return": {"dark_trigger": 0.6},
-            "family_return": {"dark_trigger": 0.7},
-            "male_leave_work": {"light_change": 0.3}
-          },
-          "capabilities": {
-            "query": ["光照度(Lux)"],
-            "config": ["暗光触发阈值（如低于50 Lux联动开灯）"]
-          },
-          "state_transitions": {
-            "bright": ["dim", "dark"],
-            "dim": ["bright", "dark"],
-            "dark": ["dim", "bright"]
-          },
-          "data_types": ["timestamp", "lux", "trigger_status"],
-          "tools": [
-            "light_sensor.get_lux",
-            "light_sensor.set_dark_threshold"
-          ]
-        },
-        "air_quality_sensor": {
-          "name": "空气质量传感器",
-          "description": "监测PM2.5、CO2、甲醛/TVOC",
-          "scenarios": ["family_return", "elderly_outdoor", "child_return", "all_leave_arm"],
-          "typical_events": [
-            {"event_type": "pm25_alert", "description": "PM2.5超标", "trigger": "浓度超过标准"},
-            {"event_type": "co2_alert", "description": "CO2浓度过高", "trigger": "超过1500ppm"},
-            {"event_type": "tvoc_alert", "description": "TVOC超标", "trigger": "空气质量等级变化"}
-          ],
-          "operation_probability": {
-            "family_return": {"read": 0.4, "alert": 0.1},
-            "elderly_outdoor": {"alert": 0.15},
-            "child_return": {"read": 0.2},
-            "all_leave_arm": {"monitor": 0.5}
-          },
-          "capabilities": {
-            "query": ["PM2.5浓度", "CO2 ppm", "TVOC等级"],
-            "config": ["超标联动阈值（如CO2>1500联动新风系统）"]
-          },
-          "state_transitions": {
-            "good": ["moderate", "poor"],
-            "moderate": ["good", "poor"],
-            "poor": ["moderate", "good"]
-          },
-          "data_types": ["timestamp", "pm25", "co2", "tvoc", "aqi"],
-          "tools": [
-            "air_quality_sensor.get_reading",
-            "air_quality_sensor.set_threshold"
-          ]
-        }
-      }
-    },
-    "actuators": {
-      "name": "执行设备",
-      "description": "用于执行特定动作或控制的设备",
-      "devices": {
-        "smart_light": {
-          "name": "智能灯",
-          "description": "照明及氛围营造",
-          "scenarios": ["male_leave_work", "child_return", "family_return", "visitor_arrival"],
-          "typical_events": [
-            {"event_type": "light_switch", "description": "{灯名称}{状态}", "trigger": "手动/定时/联动"},
-            {"event_type": "brightness_change", "description": "{灯名称}亮度调整", "trigger": "语音/APP控制"},
-            {"event_type": "color_temp", "description": "{灯名称}色温调整", "trigger": "场景模式切换"},
-            {"event_type": "scene_activate", "description": "灯光场景{场景名称}激活", "trigger": "模式选择"}
-          ],
-          "operation_probability": {
-            "male_leave_work": {"off": 0.95, "on": 0.05},
-            "child_return": {"on": 0.9, "brightness": 0.5},
-            "family_return": {"on": 0.85, "scene": 0.4},
-            "visitor_arrival": {"on": 0.9, "brightness": 0.3}
-          },
-          "capabilities": {
-            "control": ["开关", "亮度(0-100%)", "色温(2700K-6500K)"],
-            "config": ["渐变过渡时间(ms)", "定时/倒计时", "生物钟节律模式"]
+            "control": ["打开", "关闭", "调高亮度", "调低亮度", "设置亮度", "设置色温"],
+            "query": ["开关状态", "亮度", "色温"],
+            "config": ["默认亮度", "渐变时间", "定时开关"]
           },
           "state_transitions": {
             "off": ["on"],
-            "on": ["off", "dimmed", "color_changed"],
-            "dimmed": ["bright", "off"]
+            "on": ["off", "dimmed", "brightened", "color_temperature_changed"],
+            "dimmed": ["on", "off"],
+            "brightened": ["on", "off"]
           },
-          "data_types": ["timestamp", "power_state", "brightness", "color_temp", "scene_id"],
-          "tools": [
-            "smart_light.set_power",
-            "smart_light.set_brightness",
-            "smart_light.set_color_temperature",
-            "smart_light.activate_scene"
-          ]
+          "tools": ["ceiling_light.get_status", "ceiling_light.set_power", "ceiling_light.set_brightness", "ceiling_light.set_color_temperature"]
         },
+        "desk_lamp": {
+          "name": "台灯",
+          "description": "桌面或床头局部照明设备",
+          "rooms": ["客厅", "主卧", "次卧", "书房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高亮度", "调低亮度", "设置亮度", "设置色温"],
+            "query": ["开关状态", "亮度", "色温"],
+            "config": ["护眼模式", "阅读模式", "定时关闭"]
+          },
+          "state_transitions": {
+            "off": ["on"],
+            "on": ["off", "reading_mode", "eye_protection_mode", "dimmed"],
+            "reading_mode": ["on", "off"],
+            "eye_protection_mode": ["on", "off"]
+          },
+          "tools": ["desk_lamp.get_status", "desk_lamp.set_power", "desk_lamp.set_brightness", "desk_lamp.set_color_temperature", "desk_lamp.set_mode"]
+        },
+        "night_light": {
+          "name": "夜灯",
+          "description": "夜间低亮度辅助照明设备",
+          "rooms": ["主卧", "次卧", "卫生间", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高亮度", "调低亮度", "设置亮度"],
+            "query": ["开关状态", "亮度", "人体感应状态"],
+            "config": ["人体感应开关", "夜间生效时间", "延时关闭时间"]
+          },
+          "state_transitions": {
+            "off": ["on", "motion_triggered"],
+            "on": ["off", "dimmed"],
+            "motion_triggered": ["on", "off"],
+            "dimmed": ["on", "off"]
+          },
+          "tools": ["night_light.get_status", "night_light.set_power", "night_light.set_brightness", "night_light.set_motion_detection"]
+        },
+        "other_lighting": {
+          "name": "其他",
+          "description": "其他照明类设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "卫生间", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高", "调低", "设置数值"],
+            "query": ["开关状态", "当前数值"],
+            "config": ["默认状态", "定时规则"]
+          },
+          "state_transitions": {
+            "off": ["on"],
+            "on": ["off", "adjusted"],
+            "adjusted": ["on", "off"]
+          },
+          "tools": ["other_lighting.get_status", "other_lighting.set_power", "other_lighting.set_value"]
+        }
+      }
+    },
+    "environment": {
+      "name": "环境类",
+      "description": "用于调节温度、空气流动和空气质量的设备",
+      "devices": {
         "air_conditioner": {
           "name": "空调",
-          "description": "室内温度调节",
-          "scenarios": ["male_leave_work", "family_return", "elderly_outdoor", "child_return"],
-          "typical_events": [
-            {"event_type": "ac_switch", "description": "空调{状态}", "trigger": "手动/定时/温度联动"},
-            {"event_type": "mode_change", "description": "空调模式切换为{模式}", "trigger": "模式选择"},
-            {"event_type": "temp_adjust", "description": "温度调整至{温度}℃", "trigger": "语音/APP控制"},
-            {"event_type": "energy_save", "description": "节能模式{状态}", "trigger": "模式切换"}
-          ],
-          "operation_probability": {
-            "male_leave_work": {"off": 0.8, "energy_save": 0.1},
-            "family_return": {"on": 0.7, "temp_adjust": 0.5},
-            "elderly_outdoor": {"on": 0.6, "mode_change": 0.3},
-            "child_return": {"on": 0.5}
-          },
+          "description": "室内制冷、制热、除湿与送风设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "其他"],
           "capabilities": {
-            "control": ["开关", "模式(制冷/热/除湿/送风)", "目标温度", "风速(低/中/高/自动)", "扫风方向"],
-            "config": ["节能模式", "睡眠曲线", "滤网清洗提醒重置"]
+            "control": ["打开", "关闭", "调高温度", "调低温度", "设置温度", "设置模式", "设置风速"],
+            "query": ["开关状态", "运行模式", "目标温度", "当前温度", "风速"],
+            "config": ["睡眠模式", "节能模式", "定时开关"]
           },
           "state_transitions": {
-            "off": ["cooling", "heating", "fan_only", "dehumidify"],
-            "cooling": ["off", "heating", "temp_changed"],
-            "heating": ["off", "cooling", "temp_changed"]
+            "off": ["cooling", "heating", "fan_only", "dehumidifying"],
+            "cooling": ["off", "heating", "fan_only", "dehumidifying", "temperature_changed"],
+            "heating": ["off", "cooling", "fan_only", "temperature_changed"],
+            "fan_only": ["off", "cooling", "heating"],
+            "dehumidifying": ["off", "cooling", "fan_only"]
           },
-          "data_types": ["timestamp", "power_state", "mode", "target_temp", "fan_speed", "energy_consumption"],
-          "tools": [
-            "air_conditioner.get_status",
-            "air_conditioner.set_power",
-            "air_conditioner.set_mode",
-            "air_conditioner.set_target_temperature",
-            "air_conditioner.set_fan_speed"
-          ]
+          "tools": ["air_conditioner.get_status", "air_conditioner.set_power", "air_conditioner.set_mode", "air_conditioner.set_target_temperature", "air_conditioner.set_fan_speed"]
         },
-        "smart_curtain": {
-          "name": "智能窗帘",
-          "description": "控制自然光与隐私",
-          "scenarios": ["male_leave_work", "family_return", "child_return", "visitor_arrival"],
-          "typical_events": [
-            {"event_type": "curtain_move", "description": "窗帘{操作}", "trigger": "手动/定时/光照联动"},
-            {"event_type": "curtain_stop", "description": "窗帘暂停", "trigger": "手动控制"},
-            {"event_type": "scene_linkage", "description": "窗帘联动{场景}", "trigger": "场景触发"}
-          ],
-          "operation_probability": {
-            "male_leave_work": {"close": 0.3, "open": 0.1},
-            "family_return": {"open": 0.2, "close": 0.4},
-            "child_return": {"open": 0.3},
-            "visitor_arrival": {"open": 0.5}
-          },
+        "floor_heating": {
+          "name": "暖气(地暖)",
+          "description": "室内供暖或地暖温控设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "卫生间", "其他"],
           "capabilities": {
-            "control": ["开合百分比(0-100%)", "暂停", "全开/全关"],
-            "config": ["手拉启动灵敏度", "定时开合（如早晨7点自动开30%）"]
+            "control": ["打开", "关闭", "调高温度", "调低温度", "设置温度"],
+            "query": ["开关状态", "目标温度", "当前温度", "加热状态"],
+            "config": ["分时温控", "防冻模式", "离家模式"]
           },
           "state_transitions": {
-            "open": ["closing", "closed"],
-            "closed": ["opening", "open"],
-            "opening": ["open", "stopped"],
-            "closing": ["closed", "stopped"]
+            "off": ["heating", "standby"],
+            "standby": ["heating", "off"],
+            "heating": ["standby", "off", "temperature_changed"],
+            "temperature_changed": ["heating", "standby"]
           },
-          "data_types": ["timestamp", "position", "direction", "speed"],
-          "tools": [
-            "smart_curtain.get_position",
-            "smart_curtain.set_position",
-            "smart_curtain.stop"
-          ]
+          "tools": ["floor_heating.get_status", "floor_heating.set_power", "floor_heating.set_target_temperature", "floor_heating.set_schedule"]
         },
-        "fresh_air_system": {
-          "name": "新风系统",
-          "description": "室内外空气交换与净化",
-          "scenarios": ["family_return", "child_return", "elderly_outdoor", "all_leave_arm"],
-          "typical_events": [
-            {"event_type": "fan_switch", "description": "新风系统{状态}", "trigger": "手动/空气质量联动"},
-            {"event_type": "speed_change", "description": "风速调整至{档位}", "trigger": "APP控制"},
-            {"event_type": "filter_alert", "description": "滤网更换提醒", "trigger": "达到使用寿命"},
-            {"event_type": "air_exchange", "description": "换气模式{模式}", "trigger": "内/外循环切换"}
-          ],
-          "operation_probability": {
-            "family_return": {"on": 0.6, "auto": 0.4},
-            "child_return": {"on": 0.5},
-            "elderly_outdoor": {"on": 0.55},
-            "all_leave_arm": {"off": 0.8}
-          },
+        "fan": {
+          "name": "风扇",
+          "description": "室内空气流动和降温设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "阳台", "其他"],
           "capabilities": {
-            "control": ["开关", "风速档位", "内/外循环切换"],
-            "query": ["PM2.5过滤效率", "滤网剩余寿命"],
-            "config": ["空气质量联动自动档位"]
-          },
-          "state_transitions": {
-            "off": ["low", "medium", "high", "auto"],
-            "low": ["medium", "high", "auto", "off"],
-            "auto": ["low", "medium", "high", "off"]
-          },
-          "data_types": ["timestamp", "power_state", "speed_level", "filter_life", "pm25_removal_rate"],
-          "tools": [
-            "fresh_air_system.get_status",
-            "fresh_air_system.set_power",
-            "fresh_air_system.set_speed",
-            "fresh_air_system.reset_filter_reminder"
-          ]
-        },
-        "tv_projector": {
-          "name": "电视 / 投影仪",
-          "description": "影音娱乐",
-          "scenarios": ["family_return", "child_return"],
-          "typical_events": [
-            {"event_type": "tv_switch", "description": "{设备名称}{状态}", "trigger": "手动/语音控制"},
-            {"event_type": "source_change", "description": "输入源切换至{源}", "trigger": "遥控器操作"},
-            {"event_type": "media_control", "description": "{操作}媒体", "trigger": "播放/暂停/快进"},
-            {"event_type": "scene_mode", "description": "观影模式{状态}", "trigger": "一键场景"}
-          ],
-          "operation_probability": {
-            "family_return": {"on": 0.5, "scene": 0.2},
-            "child_return": {"on": 0.4, "media_control": 0.3}
-          },
-          "capabilities": {
-            "control": ["开关", "音量", "输入源切换(HDMI1/2)", "媒体控制(播放/暂停/快进)"],
-            "config": ["观影模式联动（一键关窗帘、关灯、开电视）"]
+            "control": ["打开", "关闭", "调高风速", "调低风速", "设置风速", "设置摇头"],
+            "query": ["开关状态", "风速", "摇头状态"],
+            "config": ["自然风模式", "睡眠风模式", "定时关闭"]
           },
           "state_transitions": {
             "off": ["on"],
-            "on": ["off", "playing", "paused"],
-            "playing": ["paused", "stopped"]
+            "on": ["off", "speed_changed", "oscillating"],
+            "speed_changed": ["on", "off"],
+            "oscillating": ["on", "off"]
           },
-          "data_types": ["timestamp", "power_state", "input_source", "volume", "media_state"],
-          "tools": [
-            "tv_projector.set_power",
-            "tv_projector.set_volume",
-            "tv_projector.set_input_source",
-            "tv_projector.media_control"
-          ]
+          "tools": ["fan.get_status", "fan.set_power", "fan.set_speed", "fan.set_oscillation", "fan.set_timer"]
+        },
+        "air_purifier": {
+          "name": "空气净化器",
+          "description": "过滤颗粒物、异味和部分污染物的空气净化设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高风量", "调低风量", "设置风量", "设置模式"],
+            "query": ["开关状态", "空气质量", "PM2.5", "滤芯寿命", "风量"],
+            "config": ["自动模式", "睡眠模式", "滤芯提醒重置"]
+          },
+          "state_transitions": {
+            "off": ["auto", "manual", "sleep"],
+            "auto": ["off", "manual", "sleep", "air_quality_changed"],
+            "manual": ["off", "auto", "sleep", "speed_changed"],
+            "sleep": ["off", "auto", "manual"]
+          },
+          "tools": ["air_purifier.get_status", "air_purifier.set_power", "air_purifier.set_mode", "air_purifier.set_speed", "air_purifier.reset_filter"]
+        },
+        "other_environment": {
+          "name": "其他",
+          "description": "其他环境调节类设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "卫生间", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高", "调低", "设置数值"],
+            "query": ["开关状态", "当前数值", "运行模式"],
+            "config": ["自动模式", "定时规则"]
+          },
+          "state_transitions": {
+            "off": ["on"],
+            "on": ["off", "adjusted", "auto"],
+            "auto": ["on", "off"],
+            "adjusted": ["on", "off"]
+          },
+          "tools": ["other_environment.get_status", "other_environment.set_power", "other_environment.set_value", "other_environment.set_mode"]
         }
       }
     },
-    "interaction_devices": {
-      "name": "交互设备",
-      "description": "用于与用户进行交互的设备",
+    "security": {
+      "name": "安防类",
+      "description": "用于门窗安全、视频监控、告警与门禁交互的设备",
       "devices": {
-        "smart_speaker": {
-          "name": "智能音箱",
-          "description": "语音交互、背景音乐",
-          "scenarios": ["male_leave_work", "family_return", "child_return", "elderly_outdoor", "visitor_arrival"],
-          "typical_events": [
-            {"event_type": "voice_command", "description": "语音指令：{指令}", "trigger": "唤醒词+命令"},
-            {"event_type": "tts_announcement", "description": "播报：{内容}", "trigger": "事件触发/定时"},
-            {"event_type": "media_play", "description": "播放{内容}", "trigger": "语音指令"},
-            {"event_type": "conversation_start", "description": "对话开始", "trigger": "唤醒词"},
-            {"event_type": "conversation_end", "description": "对话结束", "trigger": "超时/主动结束"}
-          ],
-          "operation_probability": {
-            "male_leave_work": {"query": 0.3, "tts": 0.2},
-            "family_return": {"query": 0.4, "media": 0.3},
-            "child_return": {"query": 0.2, "media": 0.4},
-            "elderly_outdoor": {"query": 0.5, "tts": 0.3},
-            "visitor_arrival": {"tts": 0.6}
-          },
+        "smart_lock": {
+          "name": "智能门锁",
+          "description": "门锁状态管理、远程开关锁和开锁记录查询设备",
+          "rooms": ["其他"],
           "capabilities": {
-            "control": ["音量调节", "TTS文本播报（文字转语音，如\"饭做好了\"）", "媒体播放控制"],
-            "config": ["麦克风阵列静音（物理隐私）", "蓝牙配对", "声纹识别绑定"]
+            "control": ["打开", "关闭", "远程解锁", "上锁", "生成临时密码"],
+            "query": ["门锁状态", "门状态", "电量", "开锁日志"],
+            "config": ["指纹管理", "密码管理", "防撬报警开关", "自动上锁延迟"]
           },
           "state_transitions": {
-            "idle": ["listening", "playing"],
-            "listening": ["processing", "idle"],
-            "processing": ["speaking", "idle"],
-            "playing": ["idle", "paused"]
+            "locked": ["unlocked", "tamper_alert", "low_battery"],
+            "unlocked": ["locked", "door_open"],
+            "door_open": ["door_closed", "locked"],
+            "door_closed": ["locked", "unlocked"],
+            "tamper_alert": ["locked"],
+            "low_battery": ["locked"]
           },
-          "data_types": ["timestamp", "interaction_type", "command_text", "tts_text", "duration"],
-          "tools": [
-            "smart_speaker.announce",
-            "smart_speaker.set_volume",
-            "smart_speaker.play_media",
-            "smart_speaker.stop_media"
-          ]
+          "tools": ["smart_lock.get_status", "smart_lock.lock", "smart_lock.unlock", "smart_lock.create_temp_password", "smart_lock.get_unlock_logs"]
+        },
+        "smart_window": {
+          "name": "智能窗户",
+          "description": "窗户开合、通风和安全状态管理设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "卫生间", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "设置开合比例", "暂停"],
+            "query": ["开关状态", "开合比例", "锁定状态", "雨水感应状态"],
+            "config": ["雨天自动关闭", "通风定时", "儿童锁"]
+          },
+          "state_transitions": {
+            "closed": ["opening", "open", "locked"],
+            "opening": ["open", "stopped", "closed"],
+            "open": ["closing", "closed"],
+            "closing": ["closed", "stopped", "open"],
+            "stopped": ["opening", "closing"],
+            "locked": ["closed"]
+          },
+          "tools": ["smart_window.get_status", "smart_window.set_position", "smart_window.open", "smart_window.close", "smart_window.stop"]
+        },
+        "camera": {
+          "name": "摄像头",
+          "description": "视频监控、移动侦测和录像抓拍设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "抓拍", "开始录像", "停止录像", "调节云台"],
+            "query": ["在线状态", "当前画面", "最近事件", "录像状态"],
+            "config": ["移动侦测灵敏度", "隐私遮蔽", "告警推送开关"]
+          },
+          "state_transitions": {
+            "off": ["idle"],
+            "idle": ["recording", "motion_detected", "privacy_mode", "off"],
+            "recording": ["idle", "off"],
+            "motion_detected": ["recording", "idle"],
+            "privacy_mode": ["idle", "off"]
+          },
+          "tools": ["camera.get_status", "camera.get_stream", "camera.take_snapshot", "camera.start_recording", "camera.stop_recording", "camera.set_ptz"]
+        },
+        "doorbell": {
+          "name": "门铃",
+          "description": "访客呼叫、门口画面和双向通话设备",
+          "rooms": ["其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "播放提示音", "开始通话", "结束通话"],
+            "query": ["门铃状态", "最近呼叫记录", "当前画面", "电量"],
+            "config": ["铃声音量", "勿扰时段", "移动侦测"]
+          },
+          "state_transitions": {
+            "idle": ["ringing", "motion_detected", "offline"],
+            "ringing": ["talking", "idle"],
+            "talking": ["idle"],
+            "motion_detected": ["idle", "ringing"],
+            "offline": ["idle"]
+          },
+          "tools": ["doorbell.get_status", "doorbell.get_recent_events", "doorbell.answer_call", "doorbell.end_call", "doorbell.play_chime"]
+        },
+        "gas_alarm": {
+          "name": "燃气报警器",
+          "description": "燃气泄漏监测与告警设备",
+          "rooms": ["厨房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "消音", "自检"],
+            "query": ["报警状态", "燃气浓度", "传感器状态", "电量"],
+            "config": ["报警阈值", "联动关闭燃气阀", "告警通知"]
+          },
+          "state_transitions": {
+            "normal": ["gas_detected", "fault", "low_battery"],
+            "gas_detected": ["alarming", "normal"],
+            "alarming": ["muted", "normal"],
+            "muted": ["alarming", "normal"],
+            "fault": ["normal"]
+          },
+          "tools": ["gas_alarm.get_status", "gas_alarm.get_concentration", "gas_alarm.mute", "gas_alarm.self_test", "gas_alarm.set_threshold"]
+        },
+        "smoke_alarm": {
+          "name": "烟雾报警器",
+          "description": "烟雾和火灾风险监测告警设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "消音", "自检"],
+            "query": ["报警状态", "烟雾浓度", "传感器状态", "电量"],
+            "config": ["报警阈值", "告警通知", "联动场景"]
+          },
+          "state_transitions": {
+            "normal": ["smoke_detected", "fault", "low_battery"],
+            "smoke_detected": ["alarming", "normal"],
+            "alarming": ["muted", "normal"],
+            "muted": ["alarming", "normal"],
+            "fault": ["normal"]
+          },
+          "tools": ["smoke_alarm.get_status", "smoke_alarm.get_density", "smoke_alarm.mute", "smoke_alarm.self_test", "smoke_alarm.set_threshold"]
+        },
+        "other_security": {
+          "name": "其他",
+          "description": "其他安防类设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "卫生间", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "布防", "撤防"],
+            "query": ["在线状态", "工作状态", "告警状态"],
+            "config": ["告警通知", "联动规则"]
+          },
+          "state_transitions": {
+            "disarmed": ["armed"],
+            "armed": ["disarmed", "alarming"],
+            "alarming": ["armed", "disarmed"],
+            "offline": ["disarmed"]
+          },
+          "tools": ["other_security.get_status", "other_security.arm", "other_security.disarm", "other_security.set_alert_rule"]
+        }
+      }
+    },
+    "appliance": {
+      "name": "家电类",
+      "description": "用于影音娱乐、清洁洗护、厨房烹饪和生活服务的家电设备",
+      "devices": {
+        "tv": {
+          "name": "电视",
+          "description": "视频播放、投屏和输入源切换设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "播放", "暂停", "投屏", "调高音量", "调低音量", "切换输入源"],
+            "query": ["开关状态", "播放状态", "音量", "输入源"],
+            "config": ["儿童模式", "默认输入源", "投屏权限"]
+          },
+          "state_transitions": {
+            "off": ["on"],
+            "on": ["off", "playing", "casting"],
+            "playing": ["paused", "off"],
+            "paused": ["playing", "off"],
+            "casting": ["playing", "paused", "off"]
+          },
+          "tools": ["tv.get_status", "tv.set_power", "tv.media_control", "tv.cast", "tv.set_volume", "tv.set_input_source"]
+        },
+        "projector": {
+          "name": "投影仪",
+          "description": "投影显示、播放和投屏设备",
+          "rooms": ["客厅", "主卧", "次卧", "书房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "播放", "暂停", "投屏", "调焦", "梯形校正"],
+            "query": ["开关状态", "播放状态", "输入源", "灯泡寿命"],
+            "config": ["画面模式", "自动梯形校正", "默认输入源"]
+          },
+          "state_transitions": {
+            "off": ["warming_up"],
+            "warming_up": ["on", "off"],
+            "on": ["playing", "casting", "cooling_down"],
+            "playing": ["paused", "cooling_down"],
+            "paused": ["playing", "cooling_down"],
+            "casting": ["playing", "paused", "cooling_down"],
+            "cooling_down": ["off"]
+          },
+          "tools": ["projector.get_status", "projector.set_power", "projector.media_control", "projector.cast", "projector.set_focus", "projector.set_keystone"]
+        },
+        "speaker": {
+          "name": "音响",
+          "description": "音频播放、音量调节和投放播放设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "卫生间", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "播放", "暂停", "投屏", "调高音量", "调低音量", "设置音量"],
+            "query": ["开关状态", "播放状态", "音量", "音源"],
+            "config": ["蓝牙配对", "音效模式", "多房间分组"]
+          },
+          "state_transitions": {
+            "off": ["idle"],
+            "idle": ["playing", "casting", "off"],
+            "playing": ["paused", "idle", "off"],
+            "paused": ["playing", "idle", "off"],
+            "casting": ["playing", "paused", "idle"]
+          },
+          "tools": ["speaker.get_status", "speaker.set_power", "speaker.play_media", "speaker.pause_media", "speaker.cast", "speaker.set_volume"]
+        },
+        "refrigerator": {
+          "name": "冰箱",
+          "description": "冷藏冷冻和食品保鲜设备",
+          "rooms": ["餐厅", "厨房", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高温度", "调低温度", "设置温度", "设置模式"],
+            "query": ["运行状态", "冷藏温度", "冷冻温度", "门状态", "故障状态"],
+            "config": ["速冷模式", "速冻模式", "假日模式"]
+          },
+          "state_transitions": {
+            "normal": ["cooling", "quick_cooling", "quick_freezing", "door_open", "fault"],
+            "cooling": ["normal", "fault"],
+            "quick_cooling": ["normal"],
+            "quick_freezing": ["normal"],
+            "door_open": ["normal", "alarm"],
+            "alarm": ["normal"]
+          },
+          "tools": ["refrigerator.get_status", "refrigerator.set_fridge_temperature", "refrigerator.set_freezer_temperature", "refrigerator.set_mode"]
+        },
+        "washing_machine": {
+          "name": "洗衣机",
+          "description": "衣物洗涤和脱水设备",
+          "rooms": ["厨房", "卫生间", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "启动", "暂停", "设置洗涤程序"],
+            "query": ["开关状态", "运行阶段", "剩余时间", "门锁状态"],
+            "config": ["洗涤程序", "水温", "脱水转速", "预约时间"]
+          },
+          "state_transitions": {
+            "off": ["idle"],
+            "idle": ["washing", "scheduled", "off"],
+            "scheduled": ["washing", "idle"],
+            "washing": ["rinsing", "paused", "fault"],
+            "rinsing": ["spinning", "paused", "fault"],
+            "spinning": ["finished", "paused", "fault"],
+            "paused": ["washing", "rinsing", "spinning", "idle"],
+            "finished": ["idle"]
+          },
+          "tools": ["washing_machine.get_status", "washing_machine.set_power", "washing_machine.start", "washing_machine.pause", "washing_machine.set_program", "washing_machine.set_schedule"]
+        },
+        "dryer": {
+          "name": "烘干机",
+          "description": "衣物烘干设备",
+          "rooms": ["卫生间", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "启动", "暂停", "设置烘干程序"],
+            "query": ["开关状态", "运行阶段", "剩余时间", "湿度"],
+            "config": ["烘干程序", "烘干强度", "预约时间"]
+          },
+          "state_transitions": {
+            "off": ["idle"],
+            "idle": ["drying", "scheduled", "off"],
+            "scheduled": ["drying", "idle"],
+            "drying": ["cooling", "paused", "fault"],
+            "cooling": ["finished", "paused"],
+            "paused": ["drying", "cooling", "idle"],
+            "finished": ["idle"]
+          },
+          "tools": ["dryer.get_status", "dryer.set_power", "dryer.start", "dryer.pause", "dryer.set_program", "dryer.set_dry_level"]
+        },
+        "dishwasher": {
+          "name": "洗碗机",
+          "description": "餐具洗涤、烘干和消毒设备",
+          "rooms": ["厨房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "启动", "暂停", "设置洗涤程序"],
+            "query": ["开关状态", "运行阶段", "剩余时间", "耗材状态"],
+            "config": ["洗涤程序", "烘干模式", "预约时间"]
+          },
+          "state_transitions": {
+            "off": ["idle"],
+            "idle": ["washing", "scheduled", "off"],
+            "scheduled": ["washing", "idle"],
+            "washing": ["rinsing", "drying", "paused", "fault"],
+            "rinsing": ["drying", "paused", "fault"],
+            "drying": ["finished", "paused"],
+            "paused": ["washing", "rinsing", "drying", "idle"],
+            "finished": ["idle"]
+          },
+          "tools": ["dishwasher.get_status", "dishwasher.set_power", "dishwasher.start", "dishwasher.pause", "dishwasher.set_program", "dishwasher.set_schedule"]
+        },
+        "microwave": {
+          "name": "微波炉",
+          "description": "食物加热和解冻设备",
+          "rooms": ["餐厅", "厨房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "启动", "暂停", "设置功率", "设置时长"],
+            "query": ["开关状态", "运行状态", "剩余时间", "门状态"],
+            "config": ["加热功率", "加热时长", "解冻模式"]
+          },
+          "state_transitions": {
+            "off": ["idle"],
+            "idle": ["heating", "defrosting", "off"],
+            "heating": ["paused", "finished", "fault"],
+            "defrosting": ["paused", "finished", "fault"],
+            "paused": ["heating", "defrosting", "idle"],
+            "finished": ["idle"]
+          },
+          "tools": ["microwave.get_status", "microwave.set_power", "microwave.start", "microwave.pause", "microwave.set_cook_time", "microwave.set_power_level"]
+        },
+        "oven": {
+          "name": "烤箱",
+          "description": "烘焙和烤制设备",
+          "rooms": ["餐厅", "厨房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "启动", "暂停", "调高温度", "调低温度", "设置温度", "设置时长"],
+            "query": ["开关状态", "当前温度", "目标温度", "剩余时间"],
+            "config": ["烘烤模式", "预热", "预约时间"]
+          },
+          "state_transitions": {
+            "off": ["preheating", "idle"],
+            "idle": ["preheating", "baking", "off"],
+            "preheating": ["baking", "paused", "off"],
+            "baking": ["paused", "finished", "fault"],
+            "paused": ["baking", "idle"],
+            "finished": ["idle"]
+          },
+          "tools": ["oven.get_status", "oven.set_power", "oven.start", "oven.pause", "oven.set_temperature", "oven.set_cook_time", "oven.set_mode"]
+        },
+        "rice_cooker": {
+          "name": "电饭煲",
+          "description": "煮饭、煲粥和保温设备",
+          "rooms": ["厨房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "启动", "暂停", "设置程序"],
+            "query": ["开关状态", "运行阶段", "剩余时间", "保温状态"],
+            "config": ["烹饪程序", "预约时间", "保温时长"]
+          },
+          "state_transitions": {
+            "off": ["idle"],
+            "idle": ["cooking", "scheduled", "off"],
+            "scheduled": ["cooking", "idle"],
+            "cooking": ["warming", "paused", "fault"],
+            "paused": ["cooking", "idle"],
+            "warming": ["idle", "off"]
+          },
+          "tools": ["rice_cooker.get_status", "rice_cooker.set_power", "rice_cooker.start", "rice_cooker.pause", "rice_cooker.set_program", "rice_cooker.set_schedule"]
+        },
+        "coffee_machine": {
+          "name": "咖啡机",
+          "description": "咖啡研磨、萃取和保温设备",
+          "rooms": ["餐厅", "厨房", "书房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "启动", "暂停", "设置杯量", "设置浓度"],
+            "query": ["开关状态", "运行状态", "水箱状态", "豆仓状态"],
+            "config": ["咖啡类型", "杯量", "浓度", "预约时间"]
+          },
+          "state_transitions": {
+            "off": ["idle"],
+            "idle": ["brewing", "cleaning", "off"],
+            "brewing": ["finished", "paused", "fault"],
+            "paused": ["brewing", "idle"],
+            "cleaning": ["idle", "fault"],
+            "finished": ["idle"]
+          },
+          "tools": ["coffee_machine.get_status", "coffee_machine.set_power", "coffee_machine.start_brew", "coffee_machine.pause", "coffee_machine.set_cup_size", "coffee_machine.set_strength"]
+        },
+        "water_dispenser": {
+          "name": "饮水机",
+          "description": "饮用水加热、制冷和出水设备",
+          "rooms": ["客厅", "餐厅", "厨房", "书房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高温度", "调低温度", "设置温度", "出水"],
+            "query": ["开关状态", "水温", "水量", "滤芯寿命", "童锁状态"],
+            "config": ["童锁", "加热温度", "制冷开关", "滤芯提醒"]
+          },
+          "state_transitions": {
+            "off": ["standby"],
+            "standby": ["heating", "cooling", "dispensing", "off"],
+            "heating": ["standby", "dispensing"],
+            "cooling": ["standby", "dispensing"],
+            "dispensing": ["standby"],
+            "locked": ["standby"]
+          },
+          "tools": ["water_dispenser.get_status", "water_dispenser.set_power", "water_dispenser.set_temperature", "water_dispenser.dispense", "water_dispenser.set_child_lock"]
+        },
+        "range_hood": {
+          "name": "油烟机",
+          "description": "厨房排烟和照明设备",
+          "rooms": ["厨房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高风量", "调低风量", "设置风量", "打开照明", "关闭照明"],
+            "query": ["开关状态", "风量", "照明状态", "清洁提醒"],
+            "config": ["自动巡航增压", "延时关闭", "清洁提醒重置"]
+          },
+          "state_transitions": {
+            "off": ["low", "medium", "high"],
+            "low": ["medium", "high", "off"],
+            "medium": ["low", "high", "off"],
+            "high": ["medium", "low", "off"],
+            "delay_off": ["off"]
+          },
+          "tools": ["range_hood.get_status", "range_hood.set_power", "range_hood.set_speed", "range_hood.set_light", "range_hood.set_delay_off"]
+        },
+        "gas_stove": {
+          "name": "燃气灶",
+          "description": "燃气烹饪和火力控制设备",
+          "rooms": ["厨房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高火力", "调低火力", "设置火力"],
+            "query": ["开关状态", "火力档位", "熄火保护状态", "燃气阀状态"],
+            "config": ["童锁", "定时关火", "熄火保护"]
+          },
+          "state_transitions": {
+            "off": ["igniting"],
+            "igniting": ["on", "off", "fault"],
+            "on": ["flame_adjusted", "off", "flameout_protection"],
+            "flame_adjusted": ["on", "off"],
+            "flameout_protection": ["off"],
+            "fault": ["off"]
+          },
+          "tools": ["gas_stove.get_status", "gas_stove.ignite", "gas_stove.turn_off", "gas_stove.set_flame_level", "gas_stove.set_timer"]
+        },
+        "induction_cooker": {
+          "name": "电磁炉",
+          "description": "电磁加热烹饪设备",
+          "rooms": ["餐厅", "厨房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高功率", "调低功率", "设置功率", "设置温度"],
+            "query": ["开关状态", "功率", "温度", "锅具检测状态"],
+            "config": ["烹饪模式", "定时关闭", "童锁"]
+          },
+          "state_transitions": {
+            "off": ["heating"],
+            "heating": ["paused", "temperature_changed", "finished", "fault"],
+            "paused": ["heating", "off"],
+            "temperature_changed": ["heating", "off"],
+            "finished": ["off"]
+          },
+          "tools": ["induction_cooker.get_status", "induction_cooker.set_power", "induction_cooker.set_wattage", "induction_cooker.set_temperature", "induction_cooker.set_timer"]
+        },
+        "water_heater": {
+          "name": "热水器",
+          "description": "生活热水加热和温度控制设备",
+          "rooms": ["厨房", "卫生间", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "调高温度", "调低温度", "设置温度"],
+            "query": ["开关状态", "当前水温", "目标水温", "加热状态", "故障状态"],
+            "config": ["预约加热", "节能模式", "防冻模式"]
+          },
+          "state_transitions": {
+            "off": ["standby", "heating"],
+            "standby": ["heating", "off"],
+            "heating": ["standby", "temperature_changed", "fault"],
+            "temperature_changed": ["heating", "standby"],
+            "fault": ["off"]
+          },
+          "tools": ["water_heater.get_status", "water_heater.set_power", "water_heater.set_target_temperature", "water_heater.set_mode", "water_heater.set_schedule"]
+        },
+        "router": {
+          "name": "路由器",
+          "description": "家庭网络接入、无线覆盖和联网设备管理设备",
+          "rooms": ["客厅", "餐厅", "书房", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "重启", "打开访客网络", "关闭访客网络", "限制设备上网"],
+            "query": ["开关状态", "联网状态", "连接设备列表", "上行速率", "下行速率", "访客网络状态"],
+            "config": ["WiFi名称", "WiFi密码", "访客网络", "儿童上网限制", "设备黑名单", "信号强度"]
+          },
+          "state_transitions": {
+            "off": ["booting"],
+            "booting": ["online", "offline"],
+            "online": ["offline", "restarting", "guest_network_enabled", "device_limited"],
+            "offline": ["booting", "restarting"],
+            "restarting": ["booting", "online", "offline"],
+            "guest_network_enabled": ["online"],
+            "device_limited": ["online"]
+          },
+          "tools": ["router.get_status", "router.set_power", "router.restart", "router.list_connected_devices", "router.set_guest_network", "router.limit_device"]
+        },
+        "other_appliance": {
+          "name": "其他",
+          "description": "其他家电类设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "卫生间", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "播放", "暂停", "投屏", "调高", "调低", "设置数值"],
+            "query": ["开关状态", "运行状态", "当前数值"],
+            "config": ["运行模式", "定时规则"]
+          },
+          "state_transitions": {
+            "off": ["on"],
+            "on": ["off", "running", "paused", "adjusted"],
+            "running": ["paused", "finished", "off"],
+            "paused": ["running", "off"],
+            "finished": ["on", "off"]
+          },
+          "tools": ["other_appliance.get_status", "other_appliance.set_power", "other_appliance.start", "other_appliance.pause", "other_appliance.set_value"]
+        }
+      }
+    },
+    "robot": {
+      "name": "机器人类",
+      "description": "用于自动清洁、巡航或其他自动化任务的机器人设备",
+      "devices": {
+        "robot_vacuum": {
+          "name": "扫地机器人",
+          "description": "地面清扫、拖地、回充和区域清洁机器人",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "启动清扫", "暂停", "回充", "设置清扫区域", "设置吸力"],
+            "query": ["开关状态", "清扫状态", "电量", "当前位置", "尘盒状态"],
+            "config": ["清扫地图", "禁区", "定时清扫", "清扫模式"]
+          },
+          "state_transitions": {
+            "docked": ["cleaning", "charging", "idle"],
+            "idle": ["cleaning", "docked"],
+            "cleaning": ["paused", "returning", "fault"],
+            "paused": ["cleaning", "returning", "idle"],
+            "returning": ["docked", "fault"],
+            "charging": ["docked"],
+            "fault": ["idle", "docked"]
+          },
+          "tools": ["robot_vacuum.get_status", "robot_vacuum.start_cleaning", "robot_vacuum.pause", "robot_vacuum.return_to_dock", "robot_vacuum.set_cleaning_area", "robot_vacuum.set_suction"]
+        },
+        "other_robot": {
+          "name": "其他",
+          "description": "其他机器人类设备",
+          "rooms": ["客厅", "餐厅", "主卧", "次卧", "书房", "厨房", "卫生间", "阳台", "其他"],
+          "capabilities": {
+            "control": ["打开", "关闭", "启动任务", "暂停任务", "返回基站", "设置任务参数"],
+            "query": ["开关状态", "任务状态", "电量", "当前位置"],
+            "config": ["任务计划", "工作区域", "避障规则"]
+          },
+          "state_transitions": {
+            "idle": ["working", "charging", "off"],
+            "working": ["paused", "returning", "fault"],
+            "paused": ["working", "returning", "idle"],
+            "returning": ["idle", "charging"],
+            "charging": ["idle"],
+            "fault": ["idle"]
+          },
+          "tools": ["other_robot.get_status", "other_robot.start_task", "other_robot.pause_task", "other_robot.return_to_base", "other_robot.set_task_config"]
         }
       }
     }
   },
   "device_types": {
-    "wifi_router": "sensing_devices",
-    "door_camera": "sensing_devices",
-    "smart_lock": "sensing_devices",
-    "temp_humidity_sensor": "environmental_sensors",
-    "light_sensor": "environmental_sensors",
-    "air_quality_sensor": "environmental_sensors",
-    "smart_light": "actuators",
-    "air_conditioner": "actuators",
-    "smart_curtain": "actuators",
-    "fresh_air_system": "actuators",
-    "tv_projector": "actuators",
-    "smart_speaker": "interaction_devices"
-  },
-  "scenario_device_mapping": {
-    "male_leave_work": ["wifi_router", "smart_lock", "smart_light", "air_conditioner", "smart_speaker"],
-    "elderly_outdoor": ["wifi_router", "door_camera", "temp_humidity_sensor", "air_quality_sensor", "fresh_air_system", "smart_speaker"],
-    "child_return": ["wifi_router", "smart_light", "light_sensor", "air_conditioner", "smart_curtain", "tv_projector", "smart_speaker"],
-    "family_return": ["wifi_router", "door_camera", "smart_lock", "temp_humidity_sensor", "light_sensor", "air_quality_sensor", "smart_light", "air_conditioner", "smart_curtain", "fresh_air_system", "tv_projector", "smart_speaker"],
-    "visitor_arrival": ["door_camera", "smart_lock", "smart_light", "smart_curtain", "smart_speaker"],
-    "all_leave_arm": ["wifi_router", "door_camera", "smart_lock", "air_quality_sensor", "smart_light", "air_conditioner", "fresh_air_system"],
-    "anomaly_detection": ["wifi_router", "door_camera"]
+    "ceiling_light": "lighting",
+    "desk_lamp": "lighting",
+    "night_light": "lighting",
+    "other_lighting": "lighting",
+    "air_conditioner": "environment",
+    "floor_heating": "environment",
+    "fan": "environment",
+    "air_purifier": "environment",
+    "other_environment": "environment",
+    "smart_lock": "security",
+    "smart_window": "security",
+    "camera": "security",
+    "doorbell": "security",
+    "gas_alarm": "security",
+    "smoke_alarm": "security",
+    "other_security": "security",
+    "tv": "appliance",
+    "projector": "appliance",
+    "speaker": "appliance",
+    "refrigerator": "appliance",
+    "washing_machine": "appliance",
+    "dryer": "appliance",
+    "dishwasher": "appliance",
+    "microwave": "appliance",
+    "oven": "appliance",
+    "rice_cooker": "appliance",
+    "coffee_machine": "appliance",
+    "water_dispenser": "appliance",
+    "range_hood": "appliance",
+    "gas_stove": "appliance",
+    "induction_cooker": "appliance",
+    "water_heater": "appliance",
+    "router": "appliance",
+    "other_appliance": "appliance",
+    "robot_vacuum": "robot",
+    "other_robot": "robot"
   }
 }
