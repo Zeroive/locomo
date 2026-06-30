@@ -1,0 +1,183 @@
+{
+  "case_id": "TC-053",
+  "dimension_tags": {
+    "turn_count": "2-3轮",
+    "candidate_tool_count": "16-20",
+    "tool_call_mode": "顺序多工具",
+    "validity": "部分有效",
+    "same_device_across_rooms": "不涉及"
+  },
+  "scenario": "回家",
+  "home_context": {
+    "rooms": [
+      {
+        "room": "客厅",
+        "devices": [
+          {
+            "device_id": "living_room_air_conditioner",
+            "device_type": "air_conditioner",
+            "device_name": "空调",
+            "category": "环境类",
+            "initial_state": {
+              "power": false,
+              "mode": "cooling",
+              "target_temperature": 26,
+              "fan_speed": "auto"
+            }
+          },
+          {
+            "device_id": "living_room_air_purifier",
+            "device_type": "air_purifier",
+            "device_name": "空气净化器",
+            "category": "环境类",
+            "initial_state": {
+              "power": false,
+              "mode": "auto",
+              "speed": 2,
+              "pm25": 42
+            }
+          },
+          {
+            "device_id": "living_room_ceiling_light",
+            "device_type": "ceiling_light",
+            "device_name": "顶灯",
+            "category": "照明类",
+            "initial_state": {
+              "power": false,
+              "brightness": 45,
+              "color_temperature": 3500
+            }
+          },
+          {
+            "device_id": "living_room_fan",
+            "device_type": "fan",
+            "device_name": "风扇",
+            "category": "环境类",
+            "initial_state": {
+              "power": false,
+              "speed": 1,
+              "oscillation": false
+            }
+          },
+          {
+            "device_id": "living_room_window",
+            "device_type": "smart_window",
+            "device_name": "智能窗户",
+            "category": "安防类",
+            "initial_state": {
+              "position": 0,
+              "lock_state": "unlocked",
+              "rain_sensor": false
+            }
+          }
+        ]
+      },
+      {
+        "room": "主卧",
+        "devices": [
+          {
+            "device_id": "master_bedroom_night_light",
+            "device_type": "night_light",
+            "device_name": "夜灯",
+            "category": "照明类",
+            "initial_state": {
+              "power": false,
+              "brightness": 15,
+              "motion_detection": true
+            }
+          }
+        ]
+      },
+      {
+        "room": "书房",
+        "devices": [
+          {
+            "device_id": "study_desk_lamp",
+            "device_type": "desk_lamp",
+            "device_name": "台灯",
+            "category": "照明类",
+            "initial_state": {
+              "power": false,
+              "brightness": 50,
+              "color_temperature": 4000,
+              "mode": "normal"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "candidate_tools": [
+    "ceiling_light.set_power",
+    "air_conditioner.set_power",
+    "ceiling_light.set_brightness",
+    "ceiling_light.set_color_temperature",
+    "night_light.set_power",
+    "night_light.set_brightness",
+    "desk_lamp.set_power",
+    "desk_lamp.set_brightness",
+    "air_conditioner.get_status",
+    "air_conditioner.set_mode",
+    "air_conditioner.set_target_temperature",
+    "air_conditioner.set_fan_speed",
+    "fan.set_power",
+    "fan.set_speed",
+    "air_purifier.set_power",
+    "air_purifier.set_mode",
+    "smart_window.open",
+    "smart_window.close"
+  ],
+  "dialogue": [
+    {
+      "turn_id": 1,
+      "role": "user",
+      "content": "先我到家了，打开客厅顶灯，再把客厅空调打开。"
+    },
+    {
+      "turn_id": 2,
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "ceiling_light.set_power",
+            "arguments": "{\"room\":\"客厅\",\"ceiling_light_id\":\"living_room_ceiling_light\",\"power\":true}"
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "air_conditioner.set_temperature",
+            "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
+          }
+        }
+      ]
+    },
+    {
+      "turn_id": 3,
+      "role": "user",
+      "content": "把客厅空调打开。"
+    },
+    {
+      "turn_id": 4,
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "air_conditioner.set_power",
+            "arguments": "{\"room\":\"客厅\",\"air_conditioner_id\":\"living_room_air_conditioner\",\"power\":true}"
+          }
+        }
+      ]
+    }
+  ],
+  "expected_summary": {
+    "requires_clarification": false,
+    "execution_status": "partial_success",
+    "valid_tool_call_count": 2,
+    "invalid_tool_call_count": 1
+  }
+}

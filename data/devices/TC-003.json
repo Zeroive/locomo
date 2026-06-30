@@ -1,0 +1,113 @@
+{
+  "case_id": "TC-003",
+  "dimension_tags": {
+    "turn_count": "1轮",
+    "candidate_tool_count": "5-10",
+    "tool_call_mode": "单工具",
+    "validity": "全部无效",
+    "same_device_across_rooms": "不涉及"
+  },
+  "scenario": "午休",
+  "home_context": {
+    "rooms": [
+      {
+        "room": "客厅",
+        "devices": [
+          {
+            "device_id": "living_room_air_conditioner",
+            "device_type": "air_conditioner",
+            "device_name": "空调",
+            "category": "环境类",
+            "initial_state": {
+              "power": false,
+              "mode": "cooling",
+              "target_temperature": 26,
+              "fan_speed": "auto"
+            }
+          },
+          {
+            "device_id": "living_room_ceiling_light",
+            "device_type": "ceiling_light",
+            "device_name": "顶灯",
+            "category": "照明类",
+            "initial_state": {
+              "power": false,
+              "brightness": 45,
+              "color_temperature": 3500
+            }
+          }
+        ]
+      },
+      {
+        "room": "主卧",
+        "devices": [
+          {
+            "device_id": "master_bedroom_night_light",
+            "device_type": "night_light",
+            "device_name": "夜灯",
+            "category": "照明类",
+            "initial_state": {
+              "power": false,
+              "brightness": 15,
+              "motion_detection": true
+            }
+          }
+        ]
+      },
+      {
+        "room": "书房",
+        "devices": [
+          {
+            "device_id": "study_desk_lamp",
+            "device_type": "desk_lamp",
+            "device_name": "台灯",
+            "category": "照明类",
+            "initial_state": {
+              "power": false,
+              "brightness": 50,
+              "color_temperature": 4000,
+              "mode": "normal"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "candidate_tools": [
+    "ceiling_light.set_power",
+    "ceiling_light.set_brightness",
+    "ceiling_light.set_color_temperature",
+    "night_light.set_power",
+    "night_light.set_brightness",
+    "desk_lamp.set_power",
+    "desk_lamp.set_brightness",
+    "air_conditioner.get_status"
+  ],
+  "dialogue": [
+    {
+      "turn_id": 1,
+      "role": "user",
+      "content": "准备午休，打开主卧空调。"
+    },
+    {
+      "turn_id": 2,
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "air_conditioner.set_temperature",
+            "arguments": "{\"room\":\"客厅\",\"device_id\":\"unknown_device\"}"
+          }
+        }
+      ]
+    }
+  ],
+  "expected_summary": {
+    "requires_clarification": false,
+    "execution_status": "failed",
+    "valid_tool_call_count": 0,
+    "invalid_tool_call_count": 1
+  }
+}
