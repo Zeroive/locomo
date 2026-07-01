@@ -468,6 +468,14 @@ PERSON_ROOM_STATUS_SCHEMA = {
     "balcony": ["resting", "watering_plants"],
 }
 
+
+PERSON_STATUS_ALIASES = {
+    ("bedroom", "asleep"): "sleeping",
+    ("bedroom", "sleep"): "sleeping",
+    ("bedroom", "waking_up"): "getting_ready",
+    ("outside", "away"): "outside",
+}
+
 # ==================== LLM 单日 Episode 生成 Prompt 模板 ====================
 
 LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根据给定的家庭画像和场景，先判断当天该场景是否应该发生，并生成当天该场景下的家庭状态描述。
@@ -1672,6 +1680,17 @@ def validate_person_states(snapshot, person_ids):
         allowed_statuses = PERSON_ROOM_STATUS_SCHEMA.get(location)
         if allowed_statuses is None:
             raise ValueError(f"Invalid location for {person_id}: {location}")
+        normalized_status = PERSON_STATUS_ALIASES.get((location, status), status)
+        if normalized_status != status:
+            logging.info(
+                "Normalized person status for %s at %s: %s -> %s",
+                person_id,
+                location,
+                status,
+                normalized_status,
+            )
+            person_state['status'] = normalized_status
+            status = normalized_status
         if status not in allowed_statuses:
             raise ValueError(
                 f"Invalid status for {person_id}: {status}; "
@@ -2379,6 +2398,7 @@ def format_person_room_status_schema():
     lines = []
     for room_id, statuses in PERSON_ROOM_STATUS_SCHEMA.items():
         lines.append(f"- {room_id}: {', '.join(statuses)}")
+    lines.append("- 注意: 卧室中表示睡着必须使用 sleeping，不要使用 asleep。")
     return '\n'.join(lines)
 
 
