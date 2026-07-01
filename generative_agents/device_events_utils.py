@@ -16,6 +16,55 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # 延迟导入 LLM 相关函数，避免在不需要时导入 openai
 _run_json_trials = None
 
+LLM_FAILURE_LOG_MAX_CHARS = int(os.getenv("LLM_FAILURE_LOG_MAX_CHARS", "8000"))
+
+
+def _format_for_llm_failure_log(value, max_chars=LLM_FAILURE_LOG_MAX_CHARS):
+    if value is None:
+        return None
+    try:
+        if isinstance(value, (dict, list)):
+            text = json.dumps(value, ensure_ascii=False, indent=2)
+        else:
+            text = str(value)
+    except Exception:
+        text = repr(value)
+    if len(text) > max_chars:
+        return text[:max_chars] + f"... <truncated {len(text) - max_chars} chars>"
+    return text
+
+
+def _log_llm_failure(stage, error, context=None, prompt=None, result=None,
+                     previous_events=None, extra=None):
+    context = context or {}
+    details = {
+        "stage": stage,
+        "scenario": context.get("scenario"),
+        "episode_date": (
+            context.get("episode_date").isoformat()
+            if hasattr(context.get("episode_date"), "isoformat")
+            else context.get("episode_date")
+        ),
+        "subject_id": context.get("default_subject"),
+        "scenario_time": context.get("scenario_time"),
+        "daily_state_description": context.get("daily_state_description"),
+        "previous_events": previous_events,
+        "result": result,
+        "prompt": prompt,
+        "extra": extra,
+    }
+    compact_details = {
+        key: _format_for_llm_failure_log(value)
+        for key, value in details.items()
+        if value not in (None, "", [], {})
+    }
+    logging.exception(
+        "LLM generation failed at %s: %s\nFailure details:\n%s",
+        stage,
+        error,
+        json.dumps(compact_details, ensure_ascii=False, indent=2),
+    )
+
 def get_run_json_trials():
     """延迟导入 run_json_trials 函数"""
     global _run_json_trials
@@ -1093,6 +1142,8 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
     )
     
     for attempt in range(max_retries):
+        state_result = None
+        annotated_events = None
         try:
             logging.info(f"Generating state description for {episode_date} (attempt {attempt + 1}/{max_retries})")
             
@@ -1116,15 +1167,33 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
                     previous_events=json.dumps(annotated_events, ensure_ascii=False, indent=2),
                     candidate_event_info=format_candidate_event_info(candidate_event, default_subject),
                 )
-                item_result = run_json_trials_func(item_prompt, num_gen=1, num_tokens_request=1600, temperature=0.7)
-                annotated_event = validate_llm_event_item_result(
-                    item_result,
-                    candidate_event,
-                    default_subject,
-                    person_ids,
-                    available_devices,
-                    annotated_events,
-                )
+                item_result = None
+                try:
+                    item_result = run_json_trials_func(item_prompt, num_gen=1, num_tokens_request=1600, temperature=0.7)
+                    annotated_event = validate_llm_event_item_result(
+                        item_result,
+                        candidate_event,
+                        default_subject,
+                        person_ids,
+                        available_devices,
+                        annotated_events,
+                    )
+                except Exception as e:
+                    _log_llm_failure(
+                        "candidate_event_item",
+                        e,
+                        context={
+                            "scenario": scenario,
+                            "episode_date": episode_date,
+                            "default_subject": default_subject,
+                            "daily_state_description": state_result.get('daily_state_description'),
+                        },
+                        prompt=item_prompt,
+                        result=item_result,
+                        previous_events=annotated_events,
+                        extra={"candidate_event": candidate_event},
+                    )
+                    raise
                 if annotated_event:
                     annotated_events.append(annotated_event)
             
@@ -1132,19 +1201,35 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
                 'daily_state_description': state_result['daily_state_description'],
                 'annotated_events': annotated_events,
             }
-            validated_result = validate_llm_episode_result(
-                llm_result, 
-                scenario, 
-                episode_date, 
-                default_subject, 
-                default_home,
-                person_ids,
-                available_devices,
-                time_range,
-                primary_events,
-                allowed_events,
-                get_household_room_layout(household_profile)
-            )
+            try:
+                validated_result = validate_llm_episode_result(
+                    llm_result,
+                    scenario,
+                    episode_date,
+                    default_subject,
+                    default_home,
+                    person_ids,
+                    available_devices,
+                    time_range,
+                    primary_events,
+                    allowed_events,
+                    get_household_room_layout(household_profile)
+                )
+            except Exception as e:
+                _log_llm_failure(
+                    "single_day_episode_validation",
+                    e,
+                    context={
+                        "scenario": scenario,
+                        "episode_date": episode_date,
+                        "default_subject": default_subject,
+                        "daily_state_description": state_result.get('daily_state_description'),
+                    },
+                    result=llm_result,
+                    previous_events=annotated_events,
+                    extra={"primary_events": primary_events, "allowed_events": allowed_events},
+                )
+                raise
             
             # 添加 sampled_context
             validated_result['sampled_context'] = {
@@ -1156,7 +1241,19 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
             return validated_result
             
         except Exception as e:
-            logging.warning(f"Attempt {attempt + 1} failed for {episode_date}: {e}")
+            _log_llm_failure(
+                "single_day_episode_llm",
+                e,
+                context={
+                    "scenario": scenario,
+                    "episode_date": episode_date,
+                    "default_subject": default_subject,
+                },
+                prompt=state_prompt,
+                result=locals().get("state_result"),
+                previous_events=locals().get("annotated_events"),
+                extra={"attempt": attempt + 1, "max_retries": max_retries},
+            )
             if attempt == max_retries - 1:
                 logging.error(f"All {max_retries} attempts failed for {episode_date}, falling back to rule-based generation")
                 return None
@@ -1301,6 +1398,7 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
                 sampled_devices=', '.join(sampled_devices),
             )
 
+            state_result = None
             try:
                 state_result = run_json_trials_func(
                     state_prompt,
@@ -1310,11 +1408,12 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
                 )
                 state_result = validate_llm_state_result(state_result)
             except Exception as e:
-                logging.warning(
-                    "State description generation failed for %s/%s: %s",
-                    context['scenario'],
-                    episode_date,
+                _log_llm_failure(
+                    "daily_state_description",
                     e,
+                    context=context,
+                    prompt=state_prompt,
+                    result=locals().get("state_result"),
                 )
                 continue
 
@@ -1753,13 +1852,26 @@ def generate_single_device_state_llm(context, run_json_trials_func, device_id, t
         event_json=event_json,
         persons_json=json.dumps(persons, ensure_ascii=False, indent=2),
     )
-    result = run_json_trials_func(
-        prompt,
-        num_gen=1,
-        num_tokens_request=300,
-        temperature=0.5,
-    )
-    return validate_llm_single_device_state_result(result, device_id)
+    result = None
+    try:
+        result = run_json_trials_func(
+            prompt,
+            num_gen=1,
+            num_tokens_request=300,
+            temperature=0.5,
+        )
+        return validate_llm_single_device_state_result(result, device_id)
+    except Exception as e:
+        _log_llm_failure(
+            "single_device_state",
+            e,
+            context=context,
+            prompt=prompt,
+            result=result,
+            previous_events=previous_events_json,
+            extra={"device_id": device_id, "timestamp": timestamp, "event": event_json},
+        )
+        raise
 
 
 def generate_all_device_states_llm(context, run_json_trials_func, household_device_ids,
@@ -1846,18 +1958,31 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         previous_events=previous_events_json,
         allowed_events_info=format_allowed_events_info(primary_events, allowed_events, default_subject),
     )
-    event_result = run_json_trials_func(
-        event_prompt,
-        num_gen=1,
-        num_tokens_request=900,
-        temperature=0.7,
-    )
-    event = validate_llm_next_event_only_result(
-        event_result,
-        allowed_events,
-        default_subject,
-        previous_events,
-    )
+    event_result = None
+    try:
+        event_result = run_json_trials_func(
+            event_prompt,
+            num_gen=1,
+            num_tokens_request=900,
+            temperature=0.7,
+        )
+        event = validate_llm_next_event_only_result(
+            event_result,
+            allowed_events,
+            default_subject,
+            previous_events,
+        )
+    except Exception as e:
+        _log_llm_failure(
+            "next_event",
+            e,
+            context=context,
+            prompt=event_prompt,
+            result=event_result,
+            previous_events=previous_events,
+            extra={"allowed_events": allowed_events},
+        )
+        raise
     if not event:
         return None
 
@@ -1870,13 +1995,26 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         previous_events=previous_events_json,
         event_json=event_json,
     )
-    timestamp_result = run_json_trials_func(
-        timestamp_prompt,
-        num_gen=1,
-        num_tokens_request=300,
-        temperature=0.4,
-    )
-    timestamp = validate_llm_timestamp_result(timestamp_result, previous_events)
+    timestamp_result = None
+    try:
+        timestamp_result = run_json_trials_func(
+            timestamp_prompt,
+            num_gen=1,
+            num_tokens_request=300,
+            temperature=0.4,
+        )
+        timestamp = validate_llm_timestamp_result(timestamp_result, previous_events)
+    except Exception as e:
+        _log_llm_failure(
+            "event_timestamp",
+            e,
+            context=context,
+            prompt=timestamp_prompt,
+            result=timestamp_result,
+            previous_events=previous_events,
+            extra={"event": event_json},
+        )
+        raise
 
     persons_prompt = LLM_EVENT_PERSONS_PROMPT.format(
         scenario=scenario,
@@ -1892,23 +2030,51 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         previous_events=previous_events_json,
         event_json=event_json,
     )
-    persons_result = run_json_trials_func(
-        persons_prompt,
-        num_gen=1,
-        num_tokens_request=900,
-        temperature=0.6,
-    )
-    persons = validate_llm_persons_result(persons_result, person_ids)
+    persons_result = None
+    try:
+        persons_result = run_json_trials_func(
+            persons_prompt,
+            num_gen=1,
+            num_tokens_request=900,
+            temperature=0.6,
+        )
+        persons = validate_llm_persons_result(persons_result, person_ids)
+    except Exception as e:
+        _log_llm_failure(
+            "event_persons",
+            e,
+            context=context,
+            prompt=persons_prompt,
+            result=persons_result,
+            previous_events=previous_events,
+            extra={"timestamp": timestamp, "event": event_json},
+        )
+        raise
 
-    devices = generate_all_device_states_llm(
-        context,
-        run_json_trials_func,
-        household_device_ids,
-        timestamp,
-        event_json,
-        persons,
-        previous_events_json,
-    )
+    try:
+        devices = generate_all_device_states_llm(
+            context,
+            run_json_trials_func,
+            household_device_ids,
+            timestamp,
+            event_json,
+            persons,
+            previous_events_json,
+        )
+    except Exception as e:
+        _log_llm_failure(
+            "event_devices",
+            e,
+            context=context,
+            previous_events=previous_events,
+            extra={
+                "timestamp": timestamp,
+                "event": event_json,
+                "persons": persons,
+                "household_device_ids": household_device_ids,
+            },
+        )
+        raise
 
     annotated_event = {
         'event': event,
@@ -1920,14 +2086,24 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         }
     }
     candidate_event = find_matching_allowed_event(annotated_event, allowed_events, default_subject)
-    return validate_llm_event_item_result(
-        {'should_generate': True, 'annotated_event': annotated_event},
-        candidate_event,
-        default_subject,
-        person_ids,
-        available_devices,
-        previous_events,
-    )
+    try:
+        return validate_llm_event_item_result(
+            {'should_generate': True, 'annotated_event': annotated_event},
+            candidate_event,
+            default_subject,
+            person_ids,
+            available_devices,
+            previous_events,
+        )
+    except Exception as e:
+        _log_llm_failure(
+            "annotated_event_validation",
+            e,
+            context=context,
+            previous_events=previous_events,
+            extra={"annotated_event": annotated_event, "candidate_event": candidate_event},
+        )
+        raise
 
 
 def generate_split_annotated_event_with_retries(context, run_json_trials_func, previous_events, max_retries=3):
@@ -1992,29 +2168,45 @@ def generate_scenario_events_from_description_llm(context, run_json_trials_func,
                 'daily_state_description': context['daily_state_description'],
                 'annotated_events': annotated_events,
             }
-            episode = validate_llm_episode_result(
-                llm_result,
-                scenario,
-                episode_date,
-                default_subject,
-                default_home,
-                person_ids,
-                available_devices,
-                time_range,
-                primary_events,
-                allowed_events,
-                get_household_room_layout(household_profile),
-            )
+            try:
+                episode = validate_llm_episode_result(
+                    llm_result,
+                    scenario,
+                    episode_date,
+                    default_subject,
+                    default_home,
+                    person_ids,
+                    available_devices,
+                    time_range,
+                    primary_events,
+                    allowed_events,
+                    get_household_room_layout(household_profile),
+                )
+            except Exception as e:
+                _log_llm_failure(
+                    "scenario_episode_validation",
+                    e,
+                    context=context,
+                    result=llm_result,
+                    previous_events=annotated_events,
+                    extra={"primary_events": primary_events, "allowed_events": allowed_events},
+                )
+                raise
             episode['scenario_time'] = context['scenario_time']
             episode['sampled_context'] = context.get('sampled_context', {})
             return episode
         except Exception as e:
-            logging.warning(
-                "Event generation attempt %s failed for %s/%s: %s",
-                attempt + 1,
-                scenario,
-                episode_date,
+            _log_llm_failure(
+                "scenario_event_generation_attempt",
                 e,
+                context=context,
+                previous_events=annotated_events,
+                extra={
+                    "attempt": attempt + 1,
+                    "max_retries": max_retries,
+                    "max_events": max_events,
+                    "all_scenario_descriptions": all_scenario_descriptions,
+                },
             )
             if attempt == max_retries - 1:
                 return None
