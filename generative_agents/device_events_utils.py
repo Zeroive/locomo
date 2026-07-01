@@ -564,7 +564,7 @@ LLM_EVENT_ITEM_PROMPT = """你是一个智能家居系统分析师。请基于�
 ## 当天家庭状态描述
 {daily_state_description}
 
-## 已生成的 annotated_events
+## 已生成事件摘要与最新 state_snapshot
 {previous_events}
 
 ## 当前候选事件
@@ -661,7 +661,7 @@ LLM_NEXT_EVENT_PROMPT = """你是一个智能家居系统分析师。请基于�
 ## 当前情景描述
 {daily_state_description}
 
-## 当前情景已生成的 annotated_events
+## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
 
 ## 当前情景允许生成的事件集合
@@ -739,15 +739,15 @@ LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基
 ## 当前情景描述
 {daily_state_description}
 
-## 当前情景已生成的 annotated_events
+## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
 
-## 当前情景允许生成的事件集合
+## 当前情景尚未生成且允许生成的事件集合
 {allowed_events_info}
 
 ## 任务要求
 1. 每次只输出一个“下一个 event”；如果当前情景已经结束，输出 should_continue=false。
-2. event 的 subject_id、predicate、object_id、attributes.event_type 必须来自“当前情景允许生成的事件集合”。
+2. event 的 subject_id、predicate、object_id、attributes.event_type 必须来自“当前情景尚未生成且允许生成的事件集合”。
 3. 不要重复生成已经出现过的相同 subject_id/predicate/object_id/event_type 事件。
 4. 不要生成候选集合之外的泛化事件或动作拆解细节。
 
@@ -781,7 +781,7 @@ LLM_EVENT_TIMESTAMP_PROMPT = """你是一个智能家居系统分析师。请只
 ## 当前情景描述
 {daily_state_description}
 
-## 当前情景已生成的 annotated_events
+## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
 
 ## 当前 event
@@ -825,7 +825,7 @@ LLM_EVENT_PERSONS_PROMPT = """你是一个智能家居系统分析师。请只�
 ## 当前情景描述
 {daily_state_description}
 
-## 当前情景已生成的 annotated_events
+## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
 
 ## 当前 event
@@ -872,7 +872,7 @@ LLM_EVENT_DEVICES_PROMPT = """你是一个智能家居系统分析师。请只�
 ## 当前情景描述
 {daily_state_description}
 
-## 当前情景已生成的 annotated_events
+## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
 
 ## 当前 event
@@ -918,7 +918,7 @@ LLM_SINGLE_DEVICE_STATE_PROMPT = """你是一个智能家居系统分析师。�
 ## 当前情景描述
 {daily_state_description}
 
-## 当前情景已生成的 annotated_events
+## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
 
 ## 当前 event
@@ -1164,7 +1164,7 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
                 item_prompt = LLM_EVENT_ITEM_PROMPT.format(
                     **common_prompt_args,
                     daily_state_description=state_result['daily_state_description'],
-                    previous_events=json.dumps(annotated_events, ensure_ascii=False, indent=2),
+                    previous_events=format_previous_events_for_prompt(annotated_events),
                     candidate_event_info=format_candidate_event_info(candidate_event, default_subject),
                 )
                 item_result = None
@@ -1738,6 +1738,36 @@ def get_annotated_event_key(annotated_event):
     )
 
 
+def format_previous_events_for_prompt(previous_events):
+    """
+    压缩展示历史事件：旧事件只保留 event 摘要，state_snapshot 只保留最新一条。
+    """
+    if not previous_events:
+        return "无"
+
+    event_history = []
+    latest_state_snapshot = None
+    for index, annotated_event in enumerate(previous_events, start=1):
+        event = annotated_event.get('event', {}) if isinstance(annotated_event, dict) else {}
+        attributes = event.get('attributes', {}) if isinstance(event.get('attributes'), dict) else {}
+        snapshot = annotated_event.get('state_snapshot', {}) if isinstance(annotated_event, dict) else {}
+        latest_state_snapshot = snapshot or latest_state_snapshot
+        event_history.append({
+            "index": index,
+            "timestamp": snapshot.get('timestamp', ''),
+            "subject_id": event.get('subject_id', ''),
+            "predicate": event.get('predicate', ''),
+            "object_id": event.get('object_id', ''),
+            "event_type": attributes.get('event_type', ''),
+            "description": attributes.get('description', ''),
+        })
+
+    return json.dumps({
+        "event_history": event_history,
+        "latest_state_snapshot": latest_state_snapshot or {},
+    }, ensure_ascii=False, indent=2)
+
+
 def find_matching_allowed_event(annotated_event, allowed_events, default_subject):
     key = get_annotated_event_key(annotated_event)
     for candidate_event in allowed_events:
@@ -1752,6 +1782,24 @@ def find_matching_allowed_event(annotated_event, allowed_events, default_subject
     return None
 
 
+def get_allowed_event_key(event, default_subject):
+    return (
+        event.get('subject_id', default_subject),
+        event.get('event_type', ''),
+        event.get('predicate', ''),
+        event.get('object_id', ''),
+    )
+
+
+def get_unused_allowed_events(allowed_events, previous_events, default_subject):
+    used_keys = {get_annotated_event_key(item) for item in previous_events}
+    return [
+        event
+        for event in allowed_events
+        if get_allowed_event_key(event, default_subject) not in used_keys
+    ]
+
+
 def validate_llm_next_event_only_result(result, allowed_events, default_subject, previous_events):
     if not isinstance(result, dict):
         raise ValueError(f"Next event result must be a dict, got {type(result)}")
@@ -1763,14 +1811,15 @@ def validate_llm_next_event_only_result(result, allowed_events, default_subject,
         raise ValueError("should_continue=true but event is missing")
 
     annotated_event = {'event': event}
-    candidate_event = find_matching_allowed_event(annotated_event, allowed_events, default_subject)
-    if not candidate_event:
-        raise ValueError(f"Generated event is not in allowed event set: {get_annotated_event_key(annotated_event)}")
-
     current_key = get_annotated_event_key(annotated_event)
     used_keys = {get_annotated_event_key(item) for item in previous_events}
     if current_key in used_keys:
-        raise ValueError(f"Duplicate generated event: {current_key}")
+        logging.info("LLM generated duplicate event %s; treating it as scenario end", current_key)
+        return None
+
+    candidate_event = find_matching_allowed_event(annotated_event, allowed_events, default_subject)
+    if not candidate_event:
+        raise ValueError(f"Generated event is not in remaining allowed event set: {current_key}")
 
     event.setdefault('attributes', {})
     event['attributes'].setdefault('description', candidate_event.get('description', ''))
@@ -1838,7 +1887,7 @@ def validate_llm_single_device_state_result(result, device_id):
 
 
 def generate_single_device_state_llm(context, run_json_trials_func, device_id, timestamp,
-                                     event_json, persons, previous_events_json):
+                                     event_json, persons, previous_events_text):
     prompt = LLM_SINGLE_DEVICE_STATE_PROMPT.format(
         scenario=context['scenario'],
         episode_date=context['episode_date'].strftime('%Y-%m-%d'),
@@ -1848,7 +1897,7 @@ def generate_single_device_state_llm(context, run_json_trials_func, device_id, t
         room_device_layout=context['room_device_layout'],
         devices_info=context['devices_info'],
         daily_state_description=context['daily_state_description'],
-        previous_events=previous_events_json,
+        previous_events=previous_events_text,
         event_json=event_json,
         persons_json=json.dumps(persons, ensure_ascii=False, indent=2),
     )
@@ -1868,14 +1917,14 @@ def generate_single_device_state_llm(context, run_json_trials_func, device_id, t
             context=context,
             prompt=prompt,
             result=result,
-            previous_events=previous_events_json,
+            previous_events=previous_events_text,
             extra={"device_id": device_id, "timestamp": timestamp, "event": event_json},
         )
         raise
 
 
 def generate_all_device_states_llm(context, run_json_trials_func, household_device_ids,
-                                   timestamp, event_json, persons, previous_events_json):
+                                   timestamp, event_json, persons, previous_events_text):
     max_workers = min(8, max(1, len(household_device_ids)))
     devices = {}
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -1888,7 +1937,7 @@ def generate_all_device_states_llm(context, run_json_trials_func, household_devi
                 timestamp,
                 event_json,
                 persons,
-                previous_events_json,
+                previous_events_text,
             ): device_id
             for device_id in household_device_ids
         }
@@ -1913,14 +1962,15 @@ def validate_llm_next_event_result(result, allowed_events, default_subject, pers
     if not isinstance(annotated_event, dict):
         raise ValueError("should_continue=true but annotated_event is missing")
 
-    candidate_event = find_matching_allowed_event(annotated_event, allowed_events, default_subject)
-    if not candidate_event:
-        raise ValueError(f"Generated event is not in allowed event set: {get_annotated_event_key(annotated_event)}")
-
     current_key = get_annotated_event_key(annotated_event)
     used_keys = {get_annotated_event_key(event) for event in previous_events}
     if current_key in used_keys:
-        raise ValueError(f"Duplicate generated event: {current_key}")
+        logging.info("LLM generated duplicate event %s; treating it as scenario end", current_key)
+        return None
+
+    candidate_event = find_matching_allowed_event(annotated_event, allowed_events, default_subject)
+    if not candidate_event:
+        raise ValueError(f"Generated event is not in remaining allowed event set: {current_key}")
 
     return validate_llm_event_item_result(
         {"should_generate": True, "annotated_event": annotated_event},
@@ -1945,7 +1995,10 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
     available_devices = context['available_devices']
     household_device_ids = context['household_device_ids']
     all_scenario_descriptions = context.get('all_scenario_descriptions') or "无"
-    previous_events_json = json.dumps([i["event"] for i in previous_events], ensure_ascii=False, indent=2)
+    previous_events_text = format_previous_events_for_prompt(previous_events)
+    remaining_allowed_events = get_unused_allowed_events(allowed_events, previous_events, default_subject)
+    if not remaining_allowed_events:
+        return None
 
     event_prompt = LLM_NEXT_EVENT_ONLY_PROMPT.format(
         scenario=scenario,
@@ -1955,8 +2008,8 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         scenario_time=context['scenario_time'],
         all_scenario_descriptions=all_scenario_descriptions,
         daily_state_description=context['daily_state_description'],
-        previous_events=previous_events_json,
-        allowed_events_info=format_allowed_events_info(primary_events, allowed_events, default_subject),
+        previous_events=previous_events_text,
+        allowed_events_info=format_allowed_events_info(primary_events, remaining_allowed_events, default_subject),
     )
     event_result = None
     try:
@@ -1968,7 +2021,7 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         )
         event = validate_llm_next_event_only_result(
             event_result,
-            allowed_events,
+            remaining_allowed_events,
             default_subject,
             previous_events,
         )
@@ -1980,7 +2033,10 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
             prompt=event_prompt,
             result=event_result,
             previous_events=previous_events,
-            extra={"allowed_events": allowed_events},
+            extra={
+                "remaining_allowed_events": remaining_allowed_events,
+                "all_allowed_events": allowed_events,
+            },
         )
         raise
     if not event:
@@ -1992,7 +2048,7 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         episode_date=episode_date.strftime('%Y-%m-%d'),
         scenario_time=context['scenario_time'],
         daily_state_description=context['daily_state_description'],
-        previous_events=previous_events_json,
+        previous_events=previous_events_text,
         event_json=event_json,
     )
     timestamp_result = None
@@ -2027,7 +2083,7 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         room_device_layout=context['room_device_layout'],
         all_scenario_descriptions=all_scenario_descriptions,
         daily_state_description=context['daily_state_description'],
-        previous_events=previous_events_json,
+        previous_events=previous_events_text,
         event_json=event_json,
     )
     persons_result = None
@@ -2059,7 +2115,7 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
             timestamp,
             event_json,
             persons,
-            previous_events_json,
+            previous_events_text,
         )
     except Exception as e:
         _log_llm_failure(
@@ -2531,6 +2587,8 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
         event_key = (event['subject_id'], actual_type, event['predicate'], event['object_id'])
         if allowed_event_map and event_key not in allowed_event_map:
             raise ValueError(f"Event {i} is not an allowed scene event: {event_key}")
+        if event_key in seen_event_keys:
+            raise ValueError(f"Event {i} duplicates an earlier scene event: {event_key}")
         seen_event_keys.add(event_key)
         
         # 检查 state_snapshot 字段
