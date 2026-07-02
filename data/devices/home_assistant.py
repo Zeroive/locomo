@@ -113,11 +113,22 @@ class HomeAssistant:
 
     def _validate_required_params(self, tool_name: str, params: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         tool_def = self.tool_definitions[tool_name]
-        missing = [
-            name
-            for name, param_def in tool_def.get("parameters", {}).items()
-            if param_def.get("required") and params.get(name) is None
-        ]
+        model_required = (
+            tool_def.get("model_call", {})
+            .get("function", {})
+            .get("parameters", {})
+            .get("required")
+        )
+        required_params = (
+            model_required
+            if model_required is not None
+            else [
+                name
+                for name, param_def in tool_def.get("parameters", {}).items()
+                if param_def.get("required")
+            ]
+        )
+        missing = [name for name in required_params if params.get(name) is None]
         if missing:
             return {
                 "success": False,
