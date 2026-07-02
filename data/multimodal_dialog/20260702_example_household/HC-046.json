@@ -1,0 +1,172 @@
+{
+  "case_id": "HC-046",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2个孩子",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾南山",
+      "QA_details": [
+        {
+          "user": "晚星今晚帮小柚检查舞蹈服，我先陪阿衡做科学实验记录。",
+          "assistant": "好的，今晚提醒您陪阿衡完成实验记录。"
+        },
+        {
+          "user": "阿衡说明早会帮小柚把舞蹈包放车上，我负责签他的实验记录。",
+          "assistant": "已记录，明早提醒阿衡帮小柚拿舞蹈包。"
+        },
+        {
+          "user": "周日阿衡带小柚去儿童区选书，我和晚星在旁边看他们列清单。",
+          "assistant": "明白，周日提醒您们去儿童区。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林晚星",
+      "QA_details": [
+        {
+          "user": "南山陪阿衡做实验记录，我先看小柚的舞蹈服有没有缺发卡。",
+          "assistant": "好的，今晚提醒您检查舞蹈服和发卡。"
+        },
+        {
+          "user": "阿衡明早帮小柚拿舞蹈包，南山签实验记录，我再检查水杯。",
+          "assistant": "已记下，明早提醒您检查水杯。"
+        },
+        {
+          "user": "周日小柚让阿衡带她去儿童区，我和南山看他们自己选。",
+          "assistant": "没问题，周日提醒您们去书店儿童区。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾衡",
+      "QA_details": [
+        {
+          "user": "爸爸今晚陪我做实验记录，妈妈检查小柚的舞蹈服。",
+          "assistant": "好的，今晚提醒您准备实验记录本。"
+        },
+        {
+          "user": "我明早帮小柚把舞蹈包放车上，爸爸签我的实验记录。",
+          "assistant": "已记录，明早提醒您帮小柚拿舞蹈包。"
+        },
+        {
+          "user": "周日我带小柚去儿童区选书，妈妈和爸爸在旁边等。",
+          "assistant": "明白，周日提醒您带书单。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "顾柚",
+      "QA_details": [
+        {
+          "user": "妈妈今晚检查我的舞蹈服，爸爸陪阿衡做实验记录。",
+          "assistant": "好的，今晚提醒您把舞蹈服拿出来。"
+        },
+        {
+          "user": "阿衡明早帮我拿舞蹈包，妈妈会看水杯。",
+          "assistant": "已记下，明早提醒您带好水杯。"
+        },
+        {
+          "user": "周日我想让阿衡带我去儿童区选书。",
+          "assistant": "没问题，周日提醒您准备想看的书。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿衡和小柚是什么关系？",
+      "answer": "他们是手足关系。",
+      "category": "single_hop"
+    },
+    {
+      "question": "顾南山、阿衡和小柚围绕明早出门形成了怎样的安排链？",
+      "answer": "南山签记录，阿衡帮小柚拿舞蹈包。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，做实验记录是在周日选书之前还是之后？",
+      "answer": "之前，今晚做记录。",
+      "category": "temporal"
+    },
+    {
+      "question": "一个孩子帮另一个孩子拿舞蹈包，且两人称呼同一对成年人为爸爸妈妈，通常说明什么关系？",
+      "answer": "通常是手足关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "顾柚是否提到舞蹈课的教室号码？",
+      "answer": "无法回答，对话中没有教室号码。",
+      "category": "adversarial"
+    }
+  ]
+}

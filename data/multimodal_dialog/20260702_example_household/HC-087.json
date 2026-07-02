@@ -1,0 +1,220 @@
+{
+  "case_id": "HC-087",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 1个孩子 + 2位祖辈",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "秦书泽",
+      "QA_details": [
+        {
+          "user": "周五爸爸先教安安修小木凳，安安再把砂纸递给外婆做相框。",
+          "assistant": "好的，周五提醒您准备工具。"
+        },
+        {
+          "user": "芷遥陪她妈妈挑照片，我看着安安别碰锤子。",
+          "assistant": "已记录，做手工时提醒注意安全。"
+        },
+        {
+          "user": "木凳修好后，安安先让爷爷坐一下，再去帮外婆贴照片。",
+          "assistant": "明白，周五提醒孩子按顺序帮忙。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "孟芷遥",
+      "QA_details": [
+        {
+          "user": "书泽爸爸周五教安安修木凳，安安再帮我妈做相框。",
+          "assistant": "好的，周五提醒您准备照片。"
+        },
+        {
+          "user": "我陪我妈挑照片，书泽看着安安用砂纸。",
+          "assistant": "已记下，做手工时提醒您们分工。"
+        },
+        {
+          "user": "等爷爷试坐小木凳后，安安再帮外婆贴照片。",
+          "assistant": "没问题，周五提醒按顺序完成。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "秦安安",
+      "QA_details": [
+        {
+          "user": "爷爷周五先教我修小木凳，我再帮外婆做相框。",
+          "assistant": "好的，周五提醒您戴手套。"
+        },
+        {
+          "user": "爸爸看着我用砂纸，妈妈陪外婆挑照片。",
+          "assistant": "已记录，做手工时提醒您注意安全。"
+        },
+        {
+          "user": "小木凳修好后先让爷爷坐一下，我再给外婆贴照片。",
+          "assistant": "明白，周五提醒您按顺序帮忙。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "秦怀远",
+      "QA_details": [
+        {
+          "user": "周五我先教安安修小木凳，再让孩子去帮外婆做相框。",
+          "assistant": "好的，周五提醒您准备木工胶。"
+        },
+        {
+          "user": "书泽在旁边看着砂纸，芷遥陪她妈妈挑照片。",
+          "assistant": "已记下，做手工时提醒您们注意安全。"
+        },
+        {
+          "user": "凳子修好我先试坐，安安再去帮外婆贴照片。",
+          "assistant": "没问题，周五提醒您试坐小木凳。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "孟云芝",
+      "QA_details": [
+        {
+          "user": "周五安安先跟爷爷修小木凳，再过来帮我做相框。",
+          "assistant": "好的，周五提醒您准备相框材料。"
+        },
+        {
+          "user": "芷遥陪我挑照片，书泽看着孩子用工具。",
+          "assistant": "已记录，做手工时提醒您挑好照片。"
+        },
+        {
+          "user": "等爷爷试坐完，安安再帮我贴照片。",
+          "assistant": "明白，周五提醒您等孩子过来。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "秦怀远和秦安安通过秦书泽形成了什么关系？",
+      "answer": "秦怀远是秦安安的爷爷。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，周五安安先帮谁，再帮谁？",
+      "answer": "先帮爷爷，再帮外婆。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，帮外婆贴照片是在爷爷试坐之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼两位长辈为爷爷和外婆，通常说明什么关系？",
+      "answer": "通常是祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "相框最后贴了哪张照片？",
+      "answer": "无法回答，对话中没有照片内容。",
+      "category": "adversarial"
+    }
+  ]
+}

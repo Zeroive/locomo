@@ -1,0 +1,230 @@
+{
+  "case_id": "HC-072",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾云深",
+      "QA_details": [
+        {
+          "user": "明早我爸陪阿澄去足球课，我先把爸的护膝和阿澄的球鞋放玄关。",
+          "assistant": "好的，明早提醒您检查护膝和球鞋。"
+        },
+        {
+          "user": "小梨的画袋由若安带，阿澄的水壶我来装好。",
+          "assistant": "已记录，明早提醒您装好水壶。"
+        },
+        {
+          "user": "周末如果两个孩子作业都写完，我们五个人去江边散步。",
+          "assistant": "明白，周末提醒您确认作业情况。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林若安",
+      "QA_details": [
+        {
+          "user": "云深明早准备阿澄的水壶和球鞋，我带小梨的画袋。",
+          "assistant": "好的，明早提醒您带画袋。"
+        },
+        {
+          "user": "爷爷陪阿澄去足球课，我送小梨去画画班。",
+          "assistant": "已记下，明早提醒您们分头出门。"
+        },
+        {
+          "user": "江边散步时小梨想牵爷爷，阿澄想和云深踢一会儿球。",
+          "assistant": "没问题，周末提醒安排轻松活动。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾澄",
+      "QA_details": [
+        {
+          "user": "爷爷明早陪我去足球课，爸爸把球鞋和水壶放玄关。",
+          "assistant": "好的，明早提醒您带球鞋和水壶。"
+        },
+        {
+          "user": "妈妈送小梨去画画班，我下课后等爷爷一起回家。",
+          "assistant": "已记录，下课后提醒您等爷爷。"
+        },
+        {
+          "user": "周末我想和爸爸在江边踢球，小梨可以牵着爷爷走。",
+          "assistant": "明白，周末提醒您带小球。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "顾梨",
+      "QA_details": [
+        {
+          "user": "妈妈明早送我去画画班，爸爸给阿澄装水壶。",
+          "assistant": "好的，明早提醒您带画袋。"
+        },
+        {
+          "user": "爷爷陪阿澄去足球课，我想下课后给爷爷看我的画。",
+          "assistant": "已记录，下课后提醒您带好画。"
+        },
+        {
+          "user": "周末去江边时我想牵爷爷慢慢走。",
+          "assistant": "没问题，周末提醒您穿舒服的鞋。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "顾怀仁",
+      "QA_details": [
+        {
+          "user": "云深把我的护膝和阿澄的球鞋放玄关了，明早我陪孩子去足球课。",
+          "assistant": "好的，明早提醒您带护膝。"
+        },
+        {
+          "user": "小梨下课想给我看画，我等她回来再看。",
+          "assistant": "已记录，提醒您等小梨回来。"
+        },
+        {
+          "user": "周末江边散步我慢慢走，孩子们别跑太远。",
+          "assistant": "明白，周末提醒安排慢路线。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿澄和顾云深是什么关系？",
+      "answer": "阿澄是顾云深的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，顾怀仁明早会陪谁去足球课？",
+      "answer": "陪阿澄去足球课。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，足球课是在江边散步之前还是之后？",
+      "answer": "之前，足球课在明早。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为爸爸、一人为爷爷，通常说明什么关系？",
+      "answer": "通常是亲子和祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "顾澄是否提到足球课教练姓名？",
+      "answer": "无法回答，对话中没有教练姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

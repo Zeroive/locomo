@@ -1,0 +1,172 @@
+{
+  "case_id": "HC-050",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾予安",
+      "QA_details": [
+        {
+          "user": "小檀把我的围裙放厨房了，说我今晚给她和外婆做南瓜粥。",
+          "assistant": "好的，今晚提醒您准备南瓜粥。"
+        },
+        {
+          "user": "若晴说小檀的家长签名页放我书桌上，我先签完再煮粥。",
+          "assistant": "已记录，今晚提醒您先签名页。"
+        },
+        {
+          "user": "外婆明早陪小檀去书法课，我把她的保温杯和小檀的笔袋都放门口。",
+          "assistant": "明白，明早提醒您检查保温杯和笔袋。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林若晴",
+      "QA_details": [
+        {
+          "user": "予安今晚先签小檀的家长页，再给她和我妈煮南瓜粥。",
+          "assistant": "好的，今晚提醒您确认签名页和晚餐。"
+        },
+        {
+          "user": "我妈明早陪小檀去书法课，我下班后再接她们回来。",
+          "assistant": "已记下，明天下班后提醒您去接人。"
+        },
+        {
+          "user": "小檀说她把予安的围裙放厨房了，今晚别让他找半天。",
+          "assistant": "没问题，今晚提醒围裙在厨房。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾檀",
+      "QA_details": [
+        {
+          "user": "爸爸今晚给我签家长页，还要给我和外婆煮南瓜粥。",
+          "assistant": "好的，今晚提醒您把签名页放好。"
+        },
+        {
+          "user": "妈妈说外婆明早陪我去书法课，她下班后来接我们。",
+          "assistant": "已记录，明早提醒您带笔袋。"
+        },
+        {
+          "user": "我把爸爸的围裙放厨房了，免得他找不到。",
+          "assistant": "明白，今晚提醒您告诉爸爸围裙位置。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "赵秀兰",
+      "QA_details": [
+        {
+          "user": "若晴说明早我陪小檀去书法课，予安把保温杯和笔袋都放门口了。",
+          "assistant": "好的，明早提醒您带好保温杯和笔袋。"
+        },
+        {
+          "user": "小檀晚上想喝南瓜粥，予安签完家长页再煮也来得及。",
+          "assistant": "已记录，今晚提醒先签页再做晚餐。"
+        },
+        {
+          "user": "若晴下班来接我们，孩子下课别乱跑。",
+          "assistant": "明白，明天下课提醒等若晴来接。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "顾檀和顾予安是什么关系？",
+      "answer": "顾檀是顾予安的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四个人的对话，谁明早陪顾檀去书法课？",
+      "answer": "赵秀兰陪她去。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签家长页是在书法课之前还是之后？",
+      "answer": "之前，今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为爸爸、一人为外婆，通常说明什么关系？",
+      "answer": "通常是亲子和外祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "顾檀是否提到书法课老师姓名？",
+      "answer": "无法回答，对话中没有老师姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

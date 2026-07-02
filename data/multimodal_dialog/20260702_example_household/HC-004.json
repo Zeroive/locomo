@@ -1,0 +1,86 @@
+{
+  "case_id": "HC-004",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "单亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾南",
+      "QA_details": [
+        {
+          "user": "小满昨晚把我的药盒放在餐桌上，还贴了便签说早饭后别忘了吃。",
+          "assistant": "好的，我会在早饭后提醒您查看餐桌上的药盒。"
+        },
+        {
+          "user": "她今天有朗读比赛，我得把相机和备用电池都带上，老师给家长留的第一排座位别迟到。",
+          "assistant": "已记下，出门前提醒您带相机和备用电池，并按时到第一排座位。"
+        },
+        {
+          "user": "晚上她想吃蛋包饭，冰箱里还有鸡蛋吗？如果没有我下班顺路买。",
+          "assistant": "我会提醒您下班前检查鸡蛋，不够的话顺路购买。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "顾小满",
+      "QA_details": [
+        {
+          "user": "南南说我的朗读稿要放进蓝色文件夹，明早她会检查一遍，家长签名那页也夹好了。",
+          "assistant": "好的，我会提醒您把朗读稿放进蓝色文件夹，并确认签名页带好。"
+        },
+        {
+          "user": "她答应比赛结束后带我吃蛋包饭，我想把奖状先给她看。",
+          "assistant": "没问题，我会帮您记下比赛结束后的蛋包饭计划。"
+        },
+        {
+          "user": "周日如果她不加班，我想让她陪我去图书馆还书。",
+          "assistant": "已记录，周日确认南南是否加班，再安排去图书馆还书。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "小满和顾南是什么关系？",
+      "answer": "小满是顾南的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合顾南和顾小满的对话，小满是否也会关心顾南的日常健康？",
+      "answer": "是的，她提醒顾南吃药。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，朗读比赛是在图书馆还书计划之前还是之后？",
+      "answer": "之前，比赛在今天。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子参加朗读比赛时，家人到场拍照通常体现什么家庭支持？",
+      "answer": "体现家长对孩子活动的支持。",
+      "category": "open_domain"
+    },
+    {
+      "question": "顾小满是否提到自己的班主任姓名？",
+      "answer": "无法回答，对话中没有班主任姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "case_id": "HC-079",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "李承砚",
+      "QA_details": [
+        {
+          "user": "明晚外公教星驰磨墨，星驰再教妹妹星禾写横画，我负责铺桌布。",
+          "assistant": "好的，明晚提醒您提前整理书桌。"
+        },
+        {
+          "user": "晚晴把宣纸放柜子上层，两个孩子别自己拿。",
+          "assistant": "已记录，提醒孩子等大人取宣纸。"
+        },
+        {
+          "user": "写完字后让外公先看星禾的作品，再看星驰的。",
+          "assistant": "明白，明晚提醒您们按顺序收作品。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈晚晴",
+      "QA_details": [
+        {
+          "user": "我爸明晚教星驰磨墨，星驰再带星禾练横画。",
+          "assistant": "好的，明晚提醒您准备笔墨。"
+        },
+        {
+          "user": "承砚铺桌布，我取宣纸，别让星禾踩到墨盘。",
+          "assistant": "已记下，练字前提醒检查桌边。"
+        },
+        {
+          "user": "星禾写完先给外公看，星驰的作品后面再评。",
+          "assistant": "没问题，明晚提醒您安排点评顺序。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "李星驰",
+      "QA_details": [
+        {
+          "user": "外公明晚教我磨墨，我再教妹妹写横画。",
+          "assistant": "好的，提醒您先学磨墨再教妹妹。"
+        },
+        {
+          "user": "爸爸铺桌布，妈妈取宣纸，我带星禾洗手。",
+          "assistant": "已记录，练字前提醒您带妹妹洗手。"
+        },
+        {
+          "user": "妹妹写完先给外公看，我的作品可以晚一点。",
+          "assistant": "明白，提醒您耐心等点评。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "李星禾",
+      "QA_details": [
+        {
+          "user": "外公先教哥哥磨墨，哥哥再教我写横画。",
+          "assistant": "好的，明晚提醒您跟哥哥一起练。"
+        },
+        {
+          "user": "妈妈说宣纸在柜子上层，我不能自己拿。",
+          "assistant": "已记下，提醒您等妈妈取宣纸。"
+        },
+        {
+          "user": "我写完要先给外公看，再看哥哥的字。",
+          "assistant": "没问题，明晚提醒您收好作品。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "陈柏年",
+      "QA_details": [
+        {
+          "user": "明晚我先教星驰磨墨，再让他带星禾练横画。",
+          "assistant": "好的，明晚提醒您准备墨条。"
+        },
+        {
+          "user": "晚晴取宣纸，承砚铺桌布，两个孩子先洗手。",
+          "assistant": "已记录，练字前提醒您们按顺序准备。"
+        },
+        {
+          "user": "星禾年纪小，她写完我先看，再点评星驰的。",
+          "assistant": "明白，提醒您先看星禾的作品。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陈柏年和李星禾通过陈晚晴形成了什么关系？",
+      "answer": "陈柏年是李星禾的外公。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，明晚练字的教学顺序是什么？",
+      "answer": "外公教星驰，星驰教星禾。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，点评作品是在写完字之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一位长辈为外公，通常说明什么关系？",
+      "answer": "通常是外祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "李星驰准备写哪首诗？",
+      "answer": "无法回答，对话中没有诗名。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-015",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "叶舒",
+      "QA_details": [
+        {
+          "user": "阿原明天要交家长签字的阅读记录，我今晚先看他的读书笔记。",
+          "assistant": "好的，我会提醒您今晚检查阿原的读书笔记并签阅读记录。"
+        },
+        {
+          "user": "小禾的舞蹈鞋也要洗，周四汇报课前必须晾干。",
+          "assistant": "已记录，今晚提醒您清洗小禾的舞蹈鞋。"
+        },
+        {
+          "user": "如果他们作业都写完，周末我带两个人去公园放风筝。",
+          "assistant": "明白，周末根据作业情况安排公园放风筝。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶原",
+      "QA_details": [
+        {
+          "user": "舒舒说我的阅读记录今晚要签，我先把读书笔记放到餐桌上。",
+          "assistant": "好的，我会提醒您把读书笔记放好。"
+        },
+        {
+          "user": "小禾的舞蹈鞋在阳台，我写完作业可以帮她拿夹子。",
+          "assistant": "已记下，写完作业后提醒您帮小禾拿夹子。"
+        },
+        {
+          "user": "周末放风筝时我想和小禾轮流拿线轴。",
+          "assistant": "没问题，周末提醒您们轮流拿线轴。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "叶禾",
+      "QA_details": [
+        {
+          "user": "舒舒说我的舞蹈鞋周四前要晾干，阿原会帮我拿夹子。",
+          "assistant": "好的，我会提醒您把舞蹈鞋放到通风处。"
+        },
+        {
+          "user": "阿原的阅读记录今晚要签，我不能把餐桌弄乱。",
+          "assistant": "已记录，今晚提醒您给餐桌留出位置。"
+        },
+        {
+          "user": "周末我想和阿原一起放蓝色风筝，让舒舒帮我们拍照。",
+          "assistant": "明白，周末提醒您带蓝色风筝。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿原和叶舒是什么关系？",
+      "answer": "阿原是叶舒的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，叶舒是否同时照顾阿原和小禾的安排？",
+      "answer": "是的，她同时照顾两人的安排。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，阅读记录签字是在周末放风筝之前还是之后？",
+      "answer": "之前，签字在今晚。",
+      "category": "temporal"
+    },
+    {
+      "question": "阅读记录需要家长签字，通常说明签字人与学生是什么关系？",
+      "answer": "通常是监护关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "阿原是否提到阅读记录的具体页数？",
+      "answer": "无法回答，对话中没有页数。",
+      "category": "adversarial"
+    }
+  ]
+}

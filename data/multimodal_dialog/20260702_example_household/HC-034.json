@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-034",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林照川",
+      "QA_details": [
+        {
+          "user": "小望把我的钥匙放到鞋柜上了，说我明早送他去篮球课别找不到。",
+          "assistant": "好的，明早提醒您从鞋柜拿钥匙。"
+        },
+        {
+          "user": "瑞芳说篮球课结束她去接小望，我下班后直接买菜回家。",
+          "assistant": "已记录，篮球课后由瑞芳接小望。"
+        },
+        {
+          "user": "小望的家长确认单放我电脑旁边，今晚我先签掉。",
+          "assistant": "明白，今晚提醒您签家长确认单。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林望",
+      "QA_details": [
+        {
+          "user": "我爸爸明早送我去篮球课，我把他的钥匙放鞋柜上了。",
+          "assistant": "好的，明早提醒您带篮球鞋。"
+        },
+        {
+          "user": "奶奶说下课后来接我，她会带一瓶温水。",
+          "assistant": "已记下，篮球课结束后提醒您等奶奶。"
+        },
+        {
+          "user": "家长确认单在爸爸电脑旁边，今晚他会签。",
+          "assistant": "没问题，今晚提醒您确认签字页。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "沈瑞芳",
+      "QA_details": [
+        {
+          "user": "照川明早送小望去篮球课，我下课后去接孩子。",
+          "assistant": "好的，我会提醒您篮球课结束时间。"
+        },
+        {
+          "user": "小望说确认单在照川电脑旁边，今晚得让他签好。",
+          "assistant": "已记录，今晚提醒确认签字。"
+        },
+        {
+          "user": "我接小望时带温水，他运动完别立刻喝冰的。",
+          "assistant": "明白，提醒您带温水。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "林望和林照川是什么关系？",
+      "answer": "林望是林照川的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，谁会在篮球课结束后接林望？",
+      "answer": "沈瑞芳会接他。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签确认单是在篮球课之前还是之后？",
+      "answer": "之前，确认单今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼成年人为爸爸，通常说明两人是什么关系？",
+      "answer": "通常是父子或父女关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "林望是否提到篮球课教练的姓名？",
+      "answer": "无法回答，对话中没有教练姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

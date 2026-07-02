@@ -1,0 +1,172 @@
+{
+  "case_id": "HC-049",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "宋柏川",
+      "QA_details": [
+        {
+          "user": "宁夏今晚帮小舟整理朗读稿，我先给爸爸换血压计电池，再签小舟的比赛回执。",
+          "assistant": "好的，我会提醒您先换电池，再签比赛回执。"
+        },
+        {
+          "user": "小舟说爷爷会教他放慢语速，我把客厅台灯调亮一点。",
+          "assistant": "已记录，今晚提醒您调亮台灯。"
+        },
+        {
+          "user": "明天比赛时宁夏带稿子，我爸陪小舟候场，我去停车后再进礼堂。",
+          "assistant": "明白，明天提醒您们按这个顺序安排。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶宁夏",
+      "QA_details": [
+        {
+          "user": "柏川给老爷子换血压计电池，再签小舟的回执，我先整理朗读稿。",
+          "assistant": "好的，今晚提醒您整理朗读稿。"
+        },
+        {
+          "user": "小舟想让爷爷听他读一遍，我把稿子夹到蓝色文件夹里。",
+          "assistant": "已记下，提醒您准备蓝色文件夹。"
+        },
+        {
+          "user": "明天我带稿子，爷爷陪小舟候场，柏川停好车再来。",
+          "assistant": "没问题，明天提醒您带稿子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "宋舟",
+      "QA_details": [
+        {
+          "user": "爸爸今晚签比赛回执，妈妈帮我整理朗读稿。",
+          "assistant": "好的，今晚提醒您准备朗读稿。"
+        },
+        {
+          "user": "爷爷会听我读一遍，让我别读太快。",
+          "assistant": "已记录，今晚提醒您练习放慢语速。"
+        },
+        {
+          "user": "明天爷爷陪我候场，妈妈带稿子，爸爸停好车再来。",
+          "assistant": "明白，明天提醒您带好文件夹。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "宋怀民",
+      "QA_details": [
+        {
+          "user": "柏川今晚给我换血压计电池，还要签小舟的回执，别让他忙忘了。",
+          "assistant": "好的，今晚提醒柏川处理这两件事。"
+        },
+        {
+          "user": "小舟想读给我听，我就帮他听听节奏，别让孩子紧张。",
+          "assistant": "已记录，今晚提醒安排朗读练习。"
+        },
+        {
+          "user": "明天我陪小舟候场，宁夏带稿子，柏川停车后再进来。",
+          "assistant": "明白，明天提醒您们按分工准备。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "宋怀民和宋舟之间通过宋柏川形成了什么关系？",
+      "answer": "宋怀民是宋舟的爷爷。",
+      "category": "single_hop"
+    },
+    {
+      "question": "宋柏川、叶宁夏、宋舟和宋怀民围绕朗读比赛形成了怎样的安排链？",
+      "answer": "柏川签回执，宁夏带稿子，怀民陪候场。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，练习朗读是在比赛之前还是之后？",
+      "answer": "之前，今晚练习。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为爷爷，通常说明两人是什么关系？",
+      "answer": "通常是祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "宋舟是否提到比赛评委姓名？",
+      "answer": "无法回答，对话中没有评委姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

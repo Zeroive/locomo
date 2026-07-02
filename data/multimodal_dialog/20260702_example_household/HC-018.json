@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-018",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "苏澜",
+      "QA_details": [
+        {
+          "user": "星野把我的保温杯放进包里了，说我送他去训练时别又忘了喝水。",
+          "assistant": "好的，我会提醒您出门前确认包里的保温杯。"
+        },
+        {
+          "user": "小芮把家长签字的阅读卡放在冰箱贴下面，今晚我得先签掉。",
+          "assistant": "已记录，今晚提醒您签小芮的阅读卡。"
+        },
+        {
+          "user": "周五他们俩都要早起，一个训练一个晨读，我得把早餐提前准备好。",
+          "assistant": "明白，我会提醒您周四晚上准备好早餐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏星野",
+      "QA_details": [
+        {
+          "user": "澜澜明早送我去训练，我把她的保温杯放包里了。",
+          "assistant": "好的，明早我会提醒您确认训练包和保温杯。"
+        },
+        {
+          "user": "小芮的阅读卡今晚要签，我不能把冰箱贴弄丢。",
+          "assistant": "已记下，今晚提醒您保留阅读卡位置。"
+        },
+        {
+          "user": "周五我训练前想给小芮留一块三明治，她晨读容易饿。",
+          "assistant": "没问题，我会提醒您预留三明治。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "苏芮",
+      "QA_details": [
+        {
+          "user": "星野明早训练，澜澜送他出门后还要帮我签阅读卡。",
+          "assistant": "好的，我会提醒您把阅读卡放在显眼的位置。"
+        },
+        {
+          "user": "我把阅读卡压在冰箱贴下面了，澜澜晚上回来就能看到。",
+          "assistant": "已记录，今晚提醒您检查阅读卡是否还在冰箱贴下面。"
+        },
+        {
+          "user": "周五晨读前我想拿星野留的三明治，别让他忘了。",
+          "assistant": "明白，周五早上提醒星野预留三明治。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "小芮和苏澜是什么关系？",
+      "answer": "小芮是苏澜的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，苏澜是否负责小芮的阅读卡签字？",
+      "answer": "是的，苏澜要签阅读卡。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签阅读卡是在周五晨读之前还是之后？",
+      "answer": "之前，阅读卡今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "阅读卡需要家长签字，通常说明签字人承担什么角色？",
+      "answer": "通常是监护人角色。",
+      "category": "open_domain"
+    },
+    {
+      "question": "苏芮是否提到晨读的教室编号？",
+      "answer": "无法回答，对话中没有教室编号。",
+      "category": "adversarial"
+    }
+  ]
+}

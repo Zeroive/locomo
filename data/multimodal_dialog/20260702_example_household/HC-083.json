@@ -1,0 +1,220 @@
+{
+  "case_id": "HC-083",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 1个孩子 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "程亦安",
+      "QA_details": [
+        {
+          "user": "小柚说明天让我送她去游泳课，爸爸在家等体检报告。",
+          "assistant": "好的，明天提醒您先送游泳课。"
+        },
+        {
+          "user": "沐晴陪她妈妈去配眼镜，结束后到泳馆门口会合。",
+          "assistant": "已记录，配镜结束后提醒她们去泳馆。"
+        },
+        {
+          "user": "小柚的泳帽在书包侧袋，爸爸的报告单放茶几上。",
+          "assistant": "明白，出门前提醒检查泳帽和报告单。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林沐晴",
+      "QA_details": [
+        {
+          "user": "明天亦安送小柚去游泳课，我陪我妈去配眼镜。",
+          "assistant": "好的，明天提醒您带验光单。"
+        },
+        {
+          "user": "小柚下课后会在泳馆门口等妈妈和外婆。",
+          "assistant": "已记下，下课后提醒您到泳馆门口。"
+        },
+        {
+          "user": "亦安爸爸的报告单在茶几上，别让他出门时忘了。",
+          "assistant": "没问题，明天提醒家里检查报告单。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "程小柚",
+      "QA_details": [
+        {
+          "user": "爸爸明天送我去游泳课，妈妈陪外婆去配眼镜。",
+          "assistant": "好的，明天提醒您带泳帽。"
+        },
+        {
+          "user": "下课后我要在泳馆门口等妈妈和外婆，爷爷在家等报告。",
+          "assistant": "已记录，下课后提醒您别走远。"
+        },
+        {
+          "user": "我的泳帽在书包侧袋，爷爷的报告单在茶几上。",
+          "assistant": "明白，明天提醒您检查书包。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "程怀礼",
+      "QA_details": [
+        {
+          "user": "明天亦安送小柚去游泳课，我在家等体检报告。",
+          "assistant": "好的，明天提醒您留意报告。"
+        },
+        {
+          "user": "沐晴陪她妈妈配眼镜，结束后她们去泳馆接小柚。",
+          "assistant": "已记下，提醒您关注他们回家时间。"
+        },
+        {
+          "user": "报告单放茶几上，亦安回来后帮我看一下。",
+          "assistant": "没问题，明天提醒您把报告单放好。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "林秋萍",
+      "QA_details": [
+        {
+          "user": "明天沐晴陪我去配眼镜，亦安送小柚去游泳课。",
+          "assistant": "好的，明天提醒您带旧眼镜。"
+        },
+        {
+          "user": "小柚下课后等妈妈和外婆，我们从眼镜店直接过去。",
+          "assistant": "已记录，配镜后提醒您去泳馆。"
+        },
+        {
+          "user": "我验光单在手提包，小柚的泳帽在她书包里。",
+          "assistant": "明白，出门前提醒检查。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "程小柚和程亦安是什么关系？",
+      "answer": "小柚是亦安的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，明天谁去游泳课，谁去配眼镜？",
+      "answer": "小柚去游泳课，沐晴陪秋萍配眼镜。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，去泳馆门口会合是在配眼镜之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为爸爸，通常说明什么关系？",
+      "answer": "通常是亲子关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "程小柚游泳课的教练叫什么？",
+      "answer": "无法回答，对话中没有教练姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

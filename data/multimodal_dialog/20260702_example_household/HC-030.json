@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-030",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1位祖辈",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "程予怀",
+      "QA_details": [
+        {
+          "user": "芷微说承礼的药盒今晚要重新分装，我先把周三到周五的标签贴好。",
+          "assistant": "好的，我会提醒您今晚贴好药盒标签。"
+        },
+        {
+          "user": "承礼还记得芷微小时候总把药盒当积木玩，今晚整理时别让他翻旧抽屉太久。",
+          "assistant": "已记录，今晚整理药盒时提醒控制时间。"
+        },
+        {
+          "user": "明早芷微先陪承礼测血糖，我去楼下取轮椅，测完再出门散步。",
+          "assistant": "明白，明早提醒您们按测血糖和取轮椅的顺序安排。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "宋芷微",
+      "QA_details": [
+        {
+          "user": "予怀把承礼的药盒标签贴好了，我今晚按早晚两格重新分药。",
+          "assistant": "好的，今晚提醒您按早晚格分药。"
+        },
+        {
+          "user": "承礼又提我小时候拿药盒当积木的事，予怀说旧抽屉周末再慢慢看。",
+          "assistant": "已记下，周末提醒您们整理旧抽屉。"
+        },
+        {
+          "user": "明早我先陪承礼测血糖，予怀取轮椅，散步路线别太长。",
+          "assistant": "没问题，明早提醒安排短路线散步。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "宋承礼",
+      "QA_details": [
+        {
+          "user": "芷微今晚给我分药，予怀已经把标签贴好了，他们两个做事比我还细。",
+          "assistant": "好的，今晚提醒您按新药盒服药。"
+        },
+        {
+          "user": "芷微小时候拿药盒当积木玩，予怀说周末再陪我翻旧抽屉。",
+          "assistant": "已记录，周末提醒您们看旧抽屉。"
+        },
+        {
+          "user": "明早芷微陪我测血糖，予怀取轮椅，测完再去散步。",
+          "assistant": "明白，明早提醒按这个顺序安排。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "程予怀和宋承礼之间通过宋芷微形成了什么关系？",
+      "answer": "他们是姻亲关系。",
+      "category": "single_hop"
+    },
+    {
+      "question": "程予怀、宋芷微和宋承礼围绕明早散步形成了怎样的安排链？",
+      "answer": "芷微测血糖，予怀取轮椅，承礼再散步。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，分药是在测血糖之前还是之后？",
+      "answer": "之前，分药在今晚。",
+      "category": "temporal"
+    },
+    {
+      "question": "一方配偶为另一方长辈贴药盒标签，通常体现什么关系？",
+      "answer": "通常体现姻亲照护关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "宋承礼是否提到血糖仪品牌？",
+      "answer": "无法回答，对话中没有品牌。",
+      "category": "adversarial"
+    }
+  ]
+}

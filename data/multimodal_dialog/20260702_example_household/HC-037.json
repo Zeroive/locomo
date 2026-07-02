@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-037",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈知秋",
+      "QA_details": [
+        {
+          "user": "小桥和明德明早都要去少年宫，我先把她的画袋和他的老花镜放门口。",
+          "assistant": "好的，我会提醒您明早检查画袋和老花镜。"
+        },
+        {
+          "user": "小桥说爷爷会陪她看画展，我下午去接他们回来。",
+          "assistant": "已记录，下午提醒您去接他们。"
+        },
+        {
+          "user": "晚上我给小桥签参观记录，明德帮她挑一张照片贴上去。",
+          "assistant": "明白，晚上提醒您签记录并贴照片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈桥",
+      "QA_details": [
+        {
+          "user": "我妈妈把画袋放门口了，爷爷的老花镜也在那里。",
+          "assistant": "好的，明早提醒您出门前检查画袋。"
+        },
+        {
+          "user": "爷爷陪我看画展，下午妈妈来接我们回家。",
+          "assistant": "已记下，下午提醒您等妈妈来接。"
+        },
+        {
+          "user": "晚上妈妈签参观记录，爷爷帮我挑照片。",
+          "assistant": "没问题，晚上提醒您准备参观记录。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "沈明德",
+      "QA_details": [
+        {
+          "user": "知秋把小桥的画袋和我的老花镜放门口了，明早出门方便。",
+          "assistant": "好的，明早提醒您检查老花镜。"
+        },
+        {
+          "user": "小桥说我陪她看画展，知秋下午来接，我们别走太远。",
+          "assistant": "已记录，提醒您们看完画展等知秋。"
+        },
+        {
+          "user": "晚上知秋签参观记录，我帮小桥挑照片贴上去。",
+          "assistant": "明白，晚上提醒准备照片。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "小桥和明德是什么关系？",
+      "answer": "小桥是明德的孙辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，沈知秋和沈明德是否都参与小桥的参观记录？",
+      "answer": "是的，知秋签字，明德帮挑照片。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，看画展是在签参观记录之前还是之后？",
+      "answer": "之前，记录晚上签。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一位长辈为爷爷，通常说明两人是什么关系？",
+      "answer": "通常是祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "沈桥是否提到画展门票价格？",
+      "answer": "无法回答，对话中没有票价。",
+      "category": "adversarial"
+    }
+  ]
+}

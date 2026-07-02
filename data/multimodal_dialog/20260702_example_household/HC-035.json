@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-035",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周明棠",
+      "QA_details": [
+        {
+          "user": "小悠和玉兰都提醒我明晚早点回来，一个要我签阅读卡，一个等我修厨房灯。",
+          "assistant": "好的，我会提醒您明晚早点回家。"
+        },
+        {
+          "user": "小悠把阅读卡放到我书包外层，玉兰把螺丝刀放到厨房窗台。",
+          "assistant": "已记录，提醒您检查书包外层和厨房窗台。"
+        },
+        {
+          "user": "周六我带她们去植物园，小悠想推着玉兰慢慢看兰花。",
+          "assistant": "明白，周六提醒您安排轻松路线。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周悠",
+      "QA_details": [
+        {
+          "user": "我妈妈明晚回来签阅读卡，外婆等她修厨房灯。",
+          "assistant": "好的，明晚提醒您把阅读卡放好。"
+        },
+        {
+          "user": "外婆把螺丝刀放窗台了，我把阅读卡放妈妈书包外层。",
+          "assistant": "已记下，提醒您别移动螺丝刀。"
+        },
+        {
+          "user": "周六去植物园时，我想推外婆去看兰花，让妈妈帮我们拍照。",
+          "assistant": "没问题，周六提醒您准备相机。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "何玉兰",
+      "QA_details": [
+        {
+          "user": "明棠明晚回来修厨房灯，小悠的阅读卡也等她签。",
+          "assistant": "好的，明晚提醒她先签卡再修灯。"
+        },
+        {
+          "user": "小悠说周六推我去看兰花，孩子有这份心就够了。",
+          "assistant": "已记录，周六安排植物园兰花区。"
+        },
+        {
+          "user": "我把螺丝刀放窗台了，别让小悠碰到。",
+          "assistant": "明白，提醒家里注意安全。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "周悠和周明棠、何玉兰分别是什么关系？",
+      "answer": "周悠是明棠的孩子，也是玉兰的外孙辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，周明棠是否同时回应小悠和玉兰的需求？",
+      "answer": "是的，她要签卡也要修灯。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签阅读卡是在去植物园之前还是之后？",
+      "answer": "之前，阅读卡明晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为妈妈、一人为外婆，通常说明三人是什么家庭结构？",
+      "answer": "通常是母亲、孩子和外祖辈。",
+      "category": "open_domain"
+    },
+    {
+      "question": "周悠是否提到植物园门票价格？",
+      "answer": "无法回答，对话中没有票价。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "case_id": "HC-088",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "单亲 + 2个孩子 + 2位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_004",
+      "to": "person_005",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "梁舒然",
+      "QA_details": [
+        {
+          "user": "明早我送小屿去口才课，爸妈带小禾去公园晒太阳。",
+          "assistant": "好的，明早提醒您们分头出门。"
+        },
+        {
+          "user": "小屿的讲稿在书包里，小禾的帽子放在玄关。",
+          "assistant": "已记录，出门前提醒检查讲稿和帽子。"
+        },
+        {
+          "user": "口才课结束后，我带小屿去公园和爸妈、小禾会合。",
+          "assistant": "明白，课后提醒您去公园。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "梁小屿",
+      "QA_details": [
+        {
+          "user": "妈妈明早送我去口才课，爷爷奶奶带小禾去公园。",
+          "assistant": "好的，明早提醒您带讲稿。"
+        },
+        {
+          "user": "下课后我要和妈妈去公园找爷爷、奶奶和妹妹。",
+          "assistant": "已记录，课后提醒您等妈妈。"
+        },
+        {
+          "user": "我的讲稿在书包里，妹妹的帽子在玄关。",
+          "assistant": "没问题，明早提醒您检查书包。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小禾",
+      "QA_details": [
+        {
+          "user": "爷爷奶奶明早带我去公园，妈妈送哥哥去口才课。",
+          "assistant": "好的，明早提醒您戴帽子。"
+        },
+        {
+          "user": "哥哥下课后会和妈妈来公园找我们。",
+          "assistant": "已记下，上午提醒您在公园等他们。"
+        },
+        {
+          "user": "我的帽子在玄关，哥哥的讲稿在书包里。",
+          "assistant": "明白，出门前提醒您拿帽子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "梁启明",
+      "QA_details": [
+        {
+          "user": "明早我和奶奶带小禾去公园，舒然送小屿上口才课。",
+          "assistant": "好的，明早提醒您带水杯。"
+        },
+        {
+          "user": "小屿下课后会和舒然来公园，我们在银杏树旁等。",
+          "assistant": "已记录，上午提醒您留意会合时间。"
+        },
+        {
+          "user": "小禾的帽子在玄关，别让孩子晒着。",
+          "assistant": "没问题，出门前提醒拿帽子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "周桂琴",
+      "QA_details": [
+        {
+          "user": "明早我和爷爷带小禾去公园，舒然送小屿去上课。",
+          "assistant": "好的，明早提醒您们带小推车。"
+        },
+        {
+          "user": "小屿下课后和妈妈来找我们，小禾应该会很高兴。",
+          "assistant": "已记下，上午提醒您在公园等他们。"
+        },
+        {
+          "user": "小禾的帽子放玄关，小屿的讲稿在书包里。",
+          "assistant": "明白，出门前提醒检查。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "梁舒然和梁小屿是什么关系？",
+      "answer": "舒然是小屿的妈妈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，明早小屿和小禾分别去哪儿？",
+      "answer": "小屿去口才课，小禾去公园。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，去公园会合是在口才课之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为妈妈，通常说明什么关系？",
+      "answer": "通常是亲子关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "梁小屿口才课的主题是什么？",
+      "answer": "无法回答，对话中没有主题。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-038",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "梁知远",
+      "QA_details": [
+        {
+          "user": "小禾说爷爷会教她修自行车铃，我今晚先把工具盒从阳台拿下来，再签她的安全回执。",
+          "assistant": "好的，我会提醒您拿工具盒并签安全回执。"
+        },
+        {
+          "user": "明早德荣陪小禾去社区骑行课，我把他的护腰和小禾的头盔放一起。",
+          "assistant": "已记录，明早提醒您检查护腰和头盔。"
+        },
+        {
+          "user": "骑行课结束后，小禾想让爷爷先试一下车铃，我再带他们回家。",
+          "assistant": "明白，骑行课后提醒先检查车铃。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "梁禾",
+      "QA_details": [
+        {
+          "user": "爷爷今晚教我看车铃，爸爸会把工具盒拿下来，还要签安全回执。",
+          "assistant": "好的，今晚提醒您准备自行车。"
+        },
+        {
+          "user": "明早爷爷陪我去骑行课，爸爸把头盔和护腰都放玄关了。",
+          "assistant": "已记下，明早提醒您戴头盔。"
+        },
+        {
+          "user": "下课后我想让爷爷先试车铃，再让爸爸带我们回家。",
+          "assistant": "没问题，下课后提醒您们检查车铃。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁德荣",
+      "QA_details": [
+        {
+          "user": "知远今晚签小禾的安全回执，我教孩子看一下车铃怎么拧紧。",
+          "assistant": "好的，今晚提醒您准备工具盒。"
+        },
+        {
+          "user": "小禾明早和我去骑行课，知远把头盔和护腰都放好了。",
+          "assistant": "已记录，明早提醒您带好护具。"
+        },
+        {
+          "user": "下课后我先帮她试车铃，知远再开车接我们。",
+          "assistant": "明白，下课后提醒您检查车铃再回家。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "梁德荣和梁禾之间通过梁知远形成了什么关系？",
+      "answer": "梁德荣是梁禾的爷爷。",
+      "category": "single_hop"
+    },
+    {
+      "question": "梁知远、梁禾和梁德荣围绕骑行课形成了怎样的安排链？",
+      "answer": "知远签回执，德荣陪小禾上课。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签安全回执是在骑行课之前还是之后？",
+      "answer": "之前，回执今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一位长辈为爷爷，通常说明两人是什么关系？",
+      "answer": "通常是祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "梁禾是否提到骑行课老师的姓名？",
+      "answer": "无法回答，对话中没有老师姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

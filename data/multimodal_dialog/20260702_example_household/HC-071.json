@@ -1,0 +1,162 @@
+{
+  "case_id": "HC-071",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "夫妻 + 2位祖辈",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐景明",
+      "QA_details": [
+        {
+          "user": "明早我先送我爸去理疗，再和若禾一起接她妈妈来家里吃午饭。",
+          "assistant": "好的，明早提醒您先送理疗再接人。"
+        },
+        {
+          "user": "我爸的理疗卡在药盒旁边，若禾妈妈的拐杖放她家门口。",
+          "assistant": "已记录，出门前提醒您检查理疗卡和拐杖。"
+        },
+        {
+          "user": "午饭后若禾陪她妈妈午睡，我陪我爸整理理疗记录。",
+          "assistant": "明白，午饭后提醒分头照顾。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "江若禾",
+      "QA_details": [
+        {
+          "user": "景明先送他爸理疗，再来接我妈，路上别排太紧。",
+          "assistant": "好的，提醒您预留路上时间。"
+        },
+        {
+          "user": "他爸的理疗卡和我妈的拐杖都要带齐。",
+          "assistant": "已记下，出门前提醒检查物品。"
+        },
+        {
+          "user": "午饭后我陪我妈午睡，景明陪他爸看理疗记录。",
+          "assistant": "没问题，午饭后提醒按分工安排。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "唐守义",
+      "QA_details": [
+        {
+          "user": "景明明早送我理疗，再和若禾接她妈妈来吃饭，别让他太赶。",
+          "assistant": "好的，提醒行程放宽松。"
+        },
+        {
+          "user": "我的理疗卡在药盒旁边，若禾妈妈的拐杖也别忘。",
+          "assistant": "已记录，出门前提醒带齐。"
+        },
+        {
+          "user": "午饭后景明陪我看记录，若禾陪她妈妈休息。",
+          "assistant": "明白，午饭后提醒整理记录。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "江淑云",
+      "QA_details": [
+        {
+          "user": "若禾和景明明早接我吃饭，景明先送他爸理疗，不急。",
+          "assistant": "好的，明早提醒您等他们来接。"
+        },
+        {
+          "user": "我的拐杖在门口，景明他爸的理疗卡也要带。",
+          "assistant": "已记录，提醒出门带拐杖。"
+        },
+        {
+          "user": "午饭后若禾陪我休息，景明陪他爸看记录。",
+          "assistant": "明白，午饭后提醒您休息。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "唐景明和江淑云之间通过江若禾形成了什么关系？",
+      "answer": "他们是姻亲关系。",
+      "category": "single_hop"
+    },
+    {
+      "question": "唐景明、江若禾、唐守义和江淑云围绕午饭后形成了怎样的安排链？",
+      "answer": "景明陪父亲看记录，若禾陪母亲休息。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，理疗是在午饭之前还是之后？",
+      "answer": "之前，理疗在明早。",
+      "category": "temporal"
+    },
+    {
+      "question": "配偶和另一方母亲之间通常是什么家庭关系？",
+      "answer": "通常是姻亲关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "江淑云是否提到午饭菜单？",
+      "answer": "无法回答，对话中没有菜单。",
+      "category": "adversarial"
+    }
+  ]
+}

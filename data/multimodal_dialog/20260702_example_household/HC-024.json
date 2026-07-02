@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-024",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周景衡",
+      "QA_details": [
+        {
+          "user": "明早我和映雪一起陪淑兰去体检，我负责挂号单，映雪负责带医保卡。",
+          "assistant": "好的，我会提醒您带挂号单，并提醒映雪带医保卡。"
+        },
+        {
+          "user": "淑兰喜欢喝温豆浆，我今晚先把豆子泡上，体检回来能直接打。",
+          "assistant": "已记录，今晚提醒您泡豆子。"
+        },
+        {
+          "user": "映雪说淑兰以前给她留的旧围巾还在衣柜顶层，周末想一起找出来。",
+          "assistant": "明白，周末提醒您们找衣柜顶层的旧围巾。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "江映雪",
+      "QA_details": [
+        {
+          "user": "景衡明早拿挂号单，我带淑兰的医保卡，体检前不要让她喝豆浆。",
+          "assistant": "好的，明早提醒您带医保卡，并注意体检前饮食。"
+        },
+        {
+          "user": "淑兰以前给我织的围巾可能在衣柜顶层，周末景衡帮我搬梯子。",
+          "assistant": "已记下，周末提醒景衡搬梯子。"
+        },
+        {
+          "user": "体检回来我想陪淑兰午睡一会儿，下午再整理药盒。",
+          "assistant": "没问题，体检后提醒您先休息，下午整理药盒。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "江淑兰",
+      "QA_details": [
+        {
+          "user": "映雪和景衡明早都陪我去体检，一个带医保卡，一个带挂号单，别让他们忘。",
+          "assistant": "好的，我会提醒他们分工带好材料。"
+        },
+        {
+          "user": "映雪要找那条旧围巾，我记得是她上高中那年冬天织的。",
+          "assistant": "已记录，周末提醒您们找旧围巾。"
+        },
+        {
+          "user": "景衡泡了豆子，体检回来再打豆浆，早上先别喝。",
+          "assistant": "明白，明早提醒体检前先不喝豆浆。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "江淑兰和江映雪、周景衡分别是什么关系？",
+      "answer": "江淑兰是映雪的长辈，也是景衡的姻亲长辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，周景衡和江映雪是否共同陪江淑兰体检？",
+      "answer": "是的，两人分工陪她体检。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，体检是在找旧围巾之前还是之后？",
+      "answer": "之前，体检在明早。",
+      "category": "temporal"
+    },
+    {
+      "question": "一个人与配偶共同照顾配偶的长辈，通常体现什么家庭关系？",
+      "answer": "通常体现姻亲照护关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "江淑兰是否提到体检医院的楼层？",
+      "answer": "无法回答，对话中没有楼层。",
+      "category": "adversarial"
+    }
+  ]
+}

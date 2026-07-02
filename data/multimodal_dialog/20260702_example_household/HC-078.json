@@ -1,0 +1,230 @@
+{
+  "case_id": "HC-078",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "赵明澈",
+      "QA_details": [
+        {
+          "user": "周六去图书馆时，一帆带妹妹一苒先去儿童区，我和念安陪外婆还书。",
+          "assistant": "好的，周六提醒您们分头进馆。"
+        },
+        {
+          "user": "一苒的借书证在妈妈包里，一帆的证在他自己的书袋里。",
+          "assistant": "已记录，出门前提醒检查两个借书证。"
+        },
+        {
+          "user": "下午看牙后我们五个人直接去吃面，外婆想坐靠窗的位置。",
+          "assistant": "明白，下午提醒您看牙后去餐馆。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏念安",
+      "QA_details": [
+        {
+          "user": "一帆说要给妹妹挑绘本，我妈负责看着他们别跑远。",
+          "assistant": "好的，周六提醒您关注儿童区。"
+        },
+        {
+          "user": "看牙前先让两个孩子喝水，外婆的药盒也要带上。",
+          "assistant": "已记下，出门前提醒带药盒和水杯。"
+        },
+        {
+          "user": "明澈订了下午的牙科号，图书馆结束后别耽误。",
+          "assistant": "没问题，周六提醒您按时间离开图书馆。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "赵一帆",
+      "QA_details": [
+        {
+          "user": "我周六带妹妹先去儿童区，爸爸和妈妈陪外婆还书。",
+          "assistant": "好的，提醒您照看妹妹。"
+        },
+        {
+          "user": "妹妹的借书证在妈妈包里，我的证在书袋里。",
+          "assistant": "已记录，出门前提醒您检查书袋。"
+        },
+        {
+          "user": "看牙后我想和妹妹坐外婆旁边吃面。",
+          "assistant": "明白，下午提醒您们看牙后去吃面。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "赵一苒",
+      "QA_details": [
+        {
+          "user": "哥哥周六带我去儿童区，外婆还书的时候我不乱跑。",
+          "assistant": "好的，提醒您跟紧哥哥。"
+        },
+        {
+          "user": "妈妈拿着我的借书证，哥哥的证在他的书袋里。",
+          "assistant": "已记下，出门前提醒您确认借书证。"
+        },
+        {
+          "user": "下午看牙后，我要和哥哥陪外婆坐靠窗的位置。",
+          "assistant": "没问题，下午提醒您们看牙后去餐馆。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "苏桂英",
+      "QA_details": [
+        {
+          "user": "周六念安陪我还书，一帆带一苒去儿童区。",
+          "assistant": "好的，周六提醒您带要还的书。"
+        },
+        {
+          "user": "两个孩子看牙前要喝水，我的药盒放在布包里。",
+          "assistant": "已记录，出门前提醒检查布包。"
+        },
+        {
+          "user": "吃面时让一帆和一苒坐我旁边，我好听他们讲新书。",
+          "assistant": "明白，下午提醒您们安排座位。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "赵一帆和赵一苒是什么关系？",
+      "answer": "他们是兄妹。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，周六图书馆里谁负责儿童区，谁负责还书？",
+      "answer": "一帆带一苒去儿童区，明澈和念安陪桂英还书。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，吃面是在看牙之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "一名孩子称另一名孩子为哥哥，通常说明什么关系？",
+      "answer": "通常是兄妹或兄弟关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "赵一苒借了哪本绘本？",
+      "answer": "无法回答，对话中没有书名。",
+      "category": "adversarial"
+    }
+  ]
+}

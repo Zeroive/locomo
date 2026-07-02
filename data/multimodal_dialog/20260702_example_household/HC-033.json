@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-033",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许向晚",
+      "QA_details": [
+        {
+          "user": "小屿明天交研学回执，我今晚签完后让他放进书包夹层。",
+          "assistant": "好的，我会提醒您今晚签好研学回执。"
+        },
+        {
+          "user": "明早我妈妈素琴会陪小屿去校门口集合，我先把她的遮阳帽和小屿的水杯放玄关。",
+          "assistant": "已记录，明早提醒您检查遮阳帽和水杯。"
+        },
+        {
+          "user": "研学回来后，小屿想把照片给外婆看，我负责把照片导到平板里。",
+          "assistant": "明白，研学回来后提醒您导照片到平板。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许屿",
+      "QA_details": [
+        {
+          "user": "我爸爸今晚会签研学回执，明天外婆陪我去校门口集合。",
+          "assistant": "好的，明早提醒您带好研学回执。"
+        },
+        {
+          "user": "外婆的遮阳帽和我的水杯都在玄关，出门前别忘。",
+          "assistant": "已记下，明早提醒您检查玄关物品。"
+        },
+        {
+          "user": "研学回来后，我想让爸爸把照片导出来，再给外婆看。",
+          "assistant": "没问题，研学后提醒您整理照片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "赵素琴",
+      "QA_details": [
+        {
+          "user": "向晚今晚签小屿的回执，我明早陪孩子去校门口集合。",
+          "assistant": "好的，明早提醒您提前出门。"
+        },
+        {
+          "user": "小屿说水杯在玄关，我的遮阳帽也在那里，别让他空手出门。",
+          "assistant": "已记录，明早提醒您检查水杯和遮阳帽。"
+        },
+        {
+          "user": "孩子研学回来想给我看照片，向晚会先导到平板里。",
+          "assistant": "明白，研学回来后提醒您们看照片。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "赵素琴和许屿之间通过许向晚形成了什么关系？",
+      "answer": "赵素琴是许屿的外婆。",
+      "category": "single_hop"
+    },
+    {
+      "question": "许向晚、许屿和赵素琴围绕研学形成了怎样的安排链？",
+      "answer": "向晚签回执，素琴陪集合，小屿参加研学。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签回执是在研学集合之前还是之后？",
+      "answer": "之前，回执今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼长辈为外婆，通常说明两人是什么关系？",
+      "answer": "通常是外祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "许屿是否提到研学地点名称？",
+      "answer": "无法回答，对话中没有地点名称。",
+      "category": "adversarial"
+    }
+  ]
+}

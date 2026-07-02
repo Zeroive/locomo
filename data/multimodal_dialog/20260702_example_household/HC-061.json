@@ -1,0 +1,172 @@
+{
+  "case_id": "HC-061",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周知遥",
+      "QA_details": [
+        {
+          "user": "阿宁和小杉明早都要带阅读单，我今晚把两张都签好。",
+          "assistant": "好的，今晚提醒您签两张阅读单。"
+        },
+        {
+          "user": "妈说明早陪两个孩子去图书馆，她负责带借书证，我负责准备水杯。",
+          "assistant": "已记录，明早提醒您准备水杯。"
+        },
+        {
+          "user": "阿宁负责提醒小杉还绘本，小杉负责提醒阿宁还科普书。",
+          "assistant": "明白，明早提醒两个孩子互相检查。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周宁",
+      "QA_details": [
+        {
+          "user": "妈妈今晚签我和小杉的阅读单，奶奶明早陪我们去图书馆。",
+          "assistant": "好的，明早提醒您带阅读单。"
+        },
+        {
+          "user": "我提醒小杉还绘本，她提醒我还科普书。",
+          "assistant": "已记下，明早提醒您们互相检查书。"
+        },
+        {
+          "user": "奶奶带借书证，妈妈准备水杯。",
+          "assistant": "明白，明早提醒您检查水杯和借书证。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "周杉",
+      "QA_details": [
+        {
+          "user": "妈妈今晚签我和阿宁的阅读单，奶奶明早陪我们去图书馆。",
+          "assistant": "好的，明早提醒您带阅读单。"
+        },
+        {
+          "user": "阿宁提醒我还绘本，我提醒他还科普书。",
+          "assistant": "已记录，明早提醒您们带书。"
+        },
+        {
+          "user": "奶奶带借书证，妈妈把水杯放玄关。",
+          "assistant": "没问题，明早提醒您检查玄关。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周美兰",
+      "QA_details": [
+        {
+          "user": "知遥今晚签两个孩子的阅读单，我明早陪他们去图书馆。",
+          "assistant": "好的，明早提醒您带借书证。"
+        },
+        {
+          "user": "阿宁和小杉互相提醒还书，省得我一样样问。",
+          "assistant": "已记录，明早提醒他们互相检查。"
+        },
+        {
+          "user": "借书证我带，水杯知遥准备。",
+          "assistant": "明白，明早提醒您检查随身包。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿宁和小杉是什么关系？",
+      "answer": "他们是手足关系。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四个人的对话，阿宁和小杉是否互相提醒还书？",
+      "answer": "是的，他们互相提醒。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签阅读单是在去图书馆之前还是之后？",
+      "answer": "之前，阅读单今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "两个孩子称呼同一人为妈妈、同一人为奶奶，通常说明他们是什么关系？",
+      "answer": "通常是手足关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "周杉是否提到图书馆开放时间？",
+      "answer": "无法回答，对话中没有开放时间。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-013",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "梁修远",
+      "QA_details": [
+        {
+          "user": "明晚嘉宁和小沐要先去学校开放日，我把他们两个的通行码都截图到家庭相册里了。",
+          "assistant": "好的，我会提醒您明晚确认嘉宁和小沐的通行码。"
+        },
+        {
+          "user": "嘉宁说小沐的家长提问表要她带着，我只负责把车停到东门。",
+          "assistant": "已记录，嘉宁带提问表，您负责东门停车。"
+        },
+        {
+          "user": "周末我们三个去买书包，小沐想让嘉宁帮她挑颜色。",
+          "assistant": "明白，周末提醒您们一起去挑书包。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许嘉宁",
+      "QA_details": [
+        {
+          "user": "修远把我和小沐的开放日通行码存好了，明晚进校门前我来核对。",
+          "assistant": "好的，明晚进校门前提醒您核对通行码。"
+        },
+        {
+          "user": "小沐的家长提问表在我包里，老师说到场的两位家长都可以补充问题。",
+          "assistant": "已记下，开放日前提醒您带好提问表。"
+        },
+        {
+          "user": "周末买书包时小沐想让我帮她挑浅绿色，修远负责看尺寸。",
+          "assistant": "没问题，周末提醒您看颜色，修远看尺寸。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小沐",
+      "QA_details": [
+        {
+          "user": "修远说开放日通行码在家庭相册，嘉宁说我的提问表在她包里。",
+          "assistant": "好的，明晚提醒您确认通行码和提问表。"
+        },
+        {
+          "user": "老师说开放日可以和两位家长一起看教室，我想先去美术教室。",
+          "assistant": "已记录，开放日先安排看美术教室。"
+        },
+        {
+          "user": "周末我想让嘉宁挑颜色，让修远看书包背起来会不会太大。",
+          "assistant": "明白，周末挑书包时会提醒您们分工。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "梁小沐和梁修远、许嘉宁是什么关系？",
+      "answer": "梁小沐是他们的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，梁修远和许嘉宁是否都参与小沐的学校开放日？",
+      "answer": "是的，两人都参与。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，学校开放日是在买书包之前还是之后？",
+      "answer": "之前，开放日在明晚。",
+      "category": "temporal"
+    },
+    {
+      "question": "学校开放日由两位成年人陪同孩子参加，通常说明他们是什么角色？",
+      "answer": "通常是父母或监护人。",
+      "category": "open_domain"
+    },
+    {
+      "question": "梁小沐是否提到班主任的电话号码？",
+      "answer": "无法回答，对话中没有电话号码。",
+      "category": "adversarial"
+    }
+  ]
+}

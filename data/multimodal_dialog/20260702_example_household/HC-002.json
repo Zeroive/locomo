@@ -1,0 +1,86 @@
+{
+  "case_id": "HC-002",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "夫妻 / 伴侣家庭",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "赵明远",
+      "QA_details": [
+        {
+          "user": "清禾昨晚把我的降噪耳机放到玄关抽屉里了，她说我今天开远程会肯定用得上。",
+          "assistant": "好的，我会提醒您出门前从玄关抽屉拿降噪耳机，避免会议前临时找。"
+        },
+        {
+          "user": "她还说周五晚上别安排应酬，我们约好补过登记纪念日，餐厅最好安静一点。",
+          "assistant": "明白，周五晚上优先安排安静餐厅，并避开工作应酬。"
+        },
+        {
+          "user": "如果清禾下午先到家，麻烦提醒我把花束放到书房，别让她一进门就看见。",
+          "assistant": "没问题，我会提醒您把花束先放到书房，保留晚上的惊喜。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林清禾",
+      "QA_details": [
+        {
+          "user": "明远早上给我留了便签，说我的围巾在他车后座，晚上他接我时会顺手带过来。",
+          "assistant": "已记录，晚上明远接您时会把围巾一起带来。"
+        },
+        {
+          "user": "他今天胃口一般，我想把晚餐换成粥和清炒菜，别再点太辣的外卖了。",
+          "assistant": "好的，今晚晚餐按粥和清炒菜准备，避开辛辣外卖。"
+        },
+        {
+          "user": "周日他要陪我去看婚纱照修片，上午十点的预约别忘了提醒。",
+          "assistant": "没问题，我会在周日上午提前提醒您十点去看婚纱照修片。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "赵明远和清禾是什么关系？",
+      "answer": "他们是夫妻或伴侣。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合赵明远和林清禾的对话，两人是否都在为对方安排生活细节？",
+      "answer": "是的，他们都在照顾对方。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，补过登记纪念日是在看婚纱照修片之前还是之后？",
+      "answer": "之前，纪念日在周五晚上。",
+      "category": "temporal"
+    },
+    {
+      "question": "登记纪念日通常和哪类亲密关系有关？",
+      "answer": "通常和夫妻或伴侣有关。",
+      "category": "open_domain"
+    },
+    {
+      "question": "赵明远和林清禾是否提到他们孩子的生日日期？",
+      "answer": "无法回答，对话中没有孩子生日。",
+      "category": "adversarial"
+    }
+  ]
+}

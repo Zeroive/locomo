@@ -1,0 +1,220 @@
+{
+  "case_id": "HC-080",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 1个孩子 + 2位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾言川",
+      "QA_details": [
+        {
+          "user": "周日我带爸爸去复诊，知夏带她妈妈陪小悠去画室。",
+          "assistant": "好的，周日提醒您们分头出门。"
+        },
+        {
+          "user": "我爸的病历在蓝色袋子里，小悠的画夹放门口。",
+          "assistant": "已记录，出门前提醒检查病历和画夹。"
+        },
+        {
+          "user": "复诊结束后我和爸爸直接去画室门口等她们。",
+          "assistant": "明白，周日提醒您复诊后去画室。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许知夏",
+      "QA_details": [
+        {
+          "user": "言川周日陪他爸复诊，我带我妈和小悠去画室。",
+          "assistant": "好的，周日提醒您带画夹。"
+        },
+        {
+          "user": "我妈想看小悠上课，言川复诊后会过来接我们。",
+          "assistant": "已记下，课后提醒您等言川。"
+        },
+        {
+          "user": "小悠的水彩盒在玄关，我妈的围巾在沙发上。",
+          "assistant": "没问题，出门前提醒检查。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾小悠",
+      "QA_details": [
+        {
+          "user": "妈妈周日带我和外婆去画室，爸爸陪爷爷复诊。",
+          "assistant": "好的，周日提醒您带画夹。"
+        },
+        {
+          "user": "外婆想看我画向日葵，爷爷复诊后也来画室门口。",
+          "assistant": "已记录，课后提醒您等家人。"
+        },
+        {
+          "user": "我的水彩盒在玄关，外婆的围巾在沙发上。",
+          "assistant": "明白，出门前提醒您检查物品。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "顾绍庭",
+      "QA_details": [
+        {
+          "user": "周日言川陪我去复诊，知夏带小悠和她妈妈去画室。",
+          "assistant": "好的，周日提醒您带病历。"
+        },
+        {
+          "user": "复诊结束后我们去画室门口等小悠下课。",
+          "assistant": "已记下，复诊后提醒您去画室。"
+        },
+        {
+          "user": "我的病历在蓝色袋子里，别让言川忘了。",
+          "assistant": "没问题，出门前提醒检查蓝色袋子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "许梅兰",
+      "QA_details": [
+        {
+          "user": "周日知夏带我陪小悠去画室，言川陪他爸复诊。",
+          "assistant": "好的，周日提醒您带围巾。"
+        },
+        {
+          "user": "我想看小悠画向日葵，课后言川和他爸来接我们。",
+          "assistant": "已记录，课后提醒您在画室门口等。"
+        },
+        {
+          "user": "我的围巾在沙发上，小悠的水彩盒在玄关。",
+          "assistant": "明白，出门前提醒检查。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "顾绍庭和顾言川是什么关系？",
+      "answer": "顾绍庭是顾言川的爸爸。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，周日谁去复诊，谁去画室？",
+      "answer": "绍庭和言川去复诊，知夏、梅兰和小悠去画室。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，去画室门口是在复诊之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为爷爷，通常说明什么关系？",
+      "answer": "通常是祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "顾绍庭复诊的科室是什么？",
+      "answer": "无法回答，对话中没有科室。",
+      "category": "adversarial"
+    }
+  ]
+}

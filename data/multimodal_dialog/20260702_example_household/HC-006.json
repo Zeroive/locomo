@@ -1,0 +1,86 @@
+{
+  "case_id": "HC-006",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "罗启明",
+      "QA_details": [
+        {
+          "user": "小梨把我的老花镜收到电视柜第二层了，说我晚上看报纸总是到处找。",
+          "assistant": "好的，晚上看报纸前我会提醒您去电视柜第二层拿老花镜。"
+        },
+        {
+          "user": "她明天有手工课，要带安全剪刀和胶棒，我得睡前帮她检查书包。",
+          "assistant": "已记下，睡前提醒您检查小梨的安全剪刀和胶棒。"
+        },
+        {
+          "user": "周五她想吃我包的鲜肉馄饨，肉馅得提前一天买，她父亲小时候也最爱这一口。",
+          "assistant": "明白，我会在周四提醒您买肉馅，周五给小梨包馄饨。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "罗梨",
+      "QA_details": [
+        {
+          "user": "启明说我的手工材料不能放沙发上，睡前要一起装进书包。",
+          "assistant": "好的，我会提醒您睡前把手工材料装进书包。"
+        },
+        {
+          "user": "他今天走路有点慢，我放学后想陪他在小区里散步，不去太远。",
+          "assistant": "已记录，放学后安排小区内短距离散步。"
+        },
+        {
+          "user": "周五他要给我包馄饨，我想把美术课的小贴纸送给他，他还说以前也这样哄我父亲吃晚饭。",
+          "assistant": "没问题，我会帮您记下周五把小贴纸送给启明。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "小梨和罗启明是什么关系？",
+      "answer": "小梨是罗启明的孙辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合罗启明和罗梨的对话，小梨是否也会照顾罗启明的日常需要？",
+      "answer": "是的，她帮他收老花镜，也陪他散步。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，手工课是在吃馄饨之前还是之后？",
+      "answer": "之前，手工课在明天。",
+      "category": "temporal"
+    },
+    {
+      "question": "老花镜通常更常见于哪类年龄段成员使用？",
+      "answer": "通常更常见于年长成员。",
+      "category": "open_domain"
+    },
+    {
+      "question": "罗梨是否提到罗启明的退休单位名称？",
+      "answer": "无法回答，对话中没有单位名称。",
+      "category": "adversarial"
+    }
+  ]
+}

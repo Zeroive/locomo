@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-017",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林沛",
+      "QA_details": [
+        {
+          "user": "阿川把小鹿的手工纸放高了，我回家后先帮她拿下来，再签阿川的社团回执。",
+          "assistant": "好的，我会提醒您回家后先拿手工纸，再签社团回执。"
+        },
+        {
+          "user": "小鹿说阿川答应教她折纸船，我得把他们两个的桌面清出来。",
+          "assistant": "已记录，今晚提醒您清出桌面。"
+        },
+        {
+          "user": "周末如果阿川社团不加练，我带他们一起去湖边试纸船。",
+          "assistant": "明白，周末根据阿川社团安排去湖边。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林川",
+      "QA_details": [
+        {
+          "user": "沛沛今晚要签我的社团回执，小鹿的手工纸我放太高了，得等她回来拿。",
+          "assistant": "好的，我会提醒您把社团回执放到桌上。"
+        },
+        {
+          "user": "我答应小鹿教她折纸船，沛沛说先把桌面清空。",
+          "assistant": "已记下，今晚提醒您清桌面后再折纸船。"
+        },
+        {
+          "user": "周末去湖边时，我想让小鹿先试她折的那只。",
+          "assistant": "没问题，周末提醒您带好纸船。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "林鹿",
+      "QA_details": [
+        {
+          "user": "阿川说我的手工纸在高柜上，沛沛回来会帮我拿。",
+          "assistant": "好的，我会提醒您等沛沛回来后再拿手工纸。"
+        },
+        {
+          "user": "阿川今晚教我折纸船，沛沛还要签他的社团回执。",
+          "assistant": "已记录，今晚提醒您准备手工纸。"
+        },
+        {
+          "user": "周末我想和阿川一起把纸船放到湖边，让沛沛帮我们拍视频。",
+          "assistant": "明白，周末提醒您带纸船。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "小鹿和林沛是什么关系？",
+      "answer": "小鹿是林沛的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "林沛、阿川和小鹿之间围绕折纸船形成了怎样的安排链？",
+      "answer": "林沛拿纸，阿川教小鹿折纸船。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签社团回执是在湖边试纸船之前还是之后？",
+      "answer": "之前，回执今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "社团回执通常由哪类家庭成员签字？",
+      "answer": "通常由家长或监护人签字。",
+      "category": "open_domain"
+    },
+    {
+      "question": "林鹿是否提到社团加练的具体时长？",
+      "answer": "无法回答，对话中没有时长。",
+      "category": "adversarial"
+    }
+  ]
+}

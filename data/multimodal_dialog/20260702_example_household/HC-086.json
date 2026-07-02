@@ -1,0 +1,220 @@
+{
+  "case_id": "HC-086",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 1个孩子 + 2位祖辈",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "罗远航",
+      "QA_details": [
+        {
+          "user": "周末去湿地公园，南乔陪她妈妈慢慢走，我陪爸爸和小宁看观鸟台。",
+          "assistant": "好的，周末提醒您们分两路游览。"
+        },
+        {
+          "user": "小宁说爷爷讲鸟名，外婆讲花名，她都想听。",
+          "assistant": "已记录，游园时提醒您安排时间。"
+        },
+        {
+          "user": "爸爸的望远镜和南乔妈妈的遮阳帽都放门口柜子上。",
+          "assistant": "明白，出门前提醒检查。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "姜南乔",
+      "QA_details": [
+        {
+          "user": "周末我陪我妈走木栈道，远航陪他爸和小宁去观鸟台。",
+          "assistant": "好的，周末提醒您带遮阳帽。"
+        },
+        {
+          "user": "小宁想听爷爷讲鸟名，也想听外婆讲花名。",
+          "assistant": "已记下，游园时提醒您们会合。"
+        },
+        {
+          "user": "远航爸爸的望远镜在门口，我妈的帽子也在那儿。",
+          "assistant": "没问题，出门前提醒带齐物品。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "罗小宁",
+      "QA_details": [
+        {
+          "user": "周末爸爸陪爷爷和我去观鸟台，妈妈陪外婆走木栈道。",
+          "assistant": "好的，周末提醒您带小本子。"
+        },
+        {
+          "user": "爷爷讲鸟名，外婆讲花名，我都要记下来。",
+          "assistant": "已记录，出门前提醒您带笔。"
+        },
+        {
+          "user": "爷爷的望远镜和外婆的遮阳帽都在门口柜子上。",
+          "assistant": "明白，周末提醒您检查柜子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "罗敬修",
+      "QA_details": [
+        {
+          "user": "远航周末陪我和小宁看观鸟台，南乔陪她妈妈走木栈道。",
+          "assistant": "好的，周末提醒您带望远镜。"
+        },
+        {
+          "user": "我给小宁讲鸟名，外婆给孩子讲花名。",
+          "assistant": "已记下，游园时提醒您们会合。"
+        },
+        {
+          "user": "望远镜放门口柜子上，别让远航忘拿。",
+          "assistant": "没问题，出门前提醒拿望远镜。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "姜月琴",
+      "QA_details": [
+        {
+          "user": "周末南乔陪我走木栈道，远航陪他爸和小宁看观鸟台。",
+          "assistant": "好的，周末提醒您穿舒服的鞋。"
+        },
+        {
+          "user": "小宁听爷爷讲鸟名后，再来听我讲花名也行。",
+          "assistant": "已记录，游园时提醒您们碰面。"
+        },
+        {
+          "user": "我的遮阳帽在门口柜子上，跟望远镜放一起。",
+          "assistant": "明白，出门前提醒您带遮阳帽。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "罗小宁和罗敬修、姜月琴是什么关系？",
+      "answer": "小宁是他们的孙辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，周末谁讲鸟名，谁讲花名？",
+      "answer": "敬修讲鸟名，月琴讲花名。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，听花名是在听鸟名之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为爷爷、一人为外婆，通常说明什么关系？",
+      "answer": "通常是祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "湿地公园里看到了哪种鸟？",
+      "answer": "无法回答，对话中没有鸟的种类。",
+      "category": "adversarial"
+    }
+  ]
+}

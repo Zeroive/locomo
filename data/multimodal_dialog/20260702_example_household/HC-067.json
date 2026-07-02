@@ -1,0 +1,162 @@
+{
+  "case_id": "HC-067",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "夫妻 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林知衡",
+      "QA_details": [
+        {
+          "user": "星然提醒我周六别忘了带我爸去配助听器，也要顺路接她妈妈来吃饭。",
+          "assistant": "好的，周六提醒您带父亲配助听器并接星然妈妈。"
+        },
+        {
+          "user": "我爸的旧病历在书房，星然妈妈喜欢的软米糕我周五先订。",
+          "assistant": "已记录，周五提醒您订软米糕。"
+        },
+        {
+          "user": "周六下午星然陪她妈妈聊天，我陪我爸试助听器。",
+          "assistant": "明白，周六下午提醒您们分工陪伴。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐星然",
+      "QA_details": [
+        {
+          "user": "知衡周六带他爸配助听器，也接我妈来吃饭，我把地址发给他。",
+          "assistant": "好的，周六提醒您确认地址。"
+        },
+        {
+          "user": "他爸的旧病历在书房，我妈喜欢软米糕，他周五会先订。",
+          "assistant": "已记下，周五提醒订米糕。"
+        },
+        {
+          "user": "周六下午我陪我妈聊天，知衡陪他爸试助听器。",
+          "assistant": "没问题，周六提醒您们分工。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "林绍安",
+      "QA_details": [
+        {
+          "user": "知衡周六带我去配助听器，还要接星然妈妈来吃饭。",
+          "assistant": "好的，周六提醒您带旧病历。"
+        },
+        {
+          "user": "旧病历在书房，星然妈妈喜欢软米糕，孩子们都记着。",
+          "assistant": "已记录，周五提醒订米糕。"
+        },
+        {
+          "user": "下午知衡陪我试助听器，星然陪她妈妈聊天。",
+          "assistant": "明白，周六下午提醒按分工安排。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "唐秀荣",
+      "QA_details": [
+        {
+          "user": "星然说周六知衡来接我吃饭，他还要带他爸配助听器。",
+          "assistant": "好的，周六提醒您等知衡来接。"
+        },
+        {
+          "user": "知衡周五订软米糕，我就少带点点心过去。",
+          "assistant": "已记录，周五提醒确认米糕。"
+        },
+        {
+          "user": "下午我和星然聊天，知衡陪他爸试助听器。",
+          "assistant": "明白，周六下午提醒您们轻松安排。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "林绍安和唐秀荣分别与林知衡、唐星然是什么关系？",
+      "answer": "绍安是知衡的父亲，秀荣是星然的母亲。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四个人的对话，周六下午两位成年人分别陪谁？",
+      "answer": "知衡陪父亲，星然陪母亲。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，订软米糕是在周六吃饭之前还是之后？",
+      "answer": "之前，周五先订。",
+      "category": "temporal"
+    },
+    {
+      "question": "夫妻双方分别照顾自己的父母，通常说明什么家庭结构？",
+      "answer": "夫妻和双方父母同在。",
+      "category": "open_domain"
+    },
+    {
+      "question": "唐秀荣是否提到知衡几点来接她？",
+      "answer": "无法回答，对话中没有具体时间。",
+      "category": "adversarial"
+    }
+  ]
+}

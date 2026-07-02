@@ -1,0 +1,162 @@
+{
+  "case_id": "HC-068",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "夫妻 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾明川",
+      "QA_details": [
+        {
+          "user": "清予说我爸明早要去复查，她妈妈下午也来家里量血压，我把两份记录本都放茶几上。",
+          "assistant": "好的，我会提醒您明早带复查记录本，下午准备血压记录本。"
+        },
+        {
+          "user": "我爸喜欢清淡粥，清予妈妈喜欢软米糕，明天两边都别准备太硬的东西。",
+          "assistant": "已记录，明天餐食以清淡、软和为主。"
+        },
+        {
+          "user": "晚上清予陪她妈妈看旧照片，我陪我爸整理复查报告。",
+          "assistant": "明白，晚上提醒您们分别整理报告和照片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶清予",
+      "QA_details": [
+        {
+          "user": "明川明早陪他爸复查，下午我妈来量血压，我把血压计先充好电。",
+          "assistant": "好的，提醒您提前给血压计充电。"
+        },
+        {
+          "user": "他爸的粥要煮软一点，我妈那份米糕也别太甜。",
+          "assistant": "已记下，明天提醒您少糖、软食。"
+        },
+        {
+          "user": "晚上我陪我妈看旧照片，明川陪他爸看报告。",
+          "assistant": "没问题，晚上提醒您准备相册。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾文德",
+      "QA_details": [
+        {
+          "user": "明川明早陪我复查，清予下午还要给她妈妈量血压，他们俩一天都忙。",
+          "assistant": "好的，提醒您明早带复查资料。"
+        },
+        {
+          "user": "我喝粥就行，清予妈妈那份米糕少放糖比较好。",
+          "assistant": "已记录，提醒明天准备清淡餐食。"
+        },
+        {
+          "user": "晚上明川帮我看报告，清予陪她妈妈看照片。",
+          "assistant": "明白，晚上提醒安排报告和相册。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "叶秀珍",
+      "QA_details": [
+        {
+          "user": "清予下午给我量血压，明川上午陪他爸复查，他们别忘了休息。",
+          "assistant": "好的，下午提醒您量血压。"
+        },
+        {
+          "user": "米糕少甜一点就行，明川他爸喝粥也合适。",
+          "assistant": "已记录，提醒准备少糖米糕和清淡粥。"
+        },
+        {
+          "user": "晚上清予陪我看照片，明川陪他爸整理报告。",
+          "assistant": "明白，晚上提醒您准备旧照片。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "顾文德和叶秀珍分别与顾明川、叶清予是什么关系？",
+      "answer": "文德是明川的父亲，秀珍是清予的母亲。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四个人的对话，明天是否同时照顾两位长辈的健康安排？",
+      "answer": "是的，一位复查，一位量血压。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，复查是在看报告之前还是之后？",
+      "answer": "之前，复查在明早。",
+      "category": "temporal"
+    },
+    {
+      "question": "夫妻分别照顾自己的父母，通常说明什么家庭结构？",
+      "answer": "夫妻和双方父母同在。",
+      "category": "open_domain"
+    },
+    {
+      "question": "叶秀珍是否提到血压计品牌？",
+      "answer": "无法回答，对话中没有品牌。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-025",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈怀川",
+      "QA_details": [
+        {
+          "user": "清芷今晚给远山煮南瓜粥，我先把他复查用的病历袋放到门口。",
+          "assistant": "好的，我会提醒您把病历袋放到门口。"
+        },
+        {
+          "user": "远山说我小时候摔跤那张片子也在病历袋里，别和这次复查资料混了。",
+          "assistant": "已记录，提醒您区分旧片子和复查资料。"
+        },
+        {
+          "user": "明天清芷先陪远山排队，我停好车后再上楼汇合。",
+          "assistant": "明白，明天提醒您停好车后上楼汇合。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶清芷",
+      "QA_details": [
+        {
+          "user": "怀川把远山的病历袋放门口了，我今晚煮南瓜粥，明天先陪他排队。",
+          "assistant": "好的，我会提醒您明天带病历袋并先去排队。"
+        },
+        {
+          "user": "远山总说怀川小时候不爱喝粥，明晚我少盛一点给他。",
+          "assistant": "已记下，明晚提醒您给怀川少盛一点粥。"
+        },
+        {
+          "user": "复查结束后，怀川去取车，我陪远山在大厅等。",
+          "assistant": "没问题，明天复查后提醒您在大厅等候。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "沈远山",
+      "QA_details": [
+        {
+          "user": "怀川把病历袋放门口了，清芷又煮南瓜粥，明天别让他们忙乱。",
+          "assistant": "好的，我会提醒大家明早提前出门。"
+        },
+        {
+          "user": "病历袋里还有怀川小时候摔跤拍的旧片子，那张不用给医生看。",
+          "assistant": "已记录，明天提醒区分旧片子和复查资料。"
+        },
+        {
+          "user": "清芷先陪我排队，怀川停好车再上来，这样省时间。",
+          "assistant": "明白，明天提醒按这个顺序安排。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "沈远山和叶清芷之间通过沈怀川形成了什么关系？",
+      "answer": "他们是姻亲关系。",
+      "category": "single_hop"
+    },
+    {
+      "question": "沈怀川、叶清芷和沈远山围绕复查形成了怎样的安排链？",
+      "answer": "怀川备资料，清芷陪排队，远山复查。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，煮南瓜粥是在复查之前还是之后？",
+      "answer": "之前，今晚煮粥。",
+      "category": "temporal"
+    },
+    {
+      "question": "配偶照顾另一方的长辈，通常是什么家庭关系？",
+      "answer": "通常是姻亲关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "沈远山是否提到复查科室名称？",
+      "answer": "无法回答，对话中没有科室名称。",
+      "category": "adversarial"
+    }
+  ]
+}

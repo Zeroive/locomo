@@ -1,0 +1,220 @@
+{
+  "case_id": "HC-084",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 1个孩子 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "邵庭远",
+      "QA_details": [
+        {
+          "user": "今晚我给爸爸泡脚，星晚陪她妈妈整理阳台，小澄负责给两位老人递毛巾。",
+          "assistant": "好的，今晚提醒您们按顺序准备。"
+        },
+        {
+          "user": "小澄说明天想让爷爷和外婆一起看她跳绳。",
+          "assistant": "已记录，明天提醒您们安排观看时间。"
+        },
+        {
+          "user": "爸爸的泡脚盆在卫生间，星晚妈妈的花铲在阳台柜里。",
+          "assistant": "明白，今晚提醒检查物品位置。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶星晚",
+      "QA_details": [
+        {
+          "user": "庭远照顾他爸泡脚，我陪我妈整理阳台，小澄递毛巾。",
+          "assistant": "好的，今晚提醒您们分工。"
+        },
+        {
+          "user": "明天小澄想让爷爷和外婆都去看她跳绳。",
+          "assistant": "已记下，明天提醒带水杯。"
+        },
+        {
+          "user": "我妈的花铲在阳台柜里，庭远爸爸的盆在卫生间。",
+          "assistant": "没问题，今晚提醒取出工具。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "邵小澄",
+      "QA_details": [
+        {
+          "user": "爸爸今晚给爷爷泡脚，妈妈陪外婆整理阳台，我给他们递毛巾。",
+          "assistant": "好的，今晚提醒您把毛巾拿到客厅。"
+        },
+        {
+          "user": "明天我跳绳时，爷爷和外婆都要来看。",
+          "assistant": "已记录，明天提醒您带跳绳。"
+        },
+        {
+          "user": "爷爷的泡脚盆在卫生间，外婆的花铲在阳台柜里。",
+          "assistant": "明白，今晚提醒您别拿错。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "邵明德",
+      "QA_details": [
+        {
+          "user": "庭远今晚帮我泡脚，星晚陪她妈妈整理阳台，小澄给我们递毛巾。",
+          "assistant": "好的，今晚提醒您提前休息。"
+        },
+        {
+          "user": "明天小澄跳绳，我和外婆都去看她。",
+          "assistant": "已记下，明天提醒您带小凳子。"
+        },
+        {
+          "user": "泡脚盆在卫生间，毛巾让小澄放客厅就行。",
+          "assistant": "没问题，今晚提醒您准备泡脚盆。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "叶春兰",
+      "QA_details": [
+        {
+          "user": "星晚今晚陪我整理阳台，庭远给他爸泡脚，小澄递毛巾。",
+          "assistant": "好的，今晚提醒您拿花铲。"
+        },
+        {
+          "user": "小澄明天跳绳，我和爷爷都去看。",
+          "assistant": "已记录，明天提醒您准时出门。"
+        },
+        {
+          "user": "我的花铲在阳台柜里，别让星晚翻错抽屉。",
+          "assistant": "明白，今晚提醒您打开阳台柜。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "邵小澄和邵明德、叶春兰是什么关系？",
+      "answer": "小澄是他们的孙辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，今晚谁泡脚，谁整理阳台，谁递毛巾？",
+      "answer": "明德泡脚，春兰整理阳台，小澄递毛巾。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，看跳绳是在整理阳台之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼两位长辈为爷爷和外婆，通常说明什么关系？",
+      "answer": "通常是祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "邵小澄明天跳绳的成绩是多少？",
+      "answer": "无法回答，对话中没有成绩。",
+      "category": "adversarial"
+    }
+  ]
+}

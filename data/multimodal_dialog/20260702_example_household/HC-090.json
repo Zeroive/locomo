@@ -1,0 +1,230 @@
+{
+  "case_id": "HC-090",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "单亲 + 2个孩子 + 2位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_004",
+      "to": "person_005",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "宋知远",
+      "QA_details": [
+        {
+          "user": "周日下午爸爸先教小越调收音机，小越再教妹妹把频道记在纸上。",
+          "assistant": "好的，周日下午提醒您准备纸笔。"
+        },
+        {
+          "user": "妈妈负责找旧磁带，我看着小念别把旋钮拧坏。",
+          "assistant": "已记录，操作时提醒孩子轻一点。"
+        },
+        {
+          "user": "频道调好后，小念先念给爷爷听，再把纸交给奶奶收好。",
+          "assistant": "明白，周日下午提醒孩子按顺序做。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "宋小越",
+      "QA_details": [
+        {
+          "user": "爷爷周日下午教我调收音机，我再教妹妹记频道。",
+          "assistant": "好的，提醒您准备铅笔。"
+        },
+        {
+          "user": "爸爸看着小念别乱拧，奶奶找旧磁带。",
+          "assistant": "已记下，下午提醒您照看妹妹。"
+        },
+        {
+          "user": "妹妹念完频道给爷爷听后，再把纸交给奶奶。",
+          "assistant": "没问题，提醒您们按顺序收好。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "宋小念",
+      "QA_details": [
+        {
+          "user": "爷爷先教哥哥调收音机，哥哥再教我记频道。",
+          "assistant": "好的，周日下午提醒您拿纸。"
+        },
+        {
+          "user": "爸爸说我不能乱拧旋钮，奶奶去找旧磁带。",
+          "assistant": "已记录，提醒您轻轻操作。"
+        },
+        {
+          "user": "我记好频道后先念给爷爷听，再交给奶奶收好。",
+          "assistant": "明白，提醒您把纸拿稳。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "宋景山",
+      "QA_details": [
+        {
+          "user": "周日下午我先教小越调收音机，再让他带小念记频道。",
+          "assistant": "好的，提醒您准备收音机。"
+        },
+        {
+          "user": "知远看着两个孩子，奶奶去找旧磁带。",
+          "assistant": "已记下，下午提醒您们分工。"
+        },
+        {
+          "user": "小念记好后先念给我听，再把纸给奶奶。",
+          "assistant": "没问题，提醒您听孩子念频道。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "何秀兰",
+      "QA_details": [
+        {
+          "user": "周日下午爷爷教小越调收音机，小越再教小念记频道。",
+          "assistant": "好的，提醒您找旧磁带。"
+        },
+        {
+          "user": "知远看着小念别拧坏旋钮，我把磁带盒拿出来。",
+          "assistant": "已记录，下午提醒您拿磁带盒。"
+        },
+        {
+          "user": "小念念给爷爷听完后，把频道纸交给我收着。",
+          "assistant": "明白，提醒您收好频道纸。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "宋景山和宋小念通过宋知远形成了什么关系？",
+      "answer": "宋景山是小念的爷爷。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，周日下午调收音机的学习顺序是什么？",
+      "answer": "爷爷教小越，小越教小念。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，小念把频道纸交给奶奶是在念给爷爷听之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为哥哥，通常说明什么关系？",
+      "answer": "通常是兄妹或兄弟关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "收音机调到了哪个频率？",
+      "answer": "无法回答，对话中没有频率。",
+      "category": "adversarial"
+    }
+  ]
+}

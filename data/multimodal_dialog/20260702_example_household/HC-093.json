@@ -1,0 +1,230 @@
+{
+  "case_id": "HC-093",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "单亲 + 2个孩子 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_004",
+      "to": "person_005",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许明岚",
+      "QA_details": [
+        {
+          "user": "周六我妈先教小川叠衣服，小川再教妹妹把袜子分到收纳盒。",
+          "assistant": "好的，周六提醒您准备收纳盒。"
+        },
+        {
+          "user": "爸爸负责把晾干的衣服拿进来，我看着小溪别把袜子混在一起。",
+          "assistant": "已记录，整理衣服时提醒分清颜色。"
+        },
+        {
+          "user": "袜子分好后，小溪先给奶奶看，再让爷爷把盒子放进柜子。",
+          "assistant": "明白，周六提醒孩子按顺序整理。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许川",
+      "QA_details": [
+        {
+          "user": "奶奶周六先教我叠衣服，我再教妹妹分袜子。",
+          "assistant": "好的，提醒您先把桌面清出来。"
+        },
+        {
+          "user": "妈妈看着小溪别放混，爷爷把晾干的衣服拿进来。",
+          "assistant": "已记下，周六提醒您照看妹妹。"
+        },
+        {
+          "user": "妹妹分好袜子后先给奶奶看，再让爷爷放柜子。",
+          "assistant": "没问题，提醒您们按顺序整理。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许溪",
+      "QA_details": [
+        {
+          "user": "奶奶先教哥哥叠衣服，哥哥再教我分袜子。",
+          "assistant": "好的，周六提醒您准备收纳盒。"
+        },
+        {
+          "user": "妈妈说我不能把袜子混在一起，爷爷会把衣服拿进来。",
+          "assistant": "已记录，整理时提醒您按颜色放。"
+        },
+        {
+          "user": "我分好后先给奶奶看，再请爷爷放进柜子。",
+          "assistant": "明白，周六提醒您整理好再给奶奶看。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "许长青",
+      "QA_details": [
+        {
+          "user": "周六奶奶教小川叠衣服，小川再教小溪分袜子。",
+          "assistant": "好的，周六提醒您收晾衣架。"
+        },
+        {
+          "user": "明岚看着两个孩子，我把晾干的衣服拿进来。",
+          "assistant": "已记下，整理前提醒您拿衣服。"
+        },
+        {
+          "user": "小溪给奶奶看完袜子，我再把收纳盒放进柜子。",
+          "assistant": "没问题，周六提醒您放好收纳盒。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "陈佩蓉",
+      "QA_details": [
+        {
+          "user": "周六我先教小川叠衣服，再让他带小溪分袜子。",
+          "assistant": "好的，周六提醒您准备折衣板。"
+        },
+        {
+          "user": "明岚看着小溪别分错，爷爷把晾干的衣服拿回来。",
+          "assistant": "已记录，整理时提醒您们分工。"
+        },
+        {
+          "user": "小溪分好袜子先给我看，再让爷爷放进柜子。",
+          "assistant": "明白，周六提醒您检查收纳盒。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陈佩蓉和许溪通过许明岚形成了什么关系？",
+      "answer": "陈佩蓉是许溪的奶奶。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，周六整理衣服的学习顺序是什么？",
+      "answer": "奶奶教小川，小川教小溪。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，爷爷放收纳盒是在小溪给奶奶看之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为哥哥，通常说明什么关系？",
+      "answer": "通常是兄妹或兄弟关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "许溪分了几双袜子？",
+      "answer": "无法回答，对话中没有数量。",
+      "category": "adversarial"
+    }
+  ]
+}

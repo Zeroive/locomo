@@ -1,0 +1,162 @@
+{
+  "case_id": "HC-069",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "夫妻 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆景和",
+      "QA_details": [
+        {
+          "user": "南栀说她爸的体检报告在我车上，我先送我妈理疗，再去接她爸看报告。",
+          "assistant": "好的，提醒您先送理疗，再带体检报告接人。"
+        },
+        {
+          "user": "我妈的理疗卡在药盒旁边，南栀爸爸的报告袋在副驾驶。",
+          "assistant": "已记录，出门前提醒您检查理疗卡和报告袋。"
+        },
+        {
+          "user": "中午南栀陪她爸看报告，我陪我妈回家休息。",
+          "assistant": "明白，中午提醒您们分头照顾两位长辈。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许南栀",
+      "QA_details": [
+        {
+          "user": "景和先送他妈妈理疗，再接我爸看报告，报告袋在他车上。",
+          "assistant": "好的，提醒您确认报告袋位置。"
+        },
+        {
+          "user": "他妈妈的理疗卡别忘带，我爸的旧片子也在报告袋里。",
+          "assistant": "已记下，出门前提醒带齐资料。"
+        },
+        {
+          "user": "中午我陪我爸看报告，景和陪他妈妈回家休息。",
+          "assistant": "没问题，中午提醒按这个安排走。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆雅琴",
+      "QA_details": [
+        {
+          "user": "景和先送我理疗，再去接南栀爸爸看报告，别让他来回跑太急。",
+          "assistant": "好的，提醒行程放宽松。"
+        },
+        {
+          "user": "我的理疗卡在药盒旁边，南栀爸爸的报告在车上。",
+          "assistant": "已记录，出门前提醒检查资料。"
+        },
+        {
+          "user": "中午我回家休息，南栀陪她爸看报告就行。",
+          "assistant": "明白，中午提醒您先休息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "许柏年",
+      "QA_details": [
+        {
+          "user": "景和接我看报告前，还要先送他妈妈理疗，不用催。",
+          "assistant": "好的，提醒您等景和来接。"
+        },
+        {
+          "user": "南栀说报告袋在景和车上，旧片子也在里面。",
+          "assistant": "已记录，提醒您看报告时带齐资料。"
+        },
+        {
+          "user": "中午南栀陪我看报告，景和陪他妈妈休息。",
+          "assistant": "明白，中午提醒安排看报告。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陆景和和许柏年之间通过许南栀形成了什么关系？",
+      "answer": "他们是姻亲关系。",
+      "category": "single_hop"
+    },
+    {
+      "question": "陆景和、许南栀、陆雅琴和许柏年围绕中午形成了怎样的安排链？",
+      "answer": "南栀陪父亲看报告，景和陪母亲休息。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，理疗是在看报告之前还是之后？",
+      "answer": "之前，先送理疗。",
+      "category": "temporal"
+    },
+    {
+      "question": "配偶接送另一方父母看报告，通常体现什么关系？",
+      "answer": "通常体现姻亲关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "许柏年是否提到报告上的具体指标？",
+      "answer": "无法回答，对话中没有指标。",
+      "category": "adversarial"
+    }
+  ]
+}

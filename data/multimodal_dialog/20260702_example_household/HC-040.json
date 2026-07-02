@@ -1,0 +1,172 @@
+{
+  "case_id": "HC-040",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2个孩子",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周亦衡",
+      "QA_details": [
+        {
+          "user": "明天阿珩和小棠都要交家长确认单，我今晚和清妍一起把两份都签好。",
+          "assistant": "好的，我会提醒您们今晚处理两份确认单。"
+        },
+        {
+          "user": "阿珩的足球鞋和小棠的舞蹈鞋都得晾干，我先把阳台位置腾出来。",
+          "assistant": "已记录，今晚提醒您整理阳台。"
+        },
+        {
+          "user": "周日我们四个人去书店，阿珩看科普书，小棠看绘本。",
+          "assistant": "明白，周日提醒您们安排书店行程。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林清妍",
+      "QA_details": [
+        {
+          "user": "亦衡今晚签阿珩的确认单，我签小棠的，两个孩子明天都要带。",
+          "assistant": "好的，今晚提醒您签好确认单。"
+        },
+        {
+          "user": "足球鞋和舞蹈鞋都在阳台，我回家后再检查一遍有没有干。",
+          "assistant": "已记下，回家后提醒您检查鞋子。"
+        },
+        {
+          "user": "书店那天我带小棠看绘本，亦衡陪阿珩挑科普书。",
+          "assistant": "没问题，周日提醒您们分头选书。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "周珩",
+      "QA_details": [
+        {
+          "user": "爸爸签我的确认单，妈妈签小棠的，明早我们都要放进书包。",
+          "assistant": "好的，明早提醒您和小棠检查书包。"
+        },
+        {
+          "user": "我的足球鞋和小棠的舞蹈鞋都在阳台，我可以帮她看鞋带。",
+          "assistant": "已记录，明早提醒您帮小棠检查鞋带。"
+        },
+        {
+          "user": "周日去书店时，我想先带小棠找儿童区。",
+          "assistant": "明白，周日提醒您们先去儿童区。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周棠",
+      "QA_details": [
+        {
+          "user": "妈妈签我的确认单，爸爸签阿珩的，我们明早一起带去学校。",
+          "assistant": "好的，明早提醒您带确认单。"
+        },
+        {
+          "user": "阿珩说会帮我看舞蹈鞋鞋带，他的足球鞋也在阳台。",
+          "assistant": "已记下，明早提醒您检查舞蹈鞋。"
+        },
+        {
+          "user": "周日去书店，我想让阿珩陪我先找绘本。",
+          "assistant": "没问题，周日提醒您看绘本区。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿珩和小棠与周亦衡、林清妍是什么关系？",
+      "answer": "阿珩和小棠是他们的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四个人的对话，周亦衡和林清妍是否分别处理两个孩子的确认单？",
+      "answer": "是的，两人分别签确认单。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，交确认单是在去书店之前还是之后？",
+      "answer": "之前，确认单明天交。",
+      "category": "temporal"
+    },
+    {
+      "question": "两个孩子称呼同两位成年人为爸爸妈妈，通常说明四人是什么家庭结构？",
+      "answer": "通常是双亲和两个孩子。",
+      "category": "open_domain"
+    },
+    {
+      "question": "周棠是否提到书店的具体楼层？",
+      "answer": "无法回答，对话中没有楼层。",
+      "category": "adversarial"
+    }
+  ]
+}

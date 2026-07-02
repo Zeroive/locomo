@@ -1,0 +1,86 @@
+{
+  "case_id": "HC-005",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1个孩子",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈桂兰",
+      "QA_details": [
+        {
+          "user": "小舟明早要穿校服拍合照，我得今晚把他的白衬衫熨好。",
+          "assistant": "好的，我会提醒您今晚熨好小舟的白衬衫。"
+        },
+        {
+          "user": "他放学后喜欢先吃一小碗馄饨，再写作业，今天别给他准备太甜的点心。",
+          "assistant": "已记下，放学后给小舟准备馄饨，少准备甜点。"
+        },
+        {
+          "user": "周六我带他去社区医院复查视力，公交卡也要提前充点钱，他母亲小时候也总在这家医院查视力。",
+          "assistant": "明白，周六提醒您带小舟复查视力，并提前给公交卡充值。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈舟",
+      "QA_details": [
+        {
+          "user": "她说我的校服外套在阳台晾着，明早拍照前要自己拿下来。",
+          "assistant": "好的，明早我会提醒您去阳台拿校服外套。"
+        },
+        {
+          "user": "她今天做了馄饨，我想写完数学作业再吃第二碗。",
+          "assistant": "没问题，我会提醒您先完成数学作业。"
+        },
+        {
+          "user": "周六复查视力后，我想陪奶奶去菜市场买鱼，她说以前也常带我去那边挑小黄鱼。",
+          "assistant": "已记录，周六复查后安排去菜市场买鱼。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "小舟和沈桂兰是什么关系？",
+      "answer": "小舟是沈桂兰的孙辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合沈桂兰和沈舟的对话，沈桂兰是否在照顾小舟的上学和健康安排？",
+      "answer": "是的，她照顾校服、饮食和复查。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，拍合照是在复查视力之前还是之后？",
+      "answer": "之前，拍合照在明早。",
+      "category": "temporal"
+    },
+    {
+      "question": "祖辈照顾孩子上学和饮食，通常属于什么家庭照护场景？",
+      "answer": "属于隔代照护场景。",
+      "category": "open_domain"
+    },
+    {
+      "question": "沈舟是否提到自己的父母在哪里工作？",
+      "answer": "无法回答，对话中没有提到。",
+      "category": "adversarial"
+    }
+  ]
+}

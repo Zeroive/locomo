@@ -1,0 +1,162 @@
+{
+  "case_id": "HC-066",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "夫妻 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "宋砚",
+      "QA_details": [
+        {
+          "user": "予宁说明早我妈要去复诊，我把病历袋放她包旁边了。",
+          "assistant": "好的，明早提醒您带病历袋。"
+        },
+        {
+          "user": "予宁妈妈说她下午来家里看花，我下班前买点低糖点心。",
+          "assistant": "已记录，下班前提醒您买低糖点心。"
+        },
+        {
+          "user": "我妈复诊回来先休息，予宁陪她妈妈看阳台那几盆兰花。",
+          "assistant": "明白，下午提醒安排休息和看花。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许予宁",
+      "QA_details": [
+        {
+          "user": "宋砚把他妈妈的病历袋放好了，我明早提醒他一起带走。",
+          "assistant": "好的，明早提醒您确认病历袋。"
+        },
+        {
+          "user": "我妈下午来看兰花，宋砚下班前会买低糖点心。",
+          "assistant": "已记下，下午提醒您准备茶水。"
+        },
+        {
+          "user": "他妈妈复诊回来先休息，我陪我妈看花，不打扰她。",
+          "assistant": "没问题，下午提醒您们轻声些。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "宋慧兰",
+      "QA_details": [
+        {
+          "user": "宋砚把病历袋放我包旁边了，予宁明早会提醒他带。",
+          "assistant": "好的，明早提醒您们带病历袋。"
+        },
+        {
+          "user": "复诊回来我先休息，予宁妈妈来看花就让她们去阳台。",
+          "assistant": "已记录，下午提醒您先休息。"
+        },
+        {
+          "user": "宋砚买低糖点心挺好，老人吃着不腻。",
+          "assistant": "明白，下班前提醒他买点心。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "许兰芝",
+      "QA_details": [
+        {
+          "user": "予宁说下午陪我看兰花，宋砚给我买低糖点心。",
+          "assistant": "好的，下午提醒您去阳台看花。"
+        },
+        {
+          "user": "宋砚妈妈复诊回来先休息，我不去打扰她。",
+          "assistant": "已记录，下午提醒您们轻声些。"
+        },
+        {
+          "user": "予宁说病历袋已经放好，明早提醒宋砚带走。",
+          "assistant": "明白，明早提醒带病历袋。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "宋砚和宋慧兰是什么关系？",
+      "answer": "宋慧兰是宋砚的母亲。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四个人的对话，许兰芝下午来家里主要做什么？",
+      "answer": "来看兰花。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，复诊是在看兰花之前还是之后？",
+      "answer": "之前，复诊在明早。",
+      "category": "temporal"
+    },
+    {
+      "question": "一个人称呼长辈为妈妈，通常说明两人是什么关系？",
+      "answer": "通常是母子或母女关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "宋慧兰是否提到复诊医院名称？",
+      "answer": "无法回答，对话中没有医院名称。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-022",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "姜听竹",
+      "QA_details": [
+        {
+          "user": "阿越把小棠的拼图盒放到书架下层了，我签完他的冬令营回执后帮她找。",
+          "assistant": "好的，我会提醒您先签回执，再找拼图盒。"
+        },
+        {
+          "user": "小棠说阿越答应教她拼边框，我得把客厅地垫铺开。",
+          "assistant": "已记录，今晚提醒您铺好客厅地垫。"
+        },
+        {
+          "user": "周日他们想把拼图带去社区展台，我先确认展台报名时间。",
+          "assistant": "明白，周日前提醒您确认报名时间。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "姜越",
+      "QA_details": [
+        {
+          "user": "听竹今晚签我的冬令营回执，小棠的拼图盒我放在书架下层了。",
+          "assistant": "好的，我会提醒您把回执放到桌上。"
+        },
+        {
+          "user": "我答应小棠先教她拼边框，听竹说会把地垫铺开。",
+          "assistant": "已记下，地垫铺好后提醒您开始拼图。"
+        },
+        {
+          "user": "周日去社区展台时，我负责拿拼图板，小棠负责拿说明卡。",
+          "assistant": "没问题，周日提醒您们分工带材料。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "姜棠",
+      "QA_details": [
+        {
+          "user": "阿越说拼图盒在书架下层，听竹签完他的回执就帮我找。",
+          "assistant": "好的，今晚提醒您等听竹忙完再找拼图盒。"
+        },
+        {
+          "user": "阿越会教我拼边框，听竹负责铺地垫。",
+          "assistant": "已记录，今晚提醒您准备拼图说明卡。"
+        },
+        {
+          "user": "周日阿越拿拼图板，我拿说明卡，听竹确认展台报名时间。",
+          "assistant": "明白，周日提醒您带好说明卡。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿越和小棠是什么关系？",
+      "answer": "他们是手足关系。",
+      "category": "single_hop"
+    },
+    {
+      "question": "姜听竹、阿越和小棠围绕拼图形成了怎样的安排链？",
+      "answer": "听竹铺地垫，阿越教小棠拼边框。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签冬令营回执是在社区展台之前还是之后？",
+      "answer": "之前，回执今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "两个孩子一起参与同一家庭活动，且由同一成年人处理回执，通常说明他们可能是什么关系？",
+      "answer": "通常可能是手足关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "姜棠是否提到拼图一共有多少片？",
+      "answer": "无法回答，对话中没有片数。",
+      "category": "adversarial"
+    }
+  ]
+}

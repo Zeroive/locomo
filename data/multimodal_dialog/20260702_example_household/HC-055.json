@@ -1,0 +1,172 @@
+{
+  "case_id": "HC-055",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林疏月",
+      "QA_details": [
+        {
+          "user": "阿辰明天交科学回执，我今晚签完后让他放进书包外层。",
+          "assistant": "好的，提醒您今晚签科学回执。"
+        },
+        {
+          "user": "小禾的舞蹈鞋要晾干，妈说她明早帮小禾检查鞋带。",
+          "assistant": "已记录，明早提醒奶奶检查舞蹈鞋。"
+        },
+        {
+          "user": "周末如果两个孩子作业写完，我带他们和妈去湖边散步。",
+          "assistant": "明白，周末提醒您确认作业情况。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林辰",
+      "QA_details": [
+        {
+          "user": "妈妈今晚签我的科学回执，奶奶明早帮小禾看舞蹈鞋。",
+          "assistant": "好的，明早提醒您带回执。"
+        },
+        {
+          "user": "小禾说她的鞋带老松，我可以帮奶奶一起看。",
+          "assistant": "已记下，明早提醒您帮小禾检查鞋带。"
+        },
+        {
+          "user": "周末我想和小禾、奶奶一起去湖边散步。",
+          "assistant": "没问题，周末提醒您穿舒服的鞋。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "林禾",
+      "QA_details": [
+        {
+          "user": "妈妈说阿辰的回执今晚签，我的舞蹈鞋让奶奶明早看。",
+          "assistant": "好的，明早提醒您带舞蹈鞋。"
+        },
+        {
+          "user": "阿辰会帮奶奶看我的鞋带，别让他们忘了。",
+          "assistant": "已记录，明早提醒检查鞋带。"
+        },
+        {
+          "user": "周末我想牵着奶奶走湖边那条平路。",
+          "assistant": "明白，周末提醒您选择平路。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周桂芳",
+      "QA_details": [
+        {
+          "user": "疏月今晚签阿辰的回执，我明早帮小禾看舞蹈鞋。",
+          "assistant": "好的，明早提醒您检查鞋带。"
+        },
+        {
+          "user": "两个孩子周末想去湖边，我走慢点也行。",
+          "assistant": "已记录，周末提醒安排平路。"
+        },
+        {
+          "user": "阿辰说会一起看鞋带，孩子懂事了。",
+          "assistant": "明白，明早提醒阿辰帮忙。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿辰和林疏月是什么关系？",
+      "answer": "阿辰是林疏月的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四个人的对话，周桂芳明早会帮谁检查舞蹈鞋？",
+      "answer": "帮小禾检查。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签科学回执是在湖边散步之前还是之后？",
+      "answer": "之前，回执今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为妈妈、一人为奶奶，通常说明什么关系？",
+      "answer": "通常是亲子和祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "林辰是否提到科学回执的编号？",
+      "answer": "无法回答，对话中没有编号。",
+      "category": "adversarial"
+    }
+  ]
+}

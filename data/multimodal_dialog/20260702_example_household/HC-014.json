@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-014",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "韩澈",
+      "QA_details": [
+        {
+          "user": "若宁今晚帮小栖改朗读停顿，我负责把家长签名表扫描给老师。",
+          "assistant": "好的，我会提醒您扫描家长签名表。"
+        },
+        {
+          "user": "小栖说若宁改完稿子后，让我再听她完整读一遍。",
+          "assistant": "已记录，若宁改完后提醒您听小栖朗读。"
+        },
+        {
+          "user": "周五汇演结束后，我和若宁带小栖去吃热汤面，别订太晚。",
+          "assistant": "明白，周五汇演后安排较早的晚餐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "温若宁",
+      "QA_details": [
+        {
+          "user": "韩澈今晚扫描签名表，我先帮小栖把朗读稿的停顿标出来。",
+          "assistant": "好的，我会提醒您标好朗读停顿。"
+        },
+        {
+          "user": "小栖想先给我读一遍，再让韩澈听完整版本，这样她不紧张。",
+          "assistant": "已记下，今晚先由您听第一遍，再安排完整朗读。"
+        },
+        {
+          "user": "汇演那天韩澈带相机，我给小栖带发卡和备用袜子。",
+          "assistant": "没问题，周五提醒您带发卡和备用袜子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "韩小栖",
+      "QA_details": [
+        {
+          "user": "若宁先帮我看朗读稿，韩澈负责把家长签名表发给老师。",
+          "assistant": "好的，我会提醒您准备朗读稿和签名表。"
+        },
+        {
+          "user": "我想先读给若宁听，再读给韩澈听，周五上台就不怕了。",
+          "assistant": "已记录，今晚安排两遍朗读练习。"
+        },
+        {
+          "user": "周五汇演他们都会来，我要提醒韩澈带相机，若宁带发卡。",
+          "assistant": "明白，周五提醒您确认相机和发卡。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "韩小栖和温若宁是什么关系？",
+      "answer": "韩小栖是温若宁的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "韩澈、温若宁和韩小栖围绕朗读汇演形成了怎样的安排链？",
+      "answer": "若宁改稿，小栖练读，韩澈扫描签名表。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，朗读练习是在汇演之前还是之后？",
+      "answer": "之前。",
+      "category": "temporal"
+    },
+    {
+      "question": "学生汇演签名表通常由谁确认？",
+      "answer": "通常由家长或监护人确认。",
+      "category": "open_domain"
+    },
+    {
+      "question": "韩小栖是否提到汇演的具体节目顺序？",
+      "answer": "无法回答，对话中没有节目顺序。",
+      "category": "adversarial"
+    }
+  ]
+}

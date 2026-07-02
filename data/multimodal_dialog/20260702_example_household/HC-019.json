@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-019",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "贺知微",
+      "QA_details": [
+        {
+          "user": "阿言和小朵都把学校通知放我书桌上了，一个要签社团确认，一个要贴体检照片。",
+          "assistant": "好的，我会提醒您今晚处理两份学校通知。"
+        },
+        {
+          "user": "阿言说小朵的照片在蓝色信封里，我签完他的确认单再一起收好。",
+          "assistant": "已记录，先签确认单，再收好照片和通知。"
+        },
+        {
+          "user": "周六他们都想去科技馆，我得预约两个儿童票。",
+          "assistant": "明白，周六前提醒您预约两个儿童票。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "贺言",
+      "QA_details": [
+        {
+          "user": "知微今晚要处理我和小朵的通知，我把社团确认单放在她书桌左边。",
+          "assistant": "好的，我会提醒您确认单放在左边。"
+        },
+        {
+          "user": "小朵的体检照片在蓝色信封里，我帮她压在通知下面了。",
+          "assistant": "已记下，今晚提醒您别移动蓝色信封。"
+        },
+        {
+          "user": "周六科技馆我想先带小朵去看恐龙模型。",
+          "assistant": "没问题，周六提醒您们先看恐龙模型。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "贺朵",
+      "QA_details": [
+        {
+          "user": "阿言说我的体检照片在蓝色信封里，知微晚上会和他的确认单一起处理。",
+          "assistant": "好的，我会提醒您检查蓝色信封。"
+        },
+        {
+          "user": "知微预约科技馆时要买两个儿童票，我想和阿言一起看恐龙。",
+          "assistant": "已记录，周六提醒您们去看恐龙模型。"
+        },
+        {
+          "user": "我把通知放知微书桌上了，别让阿言的作业本压住。",
+          "assistant": "明白，我会提醒您保持通知在显眼的位置。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿言和小朵与贺知微是什么关系？",
+      "answer": "他们是贺知微的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，贺知微是否要同时处理阿言和小朵的学校通知？",
+      "answer": "是的，要处理两份通知。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，处理学校通知是在科技馆计划之前还是之后？",
+      "answer": "之前，通知今晚处理。",
+      "category": "temporal"
+    },
+    {
+      "question": "一个成年人为两个孩子处理学校通知，通常说明什么关系？",
+      "answer": "通常说明监护关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "贺朵是否提到体检照片的拍摄日期？",
+      "answer": "无法回答，对话中没有拍摄日期。",
+      "category": "adversarial"
+    }
+  ]
+}

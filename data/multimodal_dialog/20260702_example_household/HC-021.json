@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-021",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许棠",
+      "QA_details": [
+        {
+          "user": "阿珩和小若明天都要交实践单，我把两张家长签名页夹到文件袋里了。",
+          "assistant": "好的，我会提醒您明早检查文件袋。"
+        },
+        {
+          "user": "阿珩负责提醒小若带植物观察本，小若负责提醒阿珩拿运动鞋。",
+          "assistant": "已记录，明早提醒两人互相检查。"
+        },
+        {
+          "user": "周末他们想一起去花市，我先看一下公交路线。",
+          "assistant": "明白，周末前提醒您查询公交路线。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许珩",
+      "QA_details": [
+        {
+          "user": "棠棠把我和小若的家长签名页都夹好了，明早我拿文件袋。",
+          "assistant": "好的，明早提醒您拿文件袋。"
+        },
+        {
+          "user": "我提醒小若带植物观察本，她提醒我拿运动鞋，这样不会漏。",
+          "assistant": "已记下，明早提醒您们互相确认。"
+        },
+        {
+          "user": "周末去花市时，我想帮小若挑一盆薄荷。",
+          "assistant": "没问题，周末提醒您看薄荷盆栽。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许若",
+      "QA_details": [
+        {
+          "user": "阿珩明早拿文件袋，我记得提醒他带运动鞋。",
+          "assistant": "好的，明早提醒您确认运动鞋。"
+        },
+        {
+          "user": "他会提醒我带植物观察本，棠棠说签名页已经都夹好了。",
+          "assistant": "已记录，明早提醒您检查观察本。"
+        },
+        {
+          "user": "周末我想和阿珩一起去花市，让棠棠帮我们看公交。",
+          "assistant": "明白，周末提醒您带小背包。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿珩和小若是什么关系？",
+      "answer": "他们是手足关系。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，阿珩和小若是否互相提醒明早要带的东西？",
+      "answer": "是的，他们互相提醒。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，交实践单是在去花市之前还是之后？",
+      "answer": "之前，实践单明天交。",
+      "category": "temporal"
+    },
+    {
+      "question": "两个孩子共用同一位成年人签家长页，通常说明他们之间可能是什么关系？",
+      "answer": "通常可能是手足关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "许珩是否提到花市的摊位编号？",
+      "answer": "无法回答，对话中没有摊位编号。",
+      "category": "adversarial"
+    }
+  ]
+}

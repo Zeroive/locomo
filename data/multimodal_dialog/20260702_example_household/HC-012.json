@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-012",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "贺云深",
+      "QA_details": [
+        {
+          "user": "沐晴说小栎的校服扣子松了，让我今晚缝好，明早她再检查书包。",
+          "assistant": "好的，我会提醒您今晚缝校服扣子。"
+        },
+        {
+          "user": "小栎把运动会回执放在沐晴包旁边，等她签完我再拍照存档。",
+          "assistant": "已记录，等沐晴签完回执后提醒您拍照存档。"
+        },
+        {
+          "user": "周六小栎比赛，我和沐晴一个负责水壶，一个负责毛巾，别漏了号码牌。",
+          "assistant": "明白，周六提醒您们带水壶、毛巾和号码牌。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏沐晴",
+      "QA_details": [
+        {
+          "user": "云深今晚缝小栎的校服扣子，我明早检查书包和运动鞋。",
+          "assistant": "好的，我会提醒您明早检查书包和运动鞋。"
+        },
+        {
+          "user": "小栎把运动会回执放我包旁边了，我签完让云深拍照。",
+          "assistant": "已记下，签完回执后提醒云深拍照存档。"
+        },
+        {
+          "user": "周六比赛时云深带水壶，我带毛巾，小栎自己拿号码牌。",
+          "assistant": "没问题，周六提醒分工带好比赛物品。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "贺小栎",
+      "QA_details": [
+        {
+          "user": "沐晴说云深今晚帮我缝校服扣子，明早她会看书包和运动鞋。",
+          "assistant": "好的，明早我会提醒您检查校服、书包和运动鞋。"
+        },
+        {
+          "user": "运动会回执我放在沐晴包旁边了，她签完云深要拍照。",
+          "assistant": "已记录，回执签好后提醒您放回书包。"
+        },
+        {
+          "user": "周六比赛他们都来看我，我负责拿号码牌。",
+          "assistant": "明白，周六提醒您带好号码牌。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "贺小栎和苏沐晴是什么关系？",
+      "answer": "贺小栎是苏沐晴的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "贺云深、苏沐晴和贺小栎之间围绕运动会形成了怎样的安排链？",
+      "answer": "小栎交回执，沐晴签字，云深拍照存档。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，缝校服扣子是在运动会比赛之前还是之后？",
+      "answer": "之前，扣子今晚缝。",
+      "category": "temporal"
+    },
+    {
+      "question": "运动会回执由成年人签字，通常说明签字人承担什么角色？",
+      "answer": "通常承担家长或监护人角色。",
+      "category": "open_domain"
+    },
+    {
+      "question": "贺小栎是否提到运动会比赛项目名称？",
+      "answer": "无法回答，对话中没有项目名称。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-011",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "程砚秋",
+      "QA_details": [
+        {
+          "user": "予安和小满都提醒我明晚早点回家，一个要我修台灯，一个要我签实践活动表。",
+          "assistant": "好的，我会提醒您明晚早点回家，处理台灯和实践活动表。"
+        },
+        {
+          "user": "予安说小满周五要交表，我今晚先把身份证复印件找出来。",
+          "assistant": "已记录，今晚提醒您找身份证复印件。"
+        },
+        {
+          "user": "小满想周末和我们一起去书店，予安说可以顺便买台灯灯泡。",
+          "assistant": "明白，周末书店和灯泡采购一起安排。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "姜予安",
+      "QA_details": [
+        {
+          "user": "砚秋明晚早点回来，小满的实践活动表需要他签，台灯也等他看一下。",
+          "assistant": "好的，我会提醒您明晚确认砚秋回家时间。"
+        },
+        {
+          "user": "小满说身份证复印件在书柜第二层，我让砚秋今晚找出来。",
+          "assistant": "已记下，今晚提醒查书柜第二层。"
+        },
+        {
+          "user": "周末我们带小满去书店，顺路买灯泡，别排太满。",
+          "assistant": "没问题，周末安排书店和灯泡采购，行程保持轻松。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "程小满",
+      "QA_details": [
+        {
+          "user": "予安说实践活动表周五要交，砚秋明晚回来后会签。",
+          "assistant": "好的，我会提醒您把实践活动表放在桌上。"
+        },
+        {
+          "user": "他们还要帮我修台灯，我先把坏掉的灯泡放进盒子里。",
+          "assistant": "已记录，今晚提醒您收好坏灯泡。"
+        },
+        {
+          "user": "周末我想和他们一起去书店，顺便挑一本手账本。",
+          "assistant": "没问题，周末提醒您准备书店清单。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "程小满和程砚秋、姜予安是什么关系？",
+      "answer": "程小满是他们的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，程砚秋和姜予安是否都参与小满的实践活动表安排？",
+      "answer": "是的，两人都参与了。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签实践活动表是在周末去书店之前还是之后？",
+      "answer": "之前，周五前要交表。",
+      "category": "temporal"
+    },
+    {
+      "question": "实践活动表需要家里成年人签字，通常体现什么关系？",
+      "answer": "通常体现监护关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "程小满是否提到书店的具体名称？",
+      "answer": "无法回答，对话中没有书店名称。",
+      "category": "adversarial"
+    }
+  ]
+}

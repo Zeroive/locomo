@@ -1,0 +1,86 @@
+{
+  "case_id": "HC-003",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "单亲 + 1个孩子",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周岚",
+      "QA_details": [
+        {
+          "user": "阿澄周四放学后要去画画班，我得提前半小时从公司走，不然赶不上校门口接他。",
+          "assistant": "好的，我会在周四提前提醒您离开公司，预留去学校接阿澄的时间。"
+        },
+        {
+          "user": "他这两天咳嗽少了，明早书包里还是放一瓶温水和备用口罩吧，家长回执我今晚也得签好。",
+          "assistant": "已记下，明早提醒您给阿澄书包放温水和备用口罩，也别忘了签好家长回执。"
+        },
+        {
+          "user": "周末如果他作业写完，我们就去科技馆，他一直想看机器人展。",
+          "assistant": "明白，周末先确认阿澄作业完成，再安排科技馆机器人展。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周澄",
+      "QA_details": [
+        {
+          "user": "岚岚说今天晚饭先吃番茄面，等我练完钢琴再切水果。",
+          "assistant": "好的，我会提醒您先练钢琴，之后再吃水果。"
+        },
+        {
+          "user": "她让我把美术袋放门口，明天上学别忘了带，还说家长回执已经夹在语文书里了。",
+          "assistant": "已记录，明天出门前提醒您带美术袋，并检查语文书里的回执。"
+        },
+        {
+          "user": "周六我想让岚岚陪我去科技馆，我已经把作业计划写在便签上了。",
+          "assistant": "没问题，我会帮您记下周六科技馆计划和作业便签。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿澄和周岚是什么关系？",
+      "answer": "阿澄是周岚的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合周岚和周澄的对话，周岚是否负责照顾阿澄的学习和日常安排？",
+      "answer": "是的，她负责接送、健康和学习安排。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，画画班是在科技馆计划之前还是之后？",
+      "answer": "之前，画画班在周四。",
+      "category": "temporal"
+    },
+    {
+      "question": "接送孩子放学通常属于哪类家庭照护行为？",
+      "answer": "通常属于监护人照护孩子。",
+      "category": "open_domain"
+    },
+    {
+      "question": "周岚是否提到阿澄另一位监护人的姓名？",
+      "answer": "无法回答，对话中没有提到。",
+      "category": "adversarial"
+    }
+  ]
+}

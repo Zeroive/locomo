@@ -1,0 +1,230 @@
+{
+  "case_id": "HC-076",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈修远",
+      "QA_details": [
+        {
+          "user": "阿序和小禾都把通知放餐桌了，我今晚签两份，爸明早送他们去校门口。",
+          "assistant": "好的，今晚提醒您签两份通知。"
+        },
+        {
+          "user": "知夏说明早她准备早餐，爸负责带两个孩子过马路。",
+          "assistant": "已记录，明早提醒您们分工。"
+        },
+        {
+          "user": "周末爸想带两个孩子去看书法展，我和知夏负责预约票。",
+          "assistant": "明白，周末前提醒您预约票。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林知夏",
+      "QA_details": [
+        {
+          "user": "修远今晚签阿序和小禾的通知，我明早准备早餐。",
+          "assistant": "好的，明早提醒您准备早餐。"
+        },
+        {
+          "user": "爷爷明早送两个孩子到校门口，我把他们的水杯放玄关。",
+          "assistant": "已记下，明早提醒检查水杯。"
+        },
+        {
+          "user": "书法展那天修远预约票，爷爷带阿序和小禾慢慢看。",
+          "assistant": "没问题，周末提醒预约票。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "沈序",
+      "QA_details": [
+        {
+          "user": "爸爸今晚签我和小禾的通知，爷爷明早送我们到校门口。",
+          "assistant": "好的，明早提醒您带通知。"
+        },
+        {
+          "user": "妈妈准备早餐，我和小禾的水杯在玄关。",
+          "assistant": "已记录，明早提醒您带水杯。"
+        },
+        {
+          "user": "周末爷爷带我和小禾看书法展。",
+          "assistant": "明白，周末提醒您准备参观本。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "沈禾",
+      "QA_details": [
+        {
+          "user": "爸爸今晚签通知，爷爷明早送我和阿序上学。",
+          "assistant": "好的，明早提醒您带通知。"
+        },
+        {
+          "user": "妈妈准备早餐，水杯在玄关。",
+          "assistant": "已记下，明早提醒您带水杯。"
+        },
+        {
+          "user": "书法展我想跟爷爷先看楷书区。",
+          "assistant": "没问题，周末提醒您看楷书区。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "沈怀安",
+      "QA_details": [
+        {
+          "user": "修远今晚签两个孩子的通知，我明早送阿序和小禾到校门口。",
+          "assistant": "好的，明早提醒您提前出门。"
+        },
+        {
+          "user": "知夏准备早餐，水杯她放玄关了。",
+          "assistant": "已记录，明早提醒您检查水杯。"
+        },
+        {
+          "user": "周末我带两个孩子看书法展，修远和知夏预约票。",
+          "assistant": "明白，周末提醒您带参观证件。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿序和小禾与沈修远、沈怀安是什么关系？",
+      "answer": "他们是修远的孩子，也是怀安的孙辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，明早谁送两个孩子到校门口？",
+      "answer": "沈怀安送他们。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签通知是在书法展之前还是之后？",
+      "answer": "之前，通知今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "两个孩子称呼一人为爸爸、一人为爷爷，通常说明什么关系？",
+      "answer": "通常是亲子和祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "沈禾是否提到书法展门票价格？",
+      "answer": "无法回答，对话中没有价格。",
+      "category": "adversarial"
+    }
+  ]
+}

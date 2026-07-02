@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-027",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "谢临川",
+      "QA_details": [
+        {
+          "user": "若棠提醒我今晚给承安量血压，她已经把记录本放到茶几上了。",
+          "assistant": "好的，我会提醒您今晚给承安量血压并记录。"
+        },
+        {
+          "user": "承安说周末想吃我小时候常吃的葱油饼，若棠负责买面粉。",
+          "assistant": "已记录，周末提醒若棠买面粉。"
+        },
+        {
+          "user": "明天下午我和若棠一起陪承安去社区讲座，我负责签到，她负责带水杯。",
+          "assistant": "明白，明天下午提醒您们分工准备。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "傅若棠",
+      "QA_details": [
+        {
+          "user": "临川今晚给承安量血压，我把记录本放茶几上，水银笔也夹好了。",
+          "assistant": "好的，今晚提醒您确认记录本和笔。"
+        },
+        {
+          "user": "承安想吃临川小时候常吃的葱油饼，我周末去买面粉和小葱。",
+          "assistant": "已记下，周末提醒您买面粉和小葱。"
+        },
+        {
+          "user": "明天下午讲座我带水杯，临川签到，承安只要慢慢走就行。",
+          "assistant": "没问题，明天下午提醒您带水杯。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "谢承安",
+      "QA_details": [
+        {
+          "user": "若棠把记录本放茶几上了，临川今晚给我量血压，别让他们忘。",
+          "assistant": "好的，今晚提醒您们量血压并记录。"
+        },
+        {
+          "user": "周末想吃临川小时候爱吃的葱油饼，若棠还要买面粉。",
+          "assistant": "已记录，周末提醒准备葱油饼材料。"
+        },
+        {
+          "user": "明天下午他们两个陪我去社区讲座，一个签到，一个带水杯，安排得挺稳。",
+          "assistant": "明白，明天下午提醒按分工出门。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "谢承安和谢临川、傅若棠分别是什么关系？",
+      "answer": "谢承安是临川的长辈，也是若棠的姻亲长辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，谢临川和傅若棠是否共同照顾谢承安的讲座安排？",
+      "answer": "是的，两人分工陪同。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，量血压是在社区讲座之前还是之后？",
+      "answer": "之前，量血压在今晚。",
+      "category": "temporal"
+    },
+    {
+      "question": "配偶共同陪同一方长辈参加社区活动，通常体现什么家庭关系？",
+      "answer": "通常体现亲子和姻亲照护关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "谢承安是否提到社区讲座的主讲人姓名？",
+      "answer": "无法回答，对话中没有主讲人姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

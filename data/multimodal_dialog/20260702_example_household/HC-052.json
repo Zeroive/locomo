@@ -1,0 +1,172 @@
+{
+  "case_id": "HC-052",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈闻璟",
+      "QA_details": [
+        {
+          "user": "星遥说明早外公陪小宁去朗读课，我先把水杯和课本放进背包。",
+          "assistant": "好的，明早提醒您检查水杯和课本。"
+        },
+        {
+          "user": "小宁想让外公听她读第一段，我今晚负责录音，星遥负责标停顿。",
+          "assistant": "已记录，今晚提醒您录音。"
+        },
+        {
+          "user": "朗读课结束后星遥接他们，我回家把录音发给老师。",
+          "assistant": "明白，课后提醒您发送录音。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐星遥",
+      "QA_details": [
+        {
+          "user": "闻璟把小宁的课本和水杯放背包了，明早我爸陪她去朗读课。",
+          "assistant": "好的，明早提醒您确认背包。"
+        },
+        {
+          "user": "我今晚给小宁标停顿，闻璟录音，外公听她读第一段。",
+          "assistant": "已记下，今晚提醒您标朗读停顿。"
+        },
+        {
+          "user": "课后我接我爸和小宁，闻璟回家发录音给老师。",
+          "assistant": "没问题，课后提醒您去接人。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "沈宁",
+      "QA_details": [
+        {
+          "user": "爸爸把水杯和课本放背包了，明早外公陪我去朗读课。",
+          "assistant": "好的，明早提醒您带背包。"
+        },
+        {
+          "user": "妈妈帮我标停顿，爸爸录音，外公听我读第一段。",
+          "assistant": "已记录，今晚提醒您练习第一段。"
+        },
+        {
+          "user": "课后妈妈来接我和外公，爸爸回家发录音。",
+          "assistant": "明白，课后提醒您等妈妈来接。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "唐鹤年",
+      "QA_details": [
+        {
+          "user": "星遥说明早我陪小宁去朗读课，闻璟已经把课本放背包了。",
+          "assistant": "好的，明早提醒您带小宁出门。"
+        },
+        {
+          "user": "小宁想读第一段给我听，星遥标停顿，闻璟录音。",
+          "assistant": "已记录，今晚提醒安排朗读练习。"
+        },
+        {
+          "user": "课后星遥来接我们，闻璟回家发录音，挺顺。",
+          "assistant": "明白，课后提醒您等星遥来接。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "唐鹤年和沈宁之间通过唐星遥形成了什么关系？",
+      "answer": "唐鹤年是沈宁的外公。",
+      "category": "single_hop"
+    },
+    {
+      "question": "沈闻璟、唐星遥、沈宁和唐鹤年围绕朗读课形成了怎样的安排链？",
+      "answer": "星遥标停顿，闻璟录音，鹤年陪小宁上课。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，录音是在朗读课之前还是之后？",
+      "answer": "之前，今晚录音。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一位长辈为外公，通常说明两人是什么关系？",
+      "answer": "通常是外祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "沈宁是否提到朗读课所在教室？",
+      "answer": "无法回答，对话中没有教室信息。",
+      "category": "adversarial"
+    }
+  ]
+}

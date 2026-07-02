@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-016",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "孟青禾",
+      "QA_details": [
+        {
+          "user": "晨晨和小诺明早都要带校服外套，我今晚把两件都放到玄关椅子上。",
+          "assistant": "好的，我会提醒您今晚把两件校服外套放到玄关。"
+        },
+        {
+          "user": "晨晨的数学卷子要签字，小诺的自然观察表也要贴照片，我得一起处理。",
+          "assistant": "已记录，今晚提醒您签数学卷子并处理观察表照片。"
+        },
+        {
+          "user": "周六他们都想去图书馆，我先预约两个少儿阅读座。",
+          "assistant": "明白，周六提醒您预约两个少儿阅读座。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "孟晨",
+      "QA_details": [
+        {
+          "user": "青禾说我和小诺的校服外套都在玄关，明早出门别拿错。",
+          "assistant": "好的，明早我会提醒您确认自己的外套。"
+        },
+        {
+          "user": "我的数学卷子今晚要签，小诺的观察表要贴照片，我们不能抢餐桌。",
+          "assistant": "已记下，今晚提醒您给餐桌留出位置。"
+        },
+        {
+          "user": "周六我想和小诺坐相邻的阅读座。",
+          "assistant": "没问题，周六提醒您们确认相邻座位。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "孟诺",
+      "QA_details": [
+        {
+          "user": "青禾说我和晨晨明早都要穿校服外套，我的小熊胸针别忘了取下来。",
+          "assistant": "好的，明早提醒您穿校服外套并取下胸针。"
+        },
+        {
+          "user": "晨晨的卷子要签，我的观察表要贴照片，青禾今晚会一起弄。",
+          "assistant": "已记录，今晚提醒您准备观察表。"
+        },
+        {
+          "user": "周六去图书馆时，我想坐晨晨旁边看昆虫书。",
+          "assistant": "明白，周六提醒您带借书卡。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "晨晨和小诺与孟青禾是什么关系？",
+      "answer": "他们是孟青禾的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，孟青禾是否同时处理两个孩子的学校材料？",
+      "answer": "是的，她同时处理两份材料。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，处理学校材料是在图书馆计划之前还是之后？",
+      "answer": "之前，材料今晚处理。",
+      "category": "temporal"
+    },
+    {
+      "question": "一个成年人同时给两个学生签字和准备材料，通常说明什么关系？",
+      "answer": "通常说明监护关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "孟晨是否提到数学卷子的分数？",
+      "answer": "无法回答，对话中没有分数。",
+      "category": "adversarial"
+    }
+  ]
+}

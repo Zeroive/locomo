@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-020",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐绵",
+      "QA_details": [
+        {
+          "user": "阿序说小米的手工盒少了胶棒，我下班买回来，再给阿序签篮球报名表。",
+          "assistant": "好的，我会提醒您下班买胶棒并签报名表。"
+        },
+        {
+          "user": "小米说阿序会教她做纸桥，我得先把餐桌上的文件收走。",
+          "assistant": "已记录，今晚提醒您清出餐桌。"
+        },
+        {
+          "user": "周日他们想带纸桥去社区活动室，我先确认开放时间。",
+          "assistant": "明白，周日前提醒您确认社区活动室时间。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐序",
+      "QA_details": [
+        {
+          "user": "绵绵下班会给小米买胶棒，回来后还要签我的篮球报名表。",
+          "assistant": "好的，我会提醒您把报名表放在桌上。"
+        },
+        {
+          "user": "我今晚教小米做纸桥，绵绵说她先清餐桌。",
+          "assistant": "已记下，餐桌清好后提醒您开始做纸桥。"
+        },
+        {
+          "user": "周日去社区活动室时，我负责拿纸桥，小米负责拿彩笔。",
+          "assistant": "没问题，周日提醒您们分工带材料。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "唐米",
+      "QA_details": [
+        {
+          "user": "阿序说绵绵会买胶棒，我等他教我做纸桥。",
+          "assistant": "好的，今晚提醒您准备手工盒。"
+        },
+        {
+          "user": "绵绵还要签阿序的篮球报名表，所以我先把彩纸整理好。",
+          "assistant": "已记录，今晚提醒您整理彩纸。"
+        },
+        {
+          "user": "周日阿序拿纸桥，我拿彩笔，绵绵确认活动室开门时间。",
+          "assistant": "明白，周日提醒您带彩笔。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "小米和唐绵是什么关系？",
+      "answer": "小米是唐绵的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "唐绵、阿序和小米之间围绕纸桥形成了怎样的安排链？",
+      "answer": "唐绵买胶棒，阿序教小米做纸桥。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，买胶棒是在社区活动室计划之前还是之后？",
+      "answer": "之前，胶棒下班买。",
+      "category": "temporal"
+    },
+    {
+      "question": "报名表由家里成年人签字，通常体现什么关系？",
+      "answer": "通常体现监护关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "唐序是否提到篮球报名费是多少？",
+      "answer": "无法回答，对话中没有金额。",
+      "category": "adversarial"
+    }
+  ]
+}

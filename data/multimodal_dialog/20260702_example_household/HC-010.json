@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-010",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆景行",
+      "QA_details": [
+        {
+          "user": "棠音把我的雨伞放进车里了，说今天接砚砚放学可能会下雨。",
+          "assistant": "好的，我会提醒您出门前确认车里的雨伞。"
+        },
+        {
+          "user": "砚砚把家长签字页放到我键盘旁边，今晚我得先签再开视频会。",
+          "assistant": "已记录，今晚视频会前提醒您签家长签字页。"
+        },
+        {
+          "user": "棠音说晚饭留了汤，我接砚砚回来后先让他喝一点热的。",
+          "assistant": "明白，我会提醒您接砚砚回来后先喝汤。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许棠音",
+      "QA_details": [
+        {
+          "user": "景行今天接砚砚放学，我把雨伞放到他车里了。",
+          "assistant": "好的，我会提醒您不用重复准备雨伞。"
+        },
+        {
+          "user": "砚砚的家长签字页在景行键盘旁边，晚上他签完我再收进书包。",
+          "assistant": "已记下，晚上提醒您把签字页收回书包。"
+        },
+        {
+          "user": "我给他们留了汤，接回家后先喝点热的再写作业。",
+          "assistant": "没问题，我会提醒晚饭先喝汤。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆砚",
+      "QA_details": [
+        {
+          "user": "棠音说景行今天来接我，雨伞已经放他车里了。",
+          "assistant": "好的，放学前我会提醒您等景行来接。"
+        },
+        {
+          "user": "我的家长签字页放在景行键盘旁边，棠音说签完再放回书包。",
+          "assistant": "已记录，今晚提醒您把签字页放回书包。"
+        },
+        {
+          "user": "回家后我想先喝棠音留的汤，再给景行看数学订正。",
+          "assistant": "明白，回家后先喝汤，再整理数学订正。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陆砚和陆景行是什么关系？",
+      "answer": "陆砚是陆景行的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，谁负责接陆砚放学？",
+      "answer": "陆景行负责接他放学。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签家长页是在视频会之前还是之后？",
+      "answer": "之前。",
+      "category": "temporal"
+    },
+    {
+      "question": "家长签字页通常说明学生和签字人之间有什么照护关系？",
+      "answer": "通常是孩子和监护人的关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "陆砚是否提到自己数学订正错了几道题？",
+      "answer": "无法回答，对话中没有题数。",
+      "category": "adversarial"
+    }
+  ]
+}

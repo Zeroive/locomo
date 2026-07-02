@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-023",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾砚舟",
+      "QA_details": [
+        {
+          "user": "今晚我想把文清年轻时给我缝的那件旧毛衣找出来，周六陪他去复诊时披着不容易着凉。",
+          "assistant": "好的，我会提醒您今晚找旧毛衣，周六复诊时带上。"
+        },
+        {
+          "user": "知遥说她下班后买低盐酱油，文清最近口味得清淡点。",
+          "assistant": "已记录，提醒知遥下班后买低盐酱油。"
+        },
+        {
+          "user": "他以前送我去大学报到的照片还在书柜里，周末整理相册时别忘了拿出来。",
+          "assistant": "明白，周末整理相册时提醒您找那张报到照片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林知遥",
+      "QA_details": [
+        {
+          "user": "砚舟说周六陪文清复诊，我下班顺路买低盐酱油和软一点的面包。",
+          "assistant": "好的，我会提醒您下班后买低盐酱油和软面包。"
+        },
+        {
+          "user": "文清喜欢坐靠窗的位置吃早餐，我明早把餐椅挪过去。",
+          "assistant": "已记下，明早提醒您把餐椅挪到靠窗位置。"
+        },
+        {
+          "user": "周末整理相册时，砚舟想找他大学报到那张旧照片，我帮他擦一下相框。",
+          "assistant": "没问题，周末提醒您准备擦相框的布。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾文清",
+      "QA_details": [
+        {
+          "user": "砚舟说周六陪我复诊，知遥还要买低盐酱油，别让他们两个太赶。",
+          "assistant": "好的，我会提醒您们把周六行程安排得宽松一些。"
+        },
+        {
+          "user": "他想找大学报到那张照片，我记得那天箱子还是我替他拎的。",
+          "assistant": "已记录，周末整理相册时提醒找报到照片。"
+        },
+        {
+          "user": "知遥明早要挪餐椅，我坐哪里都行，别让她上班前忙乱。",
+          "assistant": "明白，明早提醒尽量提前安排好早餐座位。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "顾文清和顾砚舟是什么关系？",
+      "answer": "顾文清是顾砚舟的长辈亲人。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，顾砚舟是否会陪顾文清去复诊？",
+      "answer": "是的，周六陪他复诊。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，复诊是在整理相册之前还是之后？",
+      "answer": "之前，复诊在周六。",
+      "category": "temporal"
+    },
+    {
+      "question": "年轻时送孩子去大学报到，通常体现什么家庭关系？",
+      "answer": "通常体现亲子关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "顾文清是否提到复诊医生的姓名？",
+      "answer": "无法回答，对话中没有医生姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "case_id": "HC-058",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "苏明棠",
+      "QA_details": [
+        {
+          "user": "阿晗把我的签字笔放餐桌了，说今晚要签他的研学回执。",
+          "assistant": "好的，今晚提醒您签阿晗的研学回执。"
+        },
+        {
+          "user": "小芮把舞蹈通知压在书包下面，妈说明早帮她检查舞蹈鞋。",
+          "assistant": "已记录，明早提醒奶奶检查小芮的舞蹈鞋。"
+        },
+        {
+          "user": "周末妈陪两个孩子去公园，我下班后去接他们。",
+          "assistant": "明白，周末提醒您下班后接他们。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏晗",
+      "QA_details": [
+        {
+          "user": "妈妈今晚签我的研学回执，我把签字笔放餐桌了。",
+          "assistant": "好的，今晚提醒您把回执也放餐桌。"
+        },
+        {
+          "user": "奶奶周末陪我和小芮去公园，妈妈下班后来接我们。",
+          "assistant": "已记录，周末提醒您等妈妈来接。"
+        },
+        {
+          "user": "小芮的舞蹈鞋明早让奶奶看，我别把鞋盒挡住。",
+          "assistant": "明白，明早提醒您留出鞋盒位置。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "苏芮",
+      "QA_details": [
+        {
+          "user": "妈妈今晚签阿晗的回执，我的舞蹈通知也在书包下面。",
+          "assistant": "好的，今晚提醒您把通知拿出来。"
+        },
+        {
+          "user": "奶奶明早帮我看舞蹈鞋，阿晗说他不会挡住鞋盒。",
+          "assistant": "已记下，明早提醒您检查舞蹈鞋。"
+        },
+        {
+          "user": "周末奶奶陪我和阿晗去公园，妈妈下班后来接。",
+          "assistant": "没问题，周末提醒您带水杯。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "郑梅芳",
+      "QA_details": [
+        {
+          "user": "明棠今晚签阿晗的研学回执，我明早帮小芮看舞蹈鞋。",
+          "assistant": "好的，明早提醒您检查鞋带。"
+        },
+        {
+          "user": "两个孩子周末跟我去公园，明棠下班后来接。",
+          "assistant": "已记录，周末提醒您等明棠来接。"
+        },
+        {
+          "user": "小芮的通知在书包下面，阿晗的回执在餐桌，别弄混。",
+          "assistant": "明白，今晚提醒分类放好。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "苏晗和苏明棠是什么关系？",
+      "answer": "苏晗是苏明棠的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四个人的对话，郑梅芳明早会帮谁检查舞蹈鞋？",
+      "answer": "帮小芮检查。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签研学回执是在周末去公园之前还是之后？",
+      "answer": "之前，回执今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为妈妈、一人为奶奶，通常说明什么关系？",
+      "answer": "通常是亲子和祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "苏晗是否提到研学地点？",
+      "answer": "无法回答，对话中没有地点。",
+      "category": "adversarial"
+    }
+  ]
+}

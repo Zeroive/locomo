@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-007",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许嘉树",
+      "QA_details": [
+        {
+          "user": "安安周三有游泳课，我得把她的小泳帽和防水袋提前放进书包侧袋，家长确认单也要一起签。",
+          "assistant": "好的，我会在周三前提醒您检查安安的泳帽、防水袋和家长确认单。"
+        },
+        {
+          "user": "晚宁今晚回来得晚，我先陪安安读绘本，等她到家再一起吃水果。",
+          "assistant": "已记下，今晚先陪安安读绘本，晚宁到家后再一起吃水果。"
+        },
+        {
+          "user": "周末如果安安不咳嗽了，我们三个人去植物园，路线别安排太长。",
+          "assistant": "明白，周末根据安安的状态安排轻松的植物园路线。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林晚宁",
+      "QA_details": [
+        {
+          "user": "安安今天午睡少，晚上别让她太晚睡，我回家前嘉树先给她讲两页绘本就好。",
+          "assistant": "好的，我会提醒家里今晚让安安早点休息。"
+        },
+        {
+          "user": "嘉树说周三他负责带泳具，我负责给安安准备换洗衣服。",
+          "assistant": "已记录，周三嘉树带泳具，您准备安安的换洗衣服。"
+        },
+        {
+          "user": "植物园那天我想给安安带薄外套，湖边可能有风。",
+          "assistant": "没问题，我会提醒您植物园当天给安安带薄外套。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许安安",
+      "QA_details": [
+        {
+          "user": "嘉树说我的泳帽放书包侧袋，晚宁说换洗衣服在粉色袋子里，家长确认单他们已经签好了。",
+          "assistant": "好的，周三出门前我会提醒您检查书包侧袋、粉色袋子和确认单。"
+        },
+        {
+          "user": "今晚我想让嘉树讲海底那本绘本，等晚宁回来再一起吃水果。",
+          "assistant": "已记下，今晚先听绘本，晚宁回来后再吃水果。"
+        },
+        {
+          "user": "周末去植物园时，我想牵着他们两个走湖边那条路。",
+          "assistant": "没问题，我会帮您记下周末植物园湖边路线。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "安安和许嘉树是什么关系？",
+      "answer": "安安是许嘉树的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合许嘉树和林晚宁的对话，他们是否共同照顾安安的日常安排？",
+      "answer": "是的，他们共同安排读绘本、泳具和衣物。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，游泳课是在植物园计划之前还是之后？",
+      "answer": "之前，游泳课在周三。",
+      "category": "temporal"
+    },
+    {
+      "question": "两名成年人共同安排孩子课程和出游，通常说明他们承担什么角色？",
+      "answer": "通常承担父母或监护人角色。",
+      "category": "open_domain"
+    },
+    {
+      "question": "安安是否提到她就读学校的名称？",
+      "answer": "无法回答，对话中没有学校名称。",
+      "category": "adversarial"
+    }
+  ]
+}

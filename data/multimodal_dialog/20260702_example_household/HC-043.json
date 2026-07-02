@@ -1,0 +1,172 @@
+{
+  "case_id": "HC-043",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆嘉言",
+      "QA_details": [
+        {
+          "user": "阿晟把我的会议笔放到书房了，说我今晚签他和小沫的两张回执时会用到。",
+          "assistant": "好的，今晚提醒您去书房拿会议笔并签两张回执。"
+        },
+        {
+          "user": "小沫把她的舞蹈通知和阿晟的社团通知都压在餐垫下面，我回家先处理。",
+          "assistant": "已记录，回家后提醒您查看餐垫下面的两份通知。"
+        },
+        {
+          "user": "明早我送两个孩子去学校，清宁说她负责准备早饭和水果盒。",
+          "assistant": "明白，明早提醒您送孩子，清宁准备早饭和水果盒。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏清宁",
+      "QA_details": [
+        {
+          "user": "嘉言今晚签阿晟和小沫的回执，我先把他们两个的水杯洗好。",
+          "assistant": "好的，今晚提醒您洗好两个水杯。"
+        },
+        {
+          "user": "阿晟说会议笔在书房，小沫说通知在餐垫下面，嘉言回来就能处理。",
+          "assistant": "已记下，提醒您确认书房笔和餐垫下的通知。"
+        },
+        {
+          "user": "明早嘉言送他们去学校，我准备三明治和水果盒。",
+          "assistant": "没问题，明早提醒您准备早餐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆晟",
+      "QA_details": [
+        {
+          "user": "我爸爸今晚要签我和小沫的回执，我把他的笔放书房了。",
+          "assistant": "好的，今晚提醒您把回执放到餐桌上。"
+        },
+        {
+          "user": "妈妈会洗我们的水杯，明早爸爸送我和小沫去学校。",
+          "assistant": "已记录，明早提醒您带水杯。"
+        },
+        {
+          "user": "小沫的舞蹈通知和我的社团通知都在餐垫下面。",
+          "assistant": "明白，今晚提醒您不要移动餐垫。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "陆沫",
+      "QA_details": [
+        {
+          "user": "爸爸今晚签我和阿晟的回执，妈妈会帮我们洗水杯。",
+          "assistant": "好的，今晚提醒您把回执放好。"
+        },
+        {
+          "user": "我把舞蹈通知和阿晟的社团通知放餐垫下面了。",
+          "assistant": "已记下，提醒您告诉爸爸通知位置。"
+        },
+        {
+          "user": "明早爸爸送我们去学校，我想和阿晟坐后排。",
+          "assistant": "没问题，明早提醒您准时出门。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "阿晟和小沫与陆嘉言是什么关系？",
+      "answer": "他们是陆嘉言的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四个人的对话，陆嘉言是否要同时处理两个孩子的回执？",
+      "answer": "是的，他要签两张回执。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签回执是在明早上学之前还是之后？",
+      "answer": "之前，今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "两个孩子都称呼同一人为爸爸，通常说明他们和这个人是什么关系？",
+      "answer": "通常是亲子关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "陆沫是否提到舞蹈通知的报名费用？",
+      "answer": "无法回答，对话中没有费用。",
+      "category": "adversarial"
+    }
+  ]
+}

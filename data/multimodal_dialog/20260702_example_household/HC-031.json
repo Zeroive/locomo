@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-031",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "罗一宁",
+      "QA_details": [
+        {
+          "user": "小澈明早要交手工材料费回执，我今晚得先签好放进他的铅笔盒。",
+          "assistant": "好的，我会提醒您今晚签好回执并放进铅笔盒。"
+        },
+        {
+          "user": "桂芬说她明早陪小澈等校车，我先把她的护膝放到门口。",
+          "assistant": "已记录，明早提醒您把护膝放在门口。"
+        },
+        {
+          "user": "周末如果小澈写完作业，我带他去公园，桂芬可以在凉亭歇着。",
+          "assistant": "明白，周末根据作业情况安排公园行程。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "罗澈",
+      "QA_details": [
+        {
+          "user": "一宁说我的材料费回执今晚签，明早放进铅笔盒。",
+          "assistant": "好的，明早提醒您检查铅笔盒。"
+        },
+        {
+          "user": "奶奶明早陪我等校车，我想把她的护膝也拿到门口。",
+          "assistant": "已记下，明早提醒您把护膝拿到门口。"
+        },
+        {
+          "user": "周末去公园时，我想让奶奶坐凉亭看我和一宁放风筝。",
+          "assistant": "没问题，周末提醒您带风筝。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "郑桂芬",
+      "QA_details": [
+        {
+          "user": "一宁今晚签小澈的回执，我明早陪他等校车，别让他忘了铅笔盒。",
+          "assistant": "好的，明早提醒小澈带铅笔盒。"
+        },
+        {
+          "user": "小澈说要把我的护膝拿到门口，孩子现在也会惦记人了。",
+          "assistant": "已记录，明早提醒您戴护膝。"
+        },
+        {
+          "user": "周末他们去放风筝，我在凉亭坐一会儿就好。",
+          "assistant": "明白，周末提醒安排凉亭休息。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "小澈和罗一宁是什么关系？",
+      "answer": "小澈是罗一宁的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，郑桂芬是否会陪小澈等校车？",
+      "answer": "是的，她明早陪小澈等校车。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签回执是在周末去公园之前还是之后？",
+      "answer": "之前，回执今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "学生回执由成年人签字，通常体现什么关系？",
+      "answer": "通常体现监护关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "罗澈是否提到校车司机姓名？",
+      "answer": "无法回答，对话中没有司机姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

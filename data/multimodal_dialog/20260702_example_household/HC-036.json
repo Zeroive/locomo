@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-036",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陈疏桐",
+      "QA_details": [
+        {
+          "user": "念念说外公教她下棋，我今晚先把棋盘从书柜拿下来，再签她的活动回执。",
+          "assistant": "好的，我会提醒您拿棋盘并签活动回执。"
+        },
+        {
+          "user": "振民明早陪念念去社区活动室，我把他的公交卡和念念的水杯放一起。",
+          "assistant": "已记录，明早提醒您检查公交卡和水杯。"
+        },
+        {
+          "user": "活动结束后念念想把棋局讲给我听，振民负责带她先吃午饭。",
+          "assistant": "明白，活动结束后提醒先吃午饭。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈念",
+      "QA_details": [
+        {
+          "user": "外公今晚教我摆棋，妈妈会把棋盘拿下来，还要签活动回执。",
+          "assistant": "好的，今晚提醒您准备棋子。"
+        },
+        {
+          "user": "明早外公陪我去社区活动室，妈妈把水杯和公交卡都放玄关了。",
+          "assistant": "已记下，明早提醒您带水杯。"
+        },
+        {
+          "user": "活动结束后外公先带我吃午饭，回来我再讲给妈妈听。",
+          "assistant": "没问题，活动后提醒您整理棋局。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈振民",
+      "QA_details": [
+        {
+          "user": "疏桐今晚签念念的活动回执，我教孩子把棋盘先摆好。",
+          "assistant": "好的，今晚提醒您准备棋盘。"
+        },
+        {
+          "user": "念念明早和我去活动室，疏桐把公交卡和水杯都放好了。",
+          "assistant": "已记录，明早提醒您带公交卡和水杯。"
+        },
+        {
+          "user": "活动结束后我先带她吃午饭，再回来让她给疏桐复盘。",
+          "assistant": "明白，活动后提醒安排午饭和复盘。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陈振民和陈念之间通过陈疏桐形成了什么关系？",
+      "answer": "陈振民是陈念的外公。",
+      "category": "single_hop"
+    },
+    {
+      "question": "陈疏桐、陈念和陈振民围绕社区活动形成了怎样的安排链？",
+      "answer": "疏桐签回执，振民陪念念去活动。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，签活动回执是在去活动室之前还是之后？",
+      "answer": "之前，回执今晚签。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一位长辈为外公，通常说明两人是什么关系？",
+      "answer": "通常是外祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "陈念是否提到社区活动室的门牌号？",
+      "answer": "无法回答，对话中没有门牌号。",
+      "category": "adversarial"
+    }
+  ]
+}

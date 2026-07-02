@@ -1,0 +1,172 @@
+{
+  "case_id": "HC-053",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员之间关系",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "程望舒",
+      "QA_details": [
+        {
+          "user": "明晚思齐和外婆都要去小榆的开放课，我先把四个人的入校码截图到家庭群。",
+          "assistant": "好的，我会提醒您明晚检查入校码。"
+        },
+        {
+          "user": "思齐负责带小榆的作品册，外婆负责带她小时候给思齐织的小围巾，课后拍照用。",
+          "assistant": "已记录，提醒思齐带作品册，外婆带小围巾。"
+        },
+        {
+          "user": "开放课结束后我们一起吃清淡点，外婆最近胃口一般。",
+          "assistant": "明白，课后提醒您选择清淡餐食。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林思齐",
+      "QA_details": [
+        {
+          "user": "望舒把入校码发到家庭群了，我明晚带小榆的作品册。",
+          "assistant": "好的，明晚提醒您带作品册。"
+        },
+        {
+          "user": "我妈妈说要带我小时候那条小围巾，给小榆课后拍照当道具。",
+          "assistant": "已记下，提醒外婆带小围巾。"
+        },
+        {
+          "user": "小榆说想坐在爸爸妈妈和外婆中间看点评。",
+          "assistant": "没问题，开放课时提醒您们提前找座位。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "程榆",
+      "QA_details": [
+        {
+          "user": "爸爸把入校码发群里了，妈妈明晚带我的作品册。",
+          "assistant": "好的，明晚提醒您带好作品册。"
+        },
+        {
+          "user": "外婆要带妈妈小时候的小围巾，我想课后和他们一起拍照。",
+          "assistant": "已记录，课后提醒您拍合照。"
+        },
+        {
+          "user": "点评时我想坐在爸爸妈妈和外婆中间。",
+          "assistant": "明白，明晚提醒您们提前入座。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周雅琴",
+      "QA_details": [
+        {
+          "user": "思齐明晚带小榆的作品册，望舒已经把入校码发群里了。",
+          "assistant": "好的，明晚提醒您查看入校码。"
+        },
+        {
+          "user": "小榆想用思齐小时候的小围巾拍照，我把它提前放包里。",
+          "assistant": "已记录，提醒您带小围巾。"
+        },
+        {
+          "user": "课后他们要陪我吃清淡点，别让孩子等太久。",
+          "assistant": "明白，课后提醒尽快安排晚餐。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "小榆和思齐、雅琴分别是什么关系？",
+      "answer": "小榆是思齐的孩子，也是雅琴的外孙辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四个人的对话，开放课时三位成年人是否都参与小榆的安排？",
+      "answer": "是的，三人都参与。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，开放课是在课后拍照之前还是之后？",
+      "answer": "之前，先上开放课。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一人为妈妈、一人为外婆，通常说明什么关系？",
+      "answer": "通常是亲子和外祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "程榆是否提到开放课老师的姓名？",
+      "answer": "无法回答，对话中没有老师姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

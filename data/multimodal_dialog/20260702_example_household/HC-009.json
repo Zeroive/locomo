@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-009",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "链式关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐亦川",
+      "QA_details": [
+        {
+          "user": "雨桐今晚值班，我先陪小禾复习英语，等她回来再一起确认家长会回执。",
+          "assistant": "好的，我会提醒您先陪小禾复习，晚些再和雨桐确认家长会回执。"
+        },
+        {
+          "user": "小禾说周五想让雨桐检查作文，我帮她把草稿放到书桌左边。",
+          "assistant": "已记下，周五提醒小禾把作文草稿给雨桐检查。"
+        },
+        {
+          "user": "周日我想给雨桐留半天休息时间，所以带小禾去图书馆的事我来安排。",
+          "assistant": "明白，周日由您安排带小禾去图书馆。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "宋雨桐",
+      "QA_details": [
+        {
+          "user": "亦川说小禾今晚复习英语，我回家后只检查她的错题本和家长会回执。",
+          "assistant": "好的，我会提醒您回家后检查错题本和家长会回执。"
+        },
+        {
+          "user": "小禾的作文周五给我看，亦川已经把草稿放在书桌左边了。",
+          "assistant": "已记录，周五提醒您查看小禾的作文草稿。"
+        },
+        {
+          "user": "周日他们去图书馆时，我想在家把小禾的换季衣服整理出来。",
+          "assistant": "没问题，我会提醒您周日整理小禾的换季衣服。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "唐小禾",
+      "QA_details": [
+        {
+          "user": "亦川今晚陪我复习英语，雨桐回来后会看错题本和家长会回执。",
+          "assistant": "好的，我会提醒您先复习英语，再准备错题本。"
+        },
+        {
+          "user": "我的作文想先给雨桐看，亦川说草稿放书桌左边更容易找到。",
+          "assistant": "已记录，周五提醒您把作文草稿给雨桐。"
+        },
+        {
+          "user": "周日亦川带我去图书馆，雨桐在家整理我的换季衣服。",
+          "assistant": "明白，周日提醒您准备图书馆借书卡。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "唐小禾和宋雨桐是什么关系？",
+      "answer": "唐小禾是宋雨桐的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "唐亦川通过小禾和宋雨桐形成了怎样的家庭关系链？",
+      "answer": "唐亦川和宋雨桐共同照顾小禾。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，检查作文是在复习英语之后还是之前？",
+      "answer": "之后，作文在周五检查。",
+      "category": "temporal"
+    },
+    {
+      "question": "家长会回执通常需要哪类家庭成员确认？",
+      "answer": "通常需要父母或监护人确认。",
+      "category": "open_domain"
+    },
+    {
+      "question": "唐小禾是否提到英语老师布置了多少页作业？",
+      "answer": "无法回答，对话中没有页数。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-032",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "秦若南",
+      "QA_details": [
+        {
+          "user": "小禾明天要交阅读打卡表，我今晚签完后放到她的紫色文件夹里。",
+          "assistant": "好的，我会提醒您今晚签阅读打卡表。"
+        },
+        {
+          "user": "文秀明早送小禾去兴趣班，我把她的围巾和小禾的水壶都放玄关。",
+          "assistant": "已记录，明早提醒您检查围巾和水壶。"
+        },
+        {
+          "user": "周日我们三个人去花园拍照，小禾想让文秀穿那件浅灰外套。",
+          "assistant": "明白，周日提醒您们带相机并准备浅灰外套。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "秦禾",
+      "QA_details": [
+        {
+          "user": "若南今晚签我的阅读打卡表，明早外婆送我去兴趣班。",
+          "assistant": "好的，明早提醒您带紫色文件夹。"
+        },
+        {
+          "user": "外婆的围巾在玄关，我的水壶也在那里，出门前别拿漏。",
+          "assistant": "已记下，明早提醒您检查围巾和水壶。"
+        },
+        {
+          "user": "周日拍照时我想站在若南和外婆中间。",
+          "assistant": "没问题，周日提醒您们安排花园拍照。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁文秀",
+      "QA_details": [
+        {
+          "user": "若南今晚签小禾的阅读打卡表，我明早送她去兴趣班。",
+          "assistant": "好的，明早提醒您带小禾的文件夹。"
+        },
+        {
+          "user": "小禾说我的围巾在玄关，还记得提醒我，真细心。",
+          "assistant": "已记录，明早提醒您拿围巾。"
+        },
+        {
+          "user": "周日她想站在我和若南中间拍照，我把浅灰外套提前拿出来。",
+          "assistant": "明白，周日提醒您准备浅灰外套。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "小禾和若南、文秀分别是什么关系？",
+      "answer": "小禾是若南的孩子，也是文秀的外孙辈。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，若南和文秀是否都在照顾小禾的安排？",
+      "answer": "是的，两人都在照顾她。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，兴趣班是在花园拍照之前还是之后？",
+      "answer": "之前，兴趣班在明早。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼一位长辈为外婆，通常说明两人是什么关系？",
+      "answer": "通常是外祖孙关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "秦禾是否提到兴趣班老师的姓名？",
+      "answer": "无法回答，对话中没有老师姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

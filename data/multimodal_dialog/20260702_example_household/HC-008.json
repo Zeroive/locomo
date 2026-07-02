@@ -1,0 +1,124 @@
+{
+  "case_id": "HC-008",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "秦越",
+      "QA_details": [
+        {
+          "user": "今晚我先把念初的科学材料包整理好，等知夏回来，我们三个人一起检查明天研学要带的东西。",
+          "assistant": "好的，我会提醒您先整理念初的科学材料包，晚上再和知夏、念初一起检查研学物品。"
+        },
+        {
+          "user": "知夏说她负责给念初准备午餐盒，我负责充好相机电池，别漏了家长确认单。",
+          "assistant": "已记录，知夏准备午餐盒，您负责相机电池和家长确认单。"
+        },
+        {
+          "user": "周六如果念初不累，我想带她和知夏去河边骑车，路线选短一点。",
+          "assistant": "明白，周六根据念初状态安排短路线骑行。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈知夏",
+      "QA_details": [
+        {
+          "user": "秦越已经把念初的研学材料包放在餐桌上了，我晚上补上餐盒和湿巾。",
+          "assistant": "好的，我会提醒您晚上补齐念初的餐盒和湿巾。"
+        },
+        {
+          "user": "他还说相机电池在充电，明早我们一起送念初到校门口集合。",
+          "assistant": "已记下，明早提醒您和秦越一起送念初去校门口集合。"
+        },
+        {
+          "user": "周六骑车时我想让念初坐中间休息点吃水果，别安排太赶。",
+          "assistant": "没问题，周六骑行会安排休息点和水果时间。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "秦念初",
+      "QA_details": [
+        {
+          "user": "秦越说科学材料包在餐桌，知夏说午餐盒明早放进我的书包。",
+          "assistant": "好的，明早我会提醒您检查材料包和午餐盒。"
+        },
+        {
+          "user": "研学集合时他们两个都会送我到校门口，我想把小组牌也拿好。",
+          "assistant": "已记录，明早集合前提醒您带好小组牌。"
+        },
+        {
+          "user": "周六我想和他们一起去河边骑车，但不要骑太远。",
+          "assistant": "明白，周六骑车会提醒选择短路线。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "秦念初和秦越、沈知夏是什么关系？",
+      "answer": "秦念初是他们的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三个人的对话，秦越和沈知夏是否共同为念初准备研学？",
+      "answer": "是的，他们分工准备研学物品。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，研学集合是在河边骑车之前还是之后？",
+      "answer": "之前，研学在明早。",
+      "category": "temporal"
+    },
+    {
+      "question": "两名成年人一起签家长确认单并送孩子集合，通常说明他们承担什么角色？",
+      "answer": "通常是父母或监护人。",
+      "category": "open_domain"
+    },
+    {
+      "question": "秦念初是否提到研学老师的姓名？",
+      "answer": "无法回答，对话中没有老师姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "case_id": "HC-091",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "单亲 + 2个孩子 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系"
+  },
+  "relations": [
+    {
+      "from": "person_004",
+      "to": "person_005",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐予川",
+      "QA_details": [
+        {
+          "user": "小北说明早让我签他的社团表，小南的手工袋让妈妈帮忙看一下。",
+          "assistant": "好的，明早提醒您签表。"
+        },
+        {
+          "user": "爸爸陪小北去学校门口，妈妈陪小南去幼儿园。",
+          "assistant": "已记录，明早提醒您们分头送孩子。"
+        },
+        {
+          "user": "放学后我接两个孩子回家，爸妈在楼下等我们。",
+          "assistant": "明白，放学后提醒您接孩子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐小北",
+      "QA_details": [
+        {
+          "user": "爸爸明早给我签社团表，爷爷陪我去学校门口。",
+          "assistant": "好的，明早提醒您带社团表。"
+        },
+        {
+          "user": "奶奶陪小南去幼儿园，爸爸放学后来接我们。",
+          "assistant": "已记下，放学后提醒您等爸爸。"
+        },
+        {
+          "user": "小南的手工袋在沙发上，我的社团表在书桌。",
+          "assistant": "没问题，出门前提醒检查。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "唐小南",
+      "QA_details": [
+        {
+          "user": "奶奶明早陪我去幼儿园，爷爷陪哥哥去学校门口。",
+          "assistant": "好的，明早提醒您拿手工袋。"
+        },
+        {
+          "user": "爸爸放学后接我和哥哥回家。",
+          "assistant": "已记录，放学后提醒您等爸爸。"
+        },
+        {
+          "user": "我的手工袋在沙发上，哥哥的表在书桌。",
+          "assistant": "明白，出门前提醒您拿手工袋。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "唐德厚",
+      "QA_details": [
+        {
+          "user": "明早我陪小北去学校门口，奶奶陪小南去幼儿园。",
+          "assistant": "好的，明早提醒您带门禁卡。"
+        },
+        {
+          "user": "予川要给小北签社团表，小南的手工袋也别忘。",
+          "assistant": "已记录，出门前提醒检查。"
+        },
+        {
+          "user": "放学后予川接两个孩子，我和奶奶在楼下等。",
+          "assistant": "明白，放学后提醒您下楼。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "马秀珍",
+      "QA_details": [
+        {
+          "user": "明早我陪小南去幼儿园，爷爷陪小北去学校门口。",
+          "assistant": "好的，明早提醒您拿小南的手工袋。"
+        },
+        {
+          "user": "予川放学后接小北和小南，我们在楼下等他们。",
+          "assistant": "已记下，放学后提醒您下楼。"
+        },
+        {
+          "user": "小北的社团表在书桌，小南的手工袋在沙发上。",
+          "assistant": "没问题，出门前提醒检查。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "唐小南和唐予川是什么关系？",
+      "answer": "小南是予川的孩子。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，明早谁陪小北，谁陪小南？",
+      "answer": "爷爷陪小北，奶奶陪小南。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，唐予川接孩子是在上学之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼另一名孩子为哥哥，通常说明什么关系？",
+      "answer": "通常是兄妹或兄弟关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "唐小北参加的是哪个社团？",
+      "answer": "无法回答，对话中没有社团名称。",
+      "category": "adversarial"
+    }
+  ]
+}

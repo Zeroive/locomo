@@ -1,0 +1,230 @@
+{
+  "case_id": "HC-089",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "单亲 + 2个孩子 + 2位祖辈",
+    "relationship_direction": "说话人指向家庭成员",
+    "relationship_complexity": "聚合关系"
+  },
+  "relations": [
+    {
+      "from": "person_004",
+      "to": "person_005",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_005",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "叶承安",
+      "QA_details": [
+        {
+          "user": "今晚我做饭，爸妈陪两个孩子拼地图，阿森负责找省会，小霖负责贴小旗。",
+          "assistant": "好的，今晚提醒您们准备地图和小旗。"
+        },
+        {
+          "user": "爸爸讲山脉，妈妈讲河流，两个孩子都要记在本子上。",
+          "assistant": "已记录，拼地图时提醒孩子做笔记。"
+        },
+        {
+          "user": "饭后我检查阿森和小霖的笔记，再让爸妈休息。",
+          "assistant": "明白，晚饭后提醒您看笔记。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶森",
+      "QA_details": [
+        {
+          "user": "爸爸今晚做饭，爷爷奶奶陪我和小霖拼地图。",
+          "assistant": "好的，今晚提醒您准备本子。"
+        },
+        {
+          "user": "爷爷讲山脉，奶奶讲河流，我找省会，小霖贴小旗。",
+          "assistant": "已记录，拼地图时提醒您分工。"
+        },
+        {
+          "user": "饭后爸爸检查我和小霖的笔记。",
+          "assistant": "没问题，晚饭后提醒您整理笔记。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "叶霖",
+      "QA_details": [
+        {
+          "user": "爷爷奶奶今晚陪我和哥哥拼地图，爸爸做饭。",
+          "assistant": "好的，今晚提醒您拿小旗。"
+        },
+        {
+          "user": "哥哥找省会，我贴小旗，奶奶讲河流。",
+          "assistant": "已记下，拼地图时提醒您跟上进度。"
+        },
+        {
+          "user": "饭后爸爸要检查我和哥哥的笔记。",
+          "assistant": "明白，晚饭后提醒您把笔记放餐桌。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "叶正庭",
+      "QA_details": [
+        {
+          "user": "今晚承安做饭，我和奶奶陪阿森、小霖拼地图。",
+          "assistant": "好的，今晚提醒您拿地图。"
+        },
+        {
+          "user": "我讲山脉，奶奶讲河流，阿森找省会，小霖贴小旗。",
+          "assistant": "已记录，拼地图时提醒您们分工。"
+        },
+        {
+          "user": "饭后承安检查两个孩子的笔记，我们就休息。",
+          "assistant": "没问题，晚饭后提醒您休息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "沈玉芬",
+      "QA_details": [
+        {
+          "user": "今晚我和爷爷陪阿森、小霖拼地图，承安做饭。",
+          "assistant": "好的，今晚提醒您准备老花镜。"
+        },
+        {
+          "user": "爷爷讲山脉，我讲河流，两个孩子一个找省会一个贴小旗。",
+          "assistant": "已记下，拼地图时提醒您们配合。"
+        },
+        {
+          "user": "饭后承安检查孩子笔记，我把小旗收好。",
+          "assistant": "明白，晚饭后提醒您收纳小旗。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "叶森和叶霖是什么关系？",
+      "answer": "他们是兄妹。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五个人的对话，今晚拼地图时四个人分别做什么？",
+      "answer": "正庭讲山脉，玉芬讲河流，阿森找省会，小霖贴小旗。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从对话中的时间看，检查笔记是在拼地图之前还是之后？",
+      "answer": "之后。",
+      "category": "temporal"
+    },
+    {
+      "question": "孩子称呼另一名孩子为哥哥，通常说明什么关系？",
+      "answer": "通常是兄妹或兄弟关系。",
+      "category": "open_domain"
+    },
+    {
+      "question": "他们拼的是哪个省的地图？",
+      "answer": "无法回答，对话中没有省名。",
+      "category": "adversarial"
+    }
+  ]
+}
