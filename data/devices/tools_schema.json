@@ -4779,8 +4779,7 @@
               },
               "required": [
                 "room",
-                "camera_id",
-                "duration_seconds"
+                "camera_id"
               ]
             }
           }

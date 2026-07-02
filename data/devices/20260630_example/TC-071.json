@@ -149,7 +149,7 @@
             "type": "function",
             "function": {
               "name": "air_conditioner.set_target_temperature",
-              "arguments": "{\"room\":\"客厅\",\"air_conditioner_id\":\"living_room_air_conditioner\",\"target_temperature\":26}"
+              "arguments": "{\"room\":\"客厅\",\"air_conditioner_id\":\"living_room_air_conditioner\",\"temperature\":26}"
             }
           }
         ]
@@ -209,7 +209,7 @@
             "type": "function",
             "function": {
               "name": "air_conditioner.set_target_temperature",
-              "arguments": "{\"room\":\"客厅\",\"air_conditioner_id\":\"living_room_air_conditioner\",\"target_temperature\":26}"
+              "arguments": "{\"room\":\"客厅\",\"air_conditioner_id\":\"living_room_air_conditioner\",\"temperature\":26}"
             }
           }
         ]
