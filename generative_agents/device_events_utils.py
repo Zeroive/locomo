@@ -1819,6 +1819,18 @@ def get_unused_allowed_events(allowed_events, previous_events, default_subject):
     ]
 
 
+def get_missing_required_primary_events(primary_events, previous_events, default_subject):
+    """
+    按模板顺序返回尚未生成的必选主事件。
+    """
+    used_keys = {get_annotated_event_key(item) for item in previous_events}
+    return [
+        event
+        for event in primary_events
+        if get_allowed_event_key(event, default_subject) not in used_keys
+    ]
+
+
 def validate_llm_next_event_only_result(result, allowed_events, default_subject, previous_events):
     if not isinstance(result, dict):
         raise ValueError(f"Next event result must be a dict, got {type(result)}")
@@ -2015,9 +2027,23 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
     household_device_ids = context['household_device_ids']
     all_scenario_descriptions = context.get('all_scenario_descriptions') or "无"
     previous_events_text = format_previous_events_for_prompt(previous_events)
+    missing_required_primary_events = get_missing_required_primary_events(
+        primary_events,
+        previous_events,
+        default_subject,
+    )
     remaining_allowed_events = get_unused_allowed_events(allowed_events, previous_events, default_subject)
     if not remaining_allowed_events:
         return None
+    allowed_events_info = format_allowed_events_info(primary_events, remaining_allowed_events, default_subject)
+    if missing_required_primary_events:
+        allowed_events_info += "\n\n## 尚未生成的必选主事件\n"
+        allowed_events_info += format_allowed_events_info(
+            primary_events,
+            missing_required_primary_events,
+            default_subject,
+        )
+        allowed_events_info += "\n- 在这些必选主事件全部生成之前，不允许输出 should_continue=false。"
 
     event_prompt = LLM_NEXT_EVENT_ONLY_PROMPT.format(
         scenario=scenario,
@@ -2028,7 +2054,7 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         all_scenario_descriptions=all_scenario_descriptions,
         daily_state_description=context['daily_state_description'],
         previous_events=previous_events_text,
-        allowed_events_info=format_allowed_events_info(primary_events, remaining_allowed_events, default_subject),
+        allowed_events_info=allowed_events_info,
     )
     event_result = None
     try:
@@ -2053,12 +2079,18 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
             result=event_result,
             previous_events=previous_events,
             extra={
+                "missing_required_primary_events": missing_required_primary_events,
                 "remaining_allowed_events": remaining_allowed_events,
                 "all_allowed_events": allowed_events,
             },
         )
         raise
     if not event:
+        if missing_required_primary_events:
+            raise ValueError(
+                "LLM ended scenario before required primary events were generated: "
+                f"{[get_allowed_event_key(item, default_subject) for item in missing_required_primary_events]}"
+            )
         return None
 
     event_json = json.dumps(event, ensure_ascii=False, indent=2)
