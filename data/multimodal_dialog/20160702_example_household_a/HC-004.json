@@ -1,0 +1,90 @@
+{
+  "case_id": "HC-004",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "单亲 + 1 个孩子",
+    "activity_preference": "文化学习",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐静",
+      "QA_details": [
+        {
+          "user": "每周三工作日晚上，我想和小予在家读一章历史故事，她最近对古代城市很感兴趣。",
+          "assistant": "好的，我会把周三晚上安排为您和小予在家的历史故事阅读时间。"
+        },
+        {
+          "user": "她写完作业后再开始，不要太晚，最好八点前读完。",
+          "assistant": "明白，等小予完成作业后开始，并尽量在晚上八点前结束。"
+        },
+        {
+          "user": "如果她问长安在哪里，你帮我准备一张地图，边看边讲会更清楚。",
+          "assistant": "已记下，我会准备长安相关地图，方便您们边看边学。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐小予",
+      "QA_details": [
+        {
+          "user": "妈妈说周三晚上在家陪我读历史故事，我想听长安城那一章。",
+          "assistant": "好的，我会提醒您周三晚上读长安城相关章节。"
+        },
+        {
+          "user": "我想先把语文作业写完，再和妈妈一起看地图。",
+          "assistant": "明白，先完成语文作业，再和妈妈一起看地图学习。"
+        },
+        {
+          "user": "如果还有时间，我想把故事里的城门名字抄到笔记本上。",
+          "assistant": "没问题，读完后如果时间足够，我会提醒您整理城门名字。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "唐静和小予每周工作日晚上在家偏好的活动是什么？",
+      "answer": "读历史故事。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合母女两人的对话，她们是否会把地图用于文化学习？",
+      "answer": "会，用地图学长安。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间顺序看，小予是先写作业，还是先读历史故事？",
+      "answer": "先写作业。",
+      "category": "temporal"
+    },
+    {
+      "question": "学习历史城市时，地图通常有什么帮助？",
+      "answer": "帮助理解位置和布局。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小予在对话中提到她的学校名称了吗？",
+      "answer": "无法回答，未提到学校。",
+      "category": "adversarial"
+    }
+  ]
+}

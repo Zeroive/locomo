@@ -1,0 +1,161 @@
+{
+  "case_id": "HC-052",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "运动健身",
+    "preference_polarity": "负向",
+    "time_of_day": "早上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许承泽",
+      "QA_details": [
+        {
+          "user": "每周工作日早上让全家去户外快走不太现实，小宁要上学，岳母也说膝盖不舒服。",
+          "assistant": "好的，我会记录全家对工作日早上户外健身偏负向。"
+        },
+        {
+          "user": "晚棠原本想监督大家运动，但早上赶通勤，别再设公园打卡。",
+          "assistant": "明白，不再安排工作日早上的公园打卡。"
+        },
+        {
+          "user": "如果需要活动，就在家门口站一会儿，别安排跑步或快走。",
+          "assistant": "已记下，只提醒短暂停留，不安排跑步快走。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陆晚棠",
+      "QA_details": [
+        {
+          "user": "承泽说工作日早上别带妈和小宁去户外健身，我也觉得太赶。",
+          "assistant": "好的，我会减少工作日早上的户外健身提醒。"
+        },
+        {
+          "user": "我妈膝盖不舒服，早上先吃饭休息更合适。",
+          "assistant": "明白，早上优先吃饭和休息。"
+        },
+        {
+          "user": "小宁放学后可以玩球，早上就别运动了。",
+          "assistant": "没问题，运动更适合放学后。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许小宁",
+      "QA_details": [
+        {
+          "user": "我不想工作日早上去公园快走，会来不及上学。",
+          "assistant": "好的，我会记录您不喜欢早上户外快走。"
+        },
+        {
+          "user": "外婆膝盖不舒服，我也不想让她走太久。",
+          "assistant": "明白，避免让外婆早上久走。"
+        },
+        {
+          "user": "放学后我可以去操场玩球。",
+          "assistant": "好的，放学后再安排运动。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "陆秀芳",
+      "QA_details": [
+        {
+          "user": "工作日早上我不想跟他们去户外快走，膝盖有点不舒服。",
+          "assistant": "好的，我会记录您不适合早上户外快走。"
+        },
+        {
+          "user": "小宁还要上学，别因为我耽误孩子。",
+          "assistant": "明白，早上不安排影响上学的活动。"
+        },
+        {
+          "user": "我在门口站一会儿就行，不用去公园。",
+          "assistant": "没问题，只提醒门口短暂停留。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陆秀芳对工作日早上户外快走是什么态度？",
+      "answer": "不想去。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，这家人是否不偏好每周工作日早上的户外健身？",
+      "answer": "是的，不偏好。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，小宁更适合早上快走，还是放学后玩球？",
+      "answer": "放学后玩球。",
+      "category": "temporal"
+    },
+    {
+      "question": "膝盖不舒服时为什么不宜长时间快走？",
+      "answer": "可能加重不适。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小宁在对话中提到操场编号了吗？",
+      "answer": "无法回答，未提到编号。",
+      "category": "adversarial"
+    }
+  ]
+}

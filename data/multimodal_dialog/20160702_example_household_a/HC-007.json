@@ -1,0 +1,90 @@
+{
+  "case_id": "HC-007",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1 个孩子",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周德海",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想带小满去海边旅行，这是我们每年最期待的一次出游。",
+          "assistant": "好的，我会把今年节假日早上的海边出游记为您和小满的年度旅行安排。"
+        },
+        {
+          "user": "早上七点出发比较好，孩子能在太阳太晒之前去沙滩上走走。",
+          "assistant": "明白，早上七点出发，先安排沙滩散步。"
+        },
+        {
+          "user": "小满喜欢捡贝壳，你提醒我给他带小桶和防晒帽。",
+          "assistant": "已记下，出发前提醒您带小桶和防晒帽。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周小满",
+      "QA_details": [
+        {
+          "user": "爷爷说节假日早上带我去海边旅行，我想早点到沙滩捡贝壳。",
+          "assistant": "好的，我会提醒您早上和爷爷出发去沙滩。"
+        },
+        {
+          "user": "我想把蓝色小桶带上，捡到漂亮贝壳就放进去。",
+          "assistant": "没问题，蓝色小桶会列入出游物品。"
+        },
+        {
+          "user": "如果海风不大，我还想和爷爷在栈道上拍一张合影。",
+          "assistant": "明白，天气合适时提醒您和爷爷在栈道合影。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "周德海今年节假日早上想带小满去哪里旅行？",
+      "answer": "去海边。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合两人的对话，这次海边出游是否是他们期待的活动？",
+      "answer": "是的，很期待。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，他们计划早上几点出发？",
+      "answer": "早上七点。",
+      "category": "temporal"
+    },
+    {
+      "question": "去海边旅行时，防晒帽通常有什么作用？",
+      "answer": "遮阳防晒。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小满在对话中提到入住酒店名称了吗？",
+      "answer": "无法回答，未提到酒店。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "case_id": "HC-056",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2 个孩子 + 1 位祖辈",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "GRANDCHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "邱明岚",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想带小舟、小禾和我爸去峡谷小镇旅行，这是我们每年一次的出游。",
+          "assistant": "好的，我会把节假日早上的峡谷小镇旅行记录为年度家庭出游。"
+        },
+        {
+          "user": "早上六点四十出发，先去观景台，再坐户外摆渡车到老街。",
+          "assistant": "明白，六点四十出发，先去观景台。"
+        },
+        {
+          "user": "小舟想拍峡谷，小禾想坐摆渡车，我爸怕冷，提醒我带外套。",
+          "assistant": "已记下，出发前提醒带外套和相机。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "邱小舟",
+      "QA_details": [
+        {
+          "user": "妈妈说节假日早上带我、妹妹和外公去峡谷小镇，我想先拍观景台。",
+          "assistant": "好的，我会提醒妈妈先安排观景台。"
+        },
+        {
+          "user": "小禾坐摆渡车的时候，我帮她拿水杯。",
+          "assistant": "明白，提醒您帮妹妹拿水杯。"
+        },
+        {
+          "user": "外公冷的话，我把外套递给他。",
+          "assistant": "好的，提醒您照看外公。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "邱小禾",
+      "QA_details": [
+        {
+          "user": "我想坐峡谷小镇的摆渡车，也想和哥哥一起看高高的山。",
+          "assistant": "好的，我会提醒家人安排摆渡车和观景台。"
+        },
+        {
+          "user": "哥哥帮我拿水杯，我就跟紧妈妈和外公。",
+          "assistant": "明白，坐车时跟紧家人。"
+        },
+        {
+          "user": "早上如果冷，我也要穿外套。",
+          "assistant": "好的，出发前提醒穿外套。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "邱成山",
+      "QA_details": [
+        {
+          "user": "明岚节假日早上带我和两个孩子去峡谷小镇，我想先看看观景台。",
+          "assistant": "好的，我会提醒她先安排观景台。"
+        },
+        {
+          "user": "早上山里凉，外套要带上。",
+          "assistant": "明白，出发前提醒带外套。"
+        },
+        {
+          "user": "孩子们坐摆渡车时别太靠边，我慢慢跟着走。",
+          "assistant": "没问题，提醒孩子坐车注意安全。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "邱明岚今年节假日早上想带家人去哪里旅行？",
+      "answer": "峡谷小镇。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，小舟和小禾分别期待什么？",
+      "answer": "小舟拍峡谷，小禾坐摆渡车。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从行程顺序看，他们先去观景台，还是先去老街？",
+      "answer": "先去观景台。",
+      "category": "temporal"
+    },
+    {
+      "question": "峡谷早上带外套通常有什么作用？",
+      "answer": "防冷保暖。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小禾在对话中提到摆渡车票价了吗？",
+      "answer": "无法回答，未提到票价。",
+      "category": "adversarial"
+    }
+  ]
+}

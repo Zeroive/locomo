@@ -1,0 +1,151 @@
+{
+  "case_id": "HC-058",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2 个孩子 + 1 位祖辈",
+    "activity_preference": "户外自然",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾晴川",
+      "QA_details": [
+        {
+          "user": "这个月休息日早上，我想带南南、安安和我爸去竹林步道走走，空气会很清爽。",
+          "assistant": "好的，我会把这个月休息日早上的竹林步道安排为户外自然活动。"
+        },
+        {
+          "user": "八点十分到入口，先走平缓那段，爸累了就在石凳上坐。",
+          "assistant": "明白，八点十分到入口，先走平缓路线。"
+        },
+        {
+          "user": "南南想拍竹叶，安安想听风声，提醒我带相机和水。",
+          "assistant": "已记下，出门前提醒带相机和水。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "顾南南",
+      "QA_details": [
+        {
+          "user": "妈妈说这个月早上带我们和外公去竹林，我想拍竹叶。",
+          "assistant": "好的，我会提醒您带相机。"
+        },
+        {
+          "user": "安安听风声的时候，我不大声说话。",
+          "assistant": "明白，竹林里保持安静。"
+        },
+        {
+          "user": "外公坐石凳时，我可以陪他喝水。",
+          "assistant": "好的，外公休息时提醒陪他喝水。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾安安",
+      "QA_details": [
+        {
+          "user": "我想去竹林听风声，也想和姐姐一起看竹叶。",
+          "assistant": "好的，我会提醒家人安排竹林步道。"
+        },
+        {
+          "user": "姐姐拍照的时候，我站旁边不碰竹子。",
+          "assistant": "明白，只观察不乱折竹叶。"
+        },
+        {
+          "user": "如果外公累了，我们就在石凳边等他。",
+          "assistant": "好的，外公累了就一起休息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "顾怀民",
+      "QA_details": [
+        {
+          "user": "晴川这个月早上带我和孩子们去竹林，我想走平缓一点的路。",
+          "assistant": "好的，我会提醒她选择平缓路线。"
+        },
+        {
+          "user": "孩子们看竹叶挺好，我累了就坐石凳。",
+          "assistant": "明白，累了就坐石凳休息。"
+        },
+        {
+          "user": "水要带上，早上走路也会口渴。",
+          "assistant": "没问题，出门前提醒带水。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "顾晴川这个月休息日早上想带家人去哪里？",
+      "answer": "竹林步道。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，南南和安安分别想做什么？",
+      "answer": "南南拍竹叶，安安听风声。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，他们几点十分到入口？",
+      "answer": "八点十分。",
+      "category": "temporal"
+    },
+    {
+      "question": "在竹林里不乱折竹叶通常是为了什么？",
+      "answer": "保护植物。",
+      "category": "open_domain"
+    },
+    {
+      "question": "南南在对话中提到相机品牌了吗？",
+      "answer": "无法回答，未提到品牌。",
+      "category": "adversarial"
+    }
+  ]
+}

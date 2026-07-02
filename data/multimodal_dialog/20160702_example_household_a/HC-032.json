@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-032",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "文化学习",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "程安然",
+      "QA_details": [
+        {
+          "user": "每周二工作日晚上，我想和小柚、我妈在家学一首古诗，三代人一起读会更有意思。",
+          "assistant": "好的，我会把每周二晚上安排为家中古诗学习。"
+        },
+        {
+          "user": "小柚先读一遍，我妈讲她小时候背诗的方法，我再解释意思。",
+          "assistant": "明白，小柚先读，外婆讲方法，您解释意思。"
+        },
+        {
+          "user": "九点前结束，孩子第二天还要上学。",
+          "assistant": "已记下，九点前结束古诗学习。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "程小柚",
+      "QA_details": [
+        {
+          "user": "妈妈说周二晚上和外婆一起学古诗，我想先读《春晓》。",
+          "assistant": "好的，我会提醒您先读《春晓》。"
+        },
+        {
+          "user": "外婆背得很快，我想听她教我怎么记。",
+          "assistant": "明白，提醒外婆分享背诗方法。"
+        },
+        {
+          "user": "妈妈解释完意思后，我再抄到本子上。",
+          "assistant": "好的，解释后提醒您抄写。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "何玉梅",
+      "QA_details": [
+        {
+          "user": "安然说工作日晚上陪小柚学古诗，我可以讲讲我以前怎么背《春晓》。",
+          "assistant": "好的，我会提醒您分享背诗经验。"
+        },
+        {
+          "user": "小柚先读，不会的字我慢慢教她。",
+          "assistant": "明白，小柚先读，您再帮她纠正。"
+        },
+        {
+          "user": "别学太久，九点前让孩子收书。",
+          "assistant": "没问题，九点前提醒收书。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "程安然每周二工作日晚上想和家人在家学什么？",
+      "answer": "学古诗。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，外婆会帮小柚做什么？",
+      "answer": "教背诗方法。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，小柚是先读古诗，还是先抄到本子上？",
+      "answer": "先读古诗。",
+      "category": "temporal"
+    },
+    {
+      "question": "《春晓》通常属于什么文学形式？",
+      "answer": "古诗。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小柚在对话中提到语文老师姓名了吗？",
+      "answer": "无法回答，未提到姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

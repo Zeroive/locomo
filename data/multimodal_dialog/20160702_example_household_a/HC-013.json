@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-013",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1 个孩子",
+    "activity_preference": "亲子陪伴",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每天",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "方景然",
+      "QA_details": [
+        {
+          "user": "工作日晚上每天我都想陪小禾睡前读十分钟绘本，哪怕当天很忙也别取消。",
+          "assistant": "好的，我会把每天工作日晚上睡前绘本设为固定亲子陪伴。"
+        },
+        {
+          "user": "今天轮到我读，雨晴可以帮她挑书，我来讲故事。",
+          "assistant": "明白，今晚雨晴挑书，您给小禾讲故事。"
+        },
+        {
+          "user": "读完让小禾选一个最喜欢的角色，再关灯睡觉。",
+          "assistant": "已记下，读完聊角色，再关灯休息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林雨晴",
+      "QA_details": [
+        {
+          "user": "景然说每天晚上都陪小禾读绘本，我今晚给她挑那本小月亮。",
+          "assistant": "好的，我会提醒您今晚准备《小月亮》。"
+        },
+        {
+          "user": "他讲故事时，我坐旁边陪着就行，小禾喜欢我们都在。",
+          "assistant": "明白，今晚您和景然一起陪小禾。"
+        },
+        {
+          "user": "九点前要结束，不然她第二天起床会慢。",
+          "assistant": "没问题，九点前提醒结束绘本时间。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "方小禾",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈晚上都会陪我读绘本，我今天想听小月亮。",
+          "assistant": "好的，我会提醒爸爸妈妈今晚读《小月亮》。"
+        },
+        {
+          "user": "爸爸讲故事的时候，妈妈也坐在旁边，我会更安心。",
+          "assistant": "明白，我会提醒妈妈一起陪您。"
+        },
+        {
+          "user": "读完我想说最喜欢哪个角色，然后再睡觉。",
+          "assistant": "好的，读完先聊角色，再准备睡觉。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "方景然工作日晚上每天想陪小禾做什么？",
+      "answer": "睡前读绘本。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，今晚是否是父母一起陪小禾？",
+      "answer": "是的，父母都在。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间顺序看，小禾是先读绘本，还是先睡觉？",
+      "answer": "先读绘本。",
+      "category": "temporal"
+    },
+    {
+      "question": "睡前读绘本通常属于什么家庭活动？",
+      "answer": "亲子陪伴。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小禾在对话中提到绘本作者姓名了吗？",
+      "answer": "无法回答，未提到作者。",
+      "category": "adversarial"
+    }
+  ]
+}

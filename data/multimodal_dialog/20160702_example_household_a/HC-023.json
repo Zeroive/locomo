@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-023",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2 个孩子",
+    "activity_preference": "户外自然",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "段秋然",
+      "QA_details": [
+        {
+          "user": "这个月休息日早上，我想带然然和小森去湖边观鸟，孩子们都喜欢自然活动。",
+          "assistant": "好的，我会把这个月休息日早上的湖边观鸟安排给您和两个孩子。"
+        },
+        {
+          "user": "早上七点四十到湖边，先走木栈道，别大声吓到鸟。",
+          "assistant": "明白，七点四十到湖边，先走木栈道并保持安静。"
+        },
+        {
+          "user": "然然负责拿望远镜，小森负责带小本子画鸟。",
+          "assistant": "已记下，提醒然然带望远镜，小森带小本子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "段然然",
+      "QA_details": [
+        {
+          "user": "妈妈说这个月早上去湖边观鸟，我想用望远镜看白鹭。",
+          "assistant": "好的，我会提醒您带望远镜看白鹭。"
+        },
+        {
+          "user": "小森画鸟的时候，我帮他看有没有新的鸟飞过来。",
+          "assistant": "明白，您观察鸟，小森记录。"
+        },
+        {
+          "user": "走木栈道时我们要小声一点。",
+          "assistant": "没问题，走木栈道时提醒保持安静。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "段小森",
+      "QA_details": [
+        {
+          "user": "我想去湖边画鸟，哥哥用望远镜看到什么就告诉我。",
+          "assistant": "好的，我会提醒哥哥帮您观察。"
+        },
+        {
+          "user": "我想先画白鹭，再画水草旁边的小鸟。",
+          "assistant": "明白，先画白鹭，再画水草旁的小鸟。"
+        },
+        {
+          "user": "如果鸟飞走了，我就先画湖水。",
+          "assistant": "好的，鸟飞走时可以先画湖水。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "段秋然这个月休息日早上想带两个孩子去哪里观鸟？",
+      "answer": "去湖边。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，然然和小森分别负责什么？",
+      "answer": "然然观察，小森画鸟。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，他们计划几点四十到湖边？",
+      "answer": "七点四十。",
+      "category": "temporal"
+    },
+    {
+      "question": "观鸟时为什么通常要保持安静？",
+      "answer": "避免吓到鸟。",
+      "category": "open_domain"
+    },
+    {
+      "question": "然然在对话中提到望远镜品牌了吗？",
+      "answer": "无法回答，未提到品牌。",
+      "category": "adversarial"
+    }
+  ]
+}

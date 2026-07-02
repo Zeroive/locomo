@@ -1,0 +1,151 @@
+{
+  "case_id": "HC-059",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2 个孩子 + 1 位祖辈",
+    "activity_preference": "运动健身",
+    "preference_polarity": "负向",
+    "time_of_day": "早上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆书宁",
+      "QA_details": [
+        {
+          "user": "每周工作日早上带两个孩子和我妈去户外健身太赶了，大家都不太愿意。",
+          "assistant": "好的，我会记录全家对工作日早上户外健身偏负向。"
+        },
+        {
+          "user": "小遥要背书包，小栗起床慢，我妈早上腿也不太灵便。",
+          "assistant": "明白，早上优先上学准备和老人休息。"
+        },
+        {
+          "user": "如果要活动，就在楼道口做两分钟伸展，不去操场跑。",
+          "assistant": "已记下，只提醒两分钟伸展，不安排跑步。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陆小遥",
+      "QA_details": [
+        {
+          "user": "妈妈说工作日早上别去户外跑步，我也觉得会迟到。",
+          "assistant": "好的，我会记录您不喜欢早上户外跑步。"
+        },
+        {
+          "user": "小栗起床慢，我还要帮他拿水杯。",
+          "assistant": "明白，早上留时间准备上学用品。"
+        },
+        {
+          "user": "放学后我可以陪小栗玩球。",
+          "assistant": "好的，运动更适合放学后。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆小栗",
+      "QA_details": [
+        {
+          "user": "我不想工作日早上去操场跑步，我还没睡醒。",
+          "assistant": "好的，我会记录早上不安排跑步。"
+        },
+        {
+          "user": "姐姐帮我拿水杯，我可以在门口伸展一下。",
+          "assistant": "明白，早上只做简单伸展。"
+        },
+        {
+          "user": "放学后玩球可以，早上不想运动。",
+          "assistant": "好的，放学后再安排运动。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周玉兰",
+      "QA_details": [
+        {
+          "user": "工作日早上我不想跟孩子们去户外健身，腿还没活动开。",
+          "assistant": "好的，我会记录您不适合早上户外健身。"
+        },
+        {
+          "user": "孩子们上学也忙，别为了运动把早上弄乱。",
+          "assistant": "明白，早上不强排运动。"
+        },
+        {
+          "user": "在楼道口伸展两下就够了。",
+          "assistant": "没问题，只提醒短暂伸展。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "周玉兰对工作日早上户外健身是什么态度？",
+      "answer": "不想参加。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，这家人是否不偏好每周工作日早上的户外运动？",
+      "answer": "是的，不偏好。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，孩子们更适合早上跑步，还是放学后玩球？",
+      "answer": "放学后玩球。",
+      "category": "temporal"
+    },
+    {
+      "question": "早上赶上学时，短伸展比去操场跑步有什么优势？",
+      "answer": "更省时间。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小栗在对话中提到操场位置了吗？",
+      "answer": "无法回答，未提到位置。",
+      "category": "adversarial"
+    }
+  ]
+}

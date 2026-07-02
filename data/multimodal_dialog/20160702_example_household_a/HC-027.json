@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-027",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1 位祖辈",
+    "activity_preference": "亲子陪伴",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每天",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "梁昊",
+      "QA_details": [
+        {
+          "user": "工作日晚上每天我都想陪静宜和岳父在家泡脚聊天，老人一天里最放松就是这会儿。",
+          "assistant": "好的，我会把每天工作日晚上泡脚聊天设为家中陪伴时间。"
+        },
+        {
+          "user": "先把水温调好，静宜陪爸量血压，我负责倒茶。",
+          "assistant": "明白，先调水温，再量血压和倒茶。"
+        },
+        {
+          "user": "聊天别开电视，让爸慢慢讲他年轻时的事。",
+          "assistant": "已记下，关闭电视，专心陪老人聊天。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈静宜",
+      "QA_details": [
+        {
+          "user": "梁昊说每天晚上陪我爸泡脚聊天，我想把血压计放到客厅。",
+          "assistant": "好的，我会提醒您把血压计放到客厅。"
+        },
+        {
+          "user": "我爸喜欢讲老厂里的故事，我们听着就好。",
+          "assistant": "明白，晚上以陪伴和倾听为主。"
+        },
+        {
+          "user": "九点前结束泡脚，别让他坐太久。",
+          "assistant": "没问题，九点前提醒结束。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈国良",
+      "QA_details": [
+        {
+          "user": "女儿和女婿晚上陪我泡脚，我想顺便讲讲以前老厂的事。",
+          "assistant": "好的，我会提醒他们晚上留出聊天时间。"
+        },
+        {
+          "user": "梁昊倒杯热茶就行，电视不用开。",
+          "assistant": "明白，准备热茶并关闭电视。"
+        },
+        {
+          "user": "静宜量完血压后，我们再慢慢聊。",
+          "assistant": "好的，先量血压，再聊天。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "梁昊工作日晚上每天在家陪岳父做什么？",
+      "answer": "泡脚聊天。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，晚上陪伴时梁昊和静宜分别做什么？",
+      "answer": "梁昊倒茶，静宜量血压。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，他们先量血压，还是先慢慢聊天？",
+      "answer": "先量血压。",
+      "category": "temporal"
+    },
+    {
+      "question": "陪老人聊天时关闭电视通常有什么好处？",
+      "answer": "更专心交流。",
+      "category": "open_domain"
+    },
+    {
+      "question": "陈国良在对话中提到老厂的具体地址了吗？",
+      "answer": "无法回答，未提到地址。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-021",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2 个孩子",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "叶清",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想带知知和小砚去古镇旅行，这是我们每年都会期待的出游。",
+          "assistant": "好的，我会把节假日早上的古镇旅行记为年度家庭出游。"
+        },
+        {
+          "user": "早上七点半出发，先走石桥和河边小路，趁人少多拍几张照片。",
+          "assistant": "明白，七点半出发，先去石桥和河边小路。"
+        },
+        {
+          "user": "知知想买明信片，小砚想坐摇橹船，提醒我带雨伞和儿童水杯。",
+          "assistant": "已记下，出发前提醒您带雨伞和儿童水杯。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶知知",
+      "QA_details": [
+        {
+          "user": "妈妈说节假日早上带我和弟弟去古镇，我想先去河边买明信片。",
+          "assistant": "好的，我会提醒妈妈先安排河边明信片店。"
+        },
+        {
+          "user": "小砚想坐船，我可以帮他拿水杯，不让他乱跑。",
+          "assistant": "明白，坐船前提醒您照看弟弟和水杯。"
+        },
+        {
+          "user": "如果石桥上人少，我想和妈妈、小砚一起拍合影。",
+          "assistant": "没问题，人少时提醒全家在石桥合影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "叶小砚",
+      "QA_details": [
+        {
+          "user": "我想节假日早上去古镇坐摇橹船，姐姐说她会陪我排队。",
+          "assistant": "好的，我会提醒您和姐姐一起排队坐船。"
+        },
+        {
+          "user": "坐船之前我想先看石桥，妈妈说早上人会少一点。",
+          "assistant": "明白，先看石桥，再安排摇橹船。"
+        },
+        {
+          "user": "如果下小雨，就提醒妈妈给我拿伞。",
+          "assistant": "好的，下雨时提醒带伞。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "叶清今年节假日早上想带两个孩子去哪里旅行？",
+      "answer": "去古镇。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，知知和小砚各自期待什么？",
+      "answer": "知知买明信片，小砚坐船。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从行程顺序看，他们先看石桥，还是先坐摇橹船？",
+      "answer": "先看石桥。",
+      "category": "temporal"
+    },
+    {
+      "question": "古镇旅行中明信片通常可以用来做什么？",
+      "answer": "留作纪念。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小砚在对话中提到古镇酒店名称了吗？",
+      "answer": "无法回答，未提到酒店。",
+      "category": "adversarial"
+    }
+  ]
+}

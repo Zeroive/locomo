@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-014",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1 个孩子",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "蒋皓",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想带思然和小米去山城旅行，这是我们每年固定的一次家庭出游。",
+          "assistant": "好的，我会把节假日早上的山城旅行记录为年度家庭出游。"
+        },
+        {
+          "user": "早上六点半出发，先去老街，不然晚了人会多。",
+          "assistant": "明白，早上六点半出发，先去老街。"
+        },
+        {
+          "user": "小米想坐观光缆车，思然提醒我提前看排队时间。",
+          "assistant": "已记下，出发前查看观光缆车排队情况。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "魏思然",
+      "QA_details": [
+        {
+          "user": "蒋皓说今年节假日早上去山城，我想把雨衣和儿童水壶放进包里。",
+          "assistant": "好的，我会提醒您准备雨衣和儿童水壶。"
+        },
+        {
+          "user": "小米第一次坐缆车，别安排太赶，让他慢慢看风景。",
+          "assistant": "明白，缆车行程安排得轻松一些。"
+        },
+        {
+          "user": "老街逛完再去观景台，不要反过来走。",
+          "assistant": "没问题，顺序是老街后观景台。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "蒋小米",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说节假日早上带我去山城旅行，我最想坐观光缆车。",
+          "assistant": "好的，我会提醒爸爸妈妈安排观光缆车。"
+        },
+        {
+          "user": "我还想先去老街买一枚纪念章，再去看高高的观景台。",
+          "assistant": "明白，先逛老街，再去观景台。"
+        },
+        {
+          "user": "早上出门时别忘了我的水壶。",
+          "assistant": "好的，出发前提醒带水壶。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "蒋皓一家今年节假日早上计划去哪里旅行？",
+      "answer": "去山城。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，小米最期待旅行中的哪项活动？",
+      "answer": "坐观光缆车。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从行程顺序看，他们先去老街，还是先去观景台？",
+      "answer": "先去老街。",
+      "category": "temporal"
+    },
+    {
+      "question": "节假日热门景点为什么常需要提前看排队时间？",
+      "answer": "人多，可能排队。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小米在对话中提到酒店房间号了吗？",
+      "answer": "无法回答，未提到房号。",
+      "category": "adversarial"
+    }
+  ]
+}

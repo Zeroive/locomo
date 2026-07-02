@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-019",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2 个孩子",
+    "activity_preference": "社交餐饮",
+    "preference_polarity": "正向",
+    "time_of_day": "中午",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "孟知夏",
+      "QA_details": [
+        {
+          "user": "这个月休息日中午，我想带小南和小北去户外烘焙市集，和邻居们一起吃午餐。",
+          "assistant": "好的，我会把这个月休息日中午安排为户外市集社交午餐。"
+        },
+        {
+          "user": "小南喜欢和邻居姐姐聊天，小北只要有面包摊就开心。",
+          "assistant": "明白，市集里优先找面包摊，也方便孩子们交流。"
+        },
+        {
+          "user": "我们先吃三明治，再去试小蛋糕，不要让他们空腹吃甜的。",
+          "assistant": "已记下，先吃三明治，再试小蛋糕。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "孟小南",
+      "QA_details": [
+        {
+          "user": "妈妈说休息日中午带我和弟弟去户外市集，我想找邻居姐姐一起坐。",
+          "assistant": "好的，我会提醒妈妈安排您和邻居姐姐一起用餐。"
+        },
+        {
+          "user": "小北喜欢甜面包，我帮他拿一小块就好。",
+          "assistant": "明白，帮弟弟拿少量甜面包。"
+        },
+        {
+          "user": "吃完三明治后，我想再试一个小蛋糕。",
+          "assistant": "好的，先吃三明治，再试小蛋糕。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "孟小北",
+      "QA_details": [
+        {
+          "user": "我想去户外市集吃面包，也想和哥哥坐在一起。",
+          "assistant": "好的，我会提醒妈妈让您和哥哥坐一起。"
+        },
+        {
+          "user": "妈妈说先吃三明治，我吃完再吃小蛋糕。",
+          "assistant": "明白，先午餐，再吃甜点。"
+        },
+        {
+          "user": "如果邻居姐姐也来，我可以把贴纸给她看。",
+          "assistant": "没问题，我会提醒您带贴纸。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "孟知夏这个月休息日中午想带两个孩子去哪里吃午餐？",
+      "answer": "户外烘焙市集。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，这次午餐是否包含和邻居社交？",
+      "answer": "是的，和邻居见面。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从进餐顺序看，孩子们先吃三明治，还是先吃小蛋糕？",
+      "answer": "先吃三明治。",
+      "category": "temporal"
+    },
+    {
+      "question": "为什么通常不建议孩子空腹先吃甜点？",
+      "answer": "不利于均衡饮食。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小南在对话中提到邻居姐姐的电话号码了吗？",
+      "answer": "无法回答，未提到电话。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-016",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2 个孩子",
+    "activity_preference": "户外自然",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "何雨澄",
+      "QA_details": [
+        {
+          "user": "这个月休息日早上，我想带星星和小禾去郊外花田走走，两个孩子都喜欢户外自然。",
+          "assistant": "好的，我会把这个月休息日早上的郊外花田安排给您和两个孩子。"
+        },
+        {
+          "user": "我们八点出门，先走花田小路，再去树荫下吃点水果。",
+          "assistant": "明白，八点出门，先走花田小路，再到树荫下休息。"
+        },
+        {
+          "user": "星星喜欢拍花，小禾喜欢找蝴蝶，提醒我带相机和防蚊贴。",
+          "assistant": "已记下，出门前提醒您带相机和防蚊贴。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "何星星",
+      "QA_details": [
+        {
+          "user": "妈妈说休息日早上带我和弟弟去花田，我想拍黄色的小花。",
+          "assistant": "好的，我会提醒您带相机拍花。"
+        },
+        {
+          "user": "小禾如果追蝴蝶跑太远，你提醒我拉着他一点。",
+          "assistant": "明白，我会提醒您照看弟弟。"
+        },
+        {
+          "user": "走完花田小路后，我想在树下面吃苹果。",
+          "assistant": "好的，走完小路后提醒您到树荫下吃水果。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "何小禾",
+      "QA_details": [
+        {
+          "user": "妈妈和姐姐说这个月早上去花田，我想找蝴蝶。",
+          "assistant": "好的，我会提醒您在花田里观察蝴蝶。"
+        },
+        {
+          "user": "姐姐拍花的时候，我可以站旁边看，不乱踩花。",
+          "assistant": "明白，观察时不踩花。"
+        },
+        {
+          "user": "如果蚊子多，就提醒妈妈给我贴防蚊贴。",
+          "assistant": "没问题，蚊子多时提醒贴防蚊贴。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "何雨澄这个月休息日早上想带两个孩子去哪里？",
+      "answer": "去郊外花田。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，星星和小禾在花田分别想做什么？",
+      "answer": "星星拍花，小禾找蝴蝶。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间顺序看，他们先走花田小路，还是先去树荫下吃水果？",
+      "answer": "先走花田小路。",
+      "category": "temporal"
+    },
+    {
+      "question": "在花田里为什么通常不应该乱踩花？",
+      "answer": "会破坏植物。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小禾在对话中提到花田门票价格了吗？",
+      "answer": "无法回答，未提到票价。",
+      "category": "adversarial"
+    }
+  ]
+}

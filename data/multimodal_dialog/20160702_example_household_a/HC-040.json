@@ -1,0 +1,176 @@
+{
+  "case_id": "HC-040",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2 个孩子",
+    "activity_preference": "社交餐饮",
+    "preference_polarity": "正向",
+    "time_of_day": "中午",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾言川",
+      "QA_details": [
+        {
+          "user": "这个月休息日中午，我想和晚晴带阿宁、小初去户外草坪餐厅，约邻居一家一起吃饭。",
+          "assistant": "好的，我会把这个月休息日中午安排为户外草坪餐厅聚餐。"
+        },
+        {
+          "user": "阿宁和邻居家的孩子熟，小初喜欢草坪边的儿童餐盘。",
+          "assistant": "明白，优先选择靠草坪的户外座位。"
+        },
+        {
+          "user": "先点意面和烤鸡，再给孩子们分水果杯。",
+          "assistant": "已记下，先点主餐，再分水果杯。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林晚晴",
+      "QA_details": [
+        {
+          "user": "言川说休息日中午去草坪餐厅，我想提前确认儿童椅和遮阳伞。",
+          "assistant": "好的，我会提醒您确认儿童椅和遮阳伞。"
+        },
+        {
+          "user": "邻居一家来了以后，让阿宁先带小初打招呼。",
+          "assistant": "明白，提醒阿宁带小初和邻居打招呼。"
+        },
+        {
+          "user": "吃完饭如果不热，孩子们可以在草坪旁边玩十分钟。",
+          "assistant": "没问题，饭后天气合适就短暂玩耍。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾阿宁",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说休息日中午带我和妹妹去草坪餐厅，我想见邻居家的小哲。",
+          "assistant": "好的，我会提醒爸爸妈妈安排邻居一家一起用餐。"
+        },
+        {
+          "user": "妈妈说让我带小初打招呼，我会牵着她过去。",
+          "assistant": "明白，提醒您带妹妹一起打招呼。"
+        },
+        {
+          "user": "吃完饭我想在草坪边玩十分钟。",
+          "assistant": "好的，饭后提醒短时间玩耍。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "顾小初",
+      "QA_details": [
+        {
+          "user": "我想和爸爸妈妈、哥哥去户外餐厅，坐有遮阳伞的位置。",
+          "assistant": "好的，我会提醒爸爸妈妈选遮阳伞座位。"
+        },
+        {
+          "user": "哥哥带我跟小哲打招呼的时候，我想拿着水果杯。",
+          "assistant": "明白，提醒哥哥带您一起打招呼。"
+        },
+        {
+          "user": "吃完我想去草坪旁边玩，不要马上回家。",
+          "assistant": "好的，午餐后可以短暂玩一会儿。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "顾言川一家这个月休息日中午计划去哪里聚餐？",
+      "answer": "草坪餐厅。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，这次午餐是否有社交目的？",
+      "answer": "是的，约邻居一家。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从进餐顺序看，他们先吃主餐，还是先饭后去草坪玩？",
+      "answer": "先吃主餐。",
+      "category": "temporal"
+    },
+    {
+      "question": "户外餐厅的遮阳伞通常有什么作用？",
+      "answer": "遮阳防晒。",
+      "category": "open_domain"
+    },
+    {
+      "question": "阿宁在对话中提到小哲家的门牌号了吗？",
+      "answer": "无法回答，未提到门牌号。",
+      "category": "adversarial"
+    }
+  ]
+}

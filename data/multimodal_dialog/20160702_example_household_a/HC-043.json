@@ -1,0 +1,176 @@
+{
+  "case_id": "HC-043",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2 个孩子",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "梁一鸣",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和沛然带子墨、若若在家做拼图，不出去看电影。",
+          "assistant": "好的，我会把这周休息日晚上安排为全家拼图时间。"
+        },
+        {
+          "user": "子墨负责找边框，若若负责找蓝色天空，我和沛然拼中间那块城堡。",
+          "assistant": "明白，孩子们分工找图块，父母拼城堡区域。"
+        },
+        {
+          "user": "八点开始，九点半前收盒，别把小块弄丢。",
+          "assistant": "已记下，八点开始，九点半前收好拼图。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈沛然",
+      "QA_details": [
+        {
+          "user": "一鸣说周末晚上在家拼图，我先把客厅茶几腾出来。",
+          "assistant": "好的，我会提醒您整理茶几。"
+        },
+        {
+          "user": "若若容易把拼图块放到地毯下，子墨可以帮她看着。",
+          "assistant": "明白，提醒子墨帮妹妹保管图块。"
+        },
+        {
+          "user": "收盒前拍一张进度照片，下周还能接着拼。",
+          "assistant": "没问题，收盒前提醒拍照。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁子墨",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说休息日晚上在家拼图，我想先找边框。",
+          "assistant": "好的，我会提醒您先找边框图块。"
+        },
+        {
+          "user": "若若找蓝色天空的时候，我帮她别弄丢小块。",
+          "assistant": "明白，提醒您帮妹妹看好图块。"
+        },
+        {
+          "user": "九点半前我负责把边框那一包收好。",
+          "assistant": "好的，九点半前提醒您收好边框图块。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "梁若若",
+      "QA_details": [
+        {
+          "user": "我想和爸爸妈妈、哥哥在家拼图，我要找蓝色天空。",
+          "assistant": "好的，我会提醒大家把蓝色天空交给您找。"
+        },
+        {
+          "user": "哥哥帮我看小块，我就不会弄丢。",
+          "assistant": "明白，提醒哥哥帮您保管小块。"
+        },
+        {
+          "user": "拼完一部分想拍照，明天再看。",
+          "assistant": "好的，收盒前提醒拍进度照片。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "梁一鸣一家这周休息日晚上在家计划做什么？",
+      "answer": "一起拼图。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，子墨和若若分别负责什么？",
+      "answer": "子墨找边框，若若找天空。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，拼图几点开始？",
+      "answer": "晚上八点。",
+      "category": "temporal"
+    },
+    {
+      "question": "拼图收盒前拍进度照片有什么用？",
+      "answer": "方便下次继续。",
+      "category": "open_domain"
+    },
+    {
+      "question": "若若在对话中提到拼图品牌了吗？",
+      "answer": "无法回答，未提到品牌。",
+      "category": "adversarial"
+    }
+  ]
+}

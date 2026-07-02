@@ -1,0 +1,90 @@
+{
+  "case_id": "HC-002",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "夫妻 / 伴侣家庭",
+    "activity_preference": "户外自然",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林泽宇",
+      "QA_details": [
+        {
+          "user": "这个月休息日早上，我想和舒雅去郊外湿地走走，她最近也说想多看看自然风景。",
+          "assistant": "好的，我会把这个月休息日早上的湿地散步安排为您和舒雅的户外自然活动。"
+        },
+        {
+          "user": "我们别睡太晚，早上七点半出门，趁太阳不晒的时候走木栈道。",
+          "assistant": "明白，早上七点半出门，优先安排湿地木栈道路线。"
+        },
+        {
+          "user": "舒雅喜欢拍鸟和水边的芦苇，记得提醒我带长焦镜头。",
+          "assistant": "已记下，出门前提醒您带长焦镜头，方便舒雅拍鸟和芦苇。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许舒雅",
+      "QA_details": [
+        {
+          "user": "泽宇说这个月找个休息日早上陪我去湿地，我想选空气好一点的那天。",
+          "assistant": "好的，我会关注空气质量，帮您们选择适合去湿地的休息日早上。"
+        },
+        {
+          "user": "我不想赶景点，只想和他慢慢走一圈，看水鸟和植物。",
+          "assistant": "明白，行程会安排得轻松，以散步、观鸟和看植物为主。"
+        },
+        {
+          "user": "如果回程路过湖边咖啡车，可以和泽宇买杯热咖啡再回家。",
+          "assistant": "没问题，回程如果经过湖边咖啡车，我会提醒您们停一下。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "林泽宇和许舒雅这个月休息日早上计划去哪里活动？",
+      "answer": "去郊外湿地。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合两人的对话，他们是否都喜欢这次户外自然活动？",
+      "answer": "是的，都愿意去湿地。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，他们是早上出门，还是晚上出门？",
+      "answer": "早上出门。",
+      "category": "temporal"
+    },
+    {
+      "question": "湿地通常适合观察哪些自然景物？",
+      "answer": "水鸟、植物和水景。",
+      "category": "open_domain"
+    },
+    {
+      "question": "他们在对话中提到湿地门票价格是多少吗？",
+      "answer": "无法回答，未提到票价。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-012",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1 个孩子",
+    "activity_preference": "社交餐饮",
+    "preference_polarity": "正向",
+    "time_of_day": "中午",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "程远",
+      "QA_details": [
+        {
+          "user": "这个月休息日中午，我想和曼宁、可可去河边露天餐厅，顺便约老同学一家见面。",
+          "assistant": "好的，我会把这个月休息日中午安排为河边露天餐厅聚餐。"
+        },
+        {
+          "user": "可可和他们家孩子熟，坐户外位置会更自在。",
+          "assistant": "明白，优先选择户外座位，方便孩子们交流。"
+        },
+        {
+          "user": "菜别点太复杂，披萨、沙拉和果汁就够。",
+          "assistant": "已记下，午餐以披萨、沙拉和果汁为主。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "赵曼宁",
+      "QA_details": [
+        {
+          "user": "程远说这个月休息日中午去河边露天餐厅，我想提前确认遮阳伞座位。",
+          "assistant": "好的，我会提醒您确认户外遮阳伞座位。"
+        },
+        {
+          "user": "可可见到小桐会很开心，她们上次一起画贴纸聊了很久。",
+          "assistant": "明白，这次聚餐也方便可可和小桐继续交流。"
+        },
+        {
+          "user": "吃完如果不热，可以在河边步道走十分钟。",
+          "assistant": "没问题，午餐后天气合适就安排短步行。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "程可可",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说休息日中午带我去河边餐厅，我想坐外面等小桐。",
+          "assistant": "好的，我会提醒爸爸妈妈选择户外座位。"
+        },
+        {
+          "user": "我想和小桐一起喝果汁，还想给她看我的贴纸本。",
+          "assistant": "明白，果汁和贴纸本都会提醒您带上。"
+        },
+        {
+          "user": "吃完饭我想在河边走一小会儿，不想马上回家。",
+          "assistant": "好的，吃完后可以短时间散步。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "程远一家这个月休息日中午计划去哪里聚餐？",
+      "answer": "河边露天餐厅。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，这次餐饮活动是否包含社交目的？",
+      "answer": "是的，要见朋友。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间顺序看，他们是先吃午餐，还是先河边散步？",
+      "answer": "先吃午餐。",
+      "category": "temporal"
+    },
+    {
+      "question": "露天餐厅的遮阳伞通常有什么作用？",
+      "answer": "遮阳降温。",
+      "category": "open_domain"
+    },
+    {
+      "question": "可可在对话中提到小桐家的住址了吗？",
+      "answer": "无法回答，未提到地址。",
+      "category": "adversarial"
+    }
+  ]
+}

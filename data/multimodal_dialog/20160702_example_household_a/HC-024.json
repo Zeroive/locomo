@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-024",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1 位祖辈",
+    "activity_preference": "运动健身",
+    "preference_polarity": "负向",
+    "time_of_day": "早上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "宋景辰",
+      "QA_details": [
+        {
+          "user": "每周工作日早上让我们仨去户外快走，我有点不愿意，妈也说太早了。",
+          "assistant": "明白，我会记录您和母亲对工作日早上户外健身偏负向。"
+        },
+        {
+          "user": "若宁原本想陪我们运动，但上班前时间太紧，别再推四十分钟路线。",
+          "assistant": "好的，不再推荐工作日早上的长时间户外快走。"
+        },
+        {
+          "user": "如果妈想活动，就在楼下晒太阳走五分钟，不算正式健身。",
+          "assistant": "已记下，只安排楼下短走，不做正式健身计划。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许若宁",
+      "QA_details": [
+        {
+          "user": "景辰和妈都不太想每周工作日早上去户外运动，我别再坚持晨练打卡了。",
+          "assistant": "好的，我会减少晨练打卡提醒。"
+        },
+        {
+          "user": "妈早上要慢慢吃药和早餐，运动放上午晚点会更合适。",
+          "assistant": "明白，早上先吃药和早餐，运动不强排。"
+        },
+        {
+          "user": "明天只提醒他们下楼透透气，不写成健身任务。",
+          "assistant": "没问题，明天只提醒下楼透气。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "宋玉琴",
+      "QA_details": [
+        {
+          "user": "工作日早上我不想跟景辰他们去户外快走，吃完早饭再说吧。",
+          "assistant": "好的，我会记录您不喜欢工作日早上的户外快走。"
+        },
+        {
+          "user": "若宁是好意，但我早上腿还没活动开，走太久不舒服。",
+          "assistant": "明白，早上避免安排长时间快走。"
+        },
+        {
+          "user": "如果只是楼下晒五分钟太阳，我可以去。",
+          "assistant": "好的，只提醒楼下短时间晒太阳。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "宋玉琴对工作日早上户外快走是什么态度？",
+      "answer": "不太愿意。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，这家人是否会减少每周工作日早上的户外健身安排？",
+      "answer": "是的，会减少。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，宋玉琴想先吃早饭，还是先快走？",
+      "answer": "先吃早饭。",
+      "category": "temporal"
+    },
+    {
+      "question": "对老人来说，早上运动前为什么常要注意身体状态？",
+      "answer": "避免不适。",
+      "category": "open_domain"
+    },
+    {
+      "question": "宋玉琴在对话中提到药品名称了吗？",
+      "answer": "无法回答，未提到药名。",
+      "category": "adversarial"
+    }
+  ]
+}

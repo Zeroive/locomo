@@ -1,0 +1,161 @@
+{
+  "case_id": "HC-049",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "秦泊舟",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想和若笙带小砚、岳父去水乡旅行，这是我们每年一次的全家出游。",
+          "assistant": "好的，我会把节假日早上的水乡旅行记录为年度全家出游。"
+        },
+        {
+          "user": "早上七点出发，先坐游船，之后再去老街吃早茶。",
+          "assistant": "明白，七点出发，先坐游船再去老街。"
+        },
+        {
+          "user": "小砚想看桥，岳父怕晒，提醒我带遮阳帽。",
+          "assistant": "已记下，出发前提醒带遮阳帽。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐若笙",
+      "QA_details": [
+        {
+          "user": "泊舟说节假日早上去水乡，我想提前看游船排队时间。",
+          "assistant": "好的，我会提醒您查看游船排队情况。"
+        },
+        {
+          "user": "我爸喜欢老街早茶，但先坐船会凉快些。",
+          "assistant": "明白，先坐船，再安排老街早茶。"
+        },
+        {
+          "user": "小砚看桥的时候，我们别让他靠栏杆太近。",
+          "assistant": "没问题，提醒孩子注意栏杆距离。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "秦小砚",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈和外公节假日早上带我去水乡，我想看很多小桥。",
+          "assistant": "好的，我会提醒家人安排看桥。"
+        },
+        {
+          "user": "妈妈说先坐游船，我坐船时不靠栏杆太近。",
+          "assistant": "明白，坐船时注意安全。"
+        },
+        {
+          "user": "外公吃早茶的时候，我想尝一块桂花糕。",
+          "assistant": "好的，老街早茶时提醒尝桂花糕。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "唐德厚",
+      "QA_details": [
+        {
+          "user": "女儿和女婿带我和小砚去水乡，我想吃老街早茶。",
+          "assistant": "好的，我会提醒他们安排老街早茶。"
+        },
+        {
+          "user": "先坐游船也可以，早上没那么晒。",
+          "assistant": "明白，先坐游船更凉快。"
+        },
+        {
+          "user": "遮阳帽别忘了，我怕晒。",
+          "assistant": "好的，出发前提醒带遮阳帽。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "秦泊舟一家今年节假日早上计划去哪里旅行？",
+      "answer": "去水乡。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，小砚和外公分别期待什么？",
+      "answer": "小砚看桥，外公吃早茶。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从行程顺序看，他们先坐游船，还是先吃早茶？",
+      "answer": "先坐游船。",
+      "category": "temporal"
+    },
+    {
+      "question": "水乡旅行中看桥通常属于什么体验？",
+      "answer": "观光体验。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小砚在对话中提到游船票价了吗？",
+      "answer": "无法回答，未提到票价。",
+      "category": "adversarial"
+    }
+  ]
+}

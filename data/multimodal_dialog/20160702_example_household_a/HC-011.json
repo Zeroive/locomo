@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-011",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1 个孩子",
+    "activity_preference": "文化学习",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆明川",
+      "QA_details": [
+        {
+          "user": "每周二工作日晚上，我想和青禾、朵朵在家听一段古典音乐，再聊聊作曲家的故事。",
+          "assistant": "好的，我会把每周二晚上设为全家在家的音乐文化学习时间。"
+        },
+        {
+          "user": "朵朵最近问贝多芬是谁，我可以先讲《命运交响曲》的开头。",
+          "assistant": "明白，今晚内容从贝多芬和《命运交响曲》开始。"
+        },
+        {
+          "user": "别安排太长，听十分钟就够，后面让她说说听到的感觉。",
+          "assistant": "已记下，先听十分钟，再让朵朵表达感受。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "宋青禾",
+      "QA_details": [
+        {
+          "user": "明川说周二晚上在家给朵朵讲古典音乐，我想准备一张作曲家小卡片。",
+          "assistant": "好的，我会提醒您准备贝多芬的小卡片。"
+        },
+        {
+          "user": "朵朵如果听不懂，就让她先画下音乐给她的感觉。",
+          "assistant": "明白，可以用画画帮助她理解音乐。"
+        },
+        {
+          "user": "九点前一定结束，第二天还要上学。",
+          "assistant": "没问题，九点前提醒结束。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆朵朵",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说周二晚上在家听音乐故事，我想知道贝多芬为什么有名。",
+          "assistant": "好的，我会提醒爸爸妈妈先讲贝多芬。"
+        },
+        {
+          "user": "如果音乐听起来很紧张，我想用红色笔画下来。",
+          "assistant": "明白，听完可以用颜色画出感受。"
+        },
+        {
+          "user": "九点前我还要收好彩笔，不能太晚睡。",
+          "assistant": "好的，九点前提醒您收彩笔并准备休息。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陆明川一家每周二工作日晚上在家学习什么内容？",
+      "answer": "古典音乐。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，朵朵会通过哪些方式参与文化学习？",
+      "answer": "听音乐、画感受。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，这次学习要在几点前结束？",
+      "answer": "九点前。",
+      "category": "temporal"
+    },
+    {
+      "question": "贝多芬通常属于哪个艺术领域的人物？",
+      "answer": "音乐领域。",
+      "category": "open_domain"
+    },
+    {
+      "question": "朵朵在对话中提到音乐老师姓名了吗？",
+      "answer": "无法回答，未提到姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

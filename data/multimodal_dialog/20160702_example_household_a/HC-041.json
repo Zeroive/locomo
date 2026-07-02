@@ -1,0 +1,176 @@
+{
+  "case_id": "HC-041",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2 个孩子",
+    "activity_preference": "亲子陪伴",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每天",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈砚",
+      "QA_details": [
+        {
+          "user": "工作日晚上每天我都想和知微陪阿澈、小满在家做睡前分享，每人说一件开心事。",
+          "assistant": "好的，我会把每天工作日晚上设为全家的睡前分享时间。"
+        },
+        {
+          "user": "阿澈先说学校里的事，小满再说幼儿园的事，我和知微最后回应他们。",
+          "assistant": "明白，阿澈先说，小满再说，父母最后回应。"
+        },
+        {
+          "user": "分享时不要开电视，九点前让两个孩子准备睡觉。",
+          "assistant": "已记下，关闭电视，九点前提醒孩子睡觉。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许知微",
+      "QA_details": [
+        {
+          "user": "沈砚说每天晚上陪两个孩子睡前分享，我想把客厅灯调柔和一点。",
+          "assistant": "好的，我会提醒您调柔和灯光。"
+        },
+        {
+          "user": "小满说话慢，阿澈听完以后别急着插话。",
+          "assistant": "明白，提醒阿澈耐心听妹妹说完。"
+        },
+        {
+          "user": "孩子们说完开心事后，我们再各自抱抱他们。",
+          "assistant": "没问题，分享后提醒父母抱抱孩子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "沈阿澈",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈晚上会陪我和妹妹聊天，我想先说今天科学课做实验。",
+          "assistant": "好的，我会提醒您先分享科学课。"
+        },
+        {
+          "user": "小满说幼儿园的事时，我会等她说完。",
+          "assistant": "明白，提醒您耐心听妹妹分享。"
+        },
+        {
+          "user": "九点前我想把书包放好再睡。",
+          "assistant": "好的，九点前提醒您收好书包。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "沈小满",
+      "QA_details": [
+        {
+          "user": "晚上爸爸妈妈和哥哥都会听我说话，我想说幼儿园画画的事。",
+          "assistant": "好的，我会提醒大家听您分享画画的事。"
+        },
+        {
+          "user": "哥哥先说完，我再说，妈妈说会抱抱我。",
+          "assistant": "明白，哥哥先分享，之后您再分享。"
+        },
+        {
+          "user": "电视不要开，我想听清楚大家说话。",
+          "assistant": "好的，睡前分享时关闭电视。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "沈砚一家工作日晚上每天在家做什么亲子陪伴？",
+      "answer": "睡前分享。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，两个孩子分享时谁先说？",
+      "answer": "阿澈先说。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，孩子们要在几点前准备睡觉？",
+      "answer": "九点前。",
+      "category": "temporal"
+    },
+    {
+      "question": "睡前关闭电视通常有什么好处？",
+      "answer": "减少分心。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小满在对话中提到幼儿园老师姓名了吗？",
+      "answer": "无法回答，未提到姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

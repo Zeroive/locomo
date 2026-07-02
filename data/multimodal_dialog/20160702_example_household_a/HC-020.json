@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-020",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2 个孩子",
+    "activity_preference": "亲子陪伴",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每天",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许晴岚",
+      "QA_details": [
+        {
+          "user": "工作日晚上每天我都想在家陪阿树和小苗做睡前聊天，哪怕只聊十分钟。",
+          "assistant": "好的，我会把每天工作日晚上十分钟睡前聊天设为固定亲子陪伴。"
+        },
+        {
+          "user": "阿树先说学校里的事，小苗再说今天开心的事，我最后给他们讲晚安故事。",
+          "assistant": "明白，顺序是阿树先说，小苗再说，最后您讲故事。"
+        },
+        {
+          "user": "聊天时不要开电视，客厅灯调暗一点。",
+          "assistant": "已记下，睡前聊天时关闭电视，并调暗灯光。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许阿树",
+      "QA_details": [
+        {
+          "user": "妈妈每天晚上会陪我和妹妹聊天，我想先讲今天科学课的事。",
+          "assistant": "好的，我会提醒您先分享科学课。"
+        },
+        {
+          "user": "小苗说完开心的事以后，我想听妈妈讲晚安故事。",
+          "assistant": "明白，等妹妹说完后听晚安故事。"
+        },
+        {
+          "user": "聊天的时候电视不要开，不然我会分心。",
+          "assistant": "没问题，睡前聊天时关闭电视。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许小苗",
+      "QA_details": [
+        {
+          "user": "晚上妈妈和哥哥都会在家陪我聊天，我想说今天画画得了星星贴。",
+          "assistant": "好的，我会提醒您分享画画得星星贴的事。"
+        },
+        {
+          "user": "哥哥先说完，我再说，然后妈妈讲故事。",
+          "assistant": "明白，哥哥先说，您再说，最后听故事。"
+        },
+        {
+          "user": "灯暗一点我会觉得舒服，但不要马上关掉。",
+          "assistant": "好的，灯光调暗但不立刻关灯。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "许晴岚工作日晚上每天在家陪两个孩子做什么？",
+      "answer": "睡前聊天。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，睡前聊天时谁先分享？",
+      "answer": "阿树先分享。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间顺序看，许晴岚是在孩子们分享前，还是分享后讲晚安故事？",
+      "answer": "分享后。",
+      "category": "temporal"
+    },
+    {
+      "question": "睡前关闭电视通常有什么好处？",
+      "answer": "减少分心。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小苗在对话中提到她画画老师的姓名了吗？",
+      "answer": "无法回答，未提到姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-025",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1 位祖辈",
+    "activity_preference": "文化学习",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "邹启航",
+      "QA_details": [
+        {
+          "user": "每周三工作日晚上，我想和芊芊、岳母在家一起听一段评书，岳母很喜欢这种文化节目。",
+          "assistant": "好的，我会把每周三晚上安排为家中评书欣赏时间。"
+        },
+        {
+          "user": "先把客厅收音机调好，别开太大声，听完再聊故事里的老地名。",
+          "assistant": "明白，先调收音机，听完再聊老地名。"
+        },
+        {
+          "user": "芊芊可以帮忙查地图，岳母讲她以前听过的版本。",
+          "assistant": "已记下，芊芊查地图，岳母分享旧版本。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "姜芊芊",
+      "QA_details": [
+        {
+          "user": "启航说周三晚上陪我妈听评书，我想准备平板查故事里的地名。",
+          "assistant": "好的，我会提醒您准备平板查地名。"
+        },
+        {
+          "user": "我妈喜欢边听边讲旧事，别催她太快结束。",
+          "assistant": "明白，晚上的学习交流会安排得轻松些。"
+        },
+        {
+          "user": "九点半前收尾就行，工作日别太晚。",
+          "assistant": "没问题，九点半前提醒收尾。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "罗秀珍",
+      "QA_details": [
+        {
+          "user": "周三晚上女儿和女婿陪我在家听评书，我想听三国那一段。",
+          "assistant": "好的，我会提醒他们准备三国评书。"
+        },
+        {
+          "user": "听到老地名的时候，让芊芊帮我查一下现在叫什么。",
+          "assistant": "明白，听到老地名时请芊芊查地图。"
+        },
+        {
+          "user": "启航把收音机声音调清楚一点就行，别太响。",
+          "assistant": "好的，提醒启航调清楚但不过响。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "邹启航一家每周三工作日晚上在家听什么？",
+      "answer": "听评书。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，芊芊在文化学习中会帮忙做什么？",
+      "answer": "查地名和地图。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，这次活动要在几点半前收尾？",
+      "answer": "九点半前。",
+      "category": "temporal"
+    },
+    {
+      "question": "评书通常属于哪类传统文化形式？",
+      "answer": "口头说唱艺术。",
+      "category": "open_domain"
+    },
+    {
+      "question": "罗秀珍在对话中提到评书演员姓名了吗？",
+      "answer": "无法回答，未提到演员。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "case_id": "HC-045",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2 个孩子",
+    "activity_preference": "运动健身",
+    "preference_polarity": "负向",
+    "time_of_day": "早上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "赵闻舟",
+      "QA_details": [
+        {
+          "user": "每周工作日早上带全家去户外晨跑太难了，两个孩子都起不来，我和思妍也赶时间。",
+          "assistant": "好的，我会记录全家对工作日早上户外晨跑偏负向。"
+        },
+        {
+          "user": "别再安排七点跑圈，早上要吃饭、背书包、赶通勤。",
+          "assistant": "明白，不再安排七点户外跑圈。"
+        },
+        {
+          "user": "如果要活动，就在玄关拉伸两分钟，周末再考虑运动。",
+          "assistant": "已记下，工作日早上只提醒短暂拉伸。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "乔思妍",
+      "QA_details": [
+        {
+          "user": "闻舟说工作日早上别晨跑，我同意，阿澈和小禾都会拖到快迟到。",
+          "assistant": "好的，我会减少工作日早上的晨跑提醒。"
+        },
+        {
+          "user": "早上最多做两分钟拉伸，别让孩子们换运动鞋。",
+          "assistant": "明白，只安排原地短拉伸。"
+        },
+        {
+          "user": "放学后如果天气好，再让他们去操场玩。",
+          "assistant": "没问题，运动更适合放学后。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "赵阿澈",
+      "QA_details": [
+        {
+          "user": "我不想工作日早上去户外跑步，跑完还要赶着上学。",
+          "assistant": "好的，我会记录您不喜欢早上户外跑步。"
+        },
+        {
+          "user": "如果只在玄关拉伸两分钟，我可以接受。",
+          "assistant": "明白，早上只提醒两分钟拉伸。"
+        },
+        {
+          "user": "放学后去操场玩球可以，早上不要跑。",
+          "assistant": "好的，运动安排优先放学后。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "赵小禾",
+      "QA_details": [
+        {
+          "user": "我早上不想换运动鞋去跑步，会来不及吃早饭。",
+          "assistant": "好的，我会记录早上不安排跑步。"
+        },
+        {
+          "user": "哥哥说拉伸两分钟可以，我也可以跟着做。",
+          "assistant": "明白，提醒您和哥哥一起短拉伸。"
+        },
+        {
+          "user": "放学后我想去操场跳格子，不想早上运动。",
+          "assistant": "好的，放学后再安排运动。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "赵小禾对工作日早上户外跑步是什么态度？",
+      "answer": "不想跑。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，这家人是否不偏好每周工作日早上的户外晨跑？",
+      "answer": "是的，不偏好。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，孩子们更适合早上跑步，还是放学后运动？",
+      "answer": "放学后运动。",
+      "category": "temporal"
+    },
+    {
+      "question": "工作日早上时间紧时，短拉伸比晨跑通常有什么优势？",
+      "answer": "更省时间。",
+      "category": "open_domain"
+    },
+    {
+      "question": "阿澈在对话中提到运动鞋品牌了吗？",
+      "answer": "无法回答，未提到品牌。",
+      "category": "adversarial"
+    }
+  ]
+}

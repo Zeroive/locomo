@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-038",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "运动健身",
+    "preference_polarity": "负向",
+    "time_of_day": "早上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐沐辰",
+      "QA_details": [
+        {
+          "user": "每周工作日早上带小羽和我妈去户外健身不太合适，孩子赶上学，妈也怕冷。",
+          "assistant": "好的，我会记录家里对工作日早上户外健身偏负向。"
+        },
+        {
+          "user": "别再推晨跑路线了，早上先吃饭和穿校服更重要。",
+          "assistant": "明白，工作日早上优先早餐和上学准备。"
+        },
+        {
+          "user": "如果妈想动一动，就在家门口走两分钟，不算运动计划。",
+          "assistant": "已记下，只提醒门口短走。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐小羽",
+      "QA_details": [
+        {
+          "user": "爸爸说工作日早上别去户外跑步，我也不想去，会迟到。",
+          "assistant": "好的，我会记录您不喜欢早上户外跑步。"
+        },
+        {
+          "user": "奶奶怕冷，我可以帮她拿外套，但早上不要走太久。",
+          "assistant": "明白，早上避免长时间户外活动。"
+        },
+        {
+          "user": "放学后我可以跳绳，早上不行。",
+          "assistant": "好的，运动更适合放学后。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "唐淑兰",
+      "QA_details": [
+        {
+          "user": "工作日早上我不想跟他们出去健身，外面有点冷。",
+          "assistant": "好的，我会记录您不想早上户外健身。"
+        },
+        {
+          "user": "小羽上学也急，别为了走路耽误孩子。",
+          "assistant": "明白，早上不安排影响上学的运动。"
+        },
+        {
+          "user": "我在门口站一会儿就行，不用走远。",
+          "assistant": "没问题，只提醒门口短暂停留。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "唐淑兰对工作日早上户外健身是什么态度？",
+      "answer": "不想去。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，这家人是否不适合每周工作日早上户外健身？",
+      "answer": "是的，不适合。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，小羽更愿意早上跑步，还是放学后跳绳？",
+      "answer": "放学后跳绳。",
+      "category": "temporal"
+    },
+    {
+      "question": "工作日早上孩子赶上学时，为什么不宜安排长时间运动？",
+      "answer": "容易耽误上学。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小羽在对话中提到校服颜色了吗？",
+      "answer": "无法回答，未提到颜色。",
+      "category": "adversarial"
+    }
+  ]
+}

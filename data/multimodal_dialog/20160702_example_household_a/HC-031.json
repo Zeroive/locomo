@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-031",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1 位祖辈",
+    "activity_preference": "运动健身",
+    "preference_polarity": "负向",
+    "time_of_day": "早上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "杜衡",
+      "QA_details": [
+        {
+          "user": "每周工作日早上去户外做健步操，我和嘉怡都觉得太赶，岳父也不太想去。",
+          "assistant": "好的，我会记录全家对工作日早上户外健身偏负向。"
+        },
+        {
+          "user": "嘉怡上班前要准备材料，岳父早上还要慢慢吃药，别再推七点半集合。",
+          "assistant": "明白，不再安排七点半户外健步操集合。"
+        },
+        {
+          "user": "如果岳父想活动，就午饭后在楼下走一会儿，早上别折腾。",
+          "assistant": "已记下，运动更适合午饭后短走。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "梁嘉怡",
+      "QA_details": [
+        {
+          "user": "杜衡说工作日早上别安排户外健身，我也同意，我爸早上状态慢。",
+          "assistant": "好的，我会减少工作日早上的户外健身提醒。"
+        },
+        {
+          "user": "我爸吃完早饭再下楼会舒服些，不用赶着做操。",
+          "assistant": "明白，先吃早饭，不强排健步操。"
+        },
+        {
+          "user": "明天只提醒大家拉伸一下肩颈，不要写成运动计划。",
+          "assistant": "没问题，只提醒简单肩颈拉伸。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁瑞生",
+      "QA_details": [
+        {
+          "user": "工作日早上我不想跟他们去户外做操，太早了。",
+          "assistant": "好的，我会记录您不喜欢工作日早上的户外做操。"
+        },
+        {
+          "user": "吃完药和早饭再走动比较合适，不用七点半就出门。",
+          "assistant": "明白，先吃药和早饭，再考虑走动。"
+        },
+        {
+          "user": "午饭后在楼下慢慢走一圈，我倒是可以。",
+          "assistant": "好的，午饭后可安排短走。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "梁瑞生对工作日早上户外做操是什么态度？",
+      "answer": "不想去。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，这家人是否不偏好每周工作日早上的户外健身？",
+      "answer": "是的，不偏好。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，梁瑞生更适合早上做操，还是午饭后短走？",
+      "answer": "午饭后短走。",
+      "category": "temporal"
+    },
+    {
+      "question": "老人早上吃药后再活动通常有什么好处？",
+      "answer": "减少不适。",
+      "category": "open_domain"
+    },
+    {
+      "question": "梁瑞生在对话中提到具体药品名称了吗？",
+      "answer": "无法回答，未提到药名。",
+      "category": "adversarial"
+    }
+  ]
+}

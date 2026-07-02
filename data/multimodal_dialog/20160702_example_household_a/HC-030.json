@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-030",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1 位祖辈",
+    "activity_preference": "户外自然",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "邵远",
+      "QA_details": [
+        {
+          "user": "这个月休息日早上，我想和南栀、妈去植物园走温室外的小路，妈喜欢看花草。",
+          "assistant": "好的，我会把这个月休息日早上的植物园自然散步安排给全家。"
+        },
+        {
+          "user": "早上八点半到，不走太远，先看兰花区外面的水池。",
+          "assistant": "明白，八点半到植物园，先看兰花区和水池。"
+        },
+        {
+          "user": "南栀提醒我带遮阳帽，妈要是累了就坐长椅休息。",
+          "assistant": "已记下，带遮阳帽，累了就在长椅休息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林南栀",
+      "QA_details": [
+        {
+          "user": "邵远说休息日早上陪妈去植物园，我想带一本花卉图册。",
+          "assistant": "好的，我会提醒您带花卉图册。"
+        },
+        {
+          "user": "妈看到不认识的花，我可以查给她看。",
+          "assistant": "明白，看到花草时可以一起查图册。"
+        },
+        {
+          "user": "如果太阳大，我们就走树荫多的那条路。",
+          "assistant": "没问题，太阳大时优先走树荫路线。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "邵桂芳",
+      "QA_details": [
+        {
+          "user": "儿子和儿媳这个月早上陪我去植物园，我想看看兰花和水池。",
+          "assistant": "好的，我会提醒他们先带您看兰花和水池。"
+        },
+        {
+          "user": "南栀带图册很好，我看到不认识的花就问她。",
+          "assistant": "明白，遇到不认识的花时请南栀查图册。"
+        },
+        {
+          "user": "我走累了就坐一会儿，不用赶路。",
+          "assistant": "好的，走累时提醒坐长椅休息。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "邵远这个月休息日早上想带家人去哪里？",
+      "answer": "去植物园。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，南栀会用什么帮助邵桂芳认识花草？",
+      "answer": "花卉图册。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，他们计划早上几点半到植物园？",
+      "answer": "八点半。",
+      "category": "temporal"
+    },
+    {
+      "question": "植物园通常适合观察什么？",
+      "answer": "花草植物。",
+      "category": "open_domain"
+    },
+    {
+      "question": "邵桂芳在对话中提到植物园年卡价格了吗？",
+      "answer": "无法回答，未提到价格。",
+      "category": "adversarial"
+    }
+  ]
+}

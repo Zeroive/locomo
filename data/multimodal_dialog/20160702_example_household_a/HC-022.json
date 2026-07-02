@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-022",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2 个孩子",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林芷",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和小麦、小舟在家做手影剧，不出去排队看演出。",
+          "assistant": "好的，我会把这周休息日晚上安排为在家的手影剧娱乐。"
+        },
+        {
+          "user": "先把卧室小灯调暗，小麦负责想故事，小舟负责做小狗手影。",
+          "assistant": "明白，灯光调暗后，小麦编故事，小舟做手影。"
+        },
+        {
+          "user": "八点开始，九点前收场，别影响第二天早起。",
+          "assistant": "已记下，八点开始，九点前结束。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林小麦",
+      "QA_details": [
+        {
+          "user": "妈妈说休息日晚上在家玩手影剧，我想编一个森林故事。",
+          "assistant": "好的，我会提醒您准备森林故事。"
+        },
+        {
+          "user": "小舟做小狗手影的时候，我来配旁白。",
+          "assistant": "明白，您负责旁白，小舟负责手影。"
+        },
+        {
+          "user": "九点前我要把小台灯和纸幕收好。",
+          "assistant": "好的，九点前提醒收好道具。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "林小舟",
+      "QA_details": [
+        {
+          "user": "我想和妈妈、姐姐晚上在家玩手影，我会做小狗。",
+          "assistant": "好的，我会提醒您练小狗手影。"
+        },
+        {
+          "user": "姐姐讲森林故事的时候，我的小狗可以跑出来。",
+          "assistant": "明白，小狗手影配合姐姐的故事出场。"
+        },
+        {
+          "user": "灯暗一点才看得清楚，但我不想全黑。",
+          "assistant": "没问题，灯光调暗但不全关。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "林芷这周休息日晚上想和两个孩子在家做什么？",
+      "answer": "玩手影剧。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，小麦和小舟在手影剧中分别负责什么？",
+      "answer": "小麦讲故事，小舟做手影。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，手影剧几点开始？",
+      "answer": "晚上八点。",
+      "category": "temporal"
+    },
+    {
+      "question": "手影剧为什么通常需要较暗的灯光？",
+      "answer": "方便看清影子。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小麦在对话中提到要邀请哪位同学来看手影剧了吗？",
+      "answer": "无法回答，未提到同学。",
+      "category": "adversarial"
+    }
+  ]
+}

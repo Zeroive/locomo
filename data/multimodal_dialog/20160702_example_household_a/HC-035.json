@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-035",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "贺云舒",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想带小竹和爸去草原旅行，这是我们每年最期待的一次出游。",
+          "assistant": "好的，我会把节假日早上的草原旅行记录为年度家庭出游。"
+        },
+        {
+          "user": "早上六点出发，先去观景台看草场，再去户外牧场体验区。",
+          "assistant": "明白，六点出发，先去观景台。"
+        },
+        {
+          "user": "爸怕风，小竹想看马，提醒我带围巾和小望远镜。",
+          "assistant": "已记下，出发前提醒带围巾和小望远镜。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "贺小竹",
+      "QA_details": [
+        {
+          "user": "妈妈说节假日早上带我和外公去草原，我想先看马。",
+          "assistant": "好的，我会提醒妈妈安排牧场体验区。"
+        },
+        {
+          "user": "外公怕风，我可以帮他拿围巾。",
+          "assistant": "明白，提醒您帮外公拿围巾。"
+        },
+        {
+          "user": "去观景台时，我想用小望远镜看远处的草场。",
+          "assistant": "好的，观景台提醒您用望远镜。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "贺长林",
+      "QA_details": [
+        {
+          "user": "云舒今年节假日早上带我和小竹去草原，我想先去观景台看看。",
+          "assistant": "好的，我会提醒她先安排观景台。"
+        },
+        {
+          "user": "草原早上风大，围巾别忘了，小竹看马的时候我慢慢走。",
+          "assistant": "明白，出门带围巾，去牧场时放慢步子。"
+        },
+        {
+          "user": "如果我走累了，就在户外长椅上等他们。",
+          "assistant": "没问题，累了就安排长椅休息。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "贺云舒今年节假日早上想带家人去哪里旅行？",
+      "answer": "去草原。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，小竹和外公各自期待什么？",
+      "answer": "小竹看马，外公看草场。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从行程顺序看，他们先去观景台，还是先去牧场体验区？",
+      "answer": "先去观景台。",
+      "category": "temporal"
+    },
+    {
+      "question": "草原早上带围巾通常有什么作用？",
+      "answer": "防风保暖。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小竹在对话中提到草原酒店名称了吗？",
+      "answer": "无法回答，未提到酒店。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-028",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1 位祖辈",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "马致远",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想带晓棠和妈去温泉小镇旅行，这是我们每年固定的家庭出游。",
+          "assistant": "好的，我会把节假日早上的温泉小镇旅行记为年度家庭出游。"
+        },
+        {
+          "user": "早上八点出发，先走小镇花街，再去户外温泉区。",
+          "assistant": "明白，八点出发，先去花街，再去户外温泉区。"
+        },
+        {
+          "user": "妈怕走太久，提醒我带折叠手杖和保温杯。",
+          "assistant": "已记下，出发前提醒您带折叠手杖和保温杯。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐晓棠",
+      "QA_details": [
+        {
+          "user": "致远说节假日早上带妈去温泉小镇，我想提前看无障碍步道。",
+          "assistant": "好的，我会提醒您查看无障碍步道。"
+        },
+        {
+          "user": "妈喜欢花街，我们先陪她慢慢逛，不赶着泡温泉。",
+          "assistant": "明白，先轻松逛花街。"
+        },
+        {
+          "user": "午前如果她累了，就找户外长椅休息。",
+          "assistant": "没问题，累了就安排长椅休息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "马秀英",
+      "QA_details": [
+        {
+          "user": "儿子和儿媳节假日早上带我去温泉小镇，我最想先看看花街。",
+          "assistant": "好的，我会提醒他们先陪您逛花街。"
+        },
+        {
+          "user": "户外温泉我也想去，但别走太快。",
+          "assistant": "明白，去温泉区时放慢步子。"
+        },
+        {
+          "user": "出门时帮我提醒致远带保温杯。",
+          "assistant": "好的，出发前提醒带保温杯。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "马致远今年节假日早上想带家人去哪里旅行？",
+      "answer": "温泉小镇。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，马秀英最想先看哪里？",
+      "answer": "先看花街。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从行程顺序看，他们先去花街，还是先去温泉区？",
+      "answer": "先去花街。",
+      "category": "temporal"
+    },
+    {
+      "question": "带老人出游时，无障碍步道通常有什么帮助？",
+      "answer": "方便行走。",
+      "category": "open_domain"
+    },
+    {
+      "question": "马秀英在对话中提到温泉小镇门票价格了吗？",
+      "answer": "无法回答，未提到票价。",
+      "category": "adversarial"
+    }
+  ]
+}

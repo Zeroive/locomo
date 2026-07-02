@@ -1,0 +1,151 @@
+{
+  "case_id": "HC-061",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2 个孩子 + 1 位祖辈",
+    "activity_preference": "社交餐饮",
+    "preference_polarity": "正向",
+    "time_of_day": "中午",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陈若澜",
+      "QA_details": [
+        {
+          "user": "这个月休息日中午，我想带阿宁、小果和我妈去户外花园餐厅，约邻居阿姨一起吃饭。",
+          "assistant": "好的，我会把这个月休息日中午安排为户外花园餐厅聚餐。"
+        },
+        {
+          "user": "阿宁喜欢和邻居家哥哥聊天，小果喜欢花园里的儿童餐椅。",
+          "assistant": "明白，优先选择靠花园的户外座位。"
+        },
+        {
+          "user": "先点主餐，再让孩子们分水果盘，别空腹吃甜点。",
+          "assistant": "已记下，先吃主餐，再分水果盘。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈阿宁",
+      "QA_details": [
+        {
+          "user": "妈妈说休息日中午带我们和外婆去花园餐厅，我想见邻居哥哥。",
+          "assistant": "好的，我会提醒妈妈安排邻居一起用餐。"
+        },
+        {
+          "user": "小果坐儿童椅的时候，我帮她拿水杯。",
+          "assistant": "明白，提醒您照看妹妹。"
+        },
+        {
+          "user": "吃完主餐后，我再吃水果。",
+          "assistant": "好的，先主餐后水果。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈小果",
+      "QA_details": [
+        {
+          "user": "我想坐花园餐厅的儿童椅，也想和哥哥一起吃水果。",
+          "assistant": "好的，我会提醒家人选儿童椅。"
+        },
+        {
+          "user": "外婆和邻居阿姨聊天的时候，我坐在妈妈旁边。",
+          "assistant": "明白，聚餐时坐妈妈旁边。"
+        },
+        {
+          "user": "哥哥帮我拿水杯，我就不乱跑。",
+          "assistant": "好的，提醒哥哥帮您拿水杯。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周秀琴",
+      "QA_details": [
+        {
+          "user": "若澜这个月中午带我和孩子们去花园餐厅，我想和邻居阿姨坐外面聊聊。",
+          "assistant": "好的，我会提醒若澜预订户外座位。"
+        },
+        {
+          "user": "孩子们先吃饭再吃水果，这样稳妥些。",
+          "assistant": "明白，先主餐后水果。"
+        },
+        {
+          "user": "别催我们太快走，难得见一次邻居。",
+          "assistant": "没问题，午餐时间安排宽松。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陈若澜这个月休息日中午想带家人去哪里聚餐？",
+      "answer": "花园餐厅。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，这次午餐是否有社交目的？",
+      "answer": "是的，约邻居。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从进餐顺序看，孩子们先吃主餐，还是先吃水果？",
+      "answer": "先吃主餐。",
+      "category": "temporal"
+    },
+    {
+      "question": "户外花园餐厅通常适合什么活动？",
+      "answer": "用餐和聊天。",
+      "category": "open_domain"
+    },
+    {
+      "question": "阿宁在对话中提到邻居哥哥的学校了吗？",
+      "answer": "无法回答，未提到学校。",
+      "category": "adversarial"
+    }
+  ]
+}

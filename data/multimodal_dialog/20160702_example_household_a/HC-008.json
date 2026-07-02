@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-008",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1 个孩子",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陈宇航",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和若琳、豆豆在家玩桌游，不用再安排外出。",
+          "assistant": "好的，我会把这周休息日晚上设为全家在家桌游时间。"
+        },
+        {
+          "user": "豆豆喜欢猜词游戏，若琳说可以准备水果和热茶。",
+          "assistant": "明白，桌游以猜词游戏为主，并准备水果和热茶。"
+        },
+        {
+          "user": "晚饭后八点开始刚好，玩到九点半就让豆豆洗漱。",
+          "assistant": "已记下，晚上八点开始，九点半提醒豆豆洗漱。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "李若琳",
+      "QA_details": [
+        {
+          "user": "宇航说周末晚上在家玩桌游，我觉得挺好，豆豆这周也想和我们一起玩。",
+          "assistant": "好的，我会保留周末晚上家庭桌游安排。"
+        },
+        {
+          "user": "我先把客厅茶几收出来，水果切小块，方便孩子边玩边吃。",
+          "assistant": "明白，提前整理客厅茶几，并准备小块水果。"
+        },
+        {
+          "user": "如果豆豆赢了，别让他太兴奋，九点半还是要收场。",
+          "assistant": "没问题，九点半会提醒收场和洗漱。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈豆豆",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说休息日晚上在家陪我玩桌游，我想先玩猜词。",
+          "assistant": "好的，我会提醒爸爸妈妈先陪您玩猜词游戏。"
+        },
+        {
+          "user": "我想坐在客厅地毯上，不想去餐桌那边玩。",
+          "assistant": "明白，桌游地点优先安排在客厅地毯附近。"
+        },
+        {
+          "user": "九点半如果还没结束，你提醒我收好卡片再去洗漱。",
+          "assistant": "好的，九点半提醒您收卡片并洗漱。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陈宇航一家休息日晚上在家计划做什么？",
+      "answer": "一起玩桌游。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，这次居家娱乐是否是全家共同参与？",
+      "answer": "是的，三人都参与。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，豆豆九点半后要做什么？",
+      "answer": "收卡片并洗漱。",
+      "category": "temporal"
+    },
+    {
+      "question": "桌游通常适合什么样的家庭娱乐？",
+      "answer": "多人互动娱乐。",
+      "category": "open_domain"
+    },
+    {
+      "question": "豆豆在对话中提到桌游的购买价格了吗？",
+      "answer": "无法回答，未提到价格。",
+      "category": "adversarial"
+    }
+  ]
+}

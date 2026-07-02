@@ -1,0 +1,156 @@
+{
+  "case_id": "HC-064",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "夫妻 + 2 位祖辈",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆嘉言",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和清欢陪我爸、她妈在家打牌，不安排外出。",
+          "assistant": "好的，我会把这周休息日晚上安排为家中打牌娱乐。"
+        },
+        {
+          "user": "我爸喜欢打升级，清欢妈妈想先喝茶，我来洗牌。",
+          "assistant": "明白，先准备热茶，再开始打升级。"
+        },
+        {
+          "user": "九点半前收牌，老人别坐太久。",
+          "assistant": "已记下，九点半前收牌休息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈清欢",
+      "QA_details": [
+        {
+          "user": "嘉言说周末晚上陪两位老人打牌，我先准备茶点。",
+          "assistant": "好的，我会提醒您准备茶点。"
+        },
+        {
+          "user": "我妈不太会升级，就让嘉言爸爸慢慢讲规则。",
+          "assistant": "明白，打牌前先讲规则。"
+        },
+        {
+          "user": "输赢别太认真，主要是陪他们热闹一下。",
+          "assistant": "没问题，重点放在陪伴娱乐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆建平",
+      "QA_details": [
+        {
+          "user": "嘉言和清欢休息日晚上陪我们在家打牌，我想打升级。",
+          "assistant": "好的，我会提醒他们准备升级牌局。"
+        },
+        {
+          "user": "亲家母不会的话，我可以慢慢教。",
+          "assistant": "明白，您先讲规则。"
+        },
+        {
+          "user": "九点半收也行，别坐得腰酸。",
+          "assistant": "好的，九点半提醒收牌。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "沈玉芬",
+      "QA_details": [
+        {
+          "user": "女儿和女婿周末晚上陪我们打牌，我想先喝杯茶。",
+          "assistant": "好的，我会提醒他们准备热茶。"
+        },
+        {
+          "user": "升级规则我不熟，让嘉言爸爸讲慢一点。",
+          "assistant": "明白，开始前先慢慢讲规则。"
+        },
+        {
+          "user": "大家开心就好，别计较输赢。",
+          "assistant": "没问题，牌局以轻松娱乐为主。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陆嘉言这周休息日晚上想和家人在家做什么？",
+      "answer": "在家打牌。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，陆建平会帮沈玉芬做什么？",
+      "answer": "讲升级规则。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，他们先喝茶讲规则，还是先正式打牌？",
+      "answer": "先喝茶讲规则。",
+      "category": "temporal"
+    },
+    {
+      "question": "家庭打牌通常属于什么休闲活动？",
+      "answer": "居家娱乐。",
+      "category": "open_domain"
+    },
+    {
+      "question": "沈玉芬在对话中提到茶叶品牌了吗？",
+      "answer": "无法回答，未提到品牌。",
+      "category": "adversarial"
+    }
+  ]
+}

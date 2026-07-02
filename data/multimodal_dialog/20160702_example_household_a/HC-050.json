@@ -1,0 +1,161 @@
+{
+  "case_id": "HC-050",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "程砚秋",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和云舒、爸、小禾在家看老照片，做一场家庭投影相册。",
+          "assistant": "好的，我会把这周休息日晚上安排为家中投影相册时间。"
+        },
+        {
+          "user": "爸负责讲老照片里的故事，小禾负责翻下一张，我来调投影。",
+          "assistant": "明白，爷爷讲故事，小禾翻照片，您调投影。"
+        },
+        {
+          "user": "九点半前结束，云舒准备点温水就好。",
+          "assistant": "已记下，九点半前结束并准备温水。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林云舒",
+      "QA_details": [
+        {
+          "user": "砚秋说周末晚上看老照片，我想先把客厅灯调暗。",
+          "assistant": "好的，我会提醒您调暗客厅灯。"
+        },
+        {
+          "user": "爸讲到老家的照片时，小禾肯定会问很多问题。",
+          "assistant": "明白，晚上会留时间给孩子提问。"
+        },
+        {
+          "user": "不要准备太多零食，温水和一点水果就行。",
+          "assistant": "没问题，只准备温水和水果。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "程小禾",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈和爷爷周末晚上陪我看老照片，我想负责翻下一张。",
+          "assistant": "好的，我会提醒大家让您翻照片。"
+        },
+        {
+          "user": "爷爷讲老家的照片时，我想问那条河在哪里。",
+          "assistant": "明白，爷爷讲照片时您可以提问。"
+        },
+        {
+          "user": "看完以后我想喝水再睡。",
+          "assistant": "好的，看完提醒喝水休息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "程怀山",
+      "QA_details": [
+        {
+          "user": "砚秋和云舒周末晚上陪我和小禾看老照片，我可以讲讲老家的故事。",
+          "assistant": "好的，我会提醒他们留时间听您讲老家故事。"
+        },
+        {
+          "user": "小禾翻照片慢一点，我看到河边那张要多讲几句。",
+          "assistant": "明白，河边照片停久一点。"
+        },
+        {
+          "user": "灯暗些看投影舒服，但不要全关。",
+          "assistant": "没问题，灯光调暗但不全关。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "程砚秋一家这周休息日晚上在家做什么？",
+      "answer": "看投影相册。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，爷爷和小禾分别负责什么？",
+      "answer": "爷爷讲故事，小禾翻照片。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，投影相册要在几点半前结束？",
+      "answer": "九点半前。",
+      "category": "temporal"
+    },
+    {
+      "question": "看老照片通常有什么家庭意义？",
+      "answer": "回忆家庭故事。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小禾在对话中提到老家河流名称了吗？",
+      "answer": "无法回答，未提到河名。",
+      "category": "adversarial"
+    }
+  ]
+}

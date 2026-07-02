@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-029",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1 位祖辈",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "韩知远",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和蔚然、岳母在家听老唱片，不安排外出。",
+          "assistant": "好的，我会把这周休息日晚上安排为家中听老唱片。"
+        },
+        {
+          "user": "岳母喜欢那张越剧唱片，蔚然可以先把唱机针头检查一下。",
+          "assistant": "明白，先检查唱机，再播放越剧唱片。"
+        },
+        {
+          "user": "我来泡茶，灯光调暖一点，让客厅舒服些。",
+          "assistant": "已记下，准备热茶并调暖客厅灯光。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈蔚然",
+      "QA_details": [
+        {
+          "user": "知远说周末晚上陪我妈听唱片，我先找出那张越剧专辑。",
+          "assistant": "好的，我会提醒您找越剧专辑。"
+        },
+        {
+          "user": "我妈听到熟悉的唱段会跟着哼，我们就陪她慢慢听。",
+          "assistant": "明白，晚上以陪伴和欣赏为主。"
+        },
+        {
+          "user": "九点半前把唱机收好，别让她坐太久。",
+          "assistant": "没问题，九点半前提醒收唱机。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "沈佩兰",
+      "QA_details": [
+        {
+          "user": "女儿和女婿休息日晚上陪我在家听老唱片，我想听越剧。",
+          "assistant": "好的，我会提醒他们准备越剧唱片。"
+        },
+        {
+          "user": "知远泡的茶淡一点就好，灯别太亮。",
+          "assistant": "明白，茶淡一点，灯光调柔和。"
+        },
+        {
+          "user": "听完一面唱片就行，不用放太久。",
+          "assistant": "好的，听完一面后提醒收尾。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "韩知远这周休息日晚上想和家人在家做什么？",
+      "answer": "听老唱片。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，沈佩兰想听哪类唱片？",
+      "answer": "越剧唱片。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，他们先检查唱机，还是先播放唱片？",
+      "answer": "先检查唱机。",
+      "category": "temporal"
+    },
+    {
+      "question": "越剧通常属于哪类艺术形式？",
+      "answer": "传统戏曲。",
+      "category": "open_domain"
+    },
+    {
+      "question": "沈佩兰在对话中提到唱片价格了吗？",
+      "answer": "无法回答，未提到价格。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-026",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1 位祖辈",
+    "activity_preference": "社交餐饮",
+    "preference_polarity": "正向",
+    "time_of_day": "中午",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆承安",
+      "QA_details": [
+        {
+          "user": "这个月休息日中午，我想和以宁、爸去公园旁边的露天茶餐厅，顺便见见爸的老同事。",
+          "assistant": "好的，我会把这个月休息日中午安排为露天茶餐厅聚餐。"
+        },
+        {
+          "user": "爸喜欢坐外面晒太阳，以宁说要提前订靠树荫的位置。",
+          "assistant": "明白，优先预订户外树荫座位。"
+        },
+        {
+          "user": "菜点清淡一点，粥、蒸点和热茶就好，方便老人聊天。",
+          "assistant": "已记下，餐点以清淡粥、蒸点和热茶为主。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "顾以宁",
+      "QA_details": [
+        {
+          "user": "承安说休息日中午带爸去露天茶餐厅，我想先确认有没有无台阶入口。",
+          "assistant": "好的，我会提醒您确认无台阶入口。"
+        },
+        {
+          "user": "爸和老同事见面肯定开心，我们别催他们太快结束。",
+          "assistant": "明白，午餐时间安排得宽松一些。"
+        },
+        {
+          "user": "吃完如果天气舒服，可以陪爸在公园边走一小圈。",
+          "assistant": "没问题，饭后天气合适就安排短步行。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆建民",
+      "QA_details": [
+        {
+          "user": "休息日中午儿子和儿媳陪我去茶餐厅，我想坐户外位置等老同事。",
+          "assistant": "好的，我会提醒他们预订户外座位。"
+        },
+        {
+          "user": "我想喝热茶，吃点蒸饺，别点太油的菜。",
+          "assistant": "明白，午餐选择热茶和清淡蒸点。"
+        },
+        {
+          "user": "如果饭后不累，我想在公园边慢慢走一会儿。",
+          "assistant": "好的，饭后不累时提醒散步。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陆承安这个月休息日中午想带家人去哪里聚餐？",
+      "answer": "露天茶餐厅。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，这次午餐是否有社交目的？",
+      "answer": "是的，见老同事。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间顺序看，他们先吃午餐，还是先饭后散步？",
+      "answer": "先吃午餐。",
+      "category": "temporal"
+    },
+    {
+      "question": "给老人安排户外餐位时，为什么要注意无台阶入口？",
+      "answer": "方便通行。",
+      "category": "open_domain"
+    },
+    {
+      "question": "陆建民在对话中提到老同事姓名了吗？",
+      "answer": "无法回答，未提到姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

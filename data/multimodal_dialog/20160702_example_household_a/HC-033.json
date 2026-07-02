@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-033",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "社交餐饮",
+    "preference_polarity": "正向",
+    "time_of_day": "中午",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "严书瑶",
+      "QA_details": [
+        {
+          "user": "这个月休息日中午，我想带糖糖和爸去户外农庄吃饭，顺便见爸的棋友。",
+          "assistant": "好的，我会把这个月休息日中午安排为户外农庄聚餐。"
+        },
+        {
+          "user": "糖糖喜欢农庄的小院子，爸和棋友聊天也方便。",
+          "assistant": "明白，优先选择小院户外座位。"
+        },
+        {
+          "user": "先点清蒸鱼和青菜，孩子再选一份南瓜饼。",
+          "assistant": "已记下，午餐先点清淡菜和南瓜饼。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "严糖糖",
+      "QA_details": [
+        {
+          "user": "妈妈说休息日中午带我和外公去农庄，我想坐小院子里。",
+          "assistant": "好的，我会提醒妈妈订小院座位。"
+        },
+        {
+          "user": "外公见棋友的时候，我想吃南瓜饼。",
+          "assistant": "明白，午餐提醒点南瓜饼。"
+        },
+        {
+          "user": "吃完饭如果外公还在聊天，我可以在旁边看花。",
+          "assistant": "好的，饭后可以在院子里看花。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "严正德",
+      "QA_details": [
+        {
+          "user": "书瑶这个月休息日中午带我和糖糖去农庄，我想和老棋友坐外面聊聊。",
+          "assistant": "好的，我会提醒她预订户外座位。"
+        },
+        {
+          "user": "菜清淡些就行，糖糖喜欢南瓜饼可以给她点。",
+          "assistant": "明白，餐点以清淡为主，并给糖糖点南瓜饼。"
+        },
+        {
+          "user": "别催我太快走，难得见一次棋友。",
+          "assistant": "没问题，午餐时间安排宽松。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "严书瑶这个月休息日中午想带家人去哪里吃饭？",
+      "answer": "户外农庄。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，这次午餐是否包含社交目的？",
+      "answer": "是的，见棋友。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从进餐顺序看，糖糖是先吃饭，还是饭后看花？",
+      "answer": "先吃饭。",
+      "category": "temporal"
+    },
+    {
+      "question": "户外农庄聚餐通常适合什么活动？",
+      "answer": "用餐和聊天。",
+      "category": "open_domain"
+    },
+    {
+      "question": "严正德在对话中提到棋友电话号码了吗？",
+      "answer": "无法回答，未提到电话。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "case_id": "HC-006",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1 个孩子",
+    "activity_preference": "亲子陪伴",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每天",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈桂兰",
+      "QA_details": [
+        {
+          "user": "工作日晚上我每天都想陪乐乐在家拼一会儿积木，他白天上学回来就盼着这个时间。",
+          "assistant": "好的，我会把每天工作日晚上在家拼积木记为您陪乐乐的固定安排。"
+        },
+        {
+          "user": "先让他洗手吃水果，再坐到客厅地毯上，我陪他搭那座小火车站。",
+          "assistant": "明白，顺序是先洗手吃水果，再到客厅地毯上搭小火车站。"
+        },
+        {
+          "user": "他如果搭不好容易急，你提醒我慢慢陪他说，不要替他全部完成。",
+          "assistant": "已记下，提醒您多鼓励乐乐，让他自己尝试完成。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈乐乐",
+      "QA_details": [
+        {
+          "user": "奶奶晚上会陪我在家搭积木，我想把火车站旁边再加一个小桥。",
+          "assistant": "好的，我会提醒您晚上和奶奶一起给火车站加小桥。"
+        },
+        {
+          "user": "我放学回来先吃水果，然后再和奶奶去客厅玩。",
+          "assistant": "明白，放学回家后先吃水果，再去客厅和奶奶玩。"
+        },
+        {
+          "user": "如果我搭不好，我想让奶奶教我，不要直接帮我拼完。",
+          "assistant": "没问题，我会提醒奶奶先教您方法。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "沈桂兰工作日晚上每天在家陪乐乐做什么？",
+      "answer": "陪他拼积木。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合两人的对话，乐乐是否喜欢奶奶每天晚上的陪伴？",
+      "answer": "喜欢，很期待。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间顺序看，乐乐是先吃水果，还是先去客厅拼积木？",
+      "answer": "先吃水果。",
+      "category": "temporal"
+    },
+    {
+      "question": "祖辈陪孩子拼积木通常属于什么类型的家庭活动？",
+      "answer": "亲子陪伴。",
+      "category": "open_domain"
+    },
+    {
+      "question": "乐乐在对话中提到自己的班主任姓名了吗？",
+      "answer": "无法回答，未提到姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

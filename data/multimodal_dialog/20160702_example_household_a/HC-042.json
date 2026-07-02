@@ -1,0 +1,176 @@
+{
+  "case_id": "HC-042",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2 个孩子",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周临川",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想和星澜带安安、朵朵去海岛旅行，这是我们每年一次的大出游。",
+          "assistant": "好的，我会把节假日早上的海岛旅行记录为年度家庭出游。"
+        },
+        {
+          "user": "早上六点半出发，先去码头坐船，再到岛上看灯塔。",
+          "assistant": "明白，六点半出发，先去码头坐船。"
+        },
+        {
+          "user": "安安想看灯塔，朵朵想捡贝壳，提醒我带防晒衣和小桶。",
+          "assistant": "已记下，出发前提醒带防晒衣和小桶。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林星澜",
+      "QA_details": [
+        {
+          "user": "临川说节假日早上去海岛，我想先查船班时间。",
+          "assistant": "好的，我会提醒您提前查船班。"
+        },
+        {
+          "user": "两个孩子容易晒伤，先给他们穿防晒衣，再上船。",
+          "assistant": "明白，上船前提醒穿好防晒衣。"
+        },
+        {
+          "user": "到岛上先看灯塔，午前再去沙滩捡贝壳。",
+          "assistant": "没问题，先灯塔，再沙滩。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "周安安",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说节假日早上带我们去海岛，我最想看灯塔。",
+          "assistant": "好的，我会提醒爸爸妈妈先安排灯塔。"
+        },
+        {
+          "user": "妹妹捡贝壳的时候，我可以帮她拿小桶。",
+          "assistant": "明白，提醒您帮妹妹拿小桶。"
+        },
+        {
+          "user": "坐船前我会先穿防晒衣。",
+          "assistant": "好的，上船前提醒穿防晒衣。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周朵朵",
+      "QA_details": [
+        {
+          "user": "我想去海岛沙滩捡贝壳，也想和哥哥一起看灯塔。",
+          "assistant": "好的，我会提醒家人安排灯塔和沙滩。"
+        },
+        {
+          "user": "哥哥帮我拿小桶的时候，我要挑白色贝壳。",
+          "assistant": "明白，提醒您带小桶捡贝壳。"
+        },
+        {
+          "user": "妈妈说先坐船，我会跟紧爸爸妈妈。",
+          "assistant": "好的，坐船时提醒您跟紧家人。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "周临川一家今年节假日早上计划去哪里旅行？",
+      "answer": "去海岛。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，安安和朵朵分别期待什么？",
+      "answer": "安安看灯塔，朵朵捡贝壳。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从行程顺序看，他们先坐船，还是先看灯塔？",
+      "answer": "先坐船。",
+      "category": "temporal"
+    },
+    {
+      "question": "海岛旅行穿防晒衣通常有什么作用？",
+      "answer": "防晒。",
+      "category": "open_domain"
+    },
+    {
+      "question": "朵朵在对话中提到海岛酒店名称了吗？",
+      "answer": "无法回答，未提到酒店。",
+      "category": "adversarial"
+    }
+  ]
+}

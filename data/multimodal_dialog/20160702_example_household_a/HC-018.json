@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-018",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2 个孩子",
+    "activity_preference": "文化学习",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "邵宁",
+      "QA_details": [
+        {
+          "user": "每周四工作日晚上，我想带一一和小川在家做成语故事小课堂。",
+          "assistant": "好的，我会把每周四晚上安排为在家的成语故事学习。"
+        },
+        {
+          "user": "一一负责读故事，小川负责画里面的人物，我最后讲意思。",
+          "assistant": "明白，一一读故事，小川画人物，您讲成语含义。"
+        },
+        {
+          "user": "九点前结束，孩子们第二天还要上课。",
+          "assistant": "已记下，九点前结束学习。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "邵一一",
+      "QA_details": [
+        {
+          "user": "妈妈说周四晚上在家学成语故事，我想读守株待兔。",
+          "assistant": "好的，我会提醒您准备《守株待兔》。"
+        },
+        {
+          "user": "小川可以画兔子，我来读故事给他听。",
+          "assistant": "明白，您读故事，小川画兔子。"
+        },
+        {
+          "user": "读完以后，我想让妈妈讲这个成语是什么意思。",
+          "assistant": "好的，读完提醒妈妈讲含义。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "邵小川",
+      "QA_details": [
+        {
+          "user": "姐姐周四晚上读成语故事给我听，我想画一只兔子。",
+          "assistant": "好的，我会提醒您准备画兔子的彩笔。"
+        },
+        {
+          "user": "如果我不懂守株待兔，妈妈再给我讲一遍。",
+          "assistant": "明白，不懂时请妈妈再解释。"
+        },
+        {
+          "user": "九点前我要收好彩笔和故事卡。",
+          "assistant": "没问题，九点前提醒收好材料。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "邵宁每周四工作日晚上在家带孩子学什么？",
+      "answer": "学成语故事。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，一一和小川分别负责什么？",
+      "answer": "一一读，小川画。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，成语学习要在几点前结束？",
+      "answer": "九点前。",
+      "category": "temporal"
+    },
+    {
+      "question": "守株待兔通常属于哪类语文学习内容？",
+      "answer": "成语故事。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小川在对话中提到彩笔品牌了吗？",
+      "answer": "无法回答，未提到品牌。",
+      "category": "adversarial"
+    }
+  ]
+}

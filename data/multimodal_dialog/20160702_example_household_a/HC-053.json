@@ -1,0 +1,161 @@
+{
+  "case_id": "HC-053",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "文化学习",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐景初",
+      "QA_details": [
+        {
+          "user": "每周四工作日晚上，我想和若云、爸、小栀在家看一段书法课视频。",
+          "assistant": "好的，我会把每周四晚上安排为家中书法文化学习。"
+        },
+        {
+          "user": "爸先讲毛笔怎么握，小栀练横画，若云帮她铺练习纸。",
+          "assistant": "明白，爷爷讲握笔，小栀练横画，若云铺纸。"
+        },
+        {
+          "user": "九点前结束，墨汁和毛笔要收好。",
+          "assistant": "已记下，九点前结束并收好文具。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周若云",
+      "QA_details": [
+        {
+          "user": "景初说周四晚上让爸教小栀书法，我先把旧报纸铺在桌上。",
+          "assistant": "好的，我会提醒您铺旧报纸。"
+        },
+        {
+          "user": "小栀练字时，我在旁边帮她擦手，不催她写快。",
+          "assistant": "明白，练字时慢慢来。"
+        },
+        {
+          "user": "爸讲完握笔后，再让孩子开始蘸墨。",
+          "assistant": "没问题，先听握笔，再蘸墨练习。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "唐小栀",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈和爷爷周四晚上在家教我写毛笔字，我想先学横画。",
+          "assistant": "好的，我会提醒爷爷先教横画。"
+        },
+        {
+          "user": "爷爷先教我握笔，我再蘸墨。",
+          "assistant": "明白，先学握笔，再开始蘸墨。"
+        },
+        {
+          "user": "写完我要把毛笔洗干净。",
+          "assistant": "好的，写完提醒清洗毛笔。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "唐怀礼",
+      "QA_details": [
+        {
+          "user": "景初和若云周四晚上陪小栀学书法，我可以先教她握笔。",
+          "assistant": "好的，我会提醒您先讲握笔方法。"
+        },
+        {
+          "user": "孩子先练横画，不要一上来写复杂字。",
+          "assistant": "明白，先练简单笔画。"
+        },
+        {
+          "user": "九点前收好墨汁，别弄到桌上。",
+          "assistant": "没问题，九点前提醒收拾墨汁。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "唐景初一家每周四工作日晚上在家学什么？",
+      "answer": "学书法。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，爷爷会先教小栀什么？",
+      "answer": "握毛笔。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，小栀先学握笔，还是先蘸墨？",
+      "answer": "先学握笔。",
+      "category": "temporal"
+    },
+    {
+      "question": "毛笔字通常属于哪类传统文化学习？",
+      "answer": "书法学习。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小栀在对话中提到毛笔品牌了吗？",
+      "answer": "无法回答，未提到品牌。",
+      "category": "adversarial"
+    }
+  ]
+}

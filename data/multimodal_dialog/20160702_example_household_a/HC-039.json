@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-039",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "文化学习",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "罗清越",
+      "QA_details": [
+        {
+          "user": "每周四工作日晚上，我想和小澄、爸在家看一集纪录片，讲中国古桥那集就不错。",
+          "assistant": "好的，我会把每周四晚上安排为家中文化纪录片时间。"
+        },
+        {
+          "user": "小澄先看桥的结构，爸可以讲他年轻时见过的石拱桥。",
+          "assistant": "明白，小澄看结构，外公讲石拱桥经历。"
+        },
+        {
+          "user": "看完让小澄画一座桥，九点前收本子。",
+          "assistant": "已记下，看完画桥，九点前收本子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "罗小澄",
+      "QA_details": [
+        {
+          "user": "妈妈说周四晚上和外公一起看古桥纪录片，我想画一座石拱桥。",
+          "assistant": "好的，我会提醒您准备画桥的本子。"
+        },
+        {
+          "user": "外公讲他以前见过的桥，我想听桥洞为什么是弯的。",
+          "assistant": "明白，提醒外公讲石拱桥的样子。"
+        },
+        {
+          "user": "九点前我把画收起来，第二天还要上学。",
+          "assistant": "好的，九点前提醒收本子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "罗建业",
+      "QA_details": [
+        {
+          "user": "清越周四晚上陪小澄看古桥纪录片，我可以讲讲老家那座石拱桥。",
+          "assistant": "好的，我会提醒您分享石拱桥的故事。"
+        },
+        {
+          "user": "孩子看完再画，会记得更牢。",
+          "assistant": "明白，先看纪录片，再画桥。"
+        },
+        {
+          "user": "别看到太晚，工作日晚上九点前停。",
+          "assistant": "没问题，九点前提醒结束。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "罗清越每周四工作日晚上想和家人在家看什么？",
+      "answer": "古桥纪录片。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，外公会讲什么内容？",
+      "answer": "石拱桥故事。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，小澄先看纪录片，还是先画桥？",
+      "answer": "先看纪录片。",
+      "category": "temporal"
+    },
+    {
+      "question": "石拱桥通常属于哪类文化学习内容？",
+      "answer": "建筑文化。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小澄在对话中提到纪录片导演姓名了吗？",
+      "answer": "无法回答，未提到导演。",
+      "category": "adversarial"
+    }
+  ]
+}

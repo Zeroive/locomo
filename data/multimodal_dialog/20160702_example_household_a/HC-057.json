@@ -1,0 +1,151 @@
+{
+  "case_id": "HC-057",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2 个孩子 + 1 位祖辈",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林念初",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和小川、小南、我妈在家玩家庭猜谜，不去外面排队。",
+          "assistant": "好的，我会把这周休息日晚上安排为家中猜谜娱乐。"
+        },
+        {
+          "user": "小川负责读谜面，小南负责按铃抢答，我妈讲她小时候听过的老谜语。",
+          "assistant": "明白，小川读谜面，小南抢答，外婆讲老谜语。"
+        },
+        {
+          "user": "八点开始，九点半前收好铃和卡片。",
+          "assistant": "已记下，八点开始，九点半前收好道具。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林小川",
+      "QA_details": [
+        {
+          "user": "妈妈说休息日晚上在家猜谜，我想负责读谜面。",
+          "assistant": "好的，我会提醒您准备谜语卡。"
+        },
+        {
+          "user": "小南按铃太快的话，我要先把题读完。",
+          "assistant": "明白，提醒妹妹等谜面读完再抢答。"
+        },
+        {
+          "user": "外婆讲老谜语的时候，我想记下来。",
+          "assistant": "好的，提醒您准备本子记录。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "林小南",
+      "QA_details": [
+        {
+          "user": "我想和妈妈、哥哥、外婆晚上在家猜谜，我负责按铃。",
+          "assistant": "好的，我会提醒大家把抢答铃给您。"
+        },
+        {
+          "user": "哥哥读完谜面我再按，不抢太早。",
+          "assistant": "明白，等哥哥读完再抢答。"
+        },
+        {
+          "user": "九点半前我把铃放回盒子里。",
+          "assistant": "好的，九点半前提醒收铃。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "陈桂珍",
+      "QA_details": [
+        {
+          "user": "念初周末晚上陪我和孩子们在家猜谜，我想讲几个老谜语。",
+          "assistant": "好的，我会提醒家人留时间听您讲老谜语。"
+        },
+        {
+          "user": "小川读题，小南抢答，我就在旁边提示一点。",
+          "assistant": "明白，您负责适当提示。"
+        },
+        {
+          "user": "声音别太大，晚上别吵到邻居。",
+          "assistant": "没问题，提醒控制音量。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "林念初这周休息日晚上想和家人在家做什么？",
+      "answer": "玩家庭猜谜。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，小川和小南分别负责什么？",
+      "answer": "小川读谜面，小南按铃。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，猜谜几点开始？",
+      "answer": "晚上八点。",
+      "category": "temporal"
+    },
+    {
+      "question": "晚上在家娱乐为什么要控制音量？",
+      "answer": "避免吵到邻居。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小川在对话中提到谜语书出版社了吗？",
+      "answer": "无法回答，未提到出版社。",
+      "category": "adversarial"
+    }
+  ]
+}

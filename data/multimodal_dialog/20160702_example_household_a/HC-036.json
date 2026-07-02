@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-036",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "苏明澈",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和小棠、妈在家开一场家庭卡拉OK，不去外面唱。",
+          "assistant": "好的，我会把这周休息日晚上安排为家中卡拉OK。"
+        },
+        {
+          "user": "小棠先唱动画片主题曲，妈想听老歌，我来调麦克风音量。",
+          "assistant": "明白，小棠先唱，外婆听老歌，您调麦克风。"
+        },
+        {
+          "user": "九点半前结束，别吵到邻居。",
+          "assistant": "已记下，九点半前结束并控制音量。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏小棠",
+      "QA_details": [
+        {
+          "user": "爸爸说休息日晚上在家唱歌，我想先唱动画片主题曲。",
+          "assistant": "好的，我会提醒爸爸先给您点主题曲。"
+        },
+        {
+          "user": "外婆唱老歌的时候，我可以帮她拿歌词本。",
+          "assistant": "明白，提醒您帮外婆拿歌词本。"
+        },
+        {
+          "user": "唱完以后我想喝温水，不想再吃零食。",
+          "assistant": "好的，唱完提醒准备温水。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "苏桂芬",
+      "QA_details": [
+        {
+          "user": "明澈周末晚上陪我和小棠在家唱歌，我想唱一首老歌。",
+          "assistant": "好的，我会提醒他们准备老歌曲目。"
+        },
+        {
+          "user": "小棠先唱也好，我在旁边看歌词。",
+          "assistant": "明白，小棠先唱，您看歌词准备。"
+        },
+        {
+          "user": "声音别开太大，九点半前收了就行。",
+          "assistant": "没问题，提醒控制音量并按时收场。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "苏明澈这周休息日晚上想和家人在家做什么？",
+      "answer": "家庭卡拉OK。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，小棠和外婆分别想唱什么？",
+      "answer": "小棠唱主题曲，外婆唱老歌。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，卡拉OK要在几点半前结束？",
+      "answer": "九点半前。",
+      "category": "temporal"
+    },
+    {
+      "question": "在家唱歌为什么通常要控制音量？",
+      "answer": "避免吵到邻居。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小棠在对话中提到歌曲专辑名称了吗？",
+      "answer": "无法回答，未提到专辑。",
+      "category": "adversarial"
+    }
+  ]
+}

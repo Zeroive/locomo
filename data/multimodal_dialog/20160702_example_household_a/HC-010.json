@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-010",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1 个孩子",
+    "activity_preference": "运动健身",
+    "preference_polarity": "负向",
+    "time_of_day": "早上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "梁骁",
+      "QA_details": [
+        {
+          "user": "每周工作日早上拉着全家去户外晨练，我觉得不太现实，尤其小贝起床很困难。",
+          "assistant": "明白，我会记录全家对工作日早上户外晨练的接受度偏低。"
+        },
+        {
+          "user": "雅琪想让我们多运动，但我更希望把早上留给早餐和上学准备。",
+          "assistant": "好的，工作日早上优先安排早餐和上学准备。"
+        },
+        {
+          "user": "如果一定要动一动，就在小区门口走五分钟，不要安排跑步。",
+          "assistant": "已记下，只考虑短时间步行，不安排户外跑步。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏雅琪",
+      "QA_details": [
+        {
+          "user": "梁骁和小贝都不太愿意工作日早上户外运动，我别再每周都推晨跑了。",
+          "assistant": "好的，我会减少工作日早上的晨跑提醒。"
+        },
+        {
+          "user": "小贝早上要背书包，时间已经很紧，运动最多放到放学后。",
+          "assistant": "明白，工作日早上不强排运动，放学后再考虑。"
+        },
+        {
+          "user": "明天早上只提醒他们拉伸两分钟就好，不要写成健身计划。",
+          "assistant": "没问题，明早只提醒两分钟拉伸。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小贝",
+      "QA_details": [
+        {
+          "user": "我不想工作日早上去外面跑步，跑完还要赶着上学。",
+          "assistant": "好的，我会记录您不喜欢工作日早上的户外跑步。"
+        },
+        {
+          "user": "如果妈妈说要运动，我只想在门口走一下，不能耽误吃早饭。",
+          "assistant": "明白，只安排短暂步行，并保留吃早饭时间。"
+        },
+        {
+          "user": "放学后去操场玩可以，早上真的太赶了。",
+          "assistant": "已记下，运动更适合安排在放学后。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "梁小贝对工作日早上户外跑步是什么态度？",
+      "answer": "不喜欢。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，这家人是否倾向于减少每周工作日早上的户外健身？",
+      "answer": "是的，会减少。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，小贝更愿意早上运动，还是放学后运动？",
+      "answer": "放学后运动。",
+      "category": "temporal"
+    },
+    {
+      "question": "工作日早上时间紧时，跑步和短暂拉伸相比哪种更省时？",
+      "answer": "短暂拉伸。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小贝在对话中提到学校几点上课了吗？",
+      "answer": "无法回答，未提到时间。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "case_id": "HC-046",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2 个孩子",
+    "activity_preference": "文化学习",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "江予白",
+      "QA_details": [
+        {
+          "user": "每周三工作日晚上，我想和清越带阿澄、小米在家做一次成语接龙。",
+          "assistant": "好的，我会把每周三晚上安排为家中成语接龙学习。"
+        },
+        {
+          "user": "阿澄先出题，小米可以说简单一点的词，我来解释意思。",
+          "assistant": "明白，阿澄先出题，小米答简单词，您解释含义。"
+        },
+        {
+          "user": "九点前结束，清越负责把成语卡片收好。",
+          "assistant": "已记下，九点前结束并收好卡片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许清越",
+      "QA_details": [
+        {
+          "user": "予白说周三晚上做成语接龙，我想先准备动物相关的成语卡。",
+          "assistant": "好的，我会提醒您准备动物成语卡。"
+        },
+        {
+          "user": "小米如果卡住了，就让阿澄给一个提示，不要直接说答案。",
+          "assistant": "明白，让阿澄给提示。"
+        },
+        {
+          "user": "结束后孩子们各选一个成语写进本子。",
+          "assistant": "没问题，结束后提醒抄写一个成语。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "江阿澄",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说周三晚上在家玩成语接龙，我想先出狐假虎威。",
+          "assistant": "好的，我会提醒您先出这个成语。"
+        },
+        {
+          "user": "小米不会的时候，我给她提示动物，不直接说答案。",
+          "assistant": "明白，提醒您给妹妹提示。"
+        },
+        {
+          "user": "九点前我把成语本收进书包。",
+          "assistant": "好的，九点前提醒收本子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "江小米",
+      "QA_details": [
+        {
+          "user": "我想和爸爸妈妈、哥哥晚上在家玩成语接龙，但要简单一点。",
+          "assistant": "好的，我会提醒大家给您简单提示。"
+        },
+        {
+          "user": "哥哥给我动物提示，我就试着猜。",
+          "assistant": "明白，哥哥提示后您再回答。"
+        },
+        {
+          "user": "最后我想把喜欢的成语画下来。",
+          "assistant": "好的，结束后提醒您画成语。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "江予白一家每周三工作日晚上在家做什么文化学习？",
+      "answer": "成语接龙。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，小米不会时阿澄会怎么帮她？",
+      "answer": "给动物提示。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，成语接龙要在几点前结束？",
+      "answer": "九点前。",
+      "category": "temporal"
+    },
+    {
+      "question": "成语接龙通常属于哪类学习活动？",
+      "answer": "语文学习。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小米在对话中提到语文考试成绩了吗？",
+      "answer": "无法回答，未提到成绩。",
+      "category": "adversarial"
+    }
+  ]
+}

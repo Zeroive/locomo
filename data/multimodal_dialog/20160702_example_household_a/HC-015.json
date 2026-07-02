@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-015",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1 个孩子",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾廷",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和安宁、小舟在家做一场客厅小影院。",
+          "assistant": "好的，我会把这周休息日晚上安排为家庭客厅观影。"
+        },
+        {
+          "user": "小舟想看动画电影，安宁说先把窗帘拉上，投影效果会更好。",
+          "assistant": "明白，观影前拉上窗帘，并播放动画电影。"
+        },
+        {
+          "user": "电影七点半开始，九点前结束，别让孩子看太晚。",
+          "assistant": "已记下，七点半开始，九点前结束。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "孟安宁",
+      "QA_details": [
+        {
+          "user": "顾廷说周末晚上在家看电影，我来准备爆米花和温牛奶。",
+          "assistant": "好的，我会提醒您准备爆米花和温牛奶。"
+        },
+        {
+          "user": "小舟坐沙发中间，我和顾廷坐两边陪他看。",
+          "assistant": "明白，座位按小舟在中间安排。"
+        },
+        {
+          "user": "电影结束后就收遥控器，不再加看短片。",
+          "assistant": "没问题，电影结束后提醒收遥控器。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾小舟",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说休息日晚上在家看动画电影，我想坐沙发中间。",
+          "assistant": "好的，我会提醒爸爸妈妈给您留沙发中间的位置。"
+        },
+        {
+          "user": "我想喝温牛奶，吃一点爆米花，不想开太亮的灯。",
+          "assistant": "明白，观影时准备温牛奶和爆米花，并调暗灯光。"
+        },
+        {
+          "user": "九点前如果电影结束了，我就去刷牙睡觉。",
+          "assistant": "好的，电影结束后提醒您刷牙睡觉。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "顾廷一家这周休息日晚上在家计划做什么？",
+      "answer": "看动画电影。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，这次客厅小影院需要准备哪些东西？",
+      "answer": "投影、爆米花、牛奶。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，电影计划几点开始？",
+      "answer": "七点半。",
+      "category": "temporal"
+    },
+    {
+      "question": "看投影电影时拉上窗帘通常有什么作用？",
+      "answer": "让画面更清楚。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小舟在对话中提到电影片名了吗？",
+      "answer": "无法回答，未提到片名。",
+      "category": "adversarial"
+    }
+  ]
+}

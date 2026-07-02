@@ -1,0 +1,128 @@
+{
+  "case_id": "HC-034",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1 个孩子 + 1 位祖辈",
+    "activity_preference": "亲子陪伴",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每天",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈秋月",
+      "QA_details": [
+        {
+          "user": "工作日晚上每天我都想陪小凡和我妈在家做十分钟睡前按摩，小凡最近总说肩膀酸。",
+          "assistant": "好的，我会把每天工作日晚上安排为家中睡前陪伴。"
+        },
+        {
+          "user": "我先给小凡按肩，妈妈教他做手指操，最后一起说晚安。",
+          "assistant": "明白，先按肩，再做手指操，最后说晚安。"
+        },
+        {
+          "user": "不要开电视，安静一点孩子更容易睡。",
+          "assistant": "已记下，睡前陪伴时关闭电视。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈小凡",
+      "QA_details": [
+        {
+          "user": "妈妈每天晚上会陪我，外婆也会教我做手指操。",
+          "assistant": "好的，我会提醒您睡前做手指操。"
+        },
+        {
+          "user": "妈妈先帮我按肩，我再跟外婆学动作。",
+          "assistant": "明白，先按肩，再学手指操。"
+        },
+        {
+          "user": "电视不要开，我想听妈妈和外婆轻轻说话。",
+          "assistant": "好的，睡前关闭电视。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "周桂香",
+      "QA_details": [
+        {
+          "user": "秋月每天晚上陪小凡，我就教孩子做几下手指操，别让他累着。",
+          "assistant": "好的，我会提醒您教轻松的手指操。"
+        },
+        {
+          "user": "小凡按完肩再学，顺序别反了。",
+          "assistant": "明白，先按肩后手指操。"
+        },
+        {
+          "user": "九点前让孩子躺下，工作日不能太晚。",
+          "assistant": "没问题，九点前提醒休息。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "沈秋月工作日晚上每天在家陪小凡做什么？",
+      "answer": "睡前按摩。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合三人的对话，外婆会教小凡什么？",
+      "answer": "手指操。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，小凡先按肩，还是先学手指操？",
+      "answer": "先按肩。",
+      "category": "temporal"
+    },
+    {
+      "question": "睡前保持安静通常有什么帮助？",
+      "answer": "更容易入睡。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小凡在对话中提到医生姓名了吗？",
+      "answer": "无法回答，未提到医生。",
+      "category": "adversarial"
+    }
+  ]
+}
