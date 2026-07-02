@@ -805,7 +805,7 @@ LLM_EVENT_TIMESTAMP_PROMPT = """你是一个智能家居系统分析师。请只
 ## 重要约束
 - timestamp 使用 ISO8601 格式
 - 第一条事件应从情景发生时间之后开始
-- 如果已有事件，timestamp 必须晚于最后一条annotated_events的timestamp
+- 如果已有事件，timestamp 不能早于最后一条事件的 timestamp；同一秒内的联动事件可以使用相同 timestamp
 
 请生成 timestamp："""
 
@@ -1654,8 +1654,8 @@ def validate_llm_event_item_result(result, candidate_event, default_subject, per
         prev_timestamp = datetime.fromisoformat(
             previous_events[-1]['state_snapshot']['timestamp'].replace('+08:00', '')
         )
-        if current_timestamp <= prev_timestamp:
-            raise ValueError(f"timestamp is not increasing: {snapshot['timestamp']}")
+        if current_timestamp < prev_timestamp:
+            raise ValueError(f"timestamp goes backwards: {snapshot['timestamp']}")
 
     return annotated_event
 
@@ -1868,8 +1868,8 @@ def validate_llm_timestamp_result(result, previous_events):
         prev_timestamp = datetime.fromisoformat(
             previous_events[-1]['state_snapshot']['timestamp'].replace('+08:00', '')
         )
-        if current_timestamp <= prev_timestamp:
-            raise ValueError(f"timestamp is not increasing: {timestamp}")
+        if current_timestamp < prev_timestamp:
+            raise ValueError(f"timestamp goes backwards: {timestamp}")
     return timestamp
 
 
@@ -2665,8 +2665,8 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
         # 验证时间戳格式和递增性
         try:
             current_timestamp = datetime.fromisoformat(snapshot['timestamp'].replace('+08:00', ''))
-            if prev_timestamp and current_timestamp <= prev_timestamp:
-                raise ValueError(f"Event {i} timestamp is not increasing: {snapshot['timestamp']}")
+            if prev_timestamp and current_timestamp < prev_timestamp:
+                raise ValueError(f"Event {i} timestamp goes backwards: {snapshot['timestamp']}")
             prev_timestamp = current_timestamp
         except ValueError as e:
             raise ValueError(f"Event {i} has invalid timestamp format: {e}")
