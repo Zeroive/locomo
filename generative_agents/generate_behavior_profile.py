@@ -164,6 +164,8 @@ def parse_args():
                         help="生成连续天数，默认为7天")
     parser.add_argument('--device-event-days', type=int, default=None, 
                         help="设备事件生成天数，未指定时使用--num-days")
+    parser.add_argument('--day-workers', type=int, default=1,
+                        help="按天并行生成设备事件的并发数，默认1")
     
     # 输出控制
     parser.add_argument('--overwrite-events', action='store_true', 
@@ -248,6 +250,7 @@ def main():
         scene_templates=scene_templates,
         device_file=args.device_file,
         use_llm=use_llm,
+        day_workers=args.day_workers,
     )
     
     if episodes:

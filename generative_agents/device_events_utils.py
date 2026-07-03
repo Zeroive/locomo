@@ -1270,7 +1270,8 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
 
 
 def generate_daily_device_episodes(generation_plan, num_days=7, household_profile=None,
-                                   scene_templates=None, device_file=None, use_llm=True):
+                                   scene_templates=None, device_file=None, use_llm=True,
+                                   day_workers=1):
     """
     按天生成所有情景：LLM 路径先生成当天所有情景描述，再逐情景生成事件。
     rule-based 路径回退到原有按情景生成逻辑。
@@ -1309,10 +1310,10 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
 
     person_ids = get_person_ids_from_household(household_profile)
     layout_device_ids = get_layout_device_ids(household_profile)
-    available_devices = get_available_device_ids(device_file)
+    base_available_devices = get_available_device_ids(device_file)
     for device_id in layout_device_ids:
-        if device_id not in available_devices:
-            available_devices.append(device_id)
+        if device_id not in base_available_devices:
+            base_available_devices.append(device_id)
 
     members_info = format_members_info(household_profile, person_ids)
     relations_info = format_relations_info(household_profile)
@@ -1322,11 +1323,12 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
     devices_info = format_devices_info(device_file)
 
     start_date = datetime.now().date() - timedelta(days=num_days - 1)
-    episodes = []
-
-    for day_offset in range(num_days):
+    
+    def generate_one_day(day_offset):
         episode_date = start_date + timedelta(days=day_offset)
+        day_episodes = []
         contexts = []
+        available_devices = list(base_available_devices)
 
         for plan_index, plan_item in enumerate(generation_plan):
             scenario = canonicalize_scenario(plan_item['scenario'])
@@ -1476,7 +1478,36 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
             if episode:
                 if context.get('subject_profile'):
                     episode['subject_profile'] = context['subject_profile']
-                episodes.append(episode)
+                day_episodes.append(episode)
+
+        return day_offset, day_episodes
+
+    day_workers = max(1, int(day_workers or 1))
+    if day_workers == 1 or num_days <= 1:
+        episodes = []
+        for day_offset in range(num_days):
+            _, day_episodes = generate_one_day(day_offset)
+            episodes.extend(day_episodes)
+    else:
+        max_workers = min(day_workers, num_days)
+        day_results = {}
+        logging.info("Generating device episodes by day with %s workers", max_workers)
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_day = {
+                executor.submit(generate_one_day, day_offset): day_offset
+                for day_offset in range(num_days)
+            }
+            for future in as_completed(future_to_day):
+                day_offset = future_to_day[future]
+                try:
+                    result_day_offset, day_episodes = future.result()
+                    day_results[result_day_offset] = day_episodes
+                except Exception as e:
+                    logging.exception("Daily generation failed for day_offset=%s: %s", day_offset, e)
+                    day_results[day_offset] = []
+        episodes = []
+        for day_offset in range(num_days):
+            episodes.extend(day_results.get(day_offset, []))
 
     logging.info("Generated %s episodes for %s days with daily planning", len(episodes), num_days)
     return episodes
