@@ -93,6 +93,7 @@ def parse_args():
     parser.add_argument("--reflection", action="store_true")
     parser.add_argument("--qa-pairs", action="store_true")
     parser.add_argument("--no-llm", action="store_true", help="Disable LLM generation and use deterministic fallback templates")
+    parser.add_argument("--persona-workers", type=int, default=1, help="Parallel workers for member persona_summary generation")
     parser.add_argument("--overwrite-persona", action="store_true")
     parser.add_argument("--overwrite-events", action="store_true")
     parser.add_argument("--overwrite-session", action="store_true")
@@ -172,6 +173,7 @@ def generate_persona_step(args):
         with_pet=args.with_pet,
         use_llm=not args.no_llm,
         on_profile_updated=autosave_profile,
+        persona_workers=args.persona_workers,
     )
     save_profile(profile, args.out_dir)
     save_members(profile, args.out_dir)

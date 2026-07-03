@@ -11,6 +11,8 @@ import os
 import random
 import re
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import copy
 
 
 HOUSEHOLD_TYPES = [
@@ -526,11 +528,11 @@ def build_family_context(profile):
     return json.dumps(compact, ensure_ascii=False, indent=2)
 
 
-def enrich_member_persona_with_llm(profile, member):
+def enrich_member_persona_with_llm(profile, member, family_context=None):
     from global_methods import run_chatgpt
 
     prompt = MEMBER_PERSONA_ENRICH_PROMPT.format(
-        family_context=build_family_context(profile),
+        family_context=family_context or build_family_context(profile),
         member=json.dumps(member, ensure_ascii=False, indent=2),
     )
     logging.info(
@@ -547,6 +549,51 @@ def enrich_member_persona_with_llm(profile, member):
         raise ValueError("Missing persona_summary")
     member["persona_summary"] = persona_summary
     return member
+
+
+def enrich_member_personas_with_llm(profile, on_profile_updated=None, persona_workers=1):
+    members = profile.get("members", [])
+    if persona_workers <= 1 or len(members) <= 1:
+        for idx, member in enumerate(members):
+            try:
+                profile["members"][idx] = enrich_member_persona_with_llm(profile, member)
+                validate_household(profile)
+                logging.info("Member persona enriched and validated: %s", member["person_id"])
+                if on_profile_updated:
+                    on_profile_updated(profile, f"member_persona:{member['person_id']}")
+            except Exception as exc:
+                logging.warning("LLM member persona enrichment failed for %s, keeping rule persona: %s", member.get("person_id"), exc)
+        return profile
+
+    family_context = build_family_context(profile)
+    max_workers = max(1, min(persona_workers, len(members)))
+    logging.info(
+        "Calling LLM for member personas in parallel: members=%s, workers=%s",
+        len(members),
+        max_workers,
+    )
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_idx = {
+            executor.submit(
+                enrich_member_persona_with_llm,
+                profile,
+                copy.deepcopy(member),
+                family_context,
+            ): idx
+            for idx, member in enumerate(members)
+        }
+        for future in as_completed(future_to_idx):
+            idx = future_to_idx[future]
+            member = members[idx]
+            try:
+                profile["members"][idx] = future.result()
+                validate_household(profile)
+                logging.info("Member persona enriched and validated: %s", member["person_id"])
+                if on_profile_updated:
+                    on_profile_updated(profile, f"member_persona:{member['person_id']}")
+            except Exception as exc:
+                logging.warning("LLM member persona enrichment failed for %s, keeping rule persona: %s", member.get("person_id"), exc)
+    return profile
 
 
 def enrich_household_background_with_llm(profile):
@@ -592,16 +639,12 @@ def enrich_responsibility_with_llm(profile, responsibility):
     return responsibility
 
 
-def enrich_household_profile_with_llm(profile, on_profile_updated=None):
-    for idx, member in enumerate(profile.get("members", [])):
-        try:
-            profile["members"][idx] = enrich_member_persona_with_llm(profile, member)
-            validate_household(profile)
-            logging.info("Member persona enriched and validated: %s", member["person_id"])
-            if on_profile_updated:
-                on_profile_updated(profile, f"member_persona:{member['person_id']}")
-        except Exception as exc:
-            logging.warning("LLM member persona enrichment failed for %s, keeping rule persona: %s", member.get("person_id"), exc)
+def enrich_household_profile_with_llm(profile, on_profile_updated=None, persona_workers=1):
+    profile = enrich_member_personas_with_llm(
+        profile,
+        on_profile_updated=on_profile_updated,
+        persona_workers=persona_workers,
+    )
 
     try:
         profile = enrich_household_background_with_llm(profile)
@@ -625,7 +668,7 @@ def enrich_household_profile_with_llm(profile, on_profile_updated=None):
     return profile
 
 
-def sample_household_profile(household_type, persona_source, family_id="family_001", with_pet=False, use_llm=True, on_profile_updated=None):
+def sample_household_profile(household_type, persona_source, family_id="family_001", with_pet=False, use_llm=True, on_profile_updated=None, persona_workers=1):
     if household_type not in HOUSEHOLD_TYPES:
         raise ValueError(f"Unsupported household_type: {household_type}")
 
@@ -667,7 +710,11 @@ def sample_household_profile(household_type, persona_source, family_id="family_0
     validate_household(profile)
     if use_llm:
         try:
-            profile = enrich_household_profile_with_llm(profile, on_profile_updated=on_profile_updated)
+            profile = enrich_household_profile_with_llm(
+                profile,
+                on_profile_updated=on_profile_updated,
+                persona_workers=persona_workers,
+            )
         except Exception as exc:
             logging.warning("LLM household profile enrichment failed, using rule profile: %s", exc)
     else:

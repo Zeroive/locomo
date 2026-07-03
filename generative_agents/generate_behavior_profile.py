@@ -105,6 +105,7 @@ def ensure_household_profile(args):
         with_pet=args.with_pet,
         use_llm=not args.no_llm,
         on_profile_updated=autosave_profile,
+        persona_workers=args.persona_workers,
     )
     profile = ensure_household_room_layout(
         profile,
@@ -204,6 +205,8 @@ def parse_args():
                         help="生成带宠物的家庭画像")
     parser.add_argument('--no-llm', action='store_true',
                         help="家庭画像采样不使用LLM增强")
+    parser.add_argument('--persona-workers', type=int, default=1,
+                        help="并行生成成员 persona_summary 的并发数，默认1")
     parser.add_argument('--overwrite-persona', action='store_true',
                         help="覆盖已有 household_profile.json 并重新采样家庭画像")
     parser.add_argument('--device-file', type=str, default='./data/devices/home_devices.json',
