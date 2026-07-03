@@ -57,31 +57,51 @@ class HomeAssistant:
     def _load_scenario(self, scenario: Dict[str, Any], long_context: bool = False) -> None:
         """Load devices and optional simulator state from a scenario dictionary."""
         self.devices = {}
-        for device in scenario.get("devices", []):
-            device_id = (
-                device.get("device_id")
-                or device.get("entity_id")
-                or device.get("id")
-                or device.get("name")
-            )
-            if not device_id:
-                continue
-
-            self.devices[device_id] = {
-                "device_id": device_id,
-                "entity_id": device.get("entity_id", device_id),
-                "name": device.get("name", device_id),
-                "room": device.get("room", device.get("area", "其他")),
-                "category": device.get("category", ""),
-                "state": device.get("state", "off"),
-                "attributes": deepcopy(device.get("attributes", {})),
-            }
+        rooms = scenario.get("rooms") or scenario.get("home_context", {}).get("rooms", [])
+        if rooms:
+            for room_info in rooms:
+                room = room_info.get("room", "其他")
+                for device in room_info.get("devices", []):
+                    self._load_device(device, room)
+        else:
+            for device in scenario.get("devices", []):
+                self._load_device(device, device.get("room", device.get("area", "其他")))
 
         self.home_modes = deepcopy(scenario.get("home_modes", {}))
         self.occupancy = deepcopy(scenario.get("occupancy", {}))
         self.scenes = deepcopy(scenario.get("scenes", {}))
         self.automations = deepcopy(scenario.get("automations", {}))
         self.events = deepcopy(scenario.get("events", {}))
+
+    def _load_device(self, device: Dict[str, Any], room: str) -> None:
+        device_id = (
+            device.get("device_id")
+            or device.get("entity_id")
+            or device.get("id")
+            or device.get("name")
+            or device.get("device_name")
+        )
+        if not device_id:
+            return
+
+        attributes = deepcopy(device.get("attributes", {}))
+        attributes.update(deepcopy(device.get("initial_state", {})))
+        state = device.get("state")
+        if state is None:
+            power = attributes.get("power")
+            state = "on" if power is True else "off" if power is False else "unknown"
+
+        self.devices[device_id] = {
+            "device_id": device_id,
+            "entity_id": device.get("entity_id", device_id),
+            "name": device.get("name", device.get("device_name", device_id)),
+            "room": room,
+            "device_type": device.get("device_type", ""),
+            "category": device.get("device_type", device.get("category", "")),
+            "display_category": device.get("category", ""),
+            "state": state,
+            "attributes": attributes,
+        }
 
     @classmethod
     def list_tools(cls) -> List[str]:
@@ -153,6 +173,74 @@ class HomeAssistant:
 
     def _is_identity_param(self, key: str) -> bool:
         return key in {"device_id", "entity_id", "name", "room", "room_id"} or key.endswith("_id")
+
+    def _is_powered_device(self, device: Dict[str, Any], domain: str) -> bool:
+        powered_domains = {
+            "air_conditioner",
+            "air_purifier",
+            "ceiling_light",
+            "coffee_machine",
+            "desk_lamp",
+            "dishwasher",
+            "dryer",
+            "fan",
+            "floor_heating",
+            "fresh_air_system",
+            "gas_stove",
+            "induction_cooker",
+            "microwave",
+            "night_light",
+            "other_appliance",
+            "other_environment",
+            "other_lighting",
+            "other_robot",
+            "oven",
+            "projector",
+            "range_hood",
+            "refrigerator",
+            "rice_cooker",
+            "robot_vacuum",
+            "speaker",
+            "smart_speaker",
+            "tv",
+            "tv_projector",
+            "washing_machine",
+            "water_dispenser",
+            "water_heater",
+        }
+        return domain in powered_domains or device.get("category") in powered_domains
+
+    def _is_device_off(self, device: Dict[str, Any]) -> bool:
+        attrs = device.get("attributes", {})
+        if attrs.get("power") is False:
+            return True
+        return device.get("state") == "off"
+
+    def _requires_power(self, domain: str, action: str, device: Dict[str, Any]) -> bool:
+        if not self._is_powered_device(device, domain):
+            return False
+        if action.startswith("get_") or action in {"list_connected_devices", "set_power", "ignite"}:
+            return False
+        return action.startswith("set_") or action in {
+            "activate_scene",
+            "cast",
+            "dispense",
+            "media_control",
+            "pause",
+            "pause_media",
+            "pause_task",
+            "play_media",
+            "reset_filter",
+            "reset_filter_reminder",
+            "return_to_base",
+            "return_to_dock",
+            "set_task_config",
+            "start",
+            "start_brew",
+            "start_cleaning",
+            "start_task",
+            "stop_media",
+        }
 
     def _find_device(self, params: Dict[str, Any], domain: str) -> Optional[Dict[str, Any]]:
         device_id = self._extract_device_id(params, domain)
@@ -294,6 +382,14 @@ class HomeAssistant:
             if action == "list_connected_devices":
                 return {"success": True, "tool_name": tool_name, "devices": deepcopy(attrs.get("connected_devices", []))}
             return self._device_result(tool_name, device)
+
+        if self._requires_power(domain, action, device) and self._is_device_off(device):
+            return {
+                "success": False,
+                "tool_name": tool_name,
+                "device_id": device.get("device_id"),
+                "error": f"Device {device.get('device_id')} is off; turn it on before calling {tool_name}",
+            }
 
         if action.startswith("set_"):
             for key, value in params.items():
