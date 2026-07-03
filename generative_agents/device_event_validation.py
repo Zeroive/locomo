@@ -187,9 +187,23 @@ def validate_llm_state_result(result):
         raise ValueError(f"State description result must be a dict, got {type(result)}")
     if 'scenario_should_happen' not in result:
         raise ValueError("Missing scenario_should_happen")
+    scenario_should_happen = bool(result.get('scenario_should_happen'))
+    skip_reason = result.get('skip_reason', '')
     household_state_description = result.get('household_state_description', '')
     device_event_description = result.get('device_event_description', '')
     daily_state_description = result.get('daily_state_description', '')
+    if not scenario_should_happen:
+        if not skip_reason:
+            raise ValueError("Missing skip_reason for skipped scenario")
+        return {
+            "scenario_should_happen": False,
+            "scenario_time": result.get('scenario_time', ''),
+            "skip_reason": skip_reason,
+            "household_state_description": household_state_description,
+            "device_event_description": device_event_description,
+            "daily_state_description": daily_state_description,
+            "sampled_context": result.get('sampled_context', {}),
+        }
     if not household_state_description:
         raise ValueError("Missing household_state_description")
     if not device_event_description:
@@ -197,9 +211,9 @@ def validate_llm_state_result(result):
     if not daily_state_description:
         raise ValueError("Missing daily_state_description")
     return {
-        "scenario_should_happen": bool(result.get('scenario_should_happen')),
+        "scenario_should_happen": True,
         "scenario_time": result.get('scenario_time', ''),
-        "skip_reason": result.get('skip_reason', ''),
+        "skip_reason": skip_reason,
         "household_state_description": household_state_description,
         "device_event_description": device_event_description,
         "daily_state_description": daily_state_description,

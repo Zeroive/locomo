@@ -38,7 +38,7 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
    - household_state_description: 当前情景开始前后，所有家庭成员的位置、活动状态、相关房间占用、环境氛围和特殊情况。
    - device_event_description: 当前情景预期触发或需要操作的设备事件，只描述设备动作/联动/状态变化，不要重复展开人物状态。
 3. daily_state_description 必须由上述两部分合并而成，用于给后续事件生成提供完整上下文。
-4. 如果不发生，三段描述仍需解释不发生的原因。
+4. 如果不发生，scenario_should_happen=false，scenario_time 可以为 null，skip_reason 必须说明不发生原因，household_state_description、device_event_description、daily_state_description 输出空字符串。
 
 ## 输出格式
 请严格按照以下 JSON 格式输出，不要包含其他解释文字：
@@ -59,7 +59,9 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 ## 重要约束
 - 输出必须是合法的 JSON 格式
 - scenario_should_happen 必须是布尔值
+- scenario_should_happen=false 时，必须提供 skip_reason，三个描述字段必须为空字符串
 - scenario_time 使用 ISO8601 格式，必须落在“候选发生时段”之一；不要机械照抄参考时间
+- scenario_should_happen=true 时，以下三个描述字段都不能为空
 - household_state_description 必须覆盖所有家庭成员，写明模型选择的具体小时/分钟，并与 scenario_time 保持一致
 - device_event_description 必须聚焦当前情景预期发生的设备动作或联动，不能混入无关设备
 - daily_state_description 必须是自然语言描述，并清晰包含“家庭人员状态”和“设备事件”两部分
