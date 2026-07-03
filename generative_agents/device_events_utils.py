@@ -824,11 +824,11 @@ LLM_EVENT_PERSONS_PROMPT = """你是一个智能家居系统分析师。请只�
 ## 家庭关系
 {relations_info}
 
-## 人物房间状态枚举
-{person_room_status_schema}
-
 ## 当天所有已生成的情景描述
 {all_scenario_descriptions}
+
+## 人物房间状态枚举
+{person_room_status_schema}
 
 ## 当前情景描述
 {daily_state_description}
