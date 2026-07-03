@@ -132,16 +132,10 @@ def format_previous_scenario_descriptions(descriptions):
     lines = []
     for item in descriptions:
         lines.append(
-            "- {time} {scenario}/{subject_id}: {description}".format(
+            "- {time} {scenario}/{subject_id}".format(
                 time=item.get('scenario_time', ''),
                 scenario=item.get('scenario', ''),
                 subject_id=item.get('subject_id', ''),
-                description=(
-                    "家庭人员状态：{household} 设备事件：{devices}".format(
-                        household=item.get('household_state_description', ''),
-                        devices=item.get('device_event_description', ''),
-                    )
-                )
             )
         )
     return '\n'.join(lines)
