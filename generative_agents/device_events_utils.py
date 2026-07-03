@@ -958,8 +958,6 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         members_info=context['members_info'],
         relations_info=context['relations_info'],
         person_room_status_schema=context['person_room_status_schema'],
-        room_device_layout=context['room_device_layout'],
-        all_scenario_descriptions=all_scenario_descriptions,
         household_state_description=context['household_state_description'],
         device_event_description=context['device_event_description'],
         previous_events=previous_events_persons_text,
