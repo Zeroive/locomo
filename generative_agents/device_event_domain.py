@@ -10,7 +10,7 @@ def canonicalize_scenario(scenario):
 SCENE_TEMPLATES = {
     "family_return": {
         "name": "家庭成员下班回家",
-        "description": "家庭成员下班回家，门锁、门口摄像头、灯光、空调、窗帘和影音设备根据当晚状态联动",
+        "description": "家庭成员下班回家场景：门口摄像头识别到人脸后，手动打开玄关灯；进门后手动落锁；根据时间和光线条件手动打开客厅灯；根据室温手动打开空调；夜间手动关闭窗帘；智能音箱播报欢迎语或天气提醒。涉及设备：门锁、门口摄像头、玄关灯、客厅灯、客厅空调、客厅窗帘、智能音箱。",
         "default_subject": "dad",
         "default_home": "home_1",
         "time_window": {
@@ -66,7 +66,7 @@ SCENE_TEMPLATES = {
     },
     "leave_work": {
         "name": "男主人上班离家",
-        "description": "家庭成员早上上班离家，大门、灯光、空调、电视和安防设备根据房间占用状态联动",
+        "description": "家庭成员早上上班离家场景：离家前手动关闭客厅灯、电视、空调等不必要设备；手动关闭卧室灯和空调；根据日晒情况手动关闭窗帘；经过玄关时手动打开玄关灯；出门后手动落锁；智能音箱播报通勤时间和天气提醒。涉及设备：门锁、玄关灯、客厅灯、客厅空调、客厅电视、卧室灯、卧室空调、智能音箱。",
         "default_subject": "dad",
         "default_home": "home_1",
         "time_window": {
@@ -121,7 +121,7 @@ SCENE_TEMPLATES = {
     },
     "child_return": {
         "name": "小孩放学回家",
-        "description": "小孩放学回家，门口识别、玄关灯、书房灯、空调和影音设备根据作业或休息状态联动",
+        "description": "小孩放学回家场景：门口摄像头识别到小孩后，手动打开玄关灯；根据时间和作业情况手动打开书房灯；天气热时手动打开空调；如果是休息时间可手动打开电视；智能音箱提醒写作业或喝水。涉及设备：门锁、门口摄像头、玄关灯、书房灯、客厅灯、客厅空调、客厅电视、智能音箱。",
         "default_subject": "child",
         "default_home": "home_1",
         "time_window": {
@@ -166,7 +166,7 @@ SCENE_TEMPLATES = {
     },
     "elderly_outdoor": {
         "name": "老人独自外出",
-        "description": "老人独自外出，门锁、门口摄像头、玄关灯、空调和新风系统根据安全与舒适状态联动",
+        "description": "老人独自外出场景：老人出门前手动打开玄关灯；出门后手动落锁；门口摄像头记录离家方向；手动关闭客厅空调；如果空气质量差则手动启动新风系统；智能音箱播报天气和安全提醒。涉及设备：门锁、门口摄像头、玄关灯、客厅空调、新风系统、智能音箱。",
         "default_subject": "grandpa",
         "default_home": "home_1",
         "time_window": {
@@ -209,7 +209,7 @@ SCENE_TEMPLATES = {
     },
     "visitor_arrival": {
         "name": "访客到家",
-        "description": "访客到家，门口摄像头、门铃、门锁、玄关灯、窗帘和智能音箱联动",
+        "description": "访客到家场景：门口摄像头检测到访客靠近；访客按响门铃；主人通过摄像头查看访客；手动远程开门或使用临时密码开门；玄关偏暗时手动打开玄关灯；智能音箱播报访客到达提醒。涉及设备：门铃、门口摄像头、门锁、玄关灯、智能音箱。",
         "default_subject": "visitor",
         "default_home": "home_1",
         "time_window": {
@@ -250,7 +250,7 @@ SCENE_TEMPLATES = {
     },
     "all_leave_arm": {
         "name": "全员离家布防",
-        "description": "全员离家后，门锁、灯光、空调、新风、摄像头和安防系统进入离家状态",
+        "description": "全员离家布防场景：确认所有家庭成员已离家；手动关闭所有房间的灯光（玄关灯、客厅灯、卧室灯）；手动关闭所有空调（客厅空调、卧室空调）；手动关闭或降低新风系统；手动锁上大门；手动启动安防系统进入布防状态；手动开启安防摄像头录像。涉及设备：门锁、玄关灯、客厅灯、卧室灯、客厅空调、卧室空调、新风系统、安防摄像头、安防系统。",
         "default_subject": "home_assistant",
         "default_home": "home_1",
         "time_window": {
@@ -295,7 +295,7 @@ SCENE_TEMPLATES = {
     },
     "anomaly_detection": {
         "name": "异常活动检测",
-        "description": "安防状态下检测到异常活动，门口摄像头、移动传感器、摄像头录像和音箱提醒联动",
+        "description": "异常活动检测场景：安防系统处于布防状态时，移动传感器检测到室内异常移动；门口摄像头检测到异常靠近或未识别人员；手动开启安防摄像头录像；智能音箱发出警示提醒；手动确认大门处于锁定状态；WiFi检测到陌生设备连接。涉及设备：移动传感器、门口摄像头、安防摄像头、智能音箱、门锁、WiFi路由器。",
         "default_subject": "home_assistant",
         "default_home": "home_1",
         "time_window": {
