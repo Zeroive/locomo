@@ -485,7 +485,9 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 场景描述: {scenario_desc}
 当前场景主体: {subject_id}
 日期: {episode_date}
-计划发生时间: {planned_scene_time}
+候选发生时段:
+{time_period_options}
+参考时间: {planned_scene_time}
 
 ## 当天已生成的其他情景描述
 {previous_scenario_descriptions}
@@ -510,7 +512,7 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 1. 判断当天该场景是否应该发生：
    - 如果是上班离家/下班回家，休息日、请假日、居家办公日可以不发生
    - 如果场景主体当天不在家或不符合角色作息，也可以不发生
-2. 如果发生，生成 daily_state_description，描述当前场景开始前后的家庭状态：
+2. 如果发生，先根据家庭成员画像、当天其他情景和场景语义，从候选发生时段中选择一个合理的具体 scenario_time，再生成 daily_state_description，描述当前场景开始前后的家庭状态：
    - 家庭成员的位置和活动状态
    - 每个相关房间是否有人，以及是谁
    - 主要设备的当前状态
@@ -535,7 +537,8 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 ## 重要约束
 - 输出必须是合法的 JSON 格式
 - scenario_should_happen 必须是布尔值
-- scenario_time 使用 ISO8601 格式，小时应与计划发生时间一致
+- scenario_time 使用 ISO8601 格式，必须落在“候选发生时段”之一；不要机械照抄参考时间
+- daily_state_description 必须写明模型选择的具体小时/分钟，并与 scenario_time 保持一致
 - daily_state_description 必须是自然语言描述
 - daily_state_description 不能与当天已生成的其他情景描述出现人物位置、设备状态或时间顺序冲突
 - daily_state_description 中提到的设备状态应来自“设备状态枚举”
@@ -1138,6 +1141,7 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
         episode_date=episode_date.strftime('%Y-%m-%d'),
         subject_id=default_subject,
         planned_scene_time=planned_scene_time,
+        time_period_options=format_time_period_options(time_range),
         previous_scenario_descriptions="无",
         members_info=members_info,
         relations_info=relations_info,
@@ -1158,6 +1162,13 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
             state_result = run_json_trials_func(state_prompt, num_gen=1, num_tokens_request=1000, temperature=0.8)
             
             state_result = validate_llm_state_result(state_result)
+            state_result['scenario_time'] = normalize_llm_scenario_time(
+                state_result.get('scenario_time'),
+                planned_scene_time,
+                time_range,
+                scenario,
+                episode_date,
+            )
             if not state_result['scenario_should_happen']:
                 logging.info(
                     "Skipping episode for %s %s: %s",
@@ -1397,6 +1408,7 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
                 episode_date=episode_date.strftime('%Y-%m-%d'),
                 subject_id=context['default_subject'],
                 planned_scene_time=context['planned_scene_time'],
+                time_period_options=format_time_period_options(context['time_range']),
                 previous_scenario_descriptions=format_previous_scenario_descriptions(generated_descriptions),
                 members_info=members_info,
                 relations_info=relations_info,
@@ -1417,6 +1429,13 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
                     temperature=0.8,
                 )
                 state_result = validate_llm_state_result(state_result)
+                state_result['scenario_time'] = normalize_llm_scenario_time(
+                    state_result.get('scenario_time'),
+                    context['planned_scene_time'],
+                    context['time_range'],
+                    context['scenario'],
+                    episode_date,
+                )
             except Exception as e:
                 _log_llm_failure(
                     "daily_state_description",
@@ -1567,6 +1586,89 @@ def build_scene_time(episode_date, time_range, fallback_hour=8):
     hour = hour % 24
     scene_datetime = datetime.combine(episode_date, datetime.min.time()).replace(hour=hour, minute=minute)
     return scene_datetime.strftime('%Y-%m-%dT%H:%M:%S+08:00')
+
+
+TIME_PERIODS = [
+    {"slug": "late_night", "label": "深夜", "start": "00:00", "end": "05:59", "start_min": 0, "end_min": 359},
+    {"slug": "early_morning", "label": "早上", "start": "06:00", "end": "08:59", "start_min": 360, "end_min": 539},
+    {"slug": "morning", "label": "上午", "start": "09:00", "end": "11:59", "start_min": 540, "end_min": 719},
+    {"slug": "noon", "label": "中午", "start": "12:00", "end": "13:59", "start_min": 720, "end_min": 839},
+    {"slug": "afternoon", "label": "下午", "start": "14:00", "end": "17:59", "start_min": 840, "end_min": 1079},
+    {"slug": "evening", "label": "晚上", "start": "18:00", "end": "23:59", "start_min": 1080, "end_min": 1439},
+]
+
+
+def parse_hhmm_to_minutes(value):
+    if not isinstance(value, str) or ':' not in value:
+        return None
+    try:
+        hour, minute = [int(part) for part in value.split(':')[:2]]
+    except ValueError:
+        return None
+    if hour == 24 and minute == 0:
+        return 1440
+    if not (0 <= hour <= 23 and 0 <= minute <= 59):
+        return None
+    return hour * 60 + minute
+
+
+def expand_time_range_to_segments(time_range):
+    if not isinstance(time_range, dict):
+        return [(0, 1439)]
+    start = parse_hhmm_to_minutes(time_range.get('start'))
+    end = parse_hhmm_to_minutes(time_range.get('end'))
+    if start is None or end is None:
+        return [(0, 1439)]
+    if end == 1440:
+        end = 1439
+    if start <= end:
+        return [(start, end)]
+    return [(start, 1439), (0, end)]
+
+
+def get_time_period_options(time_range):
+    segments = expand_time_range_to_segments(time_range)
+    options = []
+    for period in TIME_PERIODS:
+        if any(max(start, period["start_min"]) <= min(end, period["end_min"]) for start, end in segments):
+            options.append(period)
+    return options or TIME_PERIODS
+
+
+def format_time_period_options(time_range):
+    options = get_time_period_options(time_range)
+    return "\n".join(
+        f"- {item['label']}({item['start']}-{item['end']}), time_des={item['slug']}"
+        for item in options
+    )
+
+
+def scenario_time_in_period_options(scenario_time, time_range, episode_date=None):
+    try:
+        dt = datetime.fromisoformat(str(scenario_time).replace('Z', '+00:00'))
+    except ValueError:
+        return False
+    if episode_date is not None and dt.date() != episode_date:
+        return False
+    minute_of_day = dt.hour * 60 + dt.minute
+    return any(
+        item["start_min"] <= minute_of_day <= item["end_min"]
+        for item in get_time_period_options(time_range)
+    )
+
+
+def normalize_llm_scenario_time(scenario_time, fallback_time, time_range, scenario, episode_date):
+    if scenario_time and scenario_time_in_period_options(scenario_time, time_range, episode_date):
+        return scenario_time
+    if scenario_time:
+        logging.warning(
+            "LLM scenario_time out of allowed period for %s/%s: %s; using fallback %s",
+            scenario,
+            episode_date,
+            scenario_time,
+            fallback_time,
+        )
+    return fallback_time
 
 
 def get_time_description(timestamp):
