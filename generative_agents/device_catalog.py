@@ -8,10 +8,11 @@ from generative_agents.device_event_domain import DEVICE_STATES
 
 def format_devices_info(device_file, device_ids=None):
     """
-    格式化设备信息。
+    格式化设备信息，只显示家庭存在的设备。
     
     Args:
         device_file: 设备配置文件路径
+        device_ids: 需要显示的设备ID列表，为None时显示所有设备
         
     Returns:
         str: 格式化的设备信息字符串
@@ -20,7 +21,6 @@ def format_devices_info(device_file, device_ids=None):
     filter_devices = device_ids is not None
 
     if not device_file or not os.path.exists(device_file):
-        # 返回默认设备列表
         default_devices = {
             "wifi_router": "WiFi路由器",
             "door_camera": "门口摄像头",
@@ -48,7 +48,7 @@ def format_devices_info(device_file, device_ids=None):
             "smart_speaker": "智能音箱",
         }
         lines = [
-            f"{device_id}: {name}"
+            f"- {device_id}: {name}"
             for device_id, name in default_devices.items()
             if not filter_devices or device_id in allowed_ids
         ]
@@ -67,12 +67,11 @@ def format_devices_info(device_file, device_ids=None):
                 if filter_devices and device_id not in allowed_ids:
                     continue
                 name = device_info.get('name', device_id)
-                description = device_info.get('description', '')
-                info_lines.append(f"- {device_id}: {name} ({description})")
+                info_lines.append(f"- {device_id}: {name}")
 
         for device_id in device_ids or []:
             if device_id in DEVICE_STATES and not any(line.startswith(f"- {device_id}:") for line in info_lines):
-                info_lines.append(f"- {device_id}: {device_id} (家庭布局中的设备)")
+                info_lines.append(f"- {device_id}: {device_id}")
         
         return '\n'.join(info_lines) if info_lines else "- door_main: 主门\n- light_hallway: 玄关灯"
         

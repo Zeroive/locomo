@@ -2,18 +2,6 @@
 
 LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根据给定的家庭画像和场景，先判断当天该场景是否应该发生；如果发生，在当天已生成情景的约束下，生成两部分内容：(1) 当前场景下所有家庭成员的状态与位置；(2) 当前场景主体为完成该场景预期需要操作的一系列设备事件，包括其日常习惯触发的设备联动。
 
-## 场景信息
-场景类型: {scenario}
-场景描述: {scenario_desc}
-当前场景主体: {subject_id}
-日期: {episode_date}
-候选发生时段:
-{time_period_options}
-参考时间: {planned_scene_time}
-
-## 当天已生成的其他情景描述
-{previous_scenario_descriptions}
-
 ## 家庭成员
 {members_info}
 
@@ -25,6 +13,18 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 
 ## 可控设备
 {devices_info}
+
+## 场景信息
+场景类型: {scenario}
+场景描述: {scenario_desc}
+当前场景主体: {subject_id}
+日期: {episode_date}
+候选发生时段:
+{time_period_options}
+参考时间: {planned_scene_time}
+
+## 当天已生成的其他情景描述
+{previous_scenario_descriptions}
 
 ## 随机抽样上下文
 本日重点人物: {sampled_persons}
