@@ -266,11 +266,43 @@ def validate_generated_room_layout(layout_result, floor_plan):
     }
 
 
+def ensure_required_room_devices(household_profile):
+    if not isinstance(household_profile, dict):
+        return household_profile
+    for layout_key in ('rooms', 'room_layout', 'spaces'):
+        layout = household_profile.get(layout_key)
+        if not isinstance(layout, dict) or not layout:
+            continue
+        changed = False
+        for room_id, required_devices in REQUIRED_ROOM_DEVICES.items():
+            if room_id not in layout:
+                continue
+            room_data = layout[room_id]
+            if isinstance(room_data, dict):
+                devices = room_data.get('devices') or room_data.get('device_ids') or []
+                if not isinstance(devices, list):
+                    devices = []
+                for device_id in required_devices:
+                    if device_id in DEVICE_STATES and device_id not in devices:
+                        devices.append(device_id)
+                        changed = True
+                room_data['devices'] = devices
+            elif isinstance(room_data, list):
+                for device_id in required_devices:
+                    if device_id in DEVICE_STATES and device_id not in room_data:
+                        room_data.append(device_id)
+                        changed = True
+        if changed:
+            logging.info("Added missing required room devices to existing household layout")
+        return household_profile
+    return household_profile
+
+
 def ensure_household_room_layout(household_profile, device_file=None, use_llm=True, overwrite=False):
     if household_profile is None:
         household_profile = {}
     if household_has_room_layout(household_profile) and not overwrite:
-        return household_profile
+        return ensure_required_room_devices(household_profile)
 
     floor_plan = select_floor_plan_for_household(household_profile)
     layout_result = None

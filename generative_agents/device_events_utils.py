@@ -1817,6 +1817,7 @@ def initialize_state(person_ids):
         "light_living_room": {"state": "off"},
         "light_bedroom": {"state": "off"},
         "light_study": {"state": "off"},
+        "light_kitchen": {"state": "off"},
         "light_bathroom": {"state": "off"},
         "ac_living_room": {"state": "off"},
         "ac_bedroom": {"state": "off"},

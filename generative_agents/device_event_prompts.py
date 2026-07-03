@@ -36,7 +36,7 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
    - 如果场景主体当天不在家或不符合角色作息，也可以不发生
 2. 如果发生，先根据家庭成员画像、当天其他情景和场景语义，从候选发生时段中选择一个合理的具体 scenario_time，再分开生成两部分描述：
    - household_state_description: 当前情景开始前后，所有家庭成员的位置、活动状态、相关房间占用、环境氛围和特殊情况。
-   - device_event_description: 当前情景预期触发或需要操作的设备事件，只描述设备动作/联动/状态变化，不要重复展开人物状态。
+   - device_event_description: 当前情景预期触发或需要操作的设备事件，只描述设备动作/联动/状态变化，不要重复展开人物状态。离家/回家场景可以包含前序、伴随和后续联动事件，例如打开玄关灯/客厅灯/厨房灯，关闭客厅灯/厨房灯/电视/空调，门锁开关与落锁、摄像头识别、音箱提醒等。
 3. daily_state_description 必须由上述两部分合并而成，用于给后续事件生成提供完整上下文。
 4. 如果不发生，scenario_should_happen=false，scenario_time 可以为 null，skip_reason 必须说明不发生原因，household_state_description、device_event_description、daily_state_description 输出空字符串。
 
@@ -64,6 +64,7 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 - scenario_should_happen=true 时，以下三个描述字段都不能为空
 - household_state_description 必须覆盖所有家庭成员，写明模型选择的具体小时/分钟，并与 scenario_time 保持一致
 - device_event_description 必须聚焦当前情景预期发生的设备动作或联动，不能混入无关设备
+- device_event_description 中的设备动作必须能从房间与设备布局、可控设备、场景候选事件设备对象中找到依据；不要描述不存在的设备
 - daily_state_description 必须是自然语言描述，并清晰包含“家庭人员状态”和“设备事件”两部分
 - daily_state_description 不能与当天已生成的其他情景描述出现人物位置、设备状态或时间顺序冲突
 - daily_state_description 中提到的设备状态应来自“设备状态枚举”

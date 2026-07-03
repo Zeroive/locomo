@@ -32,6 +32,8 @@ SCENE_TEMPLATES = {
              "description": "玄关光线较暗时打开玄关灯"},
             {"subject_id": "home_assistant", "event_type": "turn_on_living_room_ac", "predicate": "on", "object_id": "ac_living_room",
              "description": "客厅温度不舒适时打开客厅空调"},
+            {"subject_id": "home_assistant", "event_type": "turn_on_kitchen_light", "predicate": "on", "object_id": "light_kitchen",
+             "description": "回家后准备进入厨房或厨房光线较暗时打开厨房灯"},
             {"subject_id": "home_assistant", "event_type": "turn_on_living_room_tv", "predicate": "on", "object_id": "tv_living_room",
              "description": "回到客厅休息时打开电视"},
             {"subject_id": "home_assistant", "event_type": "close_living_room_curtain", "predicate": "closed", "object_id": "curtain_living_room",
@@ -85,12 +87,16 @@ SCENE_TEMPLATES = {
              "description": "客厅无人时关闭电视"},
             {"subject_id": "home_assistant", "event_type": "turn_off_living_room_ac", "predicate": "off", "object_id": "ac_living_room",
              "description": "客厅无人时关闭客厅空调"},
+            {"subject_id": "home_assistant", "event_type": "turn_off_kitchen_light", "predicate": "off", "object_id": "light_kitchen",
+             "description": "厨房无人或早餐准备结束后关闭厨房灯"},
             {"subject_id": "home_assistant", "event_type": "turn_off_bedroom_light", "predicate": "off", "object_id": "light_bedroom",
              "description": "卧室无人时关闭卧室灯"},
             {"subject_id": "home_assistant", "event_type": "turn_off_bedroom_ac", "predicate": "off", "object_id": "ac_bedroom",
              "description": "卧室无人时关闭卧室空调"},
             {"subject_id": "home_assistant", "event_type": "close_living_room_curtain", "predicate": "closed", "object_id": "curtain_living_room",
              "description": "离家前根据日晒或隐私需求关闭客厅窗帘"},
+            {"subject_id": "home_assistant", "event_type": "turn_on_hallway_light", "predicate": "on", "object_id": "light_hallway",
+             "description": "离家前经过玄关时打开玄关灯"},
             {"subject_id": "home_assistant", "event_type": "speaker_commute_reminder", "predicate": "speaking", "object_id": "smart_speaker",
              "description": "智能音箱播报通勤或天气提醒"}
         ],
@@ -345,7 +351,7 @@ DEFAULT_ROOM_DEVICE_LAYOUT = {
     "bedroom": ["light_bedroom", "ac_bedroom", "tv_bedroom", "curtain_bedroom", "temp_humidity_sensor"],
     "study": ["light_study"],
     "bathroom": ["light_bathroom"],
-    "kitchen": ["coffee_machine"]
+    "kitchen": ["light_kitchen", "coffee_machine"]
 }
 
 
@@ -412,7 +418,7 @@ ROOM_DEVICE_CANDIDATES = {
     "children_room": ["light_bedroom", "ac_bedroom", "tv_kids", "curtain_bedroom", "temp_humidity_sensor"],
     "elderly_room": ["light_bedroom", "ac_bedroom", "tv_bedroom", "curtain_bedroom", "temp_humidity_sensor"],
     "study": ["light_study", "motion_sensor"],
-    "kitchen": ["coffee_machine", "motion_sensor", "air_quality_sensor"],
+    "kitchen": ["light_kitchen", "coffee_machine", "motion_sensor", "air_quality_sensor"],
     "bathroom": ["light_bathroom", "temp_humidity_sensor", "motion_sensor"],
     "balcony": ["motion_sensor", "air_quality_sensor"],
 }
@@ -422,7 +428,7 @@ REQUIRED_ROOM_DEVICES = {
     "entrance": ["door_main", "door_bell", "door_camera", "light_hallway"],
     "living_room": ["light_living_room", "motion_sensor", "light_sensor", "smart_speaker"],
     "bedroom": ["light_bedroom", "temp_humidity_sensor"],
-    "kitchen": ["coffee_machine"],
+    "kitchen": ["light_kitchen", "coffee_machine"],
     "bathroom": ["light_bathroom"],
 }
 
@@ -441,6 +447,7 @@ DEVICE_STATES = {
     "light_living_room": ["on", "off"],
     "light_bedroom": ["on", "off"],
     "light_study": ["on", "off"],
+    "light_kitchen": ["on", "off"],
     "light_bathroom": ["on", "off"],
     "ac_living_room": ["on", "off"],
     "ac_bedroom": ["on", "off"],
