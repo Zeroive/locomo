@@ -1,0 +1,194 @@
+{
+  "case_id": "HC-075",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 2 个孩子 + 1 位祖辈",
+    "activity_preference": "社交餐饮",
+    "preference_polarity": "正向",
+    "time_of_day": "中午",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_005",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "赵明序",
+      "QA_details": [
+        {
+          "user": "这个月休息日中午，我想和书瑶带小辰、小鹿、岳母去户外庭院餐厅，约表姐一家一起吃饭。",
+          "assistant": "好的，我会把这个月休息日中午安排为户外庭院餐厅聚餐。"
+        },
+        {
+          "user": "小辰和表姐家的孩子熟，小鹿喜欢庭院里的秋千座位。",
+          "assistant": "明白，优先选择靠庭院秋千的位置。"
+        },
+        {
+          "user": "先点饭菜，再让孩子们吃小点心，岳母要坐阴凉处。",
+          "assistant": "已记下，先吃饭菜，老人坐阴凉处。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "宋书瑶",
+      "QA_details": [
+        {
+          "user": "明序说休息日中午去庭院餐厅，我想提前确认遮阳棚和儿童椅。",
+          "assistant": "好的，我会提醒您确认遮阳棚和儿童椅。"
+        },
+        {
+          "user": "我妈见到表姐会聊很久，午餐别排得太紧。",
+          "assistant": "明白，午餐时间安排宽松。"
+        },
+        {
+          "user": "饭后孩子们可以在庭院边玩十分钟。",
+          "assistant": "没问题，饭后安排短暂玩耍。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "赵小辰",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说中午去庭院餐厅，我想见表姐家的小航。",
+          "assistant": "好的，我会提醒家人安排表姐一家。"
+        },
+        {
+          "user": "妹妹想坐秋千旁边，我可以陪她过去。",
+          "assistant": "明白，提醒您陪妹妹。"
+        },
+        {
+          "user": "吃完饭再吃点心，不先吃甜的。",
+          "assistant": "好的，先吃饭再吃点心。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "赵小鹿",
+      "QA_details": [
+        {
+          "user": "我想坐庭院秋千旁边，也想和哥哥一起见小航。",
+          "assistant": "好的，我会提醒家人选靠秋千的位置。"
+        },
+        {
+          "user": "外婆坐阴凉处，我把水杯放她旁边。",
+          "assistant": "明白，提醒您照顾外婆。"
+        },
+        {
+          "user": "吃完饭我想玩十分钟再回家。",
+          "assistant": "好的，饭后可以短暂玩耍。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "宋玉珍",
+      "QA_details": [
+        {
+          "user": "书瑶和明序这个月中午带我和孩子们去庭院餐厅，我想坐阴凉处和表姐聊天。",
+          "assistant": "好的，我会提醒他们预订阴凉座位。"
+        },
+        {
+          "user": "孩子们先吃饭再玩，别空着肚子跑来跑去。",
+          "assistant": "明白，先用餐再玩。"
+        },
+        {
+          "user": "遮阳棚最好有，太阳太大我坐不久。",
+          "assistant": "没问题，提前确认遮阳棚。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "赵明序一家这个月休息日中午计划去哪里聚餐？",
+      "answer": "庭院餐厅。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五人的对话，这次午餐是否有社交目的？",
+      "answer": "是的，约表姐一家。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，孩子们先吃饭，还是先玩十分钟？",
+      "answer": "先吃饭。",
+      "category": "temporal"
+    },
+    {
+      "question": "户外餐厅的遮阳棚通常有什么作用？",
+      "answer": "遮阳防晒。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小辰在对话中提到小航的班级了吗？",
+      "answer": "无法回答，未提到班级。",
+      "category": "adversarial"
+    }
+  ]
+}

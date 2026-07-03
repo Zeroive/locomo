@@ -1,0 +1,194 @@
+{
+  "case_id": "HC-076",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 2 个孩子 + 1 位祖辈",
+    "activity_preference": "亲子陪伴",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每天",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆明川",
+      "QA_details": [
+        {
+          "user": "工作日晚上每天我都想和书宁、爸陪小森、小柚在家做睡前十分钟聊天。",
+          "assistant": "好的，我会把每天工作日晚上安排为家中睡前陪伴。"
+        },
+        {
+          "user": "小森先说学校里的事，小柚说幼儿园的事，爸最后讲一句晚安祝福。",
+          "assistant": "明白，小森先说，小柚再说，爷爷最后祝福。"
+        },
+        {
+          "user": "九点前结束，书宁负责关电视和调暗灯。",
+          "assistant": "已记下，九点前结束并关闭电视。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈书宁",
+      "QA_details": [
+        {
+          "user": "明川说每天晚上陪孩子们聊天，我先把客厅灯调柔和。",
+          "assistant": "好的，我会提醒您调柔和灯光。"
+        },
+        {
+          "user": "小柚说话慢，小森要等妹妹说完再回应。",
+          "assistant": "明白，提醒小森耐心听妹妹说完。"
+        },
+        {
+          "user": "爷爷说晚安祝福后，我们就让孩子们回房间。",
+          "assistant": "没问题，祝福后提醒孩子回房间。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆小森",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈和爷爷晚上陪我们聊天，我想先说今天体育课的事。",
+          "assistant": "好的，我会提醒您先分享体育课。"
+        },
+        {
+          "user": "小柚说幼儿园的事时，我等她说完。",
+          "assistant": "明白，提醒您耐心听妹妹分享。"
+        },
+        {
+          "user": "九点前我把书包放好再睡。",
+          "assistant": "好的，九点前提醒收好书包。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "陆小柚",
+      "QA_details": [
+        {
+          "user": "晚上爸爸妈妈、哥哥和爷爷都会听我说话，我想讲幼儿园搭积木。",
+          "assistant": "好的，我会提醒大家听您分享搭积木。"
+        },
+        {
+          "user": "哥哥先说完，我再说，爷爷最后说晚安。",
+          "assistant": "明白，哥哥先分享，之后您再分享。"
+        },
+        {
+          "user": "灯暗一点我会想睡觉。",
+          "assistant": "好的，睡前聊天时调暗灯光。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "陆德厚",
+      "QA_details": [
+        {
+          "user": "明川和书宁每天晚上陪孩子聊天，我最后给小森和小柚说句晚安就好。",
+          "assistant": "好的，我会提醒您最后说晚安祝福。"
+        },
+        {
+          "user": "孩子们先讲一天的事，我慢慢听。",
+          "assistant": "明白，先听孩子分享。"
+        },
+        {
+          "user": "九点前结束，孩子们要早睡。",
+          "assistant": "没问题，九点前提醒收尾。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陆明川一家工作日晚上每天在家做什么亲子陪伴？",
+      "answer": "睡前聊天。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五人的对话，小森、小柚和爷爷的分享顺序是什么？",
+      "answer": "小森先说，小柚再说，爷爷最后。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，睡前聊天要在几点前结束？",
+      "answer": "九点前。",
+      "category": "temporal"
+    },
+    {
+      "question": "睡前调暗灯光通常有什么帮助？",
+      "answer": "帮助入睡。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小柚在对话中提到幼儿园名称了吗？",
+      "answer": "无法回答，未提到名称。",
+      "category": "adversarial"
+    }
+  ]
+}

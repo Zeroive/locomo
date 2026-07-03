@@ -1,0 +1,184 @@
+{
+  "case_id": "HC-082",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 1 个孩子 + 2 位祖辈",
+    "activity_preference": "社交餐饮",
+    "preference_polarity": "正向",
+    "time_of_day": "中午",
+    "frequency": "每月",
+    "day_type": "休息日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "方景澜",
+      "QA_details": [
+        {
+          "user": "这个月休息日中午，我想和若宁带小榆、我爸、岳母去户外湖边餐厅，约两位老朋友一起吃饭。",
+          "assistant": "好的，我会把这个月休息日中午安排为户外湖边餐厅聚餐。"
+        },
+        {
+          "user": "我爸想和老同事聊天，岳母想坐靠水的位置，小榆喜欢看鸭子。",
+          "assistant": "明白，优先选择靠水的户外座位。"
+        },
+        {
+          "user": "先点清蒸鱼和蔬菜，再给小榆点一份小米糕。",
+          "assistant": "已记下，午餐以清淡菜和小米糕为主。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林若宁",
+      "QA_details": [
+        {
+          "user": "景澜说休息日中午去湖边餐厅，我想确认遮阳棚和无台阶入口。",
+          "assistant": "好的，我会提醒您确认遮阳棚和无台阶入口。"
+        },
+        {
+          "user": "两位老人见朋友会聊很久，午餐时间排宽松一点。",
+          "assistant": "明白，聚餐时间安排宽松。"
+        },
+        {
+          "user": "小榆饭后可以看鸭子，但不要靠水太近。",
+          "assistant": "没问题，饭后看鸭子时注意距离。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "方小榆",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈和爷爷外婆中午带我去湖边餐厅，我想看鸭子。",
+          "assistant": "好的，我会提醒家人安排靠水座位。"
+        },
+        {
+          "user": "妈妈说吃完饭再看，不能靠水太近。",
+          "assistant": "明白，先吃饭，再安全看鸭子。"
+        },
+        {
+          "user": "爷爷聊天的时候，我坐在爸爸旁边吃小米糕。",
+          "assistant": "好的，午餐提醒准备小米糕。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "方德仁",
+      "QA_details": [
+        {
+          "user": "景澜这个月中午带我们去湖边餐厅，我想和老同事坐外面聊聊。",
+          "assistant": "好的，我会提醒他们预订户外座位。"
+        },
+        {
+          "user": "亲家母喜欢靠水，位置别太晒。",
+          "assistant": "明白，选择靠水且有遮阳的位置。"
+        },
+        {
+          "user": "菜清淡点就好。",
+          "assistant": "没问题，提醒点清淡菜。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "林秀兰",
+      "QA_details": [
+        {
+          "user": "女儿和女婿休息日中午带我们去湖边餐厅，我想坐靠水但有遮阳的地方。",
+          "assistant": "好的，我会提醒他们确认遮阳座位。"
+        },
+        {
+          "user": "小榆看鸭子可以，但要牵着大人的手。",
+          "assistant": "明白，看鸭子时牵好大人。"
+        },
+        {
+          "user": "见朋友别赶时间，慢慢吃就好。",
+          "assistant": "没问题，午餐时间安排宽松。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "方景澜一家这个月休息日中午计划去哪里聚餐？",
+      "answer": "湖边餐厅。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五人的对话，这次午餐是否有社交目的？",
+      "answer": "是的，见老朋友。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，小榆先吃饭，还是先看鸭子？",
+      "answer": "先吃饭。",
+      "category": "temporal"
+    },
+    {
+      "question": "湖边用餐时为什么孩子不宜靠水太近？",
+      "answer": "避免危险。",
+      "category": "open_domain"
+    },
+    {
+      "question": "方德仁在对话中提到老同事姓名了吗？",
+      "answer": "无法回答，未提到姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

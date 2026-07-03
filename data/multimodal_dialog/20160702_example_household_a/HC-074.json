@@ -1,0 +1,194 @@
+{
+  "case_id": "HC-074",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 2 个孩子 + 1 位祖辈",
+    "activity_preference": "文化学习",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "孟知远",
+      "QA_details": [
+        {
+          "user": "每周四工作日晚上，我想和清禾带小越、小米、我爸在家学一段天文常识。",
+          "assistant": "好的，我会把每周四晚上安排为家中天文学习。"
+        },
+        {
+          "user": "小越负责读星座卡，小米画月亮，我爸讲他年轻时看流星的故事。",
+          "assistant": "明白，小越读卡，小米画月亮，爷爷讲故事。"
+        },
+        {
+          "user": "九点前结束，孩子们第二天还要上学。",
+          "assistant": "已记下，九点前结束学习。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林清禾",
+      "QA_details": [
+        {
+          "user": "知远说周四晚上学天文，我先把星座卡和手电筒准备好。",
+          "assistant": "好的，我会提醒您准备星座卡和手电筒。"
+        },
+        {
+          "user": "小米画月亮时，我帮她看月相图。",
+          "assistant": "明白，提醒您准备月相图。"
+        },
+        {
+          "user": "爸讲流星故事时，孩子们先听完再提问。",
+          "assistant": "没问题，先听故事再提问。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "孟小越",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说周四晚上学天文，我想读猎户座的卡片。",
+          "assistant": "好的，我会提醒您准备猎户座卡片。"
+        },
+        {
+          "user": "妹妹画月亮的时候，我帮她找月相图。",
+          "assistant": "明白，提醒您帮妹妹找图。"
+        },
+        {
+          "user": "爷爷讲流星故事，我想听完再问问题。",
+          "assistant": "好的，听完故事后提醒您提问。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "孟小米",
+      "QA_details": [
+        {
+          "user": "我想画月亮，哥哥读星座卡的时候我在旁边听。",
+          "assistant": "好的，我会提醒您准备画月亮。"
+        },
+        {
+          "user": "妈妈给我看月相图，我就画弯弯的月亮。",
+          "assistant": "明白，照着月相图画月亮。"
+        },
+        {
+          "user": "九点前我要把蜡笔收好。",
+          "assistant": "好的，九点前提醒收蜡笔。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "孟德海",
+      "QA_details": [
+        {
+          "user": "知远和清禾周四晚上陪孩子们学天文，我可以讲讲以前看流星的事。",
+          "assistant": "好的，我会提醒家人留时间听您讲流星故事。"
+        },
+        {
+          "user": "小越先读星座卡，小米画月亮，这样挺好。",
+          "assistant": "明白，孩子们按分工学习。"
+        },
+        {
+          "user": "工作日晚上别太晚，九点前停。",
+          "assistant": "没问题，九点前提醒结束。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "孟知远一家每周四工作日晚上在家学什么？",
+      "answer": "学天文常识。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五人的对话，小越、小米和爷爷分别做什么？",
+      "answer": "小越读卡，小米画月亮，爷爷讲流星。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，天文学习要在几点前结束？",
+      "answer": "九点前。",
+      "category": "temporal"
+    },
+    {
+      "question": "月相图通常用来了解什么？",
+      "answer": "月亮形状变化。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小越在对话中提到天文老师姓名了吗？",
+      "answer": "无法回答，未提到姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "case_id": "HC-084",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 1 个孩子 + 2 位祖辈",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许景然",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想和晚棠带小知、我爸、岳母去海滨栈道旅行。",
+          "assistant": "好的，我会把节假日早上的海滨栈道旅行记录为年度家庭出游。"
+        },
+        {
+          "user": "早上七点半出发，先去看海上日光，再去户外咖啡亭休息。",
+          "assistant": "明白，七点半出发，先看海上日光。"
+        },
+        {
+          "user": "小知想捡贝壳，我爸想拍海，岳母怕晒，提醒我带遮阳帽。",
+          "assistant": "已记下，出发前提醒带遮阳帽和小袋子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林晚棠",
+      "QA_details": [
+        {
+          "user": "景然说节假日早上去海滨栈道，我想提前确认哪段路有长椅。",
+          "assistant": "好的，我会提醒您查看长椅位置。"
+        },
+        {
+          "user": "我妈怕晒，咖啡亭要选有遮阳的位置。",
+          "assistant": "明白，休息点选择遮阳座位。"
+        },
+        {
+          "user": "小知捡贝壳时别靠海浪太近。",
+          "assistant": "没问题，提醒孩子远离海浪。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许小知",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈和爷爷外婆早上带我去海滨栈道，我想捡贝壳。",
+          "assistant": "好的，我会提醒家人带小袋子。"
+        },
+        {
+          "user": "爷爷拍海的时候，我站旁边不靠近海浪。",
+          "assistant": "明白，提醒您注意海边距离。"
+        },
+        {
+          "user": "外婆休息时，我陪她坐长椅。",
+          "assistant": "好的，外婆休息时提醒陪她。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "许德海",
+      "QA_details": [
+        {
+          "user": "景然和晚棠今年节假日早上带我们去海滨栈道，我想拍海面。",
+          "assistant": "好的，我会提醒他们安排看海位置。"
+        },
+        {
+          "user": "小知捡贝壳别靠水太近，我帮着看。",
+          "assistant": "明白，提醒您照看孩子。"
+        },
+        {
+          "user": "走累了就在咖啡亭坐会儿。",
+          "assistant": "没问题，安排咖啡亭休息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "林桂兰",
+      "QA_details": [
+        {
+          "user": "女儿和女婿带我们去海滨栈道，我想坐有遮阳的地方看海。",
+          "assistant": "好的，我会提醒他们找遮阳座位。"
+        },
+        {
+          "user": "小知捡贝壳时慢慢来，不要跑。",
+          "assistant": "明白，提醒孩子慢慢走。"
+        },
+        {
+          "user": "遮阳帽别忘了，海边早上也晒。",
+          "assistant": "好的，出发前提醒带遮阳帽。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "许景然一家今年节假日早上计划去哪里旅行？",
+      "answer": "海滨栈道。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五人的对话，小知和爷爷分别想做什么？",
+      "answer": "小知捡贝壳，爷爷拍海。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从行程顺序看，他们先看海上日光，还是先去咖啡亭？",
+      "answer": "先看海上日光。",
+      "category": "temporal"
+    },
+    {
+      "question": "海边捡贝壳为什么不宜靠海浪太近？",
+      "answer": "避免危险。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小知在对话中提到贝壳数量了吗？",
+      "answer": "无法回答，未提到数量。",
+      "category": "adversarial"
+    }
+  ]
+}

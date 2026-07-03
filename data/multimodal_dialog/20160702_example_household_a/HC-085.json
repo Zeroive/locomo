@@ -1,0 +1,184 @@
+{
+  "case_id": "HC-085",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 1 个孩子 + 2 位祖辈",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周明澈",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和云岚、小安、我爸、岳母在家做一场家庭照片猜地点。",
+          "assistant": "好的，我会把这周休息日晚上安排为家中照片猜地点游戏。"
+        },
+        {
+          "user": "我放照片，云岚计分，小安先猜，我爸和岳母补充老地方故事。",
+          "assistant": "明白，您放照片，云岚计分，小安先猜，长辈补故事。"
+        },
+        {
+          "user": "九点半前结束，别让两位老人坐太久。",
+          "assistant": "已记下，九点半前结束。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶云岚",
+      "QA_details": [
+        {
+          "user": "明澈说周末晚上玩照片猜地点，我先把相册投到电视上。",
+          "assistant": "好的，我会提醒您准备投屏相册。"
+        },
+        {
+          "user": "小安猜错也没关系，主要听爷爷外婆讲故事。",
+          "assistant": "明白，重点是家庭分享。"
+        },
+        {
+          "user": "我来计分，最后不分输赢也行。",
+          "assistant": "没问题，轻松计分即可。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "周小安",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈和爷爷外婆周末晚上陪我看照片猜地点，我想先猜海边那张。",
+          "assistant": "好的，我会提醒爸爸先放海边照片。"
+        },
+        {
+          "user": "我猜错了也想听爷爷外婆讲以前去过哪里。",
+          "assistant": "明白，猜完听长辈讲故事。"
+        },
+        {
+          "user": "九点半前我把遥控器放回桌上。",
+          "assistant": "好的，九点半前提醒收遥控器。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周德康",
+      "QA_details": [
+        {
+          "user": "明澈和云岚周末晚上陪小安玩猜地点，我可以讲老照片里的码头。",
+          "assistant": "好的，我会提醒您讲码头故事。"
+        },
+        {
+          "user": "小安先猜，我们再说答案。",
+          "assistant": "明白，先让小安猜。"
+        },
+        {
+          "user": "九点半收就好，别看太久。",
+          "assistant": "没问题，九点半提醒结束。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "叶桂英",
+      "QA_details": [
+        {
+          "user": "女儿和女婿周末晚上陪我们看老照片，我想讲老街那张。",
+          "assistant": "好的，我会提醒大家留出老街照片。"
+        },
+        {
+          "user": "小安猜完地点后，我再补故事。",
+          "assistant": "明白，等小安猜完再讲。"
+        },
+        {
+          "user": "灯别太暗，我还要看清照片。",
+          "assistant": "好的，灯光保持柔和但不太暗。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "周明澈一家这周休息日晚上在家玩什么？",
+      "answer": "照片猜地点。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五人的对话，小安猜完后两位祖辈会做什么？",
+      "answer": "补充老地方故事。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，是小安先猜，还是祖辈先说答案？",
+      "answer": "小安先猜。",
+      "category": "temporal"
+    },
+    {
+      "question": "看老照片通常有什么家庭意义？",
+      "answer": "回忆家庭故事。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小安在对话中提到照片拍摄年份了吗？",
+      "answer": "无法回答，未提到年份。",
+      "category": "adversarial"
+    }
+  ]
+}

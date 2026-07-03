@@ -1,0 +1,194 @@
+{
+  "case_id": "HC-081",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 1 个孩子 + 2 位祖辈",
+    "activity_preference": "文化学习",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆承远",
+      "QA_details": [
+        {
+          "user": "每周三工作日晚上，我想和知夏、爸、岳母陪小然在家学一段古建筑知识。",
+          "assistant": "好的，我会把每周三晚上安排为家中古建筑文化学习。"
+        },
+        {
+          "user": "我爸讲斗拱，岳母讲老宅门窗，知夏帮小然做笔记。",
+          "assistant": "明白，爷爷讲斗拱，外婆讲门窗，妈妈记笔记。"
+        },
+        {
+          "user": "九点前结束，别让小然第二天起不来。",
+          "assistant": "已记下，九点前结束学习。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈知夏",
+      "QA_details": [
+        {
+          "user": "承远说周三晚上学古建筑，我先准备小然的图画本。",
+          "assistant": "好的，我会提醒您准备图画本。"
+        },
+        {
+          "user": "公公讲斗拱时，我帮小然画一个简单结构。",
+          "assistant": "明白，讲斗拱时画简单结构图。"
+        },
+        {
+          "user": "我妈讲门窗花纹后，让小然选一个画下来。",
+          "assistant": "没问题，听完门窗花纹后画下来。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆小然",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈和爷爷外婆周三晚上陪我学古建筑，我想知道斗拱是什么。",
+          "assistant": "好的，我会提醒爷爷先讲斗拱。"
+        },
+        {
+          "user": "外婆讲老宅门窗的时候，我想画一个花纹。",
+          "assistant": "明白，提醒您画门窗花纹。"
+        },
+        {
+          "user": "九点前我要把图画本收进书包。",
+          "assistant": "好的，九点前提醒收本子。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "陆德林",
+      "QA_details": [
+        {
+          "user": "承远和知夏周三晚上陪小然学古建筑，我可以讲斗拱。",
+          "assistant": "好的，我会提醒您讲斗拱。"
+        },
+        {
+          "user": "孩子听不懂就画个简单的，不用讲太深。",
+          "assistant": "明白，内容保持简单。"
+        },
+        {
+          "user": "工作日晚上别太晚，九点前停。",
+          "assistant": "没问题，九点前提醒结束。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "沈桂珍",
+      "QA_details": [
+        {
+          "user": "女儿和女婿周三晚上陪小然学习，我想讲讲老宅门窗。",
+          "assistant": "好的，我会提醒您讲老宅门窗。"
+        },
+        {
+          "user": "小然画花纹时，我慢慢给她看样子。",
+          "assistant": "明白，您给小然示范花纹。"
+        },
+        {
+          "user": "讲完一个花纹就够，不要学太久。",
+          "assistant": "好的，只安排一个花纹。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陆承远一家每周三工作日晚上在家学什么？",
+      "answer": "古建筑知识。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五人的对话，爷爷和外婆分别讲什么？",
+      "answer": "爷爷讲斗拱，外婆讲门窗。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，学习要在几点前结束？",
+      "answer": "九点前。",
+      "category": "temporal"
+    },
+    {
+      "question": "斗拱通常属于哪类建筑知识？",
+      "answer": "中国古建筑结构。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小然在对话中提到建筑老师姓名了吗？",
+      "answer": "无法回答，未提到姓名。",
+      "category": "adversarial"
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "case_id": "HC-069",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "夫妻 + 2 位祖辈",
+    "activity_preference": "亲子陪伴",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每天",
+    "day_type": "工作日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陈泊然",
+      "QA_details": [
+        {
+          "user": "工作日晚上每天我都想和语桐陪我爸、岳母在家做晚间问候，听他们说今天过得怎么样。",
+          "assistant": "好的，我会把每天工作日晚上安排为家中晚间陪伴。"
+        },
+        {
+          "user": "我爸先说血压和散步情况，岳母再说菜园的事，语桐负责倒温水。",
+          "assistant": "明白，父亲先说，岳母再说，语桐倒温水。"
+        },
+        {
+          "user": "九点前结束，不开电视，专心听他们聊。",
+          "assistant": "已记下，九点前结束并关闭电视。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周语桐",
+      "QA_details": [
+        {
+          "user": "泊然说每天晚上陪两位老人聊天，我先准备两杯温水。",
+          "assistant": "好的，我会提醒您准备温水。"
+        },
+        {
+          "user": "公公说完散步情况后，我妈再讲她今天种的菜。",
+          "assistant": "明白，按顺序听两位老人分享。"
+        },
+        {
+          "user": "如果他们聊得开心，也别超过九点太久。",
+          "assistant": "没问题，九点前提醒收尾。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈守义",
+      "QA_details": [
+        {
+          "user": "泊然和语桐每天晚上陪我们聊几句，我先说今天散步的情况。",
+          "assistant": "好的，我会提醒他们先听您说散步情况。"
+        },
+        {
+          "user": "亲家母讲菜园，我也爱听。",
+          "assistant": "明白，之后听亲家母讲菜园。"
+        },
+        {
+          "user": "电视不用开，安静聊会儿就好。",
+          "assistant": "好的，聊天时关闭电视。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周桂兰",
+      "QA_details": [
+        {
+          "user": "女儿和女婿每天晚上陪我们聊天，我想讲讲今天菜园里的番茄。",
+          "assistant": "好的，我会提醒他们听您讲菜园。"
+        },
+        {
+          "user": "亲家先说散步，我后面再说，不着急。",
+          "assistant": "明白，先听亲家分享。"
+        },
+        {
+          "user": "语桐倒点温水就行，别准备夜宵。",
+          "assistant": "没问题，只准备温水。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "陈泊然工作日晚上每天想陪两位祖辈做什么？",
+      "answer": "晚间聊天。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，陈守义和周桂兰分别分享什么？",
+      "answer": "陈守义说散步，周桂兰说菜园。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，谁先分享晚间情况？",
+      "answer": "陈守义先分享。",
+      "category": "temporal"
+    },
+    {
+      "question": "陪老人聊天时关闭电视通常有什么好处？",
+      "answer": "更专心倾听。",
+      "category": "open_domain"
+    },
+    {
+      "question": "周桂兰在对话中提到番茄品种了吗？",
+      "answer": "无法回答，未提到品种。",
+      "category": "adversarial"
+    }
+  ]
+}

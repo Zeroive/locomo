@@ -1,0 +1,156 @@
+{
+  "case_id": "HC-070",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "夫妻 + 2 位祖辈",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许嘉树",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想和念安带我妈、岳父去茶山小镇旅行，这是我们每年一次的长辈出游。",
+          "assistant": "好的，我会把节假日早上的茶山小镇旅行记录为年度家庭出游。"
+        },
+        {
+          "user": "早上七点出发，先去茶园观景台，再去户外茶棚坐坐。",
+          "assistant": "明白，七点出发，先去茶园观景台。"
+        },
+        {
+          "user": "我妈想拍茶垄，岳父想喝新茶，提醒我带遮阳帽和保温杯。",
+          "assistant": "已记下，出发前提醒带遮阳帽和保温杯。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陆念安",
+      "QA_details": [
+        {
+          "user": "嘉树说节假日早上带两位老人去茶山，我想提前查哪条路最平缓。",
+          "assistant": "好的，我会提醒您查看平缓路线。"
+        },
+        {
+          "user": "我爸喝茶前先陪婆婆看茶垄，别把行程排太满。",
+          "assistant": "明白，先看茶垄，再去茶棚。"
+        },
+        {
+          "user": "如果太阳大，观景台停留十分钟就下去。",
+          "assistant": "没问题，太阳大时缩短停留。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰英",
+      "QA_details": [
+        {
+          "user": "嘉树和念安今年节假日早上带我们去茶山，我想拍一张茶垄照片。",
+          "assistant": "好的，我会提醒他们先安排观景台。"
+        },
+        {
+          "user": "亲家想喝新茶，我们看完风景再去茶棚。",
+          "assistant": "明白，先看风景，再去茶棚喝茶。"
+        },
+        {
+          "user": "遮阳帽要带，早上太阳出来也晒。",
+          "assistant": "好的，出发前提醒带遮阳帽。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "陆德仁",
+      "QA_details": [
+        {
+          "user": "女儿和女婿节假日早上带我们去茶山，我想在茶棚喝新茶。",
+          "assistant": "好的，我会提醒他们安排户外茶棚。"
+        },
+        {
+          "user": "先陪亲家母拍茶垄也行，路别太陡。",
+          "assistant": "明白，先走平缓路线去观景台。"
+        },
+        {
+          "user": "保温杯带上，路上也能喝水。",
+          "assistant": "没问题，出门前提醒带保温杯。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "许嘉树今年节假日早上想带家人去哪里旅行？",
+      "answer": "茶山小镇。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，许兰英和陆德仁分别期待什么？",
+      "answer": "许兰英拍茶垄，陆德仁喝新茶。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从行程顺序看，他们先去观景台，还是先去茶棚？",
+      "answer": "先去观景台。",
+      "category": "temporal"
+    },
+    {
+      "question": "茶山旅行中保温杯通常有什么用？",
+      "answer": "方便喝水。",
+      "category": "open_domain"
+    },
+    {
+      "question": "陆德仁在对话中提到茶叶价格了吗？",
+      "answer": "无法回答，未提到价格。",
+      "category": "adversarial"
+    }
+  ]
+}

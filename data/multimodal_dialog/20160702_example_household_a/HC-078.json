@@ -1,0 +1,194 @@
+{
+  "case_id": "HC-078",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "双亲 + 2 个孩子 + 1 位祖辈",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_004",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_004",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_005",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "方景澄",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和知予、爸、小航、小月在家做家庭配音秀。",
+          "assistant": "好的，我会把这周休息日晚上安排为家中配音娱乐。"
+        },
+        {
+          "user": "小航配小机器人，小月配小兔子，爸负责念旁白，我来录音。",
+          "assistant": "明白，小航配机器人，小月配兔子，爷爷念旁白。"
+        },
+        {
+          "user": "九点半前录完一段，知予负责保存音频。",
+          "assistant": "已记下，九点半前录完并保存音频。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林知予",
+      "QA_details": [
+        {
+          "user": "景澄说周末晚上做配音秀，我先把平板充好电。",
+          "assistant": "好的，我会提醒您给平板充电。"
+        },
+        {
+          "user": "小月声音小，录音时让她靠近一点。",
+          "assistant": "明白，提醒小月靠近麦克风。"
+        },
+        {
+          "user": "爸念旁白的时候，孩子们别抢话。",
+          "assistant": "没问题，提醒孩子等旁白结束。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "方小航",
+      "QA_details": [
+        {
+          "user": "爸爸妈妈说晚上在家配音，我想配小机器人。",
+          "assistant": "好的，我会提醒大家给您安排小机器人角色。"
+        },
+        {
+          "user": "妹妹配小兔子时，我等她说完再接。",
+          "assistant": "明白，提醒您等妹妹说完。"
+        },
+        {
+          "user": "爷爷念旁白的时候，我不要抢话。",
+          "assistant": "好的，旁白时提醒安静等待。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "方小月",
+      "QA_details": [
+        {
+          "user": "我想配小兔子，但我的声音有点小。",
+          "assistant": "好的，我会提醒您靠近麦克风。"
+        },
+        {
+          "user": "哥哥配机器人，我配兔子，爷爷念故事。",
+          "assistant": "明白，角色分工已记录。"
+        },
+        {
+          "user": "录完以后我想听一遍。",
+          "assistant": "好的，录完提醒播放一遍。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "方德胜",
+      "QA_details": [
+        {
+          "user": "景澄和知予周末晚上带孩子们配音，我就负责念旁白。",
+          "assistant": "好的，我会提醒您准备旁白。"
+        },
+        {
+          "user": "孩子们先选角色，我等他们准备好再读。",
+          "assistant": "明白，先选角色，再读旁白。"
+        },
+        {
+          "user": "九点半前录一段就够，别太晚。",
+          "assistant": "没问题，九点半前提醒结束。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "方景澄一家这周休息日晚上在家做什么娱乐？",
+      "answer": "家庭配音秀。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五人的对话，小航、小月和爷爷分别负责什么？",
+      "answer": "小航配机器人，小月配兔子，爷爷念旁白。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，配音秀要在几点半前录完？",
+      "answer": "九点半前。",
+      "category": "temporal"
+    },
+    {
+      "question": "录音时靠近麦克风通常有什么作用？",
+      "answer": "声音更清楚。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小月在对话中提到动画片片名了吗？",
+      "answer": "无法回答，未提到片名。",
+      "category": "adversarial"
+    }
+  ]
+}

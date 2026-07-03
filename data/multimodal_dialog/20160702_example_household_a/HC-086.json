@@ -1,0 +1,174 @@
+{
+  "case_id": "HC-086",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "单亲 + 2 个孩子 + 2 位祖辈",
+    "activity_preference": "旅行出游",
+    "preference_polarity": "正向",
+    "time_of_day": "早上",
+    "frequency": "每年",
+    "day_type": "节假日",
+    "activity_space": "户外"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "叶清岚",
+      "QA_details": [
+        {
+          "user": "今年节假日早上，我想带小航、小雨和爸妈去湖湾古镇旅行，这是我们每年最期待的一次出游。",
+          "assistant": "好的，我会把节假日早上的湖湾古镇旅行记录为年度家庭出游。"
+        },
+        {
+          "user": "早上七点出发，先坐户外观光船，再去古镇老桥拍照。",
+          "assistant": "明白，七点出发，先坐观光船，再去老桥。"
+        },
+        {
+          "user": "小航想拍船，小雨想买明信片，爸妈怕晒，提醒我带遮阳帽。",
+          "assistant": "已记下，出发前提醒带遮阳帽和相机。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶小航",
+      "QA_details": [
+        {
+          "user": "妈妈说节假日早上带我们和外公外婆去古镇，我想先拍观光船。",
+          "assistant": "好的，我会提醒妈妈先安排观光船。"
+        },
+        {
+          "user": "小雨买明信片的时候，我帮她拿水杯。",
+          "assistant": "明白，提醒您照看妹妹。"
+        },
+        {
+          "user": "外公外婆去老桥拍照时，我站旁边等。",
+          "assistant": "好的，老桥拍照时提醒您跟紧家人。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "叶小雨",
+      "QA_details": [
+        {
+          "user": "我想去古镇买明信片，也想和哥哥一起坐船。",
+          "assistant": "好的，我会提醒家人安排明信片店和观光船。"
+        },
+        {
+          "user": "妈妈说先坐船，再去老桥。",
+          "assistant": "明白，先坐船，再去老桥。"
+        },
+        {
+          "user": "如果太阳大，我给外婆递遮阳帽。",
+          "assistant": "好的，太阳大时提醒遮阳。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "叶德明",
+      "QA_details": [
+        {
+          "user": "清岚今年节假日早上带我们去湖湾古镇，我想在老桥拍张照片。",
+          "assistant": "好的，我会提醒她安排老桥拍照。"
+        },
+        {
+          "user": "孩子们先坐观光船也好，早上人少。",
+          "assistant": "明白，先坐观光船。"
+        },
+        {
+          "user": "遮阳帽别忘了，古镇桥上会晒。",
+          "assistant": "没问题，出门前提醒带遮阳帽。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "叶桂芳",
+      "QA_details": [
+        {
+          "user": "清岚带我们和孩子去古镇，我想慢慢逛老桥旁边的小路。",
+          "assistant": "好的，我会提醒家人把路线放慢。"
+        },
+        {
+          "user": "小雨买明信片的时候，我陪她看图案。",
+          "assistant": "明白，提醒您陪小雨挑明信片。"
+        },
+        {
+          "user": "太阳大就先找树荫坐会儿。",
+          "assistant": "好的，太阳大时安排树荫休息。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "叶清岚今年节假日早上想带家人去哪里旅行？",
+      "answer": "湖湾古镇。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五人的对话，小航和小雨分别期待什么？",
+      "answer": "小航拍船，小雨买明信片。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从行程顺序看，他们先坐船，还是先去老桥？",
+      "answer": "先坐船。",
+      "category": "temporal"
+    },
+    {
+      "question": "户外旅行带遮阳帽通常有什么作用？",
+      "answer": "遮阳防晒。",
+      "category": "open_domain"
+    },
+    {
+      "question": "小雨在对话中提到古镇酒店名称了吗？",
+      "answer": "无法回答，未提到酒店。",
+      "category": "adversarial"
+    }
+  ]
+}

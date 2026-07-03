@@ -1,0 +1,156 @@
+{
+  "case_id": "HC-071",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "夫妻 + 2 位祖辈",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周景曜",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和映然陪我妈、岳父在家听广播剧，不出门折腾。",
+          "assistant": "好的，我会把这周休息日晚上安排为家中广播剧时间。"
+        },
+        {
+          "user": "我妈喜欢悬疑段落，岳父喜欢历史背景，映然可以帮忙调音量。",
+          "assistant": "明白，广播剧兼顾悬疑和历史内容，并调好音量。"
+        },
+        {
+          "user": "九点半前听完一集就收，别让两位老人坐太久。",
+          "assistant": "已记下，九点半前结束一集并休息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "秦映然",
+      "QA_details": [
+        {
+          "user": "景曜说周末晚上听广播剧，我先把客厅音箱连好。",
+          "assistant": "好的，我会提醒您连接客厅音箱。"
+        },
+        {
+          "user": "我爸耳朵有点背，音量要清楚但别太响。",
+          "assistant": "明白，音量调清楚但不过大。"
+        },
+        {
+          "user": "婆婆听到悬疑部分容易入神，茶水放她手边就好。",
+          "assistant": "没问题，提醒准备茶水。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "周秀兰",
+      "QA_details": [
+        {
+          "user": "景曜和映然周末晚上陪我们听广播剧，我想听悬疑那集。",
+          "assistant": "好的，我会提醒他们播放悬疑广播剧。"
+        },
+        {
+          "user": "亲家喜欢听历史背景，前面的介绍别跳过。",
+          "assistant": "明白，保留历史背景介绍。"
+        },
+        {
+          "user": "茶水放旁边就行，不用准备零食。",
+          "assistant": "好的，只准备茶水。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "秦德明",
+      "QA_details": [
+        {
+          "user": "女儿和女婿休息日晚上陪我们听广播剧，我想听清楚历史背景。",
+          "assistant": "好的，我会提醒他们调清楚音量。"
+        },
+        {
+          "user": "亲家母喜欢悬疑，听一集就够，不用连着放。",
+          "assistant": "明白，只听一集。"
+        },
+        {
+          "user": "九点半收挺好，老人也该休息。",
+          "assistant": "没问题，九点半提醒收听结束。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "周景曜这周休息日晚上想和家人在家做什么？",
+      "answer": "听广播剧。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合四人的对话，周秀兰和秦德明分别关注什么内容？",
+      "answer": "周秀兰听悬疑，秦德明听历史背景。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从时间安排看，广播剧要在几点半前结束？",
+      "answer": "九点半前。",
+      "category": "temporal"
+    },
+    {
+      "question": "在家听广播剧通常属于什么休闲活动？",
+      "answer": "居家娱乐。",
+      "category": "open_domain"
+    },
+    {
+      "question": "秦德明在对话中提到广播剧主播姓名了吗？",
+      "answer": "无法回答，未提到主播。",
+      "category": "adversarial"
+    }
+  ]
+}
