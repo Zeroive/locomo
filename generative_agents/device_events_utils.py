@@ -426,6 +426,85 @@ DEFAULT_ROOM_DEVICE_LAYOUT = {
     "kitchen": ["coffee_machine"]
 }
 
+
+FLOOR_PLAN_PRESETS = [
+    {
+        "layout_id": "one_bedroom",
+        "name": "一室一厅",
+        "min_members": 1,
+        "max_members": 2,
+        "rooms": ["entrance", "living_room", "bedroom", "kitchen", "bathroom", "balcony"],
+    },
+    {
+        "layout_id": "two_bedroom",
+        "name": "两室一厅",
+        "min_members": 2,
+        "max_members": 4,
+        "rooms": ["entrance", "living_room", "bedroom", "second_bedroom", "kitchen", "bathroom", "balcony"],
+    },
+    {
+        "layout_id": "three_bedroom",
+        "name": "三室两厅",
+        "min_members": 3,
+        "max_members": 6,
+        "rooms": ["entrance", "living_room", "dining_room", "bedroom", "second_bedroom", "children_room", "kitchen", "bathroom", "balcony"],
+    },
+    {
+        "layout_id": "three_bedroom_study",
+        "name": "三室一厅带书房",
+        "min_members": 3,
+        "max_members": 6,
+        "rooms": ["entrance", "living_room", "bedroom", "second_bedroom", "children_room", "study", "kitchen", "bathroom", "balcony"],
+    },
+    {
+        "layout_id": "four_bedroom",
+        "name": "四室两厅",
+        "min_members": 5,
+        "max_members": 8,
+        "rooms": ["entrance", "living_room", "dining_room", "bedroom", "second_bedroom", "children_room", "elderly_room", "study", "kitchen", "bathroom", "balcony"],
+    },
+]
+
+
+ROOM_LABELS = {
+    "entrance": "玄关",
+    "living_room": "客厅",
+    "dining_room": "餐厅",
+    "bedroom": "主卧",
+    "second_bedroom": "次卧",
+    "children_room": "儿童房",
+    "elderly_room": "老人房",
+    "study": "书房",
+    "kitchen": "厨房",
+    "bathroom": "卫生间",
+    "balcony": "阳台",
+}
+
+
+ROOM_DEVICE_CANDIDATES = {
+    "entrance": ["door_main", "door_bell", "door_camera", "light_hallway"],
+    "living_room": ["light_living_room", "ac_living_room", "tv_living_room", "curtain_living_room", "motion_sensor", "light_sensor", "air_quality_sensor", "fresh_air_system", "smart_speaker"],
+    "dining_room": ["light_living_room", "motion_sensor", "air_quality_sensor"],
+    "bedroom": ["light_bedroom", "ac_bedroom", "tv_bedroom", "curtain_bedroom", "temp_humidity_sensor"],
+    "second_bedroom": ["light_bedroom", "ac_bedroom", "curtain_bedroom", "temp_humidity_sensor"],
+    "children_room": ["light_bedroom", "ac_bedroom", "tv_kids", "curtain_bedroom", "temp_humidity_sensor"],
+    "elderly_room": ["light_bedroom", "ac_bedroom", "tv_bedroom", "curtain_bedroom", "temp_humidity_sensor"],
+    "study": ["light_study", "motion_sensor"],
+    "kitchen": ["coffee_machine", "motion_sensor", "air_quality_sensor"],
+    "bathroom": ["light_bathroom", "temp_humidity_sensor", "motion_sensor"],
+    "balcony": ["motion_sensor", "air_quality_sensor"],
+}
+
+
+REQUIRED_ROOM_DEVICES = {
+    "entrance": ["door_main", "door_bell", "door_camera", "light_hallway"],
+    "living_room": ["light_living_room", "motion_sensor", "light_sensor", "smart_speaker"],
+    "bedroom": ["light_bedroom", "temp_humidity_sensor"],
+    "kitchen": ["coffee_machine"],
+    "bathroom": ["light_bathroom"],
+}
+
+
 # 设备状态机
 DEVICE_STATES = {
     "wifi_router": ["online", "offline", "unknown_device_detected"],
@@ -461,8 +540,12 @@ PERSON_ROOM_STATUS_SCHEMA = {
     "outside": ["outside", "commuting", "arriving", "left_home"],
     "entrance": ["arriving", "leaving", "waiting", "passing_through"],
     "living_room": ["watching_tv", "resting", "chatting", "playing", "awake"],
+    "dining_room": ["eating", "chatting", "awake"],
     "kitchen": ["cooking", "eating", "preparing_meal", "cleaning", "awake"],
     "bedroom": ["sleeping", "resting", "getting_ready", "awake"],
+    "second_bedroom": ["sleeping", "resting", "getting_ready", "awake"],
+    "children_room": ["sleeping", "studying", "playing", "resting", "awake"],
+    "elderly_room": ["sleeping", "resting", "getting_ready", "awake"],
     "study": ["studying", "working", "reading", "awake"],
     "bathroom": ["washing", "getting_ready"],
     "balcony": ["resting", "watering_plants"],
@@ -544,6 +627,51 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 - daily_state_description 中提到的设备状态应来自“设备状态枚举”
 
 请生成场景发生判断和家庭状态描述："""
+
+
+LLM_HOME_LAYOUT_DEVICE_PROMPT = """你是一个智能家居户型与设备配置助手。请根据家庭成员、预制户型和设备库信息，为该家庭选择真实存在的房间设备。
+
+## 家庭成员
+{members_info}
+
+## 家庭用户偏好与日常习惯
+{household_preferences}
+
+## 预制户型
+户型ID: {layout_id}
+户型名称: {layout_name}
+房间列表:
+{rooms_info}
+
+## data/devices/home_devices.json 设备库摘要
+{devices_info}
+
+## 允许输出的设备ID
+{allowed_device_ids}
+
+## 每个房间推荐候选设备
+{room_device_candidates}
+
+## 任务要求
+1. 只从“允许输出的设备ID”中选择设备，不能创造新设备ID。
+2. 每个房间至少保留基础照明或必要传感/门锁设备；按家庭人口、成员角色、生活习惯和偏好选择合理设备。
+3. 如果家庭有儿童学习需求，优先给儿童房/书房配置学习照明；如果老人多，优先考虑卧室/老人房舒适与安全传感；如果有人重视影音休闲，客厅可配置电视/音箱；如果有人照护宠物或关注空气质量，优先配置传感器/新风。
+4. 客厅通常包含灯、空调/新风/传感器/音箱等；卧室按实际需要选择灯、空调、窗帘、温湿度传感器；玄关必须包含门锁、门铃、门口摄像头和玄关灯。
+5. 可以让同一种设备ID出现在多个同类房间中，表示同类设备能力存在；但不要把明显不属于房间的设备放进去。
+
+## 输出格式
+请严格按照 JSON 输出，不要包含解释文字：
+
+{{
+  "layout_id": "{layout_id}",
+  "layout_name": "{layout_name}",
+  "rooms": {{
+    "entrance": {{"name": "玄关", "devices": ["door_main", "door_bell", "door_camera", "light_hallway"]}},
+    "living_room": {{"name": "客厅", "devices": ["light_living_room", "ac_living_room", "smart_speaker"]}}
+  }}
+}}
+
+请生成该家庭的 rooms 配置："""
 
 
 LLM_EVENT_ITEM_PROMPT = """你是一个智能家居系统分析师。请基于当天家庭状态描述和已经生成的事件，判断候选事件是否应该成为下一个 annotated_events item。
@@ -2563,6 +2691,289 @@ def format_relations_info(household_profile):
                 lines.append(f"- {relation}")
         return '\n'.join(lines) if lines else "未提供显式家庭关系"
     return "未提供显式家庭关系"
+
+
+def household_has_room_layout(household_profile):
+    if not isinstance(household_profile, dict):
+        return False
+    for key in ('rooms', 'room_layout', 'spaces'):
+        layout = household_profile.get(key)
+        if isinstance(layout, dict) and layout:
+            return True
+    return False
+
+
+def select_floor_plan_for_household(household_profile):
+    member_count = len(get_person_ids_from_household(household_profile))
+    candidates = [
+        item for item in FLOOR_PLAN_PRESETS
+        if item["min_members"] <= member_count <= item["max_members"]
+    ]
+    if not candidates:
+        candidates = FLOOR_PLAN_PRESETS
+    return copy.deepcopy(random.choice(candidates))
+
+
+def format_rooms_info(room_ids):
+    return "\n".join(f"- {room_id}: {ROOM_LABELS.get(room_id, room_id)}" for room_id in room_ids)
+
+
+def format_room_device_candidates(room_ids):
+    lines = []
+    for room_id in room_ids:
+        candidates = [
+            device_id for device_id in ROOM_DEVICE_CANDIDATES.get(room_id, [])
+            if device_id in DEVICE_STATES
+        ]
+        lines.append(f"- {room_id}: {', '.join(candidates) if candidates else '无'}")
+    return "\n".join(lines)
+
+
+def summarize_home_devices_for_layout(device_file, max_devices=80):
+    if not device_file or not os.path.exists(device_file):
+        return format_devices_info(device_file)
+    try:
+        with open(device_file, 'r', encoding='utf-8') as f:
+            devices_config = json.load(f)
+    except Exception as e:
+        logging.warning("Failed to load device library for layout generation: %s", e)
+        return format_devices_info(device_file)
+
+    lines = []
+    categories = devices_config.get('device_categories', {})
+    for category_name, category_data in categories.items():
+        category_label = category_data.get('name', category_name)
+        for device_id, device_info in category_data.get('devices', {}).items():
+            rooms = ', '.join(device_info.get('rooms', []))
+            description = device_info.get('description', '')
+            lines.append(f"- {device_id}({category_label}): {description}; 适用房间: {rooms}")
+            if len(lines) >= max_devices:
+                return "\n".join(lines)
+    return "\n".join(lines) if lines else format_devices_info(device_file)
+
+
+def _format_profile_value_for_layout(value, max_items=4):
+    if value is None or value == "":
+        return ""
+    if isinstance(value, list):
+        items = [str(item) for item in value if item]
+        return "、".join(items[:max_items])
+    if isinstance(value, dict):
+        items = []
+        for key, item in value.items():
+            if item:
+                items.append(f"{key}={item}")
+            if len(items) >= max_items:
+                break
+        return "、".join(items)
+    return str(value)
+
+
+def format_household_preferences_for_layout(household_profile):
+    """
+    将家庭画像里的偏好、习惯和照护信息压缩为户型设备选择上下文。
+    """
+    if not isinstance(household_profile, dict):
+        return "未提供显式偏好，请按家庭人口结构和常见智能家居需求选择设备。"
+
+    lines = []
+    family = household_profile.get('family', {})
+    if isinstance(family, dict):
+        if family.get('shared_background'):
+            lines.append(f"- 家庭背景: {family['shared_background']}")
+        if family.get('weekend_context'):
+            lines.append(f"- 周末/休闲安排: {family['weekend_context']}")
+
+    members = household_profile.get('members', [])
+    if isinstance(members, dict):
+        member_iter = []
+        for person_id, member in members.items():
+            if isinstance(member, dict):
+                item = member.copy()
+                item.setdefault('person_id', person_id)
+                member_iter.append(item)
+    elif isinstance(members, list):
+        member_iter = [member for member in members if isinstance(member, dict)]
+    else:
+        member_iter = []
+
+    for member in member_iter:
+        traits = member.get('traits', {}) if isinstance(member.get('traits'), dict) else {}
+        detail_parts = []
+        for key, label in (
+            ('preferences', '偏好'),
+            ('daily_routines', '日常习惯'),
+            ('lifestyle', '生活方式'),
+            ('hobbies', '兴趣'),
+            ('occupation', '职业'),
+        ):
+            value = traits.get(key, member.get(key))
+            text = _format_profile_value_for_layout(value)
+            if text:
+                detail_parts.append(f"{label}:{text}")
+        if detail_parts:
+            person_id = member.get('person_id') or member.get('id') or ''
+            name = member.get('name') or person_id or '家庭成员'
+            role = member.get('role') or member.get('family_role') or ''
+            role_text = f"({role})" if role else ""
+            lines.append(f"- {name}{role_text}: " + "；".join(detail_parts))
+
+    responsibilities = household_profile.get('role_responsibilities', [])
+    if isinstance(responsibilities, dict):
+        for person_id, responsibility in responsibilities.items():
+            text = _format_profile_value_for_layout(responsibility)
+            if text:
+                lines.append(f"- 责任分工: {person_id}: {text}")
+    elif isinstance(responsibilities, list):
+        for responsibility in responsibilities[:8]:
+            if isinstance(responsibility, dict):
+                person_id = (
+                    responsibility.get('person_id')
+                    or responsibility.get('member_id')
+                    or responsibility.get('caretaker_id')
+                    or ''
+                )
+                text = _format_profile_value_for_layout(
+                    responsibility.get('responsibility')
+                    or responsibility.get('description')
+                    or responsibility.get('tasks')
+                    or responsibility
+                )
+                if text:
+                    lines.append(f"- 责任分工: {person_id}: {text}")
+            elif responsibility:
+                lines.append(f"- 责任分工: {responsibility}")
+
+    pets = household_profile.get('pets', [])
+    if isinstance(pets, list):
+        for pet in pets[:4]:
+            if not isinstance(pet, dict):
+                continue
+            name = pet.get('name') or pet.get('pet_id') or '宠物'
+            species = pet.get('species') or pet.get('type') or ''
+            caretaker = pet.get('caretaker_id') or pet.get('caretaker') or ''
+            pet_parts = [item for item in [species, f"照护人={caretaker}" if caretaker else ""] if item]
+            lines.append(f"- 宠物照护: {name}" + (f"({', '.join(pet_parts)})" if pet_parts else ""))
+
+    return "\n".join(lines) if lines else "未提供显式偏好，请按家庭人口结构和常见智能家居需求选择设备。"
+
+
+def build_rule_based_room_layout(floor_plan):
+    rooms = {}
+    for room_id in floor_plan.get('rooms', []):
+        devices = []
+        for device_id in REQUIRED_ROOM_DEVICES.get(room_id, []):
+            if device_id in DEVICE_STATES and device_id not in devices:
+                devices.append(device_id)
+        for device_id in ROOM_DEVICE_CANDIDATES.get(room_id, []):
+            if device_id in DEVICE_STATES and device_id not in devices:
+                devices.append(device_id)
+        rooms[room_id] = {
+            "name": ROOM_LABELS.get(room_id, room_id),
+            "devices": devices,
+        }
+    return {
+        "layout_id": floor_plan.get('layout_id', 'default'),
+        "layout_name": floor_plan.get('name', '默认户型'),
+        "rooms": rooms,
+    }
+
+
+def validate_generated_room_layout(layout_result, floor_plan):
+    if not isinstance(layout_result, dict):
+        raise ValueError(f"Layout result must be a dict, got {type(layout_result)}")
+    rooms = layout_result.get('rooms')
+    if not isinstance(rooms, dict) or not rooms:
+        raise ValueError("Layout result missing rooms")
+
+    allowed_rooms = set(floor_plan.get('rooms', []))
+    normalized_rooms = {}
+    for room_id in floor_plan.get('rooms', []):
+        room_data = rooms.get(room_id)
+        if not isinstance(room_data, dict):
+            room_data = {}
+        devices = room_data.get('devices', [])
+        if not isinstance(devices, list):
+            devices = []
+        normalized_devices = []
+        room_candidates = set(ROOM_DEVICE_CANDIDATES.get(room_id, [])) | set(REQUIRED_ROOM_DEVICES.get(room_id, []))
+        for device_id in devices:
+            if device_id in DEVICE_STATES and (not room_candidates or device_id in room_candidates):
+                if device_id not in normalized_devices:
+                    normalized_devices.append(device_id)
+        for device_id in REQUIRED_ROOM_DEVICES.get(room_id, []):
+            if device_id in DEVICE_STATES and device_id not in normalized_devices:
+                normalized_devices.append(device_id)
+        normalized_rooms[room_id] = {
+            "name": room_data.get('name') or ROOM_LABELS.get(room_id, room_id),
+            "devices": normalized_devices,
+        }
+
+    extra_rooms = set(rooms) - allowed_rooms
+    if extra_rooms:
+        logging.info("Ignoring rooms outside selected floor plan: %s", sorted(extra_rooms))
+    return {
+        "layout_id": layout_result.get('layout_id') or floor_plan.get('layout_id', 'default'),
+        "layout_name": layout_result.get('layout_name') or floor_plan.get('name', '默认户型'),
+        "rooms": normalized_rooms,
+    }
+
+
+def ensure_household_room_layout(household_profile, device_file=None, use_llm=True, overwrite=False):
+    if household_profile is None:
+        household_profile = {}
+    if household_has_room_layout(household_profile) and not overwrite:
+        return household_profile
+
+    floor_plan = select_floor_plan_for_household(household_profile)
+    layout_result = None
+    if use_llm:
+        run_json_trials_func = get_run_json_trials()
+        if run_json_trials_func is not None:
+            prompt = LLM_HOME_LAYOUT_DEVICE_PROMPT.format(
+                members_info=format_members_info(household_profile, get_person_ids_from_household(household_profile)),
+                household_preferences=format_household_preferences_for_layout(household_profile),
+                layout_id=floor_plan.get('layout_id', ''),
+                layout_name=floor_plan.get('name', ''),
+                rooms_info=format_rooms_info(floor_plan.get('rooms', [])),
+                devices_info=summarize_home_devices_for_layout(device_file),
+                allowed_device_ids=", ".join(sorted(DEVICE_STATES.keys())),
+                room_device_candidates=format_room_device_candidates(floor_plan.get('rooms', [])),
+            )
+            try:
+                result = run_json_trials_func(
+                    prompt,
+                    num_gen=1,
+                    num_tokens_request=2200,
+                    temperature=0.5,
+                )
+                layout_result = validate_generated_room_layout(result, floor_plan)
+            except Exception as e:
+                _log_llm_failure(
+                    "household_room_layout",
+                    e,
+                    context={"scenario": "household_layout"},
+                    prompt=prompt,
+                    result=locals().get('result'),
+                    extra={"floor_plan": floor_plan},
+                )
+        else:
+            logging.warning("LLM not available; using rule-based household room layout")
+
+    if layout_result is None:
+        layout_result = validate_generated_room_layout(build_rule_based_room_layout(floor_plan), floor_plan)
+
+    household_profile['floor_plan'] = {
+        "layout_id": layout_result['layout_id'],
+        "layout_name": layout_result['layout_name'],
+    }
+    household_profile['rooms'] = layout_result['rooms']
+    logging.info(
+        "Assigned household room layout: %s with %s rooms",
+        layout_result['layout_id'],
+        len(layout_result['rooms']),
+    )
+    return household_profile
 
 
 def get_household_room_layout(household_profile):

@@ -22,7 +22,8 @@ from generative_agents.device_events_utils import (
     save_device_events, 
     get_device_events_summary,
     load_household_profile,
-    get_scene_templates
+    get_scene_templates,
+    ensure_household_room_layout,
 )
 from generative_agents.household_utils import (
     HOUSEHOLD_TYPES,
@@ -74,7 +75,17 @@ def ensure_household_profile(args):
     for path in candidates:
         if path and os.path.exists(path) and not args.overwrite_persona:
             logging.info("Loading existing household profile: %s", path)
-            return strip_generation_prompts(load_household_profile(path))
+            profile = strip_generation_prompts(load_household_profile(path))
+            before = json.dumps(profile, ensure_ascii=False, sort_keys=True)
+            profile = ensure_household_room_layout(
+                profile,
+                device_file=args.device_file,
+                use_llm=not args.no_llm,
+            )
+            after = json.dumps(profile, ensure_ascii=False, sort_keys=True)
+            if after != before:
+                save_profile(profile, args.out_dir)
+            return profile
 
     logging.info(
         "Sampling household profile: household_type=%s, with_pet=%s, use_llm=%s",
@@ -94,6 +105,11 @@ def ensure_household_profile(args):
         with_pet=args.with_pet,
         use_llm=not args.no_llm,
         on_profile_updated=autosave_profile,
+    )
+    profile = ensure_household_room_layout(
+        profile,
+        device_file=args.device_file,
+        use_llm=not args.no_llm,
     )
     save_profile(profile, args.out_dir)
     return profile
