@@ -320,88 +320,88 @@ SCENE_TEMPLATES = {
              "description": "门口摄像头检测到未识别人员，影响开门方式"}
         ]
     },
-    # "all_leave_arm": {
-    #     "name": "全员离家布防",
-    #     "description": "全员离家后，门锁、灯光、空调、新风、摄像头和安防系统进入离家状态",
-    #     "default_subject": "home_assistant",
-    #     "default_home": "home_1",
-    #     "time_window": {
-    #         "normal": {"start": "08:30", "end": "09:30"}
-    #     },
-    #     "primary_events": [
-    #         {"event_type": "arm_away_mode", "predicate": "armed", "object_id": "security_system",
-    #          "description": "全员离家布防"}
-    #     ],
-    #     "related_events": [
-    #         {"subject_id": "home_assistant", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
-    #          "description": "全员离家后锁门"},
-    #         {"subject_id": "home_assistant", "event_type": "turn_off_hallway_light", "predicate": "off", "object_id": "light_hallway",
-    #          "description": "玄关无人时关闭玄关灯"},
-    #         {"subject_id": "home_assistant", "event_type": "turn_off_living_room_light", "predicate": "off", "object_id": "light_living_room",
-    #          "description": "客厅无人时关闭客厅灯"},
-    #         {"subject_id": "home_assistant", "event_type": "turn_off_bedroom_light", "predicate": "off", "object_id": "light_bedroom",
-    #          "description": "卧室无人时关闭卧室灯"},
-    #         {"subject_id": "home_assistant", "event_type": "turn_off_living_room_ac", "predicate": "off", "object_id": "ac_living_room",
-    #          "description": "客厅无人时关闭客厅空调"},
-    #         {"subject_id": "home_assistant", "event_type": "turn_off_bedroom_ac", "predicate": "off", "object_id": "ac_bedroom",
-    #          "description": "卧室无人时关闭卧室空调"},
-    #         {"subject_id": "home_assistant", "event_type": "stop_fresh_air", "predicate": "off", "object_id": "fresh_air_system",
-    #          "description": "全员离家后关闭或降低新风系统"},
-    #         {"subject_id": "home_assistant", "event_type": "camera_record", "predicate": "recording", "object_id": "security_camera",
-    #          "description": "安防摄像头开始录像或进入警戒"}
-    #     ],
-    #     "core_events": [
-    #         {"event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
-    #          "description": "锁门"},
-    #         {"event_type": "security_on", "predicate": "armed", "object_id": "security_system",
-    #          "description": "启动安防系统"}
-    #     ],
-    #     "noise_events": [
-    #         {"event_type": "motion_sensor_clear", "predicate": "clear", "object_id": "motion_sensor",
-    #          "description": "室内移动传感器无活动，支持布防"},
-    #         {"event_type": "wifi_all_phones_offline", "predicate": "offline", "object_id": "wifi_router",
-    #          "description": "家庭成员手机均离线，辅助判断全员离家"},
-    #         {"event_type": "air_quality_good", "predicate": "good", "object_id": "air_quality_sensor",
-    #          "description": "空气质量正常，离家后可关闭新风"}
-    #     ]
-    # },
-    # "anomaly_detection": {
-    #     "name": "异常活动检测",
-    #     "description": "安防状态下检测到异常活动，门口摄像头、移动传感器、摄像头录像和音箱提醒联动",
-    #     "default_subject": "home_assistant",
-    #     "default_home": "home_1",
-    #     "time_window": {
-    #         "normal": {"start": "00:00", "end": "24:00"}
-    #     },
-    #     "primary_events": [
-    #         {"event_type": "anomaly_detected", "predicate": "detected", "object_id": "motion_sensor",
-    #          "description": "检测到异常活动"}
-    #     ],
-    #     "related_events": [
-    #         {"subject_id": "home_assistant", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
-    #          "description": "门口摄像头检测到异常移动"},
-    #         {"subject_id": "home_assistant", "event_type": "camera_record", "predicate": "recording", "object_id": "security_camera",
-    #          "description": "安防摄像头开始录像"},
-    #         {"subject_id": "home_assistant", "event_type": "speaker_alarm", "predicate": "speaking", "object_id": "smart_speaker",
-    #          "description": "智能音箱发出警示或提醒"},
-    #         {"subject_id": "home_assistant", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
-    #          "description": "确认大门处于锁定状态"}
-    #     ],
-    #     "core_events": [
-    #         {"event_type": "motion_detected", "predicate": "detected", "object_id": "motion_sensor",
-    #          "description": "检测到移动"},
-    #         {"event_type": "camera_record", "predicate": "recording", "object_id": "security_camera",
-    #          "description": "摄像头录制"}
-    #     ],
-    #     "noise_events": [
-    #         {"event_type": "door_camera_unrecognized", "predicate": "unrecognized", "object_id": "door_camera",
-    #          "description": "门口摄像头检测到未识别人员，可能触发异常"},
-    #         {"event_type": "wifi_unknown_device", "predicate": "unknown_device_detected", "object_id": "wifi_router",
-    #          "description": "家庭 WiFi 发现陌生设备，辅助异常判断"},
-    #         {"event_type": "motion_sensor_false_positive", "predicate": "detected", "object_id": "motion_sensor",
-    #          "description": "室内短暂移动，可能是误报背景"}
-    #     ]
-    # }
+    "all_leave_arm": {
+        "name": "全员离家布防",
+        "description": "全员离家后，门锁、灯光、空调、新风、摄像头和安防系统进入离家状态",
+        "default_subject": "home_assistant",
+        "default_home": "home_1",
+        "time_window": {
+            "normal": {"start": "08:30", "end": "09:30"}
+        },
+        "primary_events": [
+            {"event_type": "arm_away_mode", "predicate": "armed", "object_id": "security_system",
+             "description": "全员离家布防"}
+        ],
+        "related_events": [
+            {"subject_id": "home_assistant", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
+             "description": "全员离家后锁门"},
+            {"subject_id": "home_assistant", "event_type": "turn_off_hallway_light", "predicate": "off", "object_id": "light_hallway",
+             "description": "玄关无人时关闭玄关灯"},
+            {"subject_id": "home_assistant", "event_type": "turn_off_living_room_light", "predicate": "off", "object_id": "light_living_room",
+             "description": "客厅无人时关闭客厅灯"},
+            {"subject_id": "home_assistant", "event_type": "turn_off_bedroom_light", "predicate": "off", "object_id": "light_bedroom",
+             "description": "卧室无人时关闭卧室灯"},
+            {"subject_id": "home_assistant", "event_type": "turn_off_living_room_ac", "predicate": "off", "object_id": "ac_living_room",
+             "description": "客厅无人时关闭客厅空调"},
+            {"subject_id": "home_assistant", "event_type": "turn_off_bedroom_ac", "predicate": "off", "object_id": "ac_bedroom",
+             "description": "卧室无人时关闭卧室空调"},
+            {"subject_id": "home_assistant", "event_type": "stop_fresh_air", "predicate": "off", "object_id": "fresh_air_system",
+             "description": "全员离家后关闭或降低新风系统"},
+            {"subject_id": "home_assistant", "event_type": "camera_record", "predicate": "recording", "object_id": "security_camera",
+             "description": "安防摄像头开始录像或进入警戒"}
+        ],
+        "core_events": [
+            {"event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
+             "description": "锁门"},
+            {"event_type": "security_on", "predicate": "armed", "object_id": "security_system",
+             "description": "启动安防系统"}
+        ],
+        "noise_events": [
+            {"event_type": "motion_sensor_clear", "predicate": "clear", "object_id": "motion_sensor",
+             "description": "室内移动传感器无活动，支持布防"},
+            {"event_type": "wifi_all_phones_offline", "predicate": "offline", "object_id": "wifi_router",
+             "description": "家庭成员手机均离线，辅助判断全员离家"},
+            {"event_type": "air_quality_good", "predicate": "good", "object_id": "air_quality_sensor",
+             "description": "空气质量正常，离家后可关闭新风"}
+        ]
+    },
+    "anomaly_detection": {
+        "name": "异常活动检测",
+        "description": "安防状态下检测到异常活动，门口摄像头、移动传感器、摄像头录像和音箱提醒联动",
+        "default_subject": "home_assistant",
+        "default_home": "home_1",
+        "time_window": {
+            "normal": {"start": "00:00", "end": "24:00"}
+        },
+        "primary_events": [
+            {"event_type": "anomaly_detected", "predicate": "detected", "object_id": "motion_sensor",
+             "description": "检测到异常活动"}
+        ],
+        "related_events": [
+            {"subject_id": "home_assistant", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
+             "description": "门口摄像头检测到异常移动"},
+            {"subject_id": "home_assistant", "event_type": "camera_record", "predicate": "recording", "object_id": "security_camera",
+             "description": "安防摄像头开始录像"},
+            {"subject_id": "home_assistant", "event_type": "speaker_alarm", "predicate": "speaking", "object_id": "smart_speaker",
+             "description": "智能音箱发出警示或提醒"},
+            {"subject_id": "home_assistant", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
+             "description": "确认大门处于锁定状态"}
+        ],
+        "core_events": [
+            {"event_type": "motion_detected", "predicate": "detected", "object_id": "motion_sensor",
+             "description": "检测到移动"},
+            {"event_type": "camera_record", "predicate": "recording", "object_id": "security_camera",
+             "description": "摄像头录制"}
+        ],
+        "noise_events": [
+            {"event_type": "door_camera_unrecognized", "predicate": "unrecognized", "object_id": "door_camera",
+             "description": "门口摄像头检测到未识别人员，可能触发异常"},
+            {"event_type": "wifi_unknown_device", "predicate": "unknown_device_detected", "object_id": "wifi_router",
+             "description": "家庭 WiFi 发现陌生设备，辅助异常判断"},
+            {"event_type": "motion_sensor_false_positive", "predicate": "detected", "object_id": "motion_sensor",
+             "description": "室内短暂移动，可能是误报背景"}
+        ]
+    }
 }
 
 # 家庭成员映射
