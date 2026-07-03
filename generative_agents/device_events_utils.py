@@ -252,11 +252,8 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
     
     primary_device_ids = [event.get('object_id') for event in allowed_events if event.get('object_id')]
     household_device_ids = list(dict.fromkeys(get_layout_device_ids(household_profile) + primary_device_ids))
-    # 准备设备信息：只展示当前家庭存在的设备和本场景候选事件对象
-    devices_info = format_devices_info(device_file, household_device_ids)
-    if primary_device_ids:
-        devices_info += "\n\n## 场景候选事件设备对象\n"
-        devices_info += "\n".join(f"- {device_id}: 场景候选事件对象" for device_id in primary_device_ids)
+    # 准备设备信息：只展示本场景候选事件设备
+    devices_info = format_devices_info(device_file, primary_device_ids)
     
     # 随机抽样部分人物和设备
     sampled_persons = random.sample(person_ids, min(3, len(person_ids)))
@@ -510,10 +507,7 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
                 event.get('object_id') for event in allowed_events if event.get('object_id')
             ))
             household_device_ids = list(dict.fromkeys(layout_device_ids + event_device_ids))
-            context_devices_info = format_devices_info(device_file, household_device_ids)
-            if event_device_ids:
-                context_devices_info += "\n\n## 场景候选事件设备对象\n"
-                context_devices_info += "\n".join(f"- {device_id}: 场景候选事件对象" for device_id in event_device_ids)
+            context_devices_info = format_devices_info(device_file, event_device_ids)
 
             contexts.append({
                 'scenario': scenario,
