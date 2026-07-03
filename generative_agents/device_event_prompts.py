@@ -5,12 +5,6 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 ## 家庭成员
 {members_info}
 
-## 家庭关系
-{relations_info}
-
-## 房间与设备布局
-{room_device_layout}
-
 ## 可控设备
 {devices_info}
 
@@ -63,7 +57,7 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 - scenario_should_happen=true 时，household_state_description 和 device_event_description 都不能为空
 - household_state_description 必须覆盖所有家庭成员，写明模型选择的具体小时/分钟，并与 scenario_time 保持一致
 - device_event_description 必须聚焦当前场景主体预期操作的设备动作或联动，不能混入与当前场景无关的设备操作
-- device_event_description 中的设备动作必须能从房间与设备布局、可控设备中找到依据；不要描述不存在的设备
+- device_event_description 中的设备动作必须能从可控设备中找到依据；不要描述不存在的设备
 - household_state_description 和 device_event_description 不能与当天已生成的其他情景描述出现人物位置、设备状态或时间顺序冲突
 
 请生成场景发生判断和家庭状态描述："""
