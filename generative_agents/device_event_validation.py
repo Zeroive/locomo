@@ -345,7 +345,7 @@ def get_annotated_event_key(annotated_event):
     )
 
 
-def format_previous_events_for_prompt(previous_events):
+def format_previous_events_for_prompt(previous_events, include_devices=True):
     """
     压缩展示历史事件：旧事件只保留 event 摘要，state_snapshot 只保留最新一条。
     """
@@ -368,6 +368,13 @@ def format_previous_events_for_prompt(previous_events):
             "event_type": attributes.get('event_type', ''),
             "description": attributes.get('description', ''),
         })
+
+    if latest_state_snapshot and not include_devices:
+        latest_state_snapshot = {
+            key: value
+            for key, value in latest_state_snapshot.items()
+            if key != 'devices'
+        }
 
     return json.dumps({
         "event_history": event_history,

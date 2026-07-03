@@ -847,6 +847,7 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
     household_device_ids = context['household_device_ids']
     all_scenario_descriptions = context.get('all_scenario_descriptions') or "无"
     previous_events_text = format_previous_events_for_prompt(previous_events)
+    previous_events_persons_text = format_previous_events_for_prompt(previous_events, include_devices=False)
     missing_required_primary_events = get_missing_required_primary_events(
         primary_events,
         previous_events,
@@ -871,7 +872,6 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         episode_date=episode_date.strftime('%Y-%m-%d'),
         subject_id=default_subject,
         scenario_time=context['scenario_time'],
-        all_scenario_descriptions=all_scenario_descriptions,
         daily_state_description=context['daily_state_description'],
         previous_events=previous_events_text,
         allowed_events_info=allowed_events_info,
@@ -954,7 +954,7 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         room_device_layout=context['room_device_layout'],
         all_scenario_descriptions=all_scenario_descriptions,
         daily_state_description=context['daily_state_description'],
-        previous_events=previous_events_text,
+        previous_events=previous_events_persons_text,
         event_json=event_json,
     )
     persons_result = None

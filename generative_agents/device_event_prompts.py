@@ -302,7 +302,7 @@ LLM_NEXT_EVENT_PROMPT = """你是一个智能家居系统分析师。请基于�
 请生成当前情景的下一个 annotated_event："""
 
 
-LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基于当天情景描述和已经生成的事件，只生成当前情景下的下一个 event，或判断当前情景事件已经结束。
+LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基于当前情景描述和已经生成的事件，只生成当前情景下的下一个 event，或判断当前情景事件已经结束。
 
 ## 场景信息
 场景类型: {scenario}
@@ -311,10 +311,8 @@ LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基
 日期: {episode_date}
 情景发生时间: {scenario_time}
 
-## 当天所有已生成的情景描述
-{all_scenario_descriptions}
-
 ## 当前情景描述
+这是整个当前情景预期发生的事情。请结合当前情景已生成事件、最新 state_snapshot 和允许事件集合，判断相关事件是否还应该发生。
 {daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
@@ -326,8 +324,9 @@ LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基
 ## 任务要求
 1. 每次只输出一个“下一个 event”；如果当前情景已经结束，输出 should_continue=false。
 2. event 的 subject_id、predicate、object_id、attributes.event_type 必须来自“当前情景尚未生成且允许生成的事件集合”。
-3. 不要重复生成已经出现过的相同 subject_id/predicate/object_id/event_type 事件。
-4. 不要生成候选集合之外的泛化事件或动作拆解细节。
+3. 需要根据当前情景描述表达的预期、已生成事件摘要和最新 state_snapshot，选择是否发生尚未生成的相关事件。
+4. 不要重复生成已经出现过的相同 subject_id/predicate/object_id/event_type 事件。
+5. 不要生成候选集合之外的泛化事件或动作拆解细节。
 
 ## 输出格式
 请严格按照以下 JSON 格式输出，不要包含其他解释文字：
@@ -337,7 +336,7 @@ LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基
     "reason": "为什么继续生成该事件，或为什么当前情景已经结束",
     "event": {{
         "subject_id": "home_assistant",
-            "predicate": "off",
+        "predicate": "off",
         "object_id": "light_living_room",
         "attributes": {{
             "event_type": "turn_off_living_room_light",
