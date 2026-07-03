@@ -364,8 +364,8 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
                     annotated_events.append(annotated_event)
             
             llm_result = {
-                'household_state_description': state_result.get('household_state_description', ''),
-                'device_event_description': state_result.get('device_event_description', ''),
+                'household_state_description': state_result['household_state_description'],
+                'device_event_description': state_result['device_event_description'],
                 'daily_state_description': state_result['daily_state_description'],
                 'annotated_events': annotated_events,
             }
@@ -607,8 +607,8 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
             scenario_time = state_result.get('scenario_time') or context['planned_scene_time']
             context['scenario_time'] = scenario_time
             context['daily_state_description'] = state_result['daily_state_description']
-            context['household_state_description'] = state_result.get('household_state_description', '')
-            context['device_event_description'] = state_result.get('device_event_description', '')
+            context['household_state_description'] = state_result['household_state_description']
+            context['device_event_description'] = state_result['device_event_description']
             context['sampled_context'] = {
                 'persons': state_result.get('sampled_context', {}).get('persons', sampled_persons),
                 'devices': state_result.get('sampled_context', {}).get('devices', sampled_devices),
@@ -618,8 +618,8 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
                 'subject_id': context['default_subject'],
                 'scenario_time': scenario_time,
                 'daily_state_description': context['daily_state_description'],
-                'household_state_description': context.get('household_state_description', ''),
-                'device_event_description': context.get('device_event_description', ''),
+                'household_state_description': context['household_state_description'],
+                'device_event_description': context['device_event_description'],
             })
             active_contexts.append(context)
 
@@ -1100,8 +1100,8 @@ def generate_scenario_events_from_description_llm(context, run_json_trials_func,
                 annotated_events.append(annotated_event)
 
             llm_result = {
-                'household_state_description': context.get('household_state_description', ''),
-                'device_event_description': context.get('device_event_description', ''),
+                'household_state_description': context['household_state_description'],
+                'device_event_description': context['device_event_description'],
                 'daily_state_description': context['daily_state_description'],
                 'annotated_events': annotated_events,
             }
@@ -1317,8 +1317,8 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
         "confidence": round(0.85 + random.random() * 0.1, 2),
         "date": episode_date.isoformat(),
         "household_layout": household_layout or get_household_room_layout({}),
-        "household_state_description": result.get('household_state_description', ''),
-        "device_event_description": result.get('device_event_description', ''),
+        "household_state_description": result['household_state_description'],
+        "device_event_description": result['device_event_description'],
         "daily_state_description": result['daily_state_description'],
         "annotated_events": annotated_events
     }

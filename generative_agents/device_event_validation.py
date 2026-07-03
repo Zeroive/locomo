@@ -190,14 +190,12 @@ def validate_llm_state_result(result):
     household_state_description = result.get('household_state_description', '')
     device_event_description = result.get('device_event_description', '')
     daily_state_description = result.get('daily_state_description', '')
+    if not household_state_description:
+        raise ValueError("Missing household_state_description")
+    if not device_event_description:
+        raise ValueError("Missing device_event_description")
     if not daily_state_description:
-        if household_state_description or device_event_description:
-            daily_state_description = (
-                f"家庭人员状态：{household_state_description or '无'} "
-                f"设备事件：{device_event_description or '无'}"
-            )
-        else:
-            raise ValueError("Missing daily_state_description")
+        raise ValueError("Missing daily_state_description")
     return {
         "scenario_should_happen": bool(result.get('scenario_should_happen')),
         "scenario_time": result.get('scenario_time', ''),
