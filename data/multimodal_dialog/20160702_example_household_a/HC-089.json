@@ -3,11 +3,11 @@
   "dimension_tags": {
     "household_size": "5人及以上",
     "household_structure": "单亲 + 2 个孩子 + 2 位祖辈",
-    "activity_preference": "运动健身",
-    "preference_polarity": "负向",
-    "time_of_day": "早上",
-    "frequency": "每周",
-    "day_type": "工作日",
+    "activity_preference": "社交餐饮",
+    "preference_polarity": "正向",
+    "time_of_day": "中午",
+    "frequency": "每月",
+    "day_type": "休息日",
     "activity_space": "户外"
   },
   "relations": [
@@ -55,119 +55,119 @@
   "dialogues": [
     {
       "entity_id": "person_001",
-      "person_name": "罗明溪",
+      "person_name": "唐若溪",
       "QA_details": [
         {
-          "user": "每周工作日早上带两个孩子和爸妈去户外健身太难了，大家都不想赶早。",
-          "assistant": "好的，我会记录全家对工作日早上户外健身偏负向。"
+          "user": "这个月休息日中午，我想带小柏、小橙和爸妈去户外果园餐厅，约舅舅一家一起吃饭。",
+          "assistant": "好的，我会把这个月休息日中午安排为户外果园餐厅聚餐。"
         },
         {
-          "user": "小野要赶校车，小桃起床慢，爸妈也要慢慢吃早饭。",
-          "assistant": "明白，早上优先上学准备和早餐。"
+          "user": "小柏想见表哥，小橙喜欢果树旁边的位置，爸妈要坐阴凉处。",
+          "assistant": "明白，优先选择果树旁的阴凉座位。"
         },
         {
-          "user": "如果要动一动，就在客厅伸展两分钟，不去公园跑步。",
-          "assistant": "已记下，只安排短暂伸展，不安排跑步。"
+          "user": "先点饭菜，再让孩子们分水果杯，别空腹吃甜的。",
+          "assistant": "已记下，先吃饭菜，再分水果杯。"
         }
       ]
     },
     {
       "entity_id": "person_002",
-      "person_name": "罗小野",
+      "person_name": "唐小柏",
       "QA_details": [
         {
-          "user": "我不想工作日早上去公园跑步，会错过校车。",
-          "assistant": "好的，我会记录您不喜欢早上跑步。"
+          "user": "妈妈说休息日中午带我们和外公外婆去果园餐厅，我想见表哥。",
+          "assistant": "好的，我会提醒妈妈安排舅舅一家。"
         },
         {
-          "user": "小桃起床慢，我还要帮她拿帽子。",
-          "assistant": "明白，早上留时间照顾妹妹。"
+          "user": "小橙坐果树旁边的时候，我帮她拿纸巾。",
+          "assistant": "明白，提醒您照看妹妹。"
         },
         {
-          "user": "放学后我可以陪她跳绳。",
-          "assistant": "好的，运动放到放学后。"
+          "user": "吃完饭我再吃水果杯。",
+          "assistant": "好的，先饭菜后水果。"
         }
       ]
     },
     {
       "entity_id": "person_003",
-      "person_name": "罗小桃",
+      "person_name": "唐小橙",
       "QA_details": [
         {
-          "user": "我早上不想去外面跑步，我想先吃早饭。",
-          "assistant": "好的，我会记录早上不安排户外跑步。"
+          "user": "我想坐果树旁边，也想和哥哥见表哥。",
+          "assistant": "好的，我会提醒家人选果树旁边座位。"
         },
         {
-          "user": "哥哥帮我拿帽子，我可以在客厅伸展一下。",
-          "assistant": "明白，只做短暂伸展。"
+          "user": "外婆坐阴凉处，我把水杯放她旁边。",
+          "assistant": "明白，提醒您照顾外婆。"
         },
         {
-          "user": "放学后再跳绳就好。",
-          "assistant": "好的，放学后再跳绳。"
+          "user": "吃完饭我想吃水果杯。",
+          "assistant": "好的，饭后提醒吃水果杯。"
         }
       ]
     },
     {
       "entity_id": "person_004",
-      "person_name": "罗德厚",
+      "person_name": "唐德华",
       "QA_details": [
         {
-          "user": "工作日早上我不想跟孩子们去公园健身，太赶了。",
-          "assistant": "好的，我会记录您不想早上户外健身。"
+          "user": "若溪这个月中午带我们去果园餐厅，我想和亲戚坐外面聊聊。",
+          "assistant": "好的，我会提醒她预订户外座位。"
         },
         {
-          "user": "两个孩子上学要紧，别为了跑步耽误他们。",
-          "assistant": "明白，早上不安排影响上学的活动。"
+          "user": "孩子们先吃饭，再去看果树。",
+          "assistant": "明白，先用餐再看果树。"
         },
         {
-          "user": "在家伸展两下就够了。",
-          "assistant": "没问题，只提醒短暂伸展。"
+          "user": "阴凉处最好，太阳大我坐不久。",
+          "assistant": "没问题，优先安排阴凉座位。"
         }
       ]
     },
     {
       "entity_id": "person_005",
-      "person_name": "罗桂珍",
+      "person_name": "唐桂英",
       "QA_details": [
         {
-          "user": "早上我也不想出门健身，先吃饭比较舒服。",
-          "assistant": "好的，我会记录您不喜欢早上户外健身。"
+          "user": "我想和舅舅一家慢慢吃饭聊天，别赶时间。",
+          "assistant": "好的，我会提醒若溪把午餐时间安排宽松。"
         },
         {
-          "user": "小野赶校车，小桃起床慢，别让孩子们更急。",
-          "assistant": "明白，早上不强排运动。"
+          "user": "小橙喜欢果树，饭后再陪她看。",
+          "assistant": "明白，饭后安排小橙看果树。"
         },
         {
-          "user": "客厅伸展两分钟可以。",
-          "assistant": "好的，只提醒客厅短伸展。"
+          "user": "水杯放旁边就好，不用太多甜点。",
+          "assistant": "没问题，少准备甜点。"
         }
       ]
     }
   ],
   "questions": [
     {
-      "question": "罗小野对工作日早上去公园跑步是什么态度？",
-      "answer": "不想去。",
+      "question": "唐若溪这个月休息日中午想带家人去哪里聚餐？",
+      "answer": "果园餐厅。",
       "category": "single_hop"
     },
     {
-      "question": "结合五人的对话，这家人是否不偏好每周工作日早上的户外健身？",
-      "answer": "是的，不偏好。",
+      "question": "结合五人的对话，这次午餐是否有社交目的？",
+      "answer": "是的，约舅舅一家。",
       "category": "multi_hop"
     },
     {
-      "question": "从时间安排看，孩子们更适合早上跑步，还是放学后跳绳？",
-      "answer": "放学后跳绳。",
+      "question": "从进餐顺序看，孩子们先吃饭菜，还是先吃水果杯？",
+      "answer": "先吃饭菜。",
       "category": "temporal"
     },
     {
-      "question": "赶校车前为什么不宜安排户外跑步？",
-      "answer": "容易误车。",
+      "question": "户外果园餐厅坐阴凉处通常有什么好处？",
+      "answer": "避免暴晒。",
       "category": "open_domain"
     },
     {
-      "question": "小野在对话中提到校车车牌号了吗？",
-      "answer": "无法回答，未提到车牌。",
+      "question": "小柏在对话中提到表哥的学校了吗？",
+      "answer": "无法回答，未提到学校。",
       "category": "adversarial"
     }
   ]

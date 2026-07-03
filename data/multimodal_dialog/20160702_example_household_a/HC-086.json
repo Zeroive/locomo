@@ -2,19 +2,24 @@
   "case_id": "HC-086",
   "dimension_tags": {
     "household_size": "5人及以上",
-    "household_structure": "单亲 + 2 个孩子 + 2 位祖辈",
-    "activity_preference": "旅行出游",
+    "household_structure": "双亲 + 1 个孩子 + 2 位祖辈",
+    "activity_preference": "户外自然",
     "preference_polarity": "正向",
     "time_of_day": "早上",
-    "frequency": "每年",
-    "day_type": "节假日",
+    "frequency": "每月",
+    "day_type": "休息日",
     "activity_space": "户外"
   },
   "relations": [
     {
       "from": "person_001",
       "to": "person_002",
-      "type": "PARENT_OF"
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
     },
     {
       "from": "person_001",
@@ -22,152 +27,157 @@
       "type": "PARENT_OF"
     },
     {
-      "from": "person_004",
-      "to": "person_001",
-      "type": "PARENT_OF"
-    },
-    {
-      "from": "person_005",
-      "to": "person_001",
-      "type": "PARENT_OF"
-    },
-    {
-      "from": "person_004",
-      "to": "person_002",
-      "type": "GRANDPARENT_OF"
-    },
-    {
-      "from": "person_005",
-      "to": "person_003",
-      "type": "GRANDPARENT_OF"
-    },
-    {
       "from": "person_002",
       "to": "person_003",
-      "type": "SIBLING_OF"
+      "type": "PARENT_OF"
     },
     {
-      "from": "person_003",
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
       "to": "person_002",
-      "type": "SIBLING_OF"
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "IN_LAW_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "IN_LAW_OF"
     }
   ],
   "dialogues": [
     {
       "entity_id": "person_001",
-      "person_name": "叶清岚",
+      "person_name": "梁景初",
       "QA_details": [
         {
-          "user": "今年节假日早上，我想带小航、小雨和爸妈去湖湾古镇旅行，这是我们每年最期待的一次出游。",
-          "assistant": "好的，我会把节假日早上的湖湾古镇旅行记录为年度家庭出游。"
+          "user": "这个月休息日早上，我想和晚晴带小沐、我爸、岳母去溪谷植物园看蕨类。",
+          "assistant": "好的，我会把这个月休息日早上的溪谷植物园安排为户外自然活动。"
         },
         {
-          "user": "早上七点出发，先坐户外观光船，再去古镇老桥拍照。",
-          "assistant": "明白，七点出发，先坐观光船，再去老桥。"
+          "user": "八点半到北门，先走阴凉的溪边步道，小沐看蕨叶，两位老人坐木椅也方便。",
+          "assistant": "明白，八点半到北门，先走溪边步道。"
         },
         {
-          "user": "小航想拍船，小雨想买明信片，爸妈怕晒，提醒我带遮阳帽。",
-          "assistant": "已记下，出发前提醒带遮阳帽和相机。"
+          "user": "晚晴提醒我带保温杯和防滑鞋，溪边石板可能有点湿。",
+          "assistant": "已记下，出门前提醒带保温杯和防滑鞋。"
         }
       ]
     },
     {
       "entity_id": "person_002",
-      "person_name": "叶小航",
+      "person_name": "林晚晴",
       "QA_details": [
         {
-          "user": "妈妈说节假日早上带我们和外公外婆去古镇，我想先拍观光船。",
-          "assistant": "好的，我会提醒妈妈先安排观光船。"
+          "user": "景初说休息日早上去植物园，我想带一本植物图册给小沐看。",
+          "assistant": "好的，我会提醒您带植物图册。"
         },
         {
-          "user": "小雨买明信片的时候，我帮她拿水杯。",
-          "assistant": "明白，提醒您照看妹妹。"
+          "user": "我妈和公公走累了就坐木椅，不用走完整圈。",
+          "assistant": "明白，老人累了就及时休息。"
         },
         {
-          "user": "外公外婆去老桥拍照时，我站旁边等。",
-          "assistant": "好的，老桥拍照时提醒您跟紧家人。"
+          "user": "小沐看蕨叶时只能拍照，别摘叶子。",
+          "assistant": "没问题，提醒只拍照不采摘。"
         }
       ]
     },
     {
       "entity_id": "person_003",
-      "person_name": "叶小雨",
+      "person_name": "梁小沐",
       "QA_details": [
         {
-          "user": "我想去古镇买明信片，也想和哥哥一起坐船。",
-          "assistant": "好的，我会提醒家人安排明信片店和观光船。"
+          "user": "爸爸妈妈和爷爷外婆这个月早上带我去植物园，我想看蕨叶。",
+          "assistant": "好的，我会提醒家人先走溪边步道。"
         },
         {
-          "user": "妈妈说先坐船，再去老桥。",
-          "assistant": "明白，先坐船，再去老桥。"
+          "user": "妈妈带图册的话，我想查蕨类叫什么名字。",
+          "assistant": "明白，到植物园后可以查图册。"
         },
         {
-          "user": "如果太阳大，我给外婆递遮阳帽。",
-          "assistant": "好的，太阳大时提醒遮阳。"
+          "user": "爷爷外婆坐木椅休息时，我陪他们喝水。",
+          "assistant": "好的，老人休息时提醒您陪他们。"
         }
       ]
     },
     {
       "entity_id": "person_004",
-      "person_name": "叶德明",
+      "person_name": "梁德润",
       "QA_details": [
         {
-          "user": "清岚今年节假日早上带我们去湖湾古镇，我想在老桥拍张照片。",
-          "assistant": "好的，我会提醒她安排老桥拍照。"
+          "user": "景初这个月休息日早上带我们去植物园，我想走阴凉一点的路。",
+          "assistant": "好的，我会提醒他选择溪边阴凉路线。"
         },
         {
-          "user": "孩子们先坐观光船也好，早上人少。",
-          "assistant": "明白，先坐观光船。"
+          "user": "小沐看植物挺好，别让孩子摘叶子。",
+          "assistant": "明白，提醒孩子只观察。"
         },
         {
-          "user": "遮阳帽别忘了，古镇桥上会晒。",
-          "assistant": "没问题，出门前提醒带遮阳帽。"
+          "user": "石板湿的话，鞋子要防滑。",
+          "assistant": "没问题，出门前提醒穿防滑鞋。"
         }
       ]
     },
     {
       "entity_id": "person_005",
-      "person_name": "叶桂芳",
+      "person_name": "林桂珍",
       "QA_details": [
         {
-          "user": "清岚带我们和孩子去古镇，我想慢慢逛老桥旁边的小路。",
-          "assistant": "好的，我会提醒家人把路线放慢。"
+          "user": "女儿和女婿带我们去溪谷植物园，我想坐木椅边慢慢看水边植物。",
+          "assistant": "好的，我会提醒他们安排木椅休息点。"
         },
         {
-          "user": "小雨买明信片的时候，我陪她看图案。",
-          "assistant": "明白，提醒您陪小雨挑明信片。"
+          "user": "小沐查植物图册时，我也想听听。",
+          "assistant": "明白，查图册时一起听。"
         },
         {
-          "user": "太阳大就先找树荫坐会儿。",
-          "assistant": "好的，太阳大时安排树荫休息。"
+          "user": "保温杯带上，早上喝点热水舒服。",
+          "assistant": "好的，出门前提醒带保温杯。"
         }
       ]
     }
   ],
   "questions": [
     {
-      "question": "叶清岚今年节假日早上想带家人去哪里旅行？",
-      "answer": "湖湾古镇。",
+      "question": "梁景初一家这个月休息日早上计划去哪里？",
+      "answer": "溪谷植物园。",
       "category": "single_hop"
     },
     {
-      "question": "结合五人的对话，小航和小雨分别期待什么？",
-      "answer": "小航拍船，小雨买明信片。",
+      "question": "结合五人的对话，小沐会用什么了解蕨类？",
+      "answer": "植物图册。",
       "category": "multi_hop"
     },
     {
-      "question": "从行程顺序看，他们先坐船，还是先去老桥？",
-      "answer": "先坐船。",
+      "question": "从时间安排看，他们几点半到北门？",
+      "answer": "八点半。",
       "category": "temporal"
     },
     {
-      "question": "户外旅行带遮阳帽通常有什么作用？",
-      "answer": "遮阳防晒。",
+      "question": "溪边石板湿时穿防滑鞋有什么作用？",
+      "answer": "防止滑倒。",
       "category": "open_domain"
     },
     {
-      "question": "小雨在对话中提到古镇酒店名称了吗？",
-      "answer": "无法回答，未提到酒店。",
+      "question": "小沐在对话中提到植物园门票价格了吗？",
+      "answer": "无法回答，未提到票价。",
       "category": "adversarial"
     }
   ]

@@ -3,10 +3,10 @@
   "dimension_tags": {
     "household_size": "5人及以上",
     "household_structure": "单亲 + 2 个孩子 + 2 位祖辈",
-    "activity_preference": "文化学习",
+    "activity_preference": "亲子陪伴",
     "preference_polarity": "正向",
     "time_of_day": "晚上",
-    "frequency": "每周",
+    "frequency": "每天",
     "day_type": "工作日",
     "activity_space": "家中"
   },
@@ -55,118 +55,118 @@
   "dialogues": [
     {
       "entity_id": "person_001",
-      "person_name": "秦知微",
+      "person_name": "江安然",
       "QA_details": [
         {
-          "user": "每周二工作日晚上，我想和阿澄、小满、爸妈在家学一段节气知识。",
-          "assistant": "好的，我会把每周二晚上安排为家中节气文化学习。"
+          "user": "工作日晚上每天我都想陪小屿、小禾和爸妈在家做睡前整理，十分钟就好。",
+          "assistant": "好的，我会把每天工作日晚上安排为家中睡前陪伴。"
         },
         {
-          "user": "阿澄负责读节气卡，小满画小雪花，爸妈讲他们小时候怎么过冬。",
-          "assistant": "明白，阿澄读卡，小满画雪花，祖辈讲过冬故事。"
+          "user": "小屿检查书包，小禾收玩具，爸妈帮他们把水杯放到玄关。",
+          "assistant": "明白，小屿查书包，小禾收玩具，祖辈放水杯。"
         },
         {
-          "user": "九点前结束，孩子们要收好彩笔和卡片。",
-          "assistant": "已记下，九点前结束并收好材料。"
+          "user": "八点五十前完成，然后关电视准备睡觉。",
+          "assistant": "已记下，八点五十前完成并关电视。"
         }
       ]
     },
     {
       "entity_id": "person_002",
-      "person_name": "秦阿澄",
+      "person_name": "江小屿",
       "QA_details": [
         {
-          "user": "妈妈说周二晚上学节气，我想读小雪那张卡片。",
-          "assistant": "好的，我会提醒您准备小雪节气卡。"
+          "user": "妈妈每天晚上陪我们整理，我负责检查书包。",
+          "assistant": "好的，我会提醒您检查书包。"
         },
         {
-          "user": "小满画雪花的时候，我帮她看颜色。",
-          "assistant": "明白，提醒您帮妹妹看颜色。"
+          "user": "小禾收玩具的时候，我帮她看有没有漏掉。",
+          "assistant": "明白，提醒您帮妹妹检查。"
         },
         {
-          "user": "外公外婆讲过冬故事，我想听完再提问。",
-          "assistant": "好的，听完故事后提醒提问。"
+          "user": "外公外婆放好水杯后，我们就准备睡觉。",
+          "assistant": "好的，水杯放好后准备休息。"
         }
       ]
     },
     {
       "entity_id": "person_003",
-      "person_name": "秦小满",
+      "person_name": "江小禾",
       "QA_details": [
         {
-          "user": "我想画小雪花，哥哥读节气卡的时候我在旁边听。",
-          "assistant": "好的，我会提醒您准备画雪花。"
+          "user": "我晚上负责收玩具，哥哥帮我看有没有少。",
+          "assistant": "好的，我会提醒您收玩具。"
         },
         {
-          "user": "外婆讲冬天故事时，我想画一件棉衣。",
-          "assistant": "明白，听故事时可以画棉衣。"
+          "user": "外婆把我的小水杯放玄关，我明天就不会忘。",
+          "assistant": "明白，提醒外婆放好水杯。"
         },
         {
-          "user": "九点前我把彩笔放回盒子。",
-          "assistant": "好的，九点前提醒收彩笔。"
+          "user": "电视关掉以后，我想听妈妈说晚安。",
+          "assistant": "好的，关电视后提醒妈妈说晚安。"
         }
       ]
     },
     {
       "entity_id": "person_004",
-      "person_name": "秦德安",
+      "person_name": "江德明",
       "QA_details": [
         {
-          "user": "知微周二晚上带孩子们学节气，我可以讲讲以前小雪后怎么备柴。",
-          "assistant": "好的，我会提醒您讲小雪后的过冬故事。"
+          "user": "安然每天晚上陪孩子们整理，我帮他们把水杯放到玄关。",
+          "assistant": "好的，我会提醒您放好水杯。"
         },
         {
-          "user": "阿澄先读卡片，我再讲，顺序别反。",
-          "assistant": "明白，先读卡片，再讲故事。"
+          "user": "小屿和小禾自己整理，我在旁边看着就好。",
+          "assistant": "明白，让孩子自己整理。"
         },
         {
-          "user": "工作日晚上九点前停。",
-          "assistant": "没问题，九点前提醒结束。"
+          "user": "八点五十前收完，工作日晚上不能太晚。",
+          "assistant": "没问题，八点五十前提醒收尾。"
         }
       ]
     },
     {
       "entity_id": "person_005",
-      "person_name": "秦桂芳",
+      "person_name": "江桂芬",
       "QA_details": [
         {
-          "user": "我想给孩子们讲小雪节气后穿棉衣的旧事。",
-          "assistant": "好的，我会提醒家人听您讲过冬旧事。"
+          "user": "我晚上帮孩子们放水杯，再听他们跟妈妈说晚安。",
+          "assistant": "好的，我会提醒您准备水杯。"
         },
         {
-          "user": "小满画雪花和棉衣，我慢慢给她说样子。",
-          "assistant": "明白，您给小满描述样子。"
+          "user": "小禾收玩具时别替她全收，让她自己学。",
+          "assistant": "明白，让小禾自己收玩具。"
         },
         {
-          "user": "学一个节气就够，不要太晚。",
-          "assistant": "好的，只安排一个节气。"
+          "user": "电视关掉会安静些。",
+          "assistant": "好的，睡前整理时关闭电视。"
         }
       ]
     }
   ],
   "questions": [
     {
-      "question": "秦知微每周二工作日晚上想带家人在家学什么？",
-      "answer": "节气知识。",
+      "question": "江安然工作日晚上每天陪孩子们做什么？",
+      "answer": "睡前整理。",
       "category": "single_hop"
     },
     {
-      "question": "结合五人的对话，阿澄、小满和祖辈分别做什么？",
-      "answer": "阿澄读卡，小满画画，祖辈讲故事。",
+      "question": "结合五人的对话，小屿和小禾分别负责什么？",
+      "answer": "小屿查书包，小禾收玩具。",
       "category": "multi_hop"
     },
     {
-      "question": "从顺序看，阿澄先读卡片，还是祖辈先讲故事？",
-      "answer": "阿澄先读卡片。",
+      "question": "从时间安排看，睡前整理要在几点五十前完成？",
+      "answer": "八点五十前。",
       "category": "temporal"
     },
     {
-      "question": "小雪通常属于什么知识内容？",
-      "answer": "二十四节气。",
+      "question": "睡前关闭电视通常有什么好处？",
+      "answer": "更安静。",
       "category": "open_domain"
     },
     {
-      "question": "小满在对话中提到彩笔品牌了吗？",
+      "question": "小禾在对话中提到玩具品牌了吗？",
       "answer": "无法回答，未提到品牌。",
       "category": "adversarial"
     }

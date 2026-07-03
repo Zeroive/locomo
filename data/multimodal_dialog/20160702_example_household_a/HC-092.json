@@ -1,0 +1,174 @@
+{
+  "case_id": "HC-092",
+  "dimension_tags": {
+    "household_size": "5人及以上",
+    "household_structure": "单亲 + 2 个孩子 + 2 位祖辈",
+    "activity_preference": "居家娱乐",
+    "preference_polarity": "正向",
+    "time_of_day": "晚上",
+    "frequency": "每周",
+    "day_type": "休息日",
+    "activity_space": "家中"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周念宁",
+      "QA_details": [
+        {
+          "user": "这周休息日晚上，我想和阿泽、小梨、爸妈在家做家庭投影谜题，不出去看电影。",
+          "assistant": "好的，我会把这周休息日晚上安排为家中投影谜题游戏。"
+        },
+        {
+          "user": "阿泽负责读线索，小梨负责按遥控器，爸妈可以帮他们猜答案。",
+          "assistant": "明白，阿泽读线索，小梨按遥控器，祖辈一起猜。"
+        },
+        {
+          "user": "九点半前结束，别让孩子们太兴奋。",
+          "assistant": "已记下，九点半前结束。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周阿泽",
+      "QA_details": [
+        {
+          "user": "妈妈说周末晚上在家玩投影谜题，我想负责读线索。",
+          "assistant": "好的，我会提醒您准备线索卡。"
+        },
+        {
+          "user": "小梨按遥控器太快的话，我提醒她等我读完。",
+          "assistant": "明白，提醒妹妹等线索读完。"
+        },
+        {
+          "user": "外公外婆猜答案的时候，我不抢话。",
+          "assistant": "好的，提醒您耐心听他们猜。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "周小梨",
+      "QA_details": [
+        {
+          "user": "我想按遥控器换题，哥哥读完线索我再按。",
+          "assistant": "好的，我会提醒您等哥哥读完再按。"
+        },
+        {
+          "user": "外婆猜对了，我想给她鼓掌。",
+          "assistant": "明白，猜对后可以鼓掌。"
+        },
+        {
+          "user": "九点半前我要把遥控器放回盒子。",
+          "assistant": "好的，九点半前提醒收遥控器。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周德山",
+      "QA_details": [
+        {
+          "user": "念宁周末晚上陪我们和孩子玩投影谜题，我可以帮孩子猜字谜。",
+          "assistant": "好的，我会提醒大家留给您猜字谜。"
+        },
+        {
+          "user": "阿泽先读线索，小梨再换题，顺序别乱。",
+          "assistant": "明白，按读线索再换题的顺序来。"
+        },
+        {
+          "user": "一晚上玩半小时就够了。",
+          "assistant": "没问题，控制在半小时左右。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "周桂兰",
+      "QA_details": [
+        {
+          "user": "我想和孩子们一起猜投影谜题，猜对了让小梨给我鼓掌。",
+          "assistant": "好的，我会提醒小梨给您鼓掌。"
+        },
+        {
+          "user": "灯暗一点看投影清楚，但别全关。",
+          "assistant": "明白，灯光调暗但不全关。"
+        },
+        {
+          "user": "九点半前收场挺好。",
+          "assistant": "没问题，九点半前提醒结束。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question": "周念宁这周休息日晚上想和家人在家玩什么？",
+      "answer": "投影谜题。",
+      "category": "single_hop"
+    },
+    {
+      "question": "结合五人的对话，阿泽和小梨分别负责什么？",
+      "answer": "阿泽读线索，小梨按遥控器。",
+      "category": "multi_hop"
+    },
+    {
+      "question": "从顺序看，小梨先按遥控器，还是阿泽先读线索？",
+      "answer": "阿泽先读线索。",
+      "category": "temporal"
+    },
+    {
+      "question": "看投影时把灯调暗通常有什么作用？",
+      "answer": "画面更清楚。",
+      "category": "open_domain"
+    },
+    {
+      "question": "阿泽在对话中提到投影仪品牌了吗？",
+      "answer": "无法回答，未提到品牌。",
+      "category": "adversarial"
+    }
+  ]
+}
