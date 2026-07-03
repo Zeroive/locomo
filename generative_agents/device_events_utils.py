@@ -102,7 +102,7 @@ SCENE_TEMPLATES = {
              "description": "进门后关上大门"}
         ],
         "related_events": [
-            {"subject_id": "home_system", "event_type": "door_camera_face_recognized", "predicate": "face_recognized", "object_id": "door_camera",
+            {"subject_id": "home_assistant", "event_type": "door_camera_face_recognized", "predicate": "face_recognized", "object_id": "door_camera",
              "description": "门口摄像头识别到回家的家庭成员"},
             {"event_type": "turn_on_living_room_light", "predicate": "on", "object_id": "light_living_room",
              "description": "客厅光线较暗且准备进入客厅时打开客厅灯"},
@@ -120,13 +120,13 @@ SCENE_TEMPLATES = {
              "description": "智能音箱播报回家欢迎或提醒"}
         ],
         "core_events": [
-            {"subject_id": "home_system", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
+            {"subject_id": "home_assistant", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
              "description": "门口摄像头检测到有人靠近"},
             {"event_type": "unlock_main_door", "predicate": "open", "object_id": "door_main",
              "description": "打开大门"},
             {"event_type": "close_main_door", "predicate": "closed", "object_id": "door_main",
              "description": "关上大门"},
-            {"subject_id": "home_system", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
+            {"subject_id": "home_assistant", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
              "description": "进门后自动落锁"}
         ],
         "noise_events": [
@@ -155,21 +155,21 @@ SCENE_TEMPLATES = {
              "description": "上班离家后关上大门"}
         ],
         "related_events": [
-            {"subject_id": "home_system", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
+            {"subject_id": "home_assistant", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
              "description": "男主人离家后锁门"},
-            {"subject_id": "home_system", "event_type": "turn_off_living_room_light", "predicate": "off", "object_id": "light_living_room",
+            {"subject_id": "home_assistant", "event_type": "turn_off_living_room_light", "predicate": "off", "object_id": "light_living_room",
              "description": "客厅无人时关闭客厅灯"},
-            {"subject_id": "home_system", "event_type": "turn_off_living_room_tv", "predicate": "off", "object_id": "tv_living_room",
+            {"subject_id": "home_assistant", "event_type": "turn_off_living_room_tv", "predicate": "off", "object_id": "tv_living_room",
              "description": "客厅无人时关闭电视"},
-            {"subject_id": "home_system", "event_type": "turn_off_living_room_ac", "predicate": "off", "object_id": "ac_living_room",
+            {"subject_id": "home_assistant", "event_type": "turn_off_living_room_ac", "predicate": "off", "object_id": "ac_living_room",
              "description": "客厅无人时关闭客厅空调"},
-            {"subject_id": "home_system", "event_type": "turn_off_bedroom_light", "predicate": "off", "object_id": "light_bedroom",
+            {"subject_id": "home_assistant", "event_type": "turn_off_bedroom_light", "predicate": "off", "object_id": "light_bedroom",
              "description": "卧室无人时关闭卧室灯"},
-            {"subject_id": "home_system", "event_type": "turn_off_bedroom_ac", "predicate": "off", "object_id": "ac_bedroom",
+            {"subject_id": "home_assistant", "event_type": "turn_off_bedroom_ac", "predicate": "off", "object_id": "ac_bedroom",
              "description": "卧室无人时关闭卧室空调"},
-            {"subject_id": "home_system", "event_type": "close_living_room_curtain", "predicate": "closed", "object_id": "curtain_living_room",
+            {"subject_id": "home_assistant", "event_type": "close_living_room_curtain", "predicate": "closed", "object_id": "curtain_living_room",
              "description": "离家前根据日晒或隐私需求关闭客厅窗帘"},
-            {"subject_id": "home_system", "event_type": "speaker_commute_reminder", "predicate": "speaking", "object_id": "smart_speaker",
+            {"subject_id": "home_assistant", "event_type": "speaker_commute_reminder", "predicate": "speaking", "object_id": "smart_speaker",
              "description": "智能音箱播报通勤或天气提醒"}
         ],
         "core_events": [
@@ -206,21 +206,21 @@ SCENE_TEMPLATES = {
              "description": "小孩进门后关上大门"}
         ],
         "related_events": [
-            {"subject_id": "home_system", "event_type": "door_camera_face_recognized", "predicate": "face_recognized", "object_id": "door_camera",
+            {"subject_id": "home_assistant", "event_type": "door_camera_face_recognized", "predicate": "face_recognized", "object_id": "door_camera",
              "description": "门口摄像头识别到小孩到家"},
-            {"subject_id": "home_system", "event_type": "turn_on_hallway_light", "predicate": "on", "object_id": "light_hallway",
+            {"subject_id": "home_assistant", "event_type": "turn_on_hallway_light", "predicate": "on", "object_id": "light_hallway",
              "description": "玄关偏暗时打开玄关灯"},
-            {"subject_id": "home_system", "event_type": "turn_on_study_light", "predicate": "on", "object_id": "light_study",
+            {"subject_id": "home_assistant", "event_type": "turn_on_study_light", "predicate": "on", "object_id": "light_study",
              "description": "小孩进入书房学习前打开书房灯"},
-            {"subject_id": "home_system", "event_type": "turn_on_living_room_tv", "predicate": "on", "object_id": "tv_living_room",
+            {"subject_id": "home_assistant", "event_type": "turn_on_living_room_tv", "predicate": "on", "object_id": "tv_living_room",
              "description": "小孩选择在客厅休息时打开电视"},
-            {"subject_id": "home_system", "event_type": "turn_on_living_room_ac", "predicate": "on", "object_id": "ac_living_room",
+            {"subject_id": "home_assistant", "event_type": "turn_on_living_room_ac", "predicate": "on", "object_id": "ac_living_room",
              "description": "室温不舒适且客厅有人时打开客厅空调"},
-            {"subject_id": "home_system", "event_type": "speaker_homework_reminder", "predicate": "speaking", "object_id": "smart_speaker",
+            {"subject_id": "home_assistant", "event_type": "speaker_homework_reminder", "predicate": "speaking", "object_id": "smart_speaker",
              "description": "智能音箱提醒写作业或喝水"}
         ],
         "core_events": [
-            {"subject_id": "home_system", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
+            {"subject_id": "home_assistant", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
              "description": "门口摄像头检测到有人靠近"},
             {"event_type": "child_unlock_main_door", "predicate": "open", "object_id": "door_main",
              "description": "小孩打开大门"},
@@ -251,17 +251,17 @@ SCENE_TEMPLATES = {
              "description": "老人外出后关上大门"}
         ],
         "related_events": [
-            {"subject_id": "home_system", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
+            {"subject_id": "home_assistant", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
              "description": "老人外出后自动锁门"},
-            {"subject_id": "home_system", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
+            {"subject_id": "home_assistant", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
              "description": "门口摄像头检测老人离家方向"},
-            {"subject_id": "home_system", "event_type": "turn_on_hallway_light", "predicate": "on", "object_id": "light_hallway",
+            {"subject_id": "home_assistant", "event_type": "turn_on_hallway_light", "predicate": "on", "object_id": "light_hallway",
              "description": "玄关偏暗时打开玄关灯"},
-            {"subject_id": "home_system", "event_type": "turn_off_living_room_ac", "predicate": "off", "object_id": "ac_living_room",
+            {"subject_id": "home_assistant", "event_type": "turn_off_living_room_ac", "predicate": "off", "object_id": "ac_living_room",
              "description": "客厅无人时关闭客厅空调"},
-            {"subject_id": "home_system", "event_type": "start_fresh_air", "predicate": "on", "object_id": "fresh_air_system",
+            {"subject_id": "home_assistant", "event_type": "start_fresh_air", "predicate": "on", "object_id": "fresh_air_system",
              "description": "老人离家前空气质量较差时启动新风系统"},
-            {"subject_id": "home_system", "event_type": "speaker_safety_reminder", "predicate": "speaking", "object_id": "smart_speaker",
+            {"subject_id": "home_assistant", "event_type": "speaker_safety_reminder", "predicate": "speaking", "object_id": "smart_speaker",
              "description": "智能音箱播报天气或安全提醒"}
         ],
         "core_events": [
@@ -292,23 +292,23 @@ SCENE_TEMPLATES = {
              "description": "访客到家"}
         ],
         "related_events": [
-            {"subject_id": "home_system", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
+            {"subject_id": "home_assistant", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
              "description": "门口摄像头检测到访客靠近"},
-            {"subject_id": "home_system", "event_type": "door_bell_ring", "predicate": "ringing", "object_id": "door_bell",
+            {"subject_id": "home_assistant", "event_type": "door_bell_ring", "predicate": "ringing", "object_id": "door_bell",
              "description": "访客按响门铃"},
-            {"subject_id": "home_system", "event_type": "remote_unlock_main_door", "predicate": "open", "object_id": "door_main",
+            {"subject_id": "home_assistant", "event_type": "remote_unlock_main_door", "predicate": "open", "object_id": "door_main",
              "description": "主人远程开门或使用临时密码开门"},
-            {"subject_id": "home_system", "event_type": "turn_on_hallway_light", "predicate": "on", "object_id": "light_hallway",
+            {"subject_id": "home_assistant", "event_type": "turn_on_hallway_light", "predicate": "on", "object_id": "light_hallway",
              "description": "玄关偏暗时打开玄关灯"},
-            {"subject_id": "home_system", "event_type": "speaker_visitor_notice", "predicate": "speaking", "object_id": "smart_speaker",
+            {"subject_id": "home_assistant", "event_type": "speaker_visitor_notice", "predicate": "speaking", "object_id": "smart_speaker",
              "description": "智能音箱播报访客到达提醒"}
         ],
         "core_events": [
-            {"subject_id": "home_system", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
+            {"subject_id": "home_assistant", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
              "description": "门口摄像头检测到访客"},
-            {"subject_id": "home_system", "event_type": "door_bell_ring", "predicate": "ringing", "object_id": "door_bell",
+            {"subject_id": "home_assistant", "event_type": "door_bell_ring", "predicate": "ringing", "object_id": "door_bell",
              "description": "门铃响起"},
-            {"subject_id": "home_system", "event_type": "remote_unlock_main_door", "predicate": "open", "object_id": "door_main",
+            {"subject_id": "home_assistant", "event_type": "remote_unlock_main_door", "predicate": "open", "object_id": "door_main",
              "description": "打开大门"}
         ],
         "noise_events": [
@@ -323,7 +323,7 @@ SCENE_TEMPLATES = {
     "all_leave_arm": {
         "name": "全员离家布防",
         "description": "全员离家后，门锁、灯光、空调、新风、摄像头和安防系统进入离家状态",
-        "default_subject": "home_system",
+        "default_subject": "home_assistant",
         "default_home": "home_1",
         "time_window": {
             "normal": {"start": "08:30", "end": "09:30"}
@@ -333,21 +333,21 @@ SCENE_TEMPLATES = {
              "description": "全员离家布防"}
         ],
         "related_events": [
-            {"subject_id": "home_system", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
+            {"subject_id": "home_assistant", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
              "description": "全员离家后锁门"},
-            {"subject_id": "home_system", "event_type": "turn_off_hallway_light", "predicate": "off", "object_id": "light_hallway",
+            {"subject_id": "home_assistant", "event_type": "turn_off_hallway_light", "predicate": "off", "object_id": "light_hallway",
              "description": "玄关无人时关闭玄关灯"},
-            {"subject_id": "home_system", "event_type": "turn_off_living_room_light", "predicate": "off", "object_id": "light_living_room",
+            {"subject_id": "home_assistant", "event_type": "turn_off_living_room_light", "predicate": "off", "object_id": "light_living_room",
              "description": "客厅无人时关闭客厅灯"},
-            {"subject_id": "home_system", "event_type": "turn_off_bedroom_light", "predicate": "off", "object_id": "light_bedroom",
+            {"subject_id": "home_assistant", "event_type": "turn_off_bedroom_light", "predicate": "off", "object_id": "light_bedroom",
              "description": "卧室无人时关闭卧室灯"},
-            {"subject_id": "home_system", "event_type": "turn_off_living_room_ac", "predicate": "off", "object_id": "ac_living_room",
+            {"subject_id": "home_assistant", "event_type": "turn_off_living_room_ac", "predicate": "off", "object_id": "ac_living_room",
              "description": "客厅无人时关闭客厅空调"},
-            {"subject_id": "home_system", "event_type": "turn_off_bedroom_ac", "predicate": "off", "object_id": "ac_bedroom",
+            {"subject_id": "home_assistant", "event_type": "turn_off_bedroom_ac", "predicate": "off", "object_id": "ac_bedroom",
              "description": "卧室无人时关闭卧室空调"},
-            {"subject_id": "home_system", "event_type": "stop_fresh_air", "predicate": "off", "object_id": "fresh_air_system",
+            {"subject_id": "home_assistant", "event_type": "stop_fresh_air", "predicate": "off", "object_id": "fresh_air_system",
              "description": "全员离家后关闭或降低新风系统"},
-            {"subject_id": "home_system", "event_type": "camera_record", "predicate": "recording", "object_id": "security_camera",
+            {"subject_id": "home_assistant", "event_type": "camera_record", "predicate": "recording", "object_id": "security_camera",
              "description": "安防摄像头开始录像或进入警戒"}
         ],
         "core_events": [
@@ -368,7 +368,7 @@ SCENE_TEMPLATES = {
     "anomaly_detection": {
         "name": "异常活动检测",
         "description": "安防状态下检测到异常活动，门口摄像头、移动传感器、摄像头录像和音箱提醒联动",
-        "default_subject": "home_system",
+        "default_subject": "home_assistant",
         "default_home": "home_1",
         "time_window": {
             "normal": {"start": "00:00", "end": "24:00"}
@@ -378,13 +378,13 @@ SCENE_TEMPLATES = {
              "description": "检测到异常活动"}
         ],
         "related_events": [
-            {"subject_id": "home_system", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
+            {"subject_id": "home_assistant", "event_type": "door_camera_motion", "predicate": "motion_detected", "object_id": "door_camera",
              "description": "门口摄像头检测到异常移动"},
-            {"subject_id": "home_system", "event_type": "camera_record", "predicate": "recording", "object_id": "security_camera",
+            {"subject_id": "home_assistant", "event_type": "camera_record", "predicate": "recording", "object_id": "security_camera",
              "description": "安防摄像头开始录像"},
-            {"subject_id": "home_system", "event_type": "speaker_alarm", "predicate": "speaking", "object_id": "smart_speaker",
+            {"subject_id": "home_assistant", "event_type": "speaker_alarm", "predicate": "speaking", "object_id": "smart_speaker",
              "description": "智能音箱发出警示或提醒"},
-            {"subject_id": "home_system", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
+            {"subject_id": "home_assistant", "event_type": "lock_main_door", "predicate": "locked", "object_id": "door_main",
              "description": "确认大门处于锁定状态"}
         ],
         "core_events": [
@@ -596,7 +596,7 @@ LLM_EVENT_ITEM_PROMPT = """你是一个智能家居系统分析师。请基于�
     "reason": "为什么该候选事件在当天状态下应该/不应该发生",
     "annotated_event": {{
         "event": {{
-            "subject_id": "home_system",
+            "subject_id": "home_assistant",
             "predicate": "off",
             "object_id": "light_living_room",
             "attributes": {{
@@ -692,7 +692,7 @@ LLM_NEXT_EVENT_PROMPT = """你是一个智能家居系统分析师。请基于�
     "reason": "为什么继续生成该事件，或为什么当前情景已经结束",
     "annotated_event": {{
         "event": {{
-            "subject_id": "home_system",
+            "subject_id": "home_assistant",
             "predicate": "off",
             "object_id": "light_living_room",
             "attributes": {{
@@ -766,7 +766,7 @@ LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基
     "should_continue": true,
     "reason": "为什么继续生成该事件，或为什么当前情景已经结束",
     "event": {{
-        "subject_id": "home_system",
+        "subject_id": "home_assistant",
             "predicate": "off",
         "object_id": "light_living_room",
         "attributes": {{
@@ -1538,6 +1538,48 @@ def build_scene_time(episode_date, time_range, fallback_hour=8):
     return scene_datetime.strftime('%Y-%m-%dT%H:%M:%S+08:00')
 
 
+def get_time_description(timestamp):
+    hour = timestamp.hour
+    if 6 <= hour <= 8:
+        return "early_morning"
+    if 9 <= hour <= 11:
+        return "morning"
+    if 12 <= hour <= 13:
+        return "noon"
+    if 14 <= hour <= 17:
+        return "afternoon"
+    if 18 <= hour <= 23:
+        return "evening"
+    return "late_night"
+
+
+def build_episode_id(subject_id, scenario, episode_date, event_time=None, time_range=None):
+    """
+    生成 episode_id: {subject_id}_{time_des}_{scenario}_{YYYYMMDD}_{HHMM}
+    """
+    timestamp = event_time
+    if isinstance(timestamp, str):
+        try:
+            timestamp = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+        except ValueError:
+            timestamp = None
+    if timestamp is None:
+        start_time = (time_range or {}).get('start') if isinstance(time_range, dict) else None
+        if isinstance(start_time, str) and ':' in start_time:
+            try:
+                hour, minute = [int(part) for part in start_time.split(':')[:2]]
+                timestamp = datetime.combine(episode_date, datetime.min.time()).replace(
+                    hour=hour % 24,
+                    minute=minute,
+                )
+            except ValueError:
+                timestamp = None
+    if timestamp is None:
+        timestamp = datetime.combine(episode_date, datetime.min.time())
+    time_des = get_time_description(timestamp)
+    return f"{subject_id}_{time_des}_{scenario}_{episode_date.strftime('%Y%m%d')}_{timestamp.strftime('%H%M')}"
+
+
 def format_previous_scenario_descriptions(descriptions):
     if not descriptions:
         return "无"
@@ -1637,7 +1679,7 @@ def validate_llm_event_item_result(result, candidate_event, default_subject, per
         raise ValueError(f"Invalid event_type: {event['attributes'].get('event_type')}, expected {expected_type}")
     event['attributes'].setdefault('description', candidate_event.get('description', ''))
 
-    if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_system', 'system', 'visitor'}:
+    if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_assistant', 'system', 'visitor'}:
         raise ValueError(f"Invalid subject_id: {event['subject_id']}")
     if event['object_id'] not in available_devices:
         raise ValueError(f"Invalid object_id: {event['object_id']}")
@@ -2628,7 +2670,7 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
             event['attributes'] = {}
         
         # 验证 subject_id 在可用人员列表或系统执行主体中
-        if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_system', 'system', 'visitor'}:
+        if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_assistant', 'system', 'visitor'}:
             raise ValueError(f"Event {i} has invalid subject_id: {event['subject_id']}")
         
         # 验证 object_id 在可用设备列表中
@@ -2674,10 +2716,14 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
     missing_required = required_event_keys - seen_event_keys
     if missing_required:
         raise ValueError(f"Missing required primary events: {sorted(missing_required)}")
+
+    first_event_time = None
+    if annotated_events:
+        first_event_time = annotated_events[0].get('state_snapshot', {}).get('timestamp')
     
     # 构建完整的 episode
     episode = {
-        "episode_id": f"{scenario}_{default_subject}_{episode_date.strftime('%Y%m%d')}",
+        "episode_id": build_episode_id(default_subject, scenario, episode_date, first_event_time, time_range),
         "home_id": default_home,
         "scene": scenario,
         "subject_id": default_subject,
@@ -2893,7 +2939,7 @@ def generate_single_day_episode_rule_based(scenario, episode_date, day_offset, t
     
     # 生成episode
     episode = {
-        "episode_id": f"{scenario}_{default_subject}_{episode_date.strftime('%Y%m%d')}",
+        "episode_id": build_episode_id(default_subject, scenario, episode_date, base_timestamp, time_window),
         "home_id": default_home,
         "scene": scenario,
         "subject_id": default_subject,
@@ -3026,7 +3072,7 @@ def generate_single_day_episode(scenario, episode_date, day_offset, template,
     
     # 生成episode
     episode = {
-        "episode_id": f"{scenario}_{episode_date.strftime('%Y%m%d')}",
+        "episode_id": build_episode_id(default_subject, scenario, episode_date, base_timestamp, time_window),
         "home_id": default_home,
         "scene": scenario,
         "subject_id": default_subject,

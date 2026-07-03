@@ -138,8 +138,8 @@ def build_generation_plan(household_profile):
             })
     plan.extend([
         {'person_id': 'visitor', 'scenario': 'visitor_arrival', 'member': {'person_id': 'visitor', 'name': '访客'}},
-        {'person_id': 'home_system', 'scenario': 'all_leave_arm', 'member': {'person_id': 'home_system', 'name': '全屋系统'}},
-        {'person_id': 'home_system', 'scenario': 'anomaly_detection', 'member': {'person_id': 'home_system', 'name': '全屋系统'}},
+        {'person_id': 'home_assistant', 'scenario': 'all_leave_arm', 'member': {'person_id': 'home_assistant', 'name': '全屋系统'}},
+        {'person_id': 'home_assistant', 'scenario': 'anomaly_detection', 'member': {'person_id': 'home_assistant', 'name': '全屋系统'}},
     ])
     return plan
 
