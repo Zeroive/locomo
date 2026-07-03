@@ -48,7 +48,7 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
     "scenario_time": "2022-03-16T08:00:00+08:00",
     "skip_reason": "",
     "household_state_description": "当前情景下所有家庭成员的状态与位置描述，必须写明具体小时/分钟，体现各人员在当前场景下的状态差异",
-    "device_event_description": "当前场景主体为完成该场景预期需要操作的设备事件描述，包含日常习惯触发的设备联动",
+    "device_event_description": "当前场景主体为完成该场景预期需要操作的设备事件描述，包含日常习惯触发的设备联动。例如：离家时关闭客厅灯、关闭电视、关闭空调、关闭窗户、落锁；回家时打开玄关灯、打开客厅灯、音箱问候、空调调至舒适温度",
     "sampled_context": {{
         "persons": ["person_005"],
         "devices": ["door_main"]
