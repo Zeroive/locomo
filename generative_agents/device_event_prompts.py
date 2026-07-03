@@ -323,10 +323,11 @@ LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基
 
 ## 任务要求
 1. 每次只输出一个“下一个 event”；如果当前情景已经结束，输出 should_continue=false。
-2. event 的 subject_id、predicate、object_id、attributes.event_type 必须来自“当前情景尚未生成且允许生成的事件集合”。
-3. 需要根据当前情景描述表达的预期、已生成事件摘要和最新 state_snapshot，选择是否发生尚未生成的相关事件。
-4. 不要重复生成已经出现过的相同 subject_id/predicate/object_id/event_type 事件。
-5. 不要生成候选集合之外的泛化事件或动作拆解细节。
+2. event.subject_id 必须固定为当前场景主体 {subject_id}，不要输出 home_assistant，除非当前场景主体本身就是 home_assistant。
+3. event 的 predicate、object_id、attributes.event_type 必须来自“当前情景尚未生成且允许生成的事件集合”。
+4. 需要根据当前情景描述表达的预期、已生成事件摘要和最新 state_snapshot，选择是否发生尚未生成的相关事件。
+5. 不要重复生成已经出现过的相同 subject_id/predicate/object_id/event_type 事件。
+6. 不要生成候选集合之外的泛化事件或动作拆解细节。
 
 ## 输出格式
 请严格按照以下 JSON 格式输出，不要包含其他解释文字：
@@ -335,12 +336,12 @@ LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基
     "should_continue": true,
     "reason": "为什么继续生成该事件，或为什么当前情景已经结束",
     "event": {{
-        "subject_id": "home_assistant",
-        "predicate": "off",
+        "subject_id": "{subject_id}",
+        "predicate": "on",
         "object_id": "light_living_room",
         "attributes": {{
-            "event_type": "turn_off_living_room_light",
-            "description": "客厅无人时关闭客厅灯"
+            "event_type": "turn_on_living_room_light",
+            "description": "客厅光线较暗且准备进入客厅时打开客厅灯"
         }}
     }}
 }}

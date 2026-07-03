@@ -160,7 +160,7 @@ def format_allowed_events_info(primary_events, allowed_events, default_subject):
             "event_type={event_type}, description={description}".format(
                 idx=idx,
                 required=required,
-                subject_id=event.get('subject_id', default_subject),
+                subject_id=default_subject,
                 predicate=event.get('predicate', ''),
                 object_id=event.get('object_id', ''),
                 event_type=event.get('event_type', ''),
@@ -211,8 +211,9 @@ def validate_llm_event_item_result(result, candidate_event, default_subject, per
     snapshot = annotated_event.get('state_snapshot')
     if not isinstance(event, dict) or not isinstance(snapshot, dict):
         raise ValueError("annotated_event must contain event and state_snapshot")
+    event['subject_id'] = default_subject
 
-    expected_subject = candidate_event.get('subject_id', default_subject)
+    expected_subject = default_subject
     expected_type = candidate_event.get('event_type', '')
     if event.get('subject_id') != expected_subject:
         raise ValueError(f"Invalid subject_id: {event.get('subject_id')}, expected {expected_subject}")
@@ -386,7 +387,7 @@ def find_matching_allowed_event(annotated_event, allowed_events, default_subject
     key = get_annotated_event_key(annotated_event)
     for candidate_event in allowed_events:
         candidate_key = (
-            candidate_event.get('subject_id', default_subject),
+            default_subject,
             candidate_event.get('event_type', ''),
             candidate_event.get('predicate', ''),
             candidate_event.get('object_id', ''),
@@ -398,7 +399,7 @@ def find_matching_allowed_event(annotated_event, allowed_events, default_subject
 
 def get_allowed_event_key(event, default_subject):
     return (
-        event.get('subject_id', default_subject),
+        default_subject,
         event.get('event_type', ''),
         event.get('predicate', ''),
         event.get('object_id', ''),
@@ -435,6 +436,7 @@ def validate_llm_next_event_only_result(result, allowed_events, default_subject,
     event = result.get('event')
     if not isinstance(event, dict):
         raise ValueError("should_continue=true but event is missing")
+    event['subject_id'] = default_subject
 
     annotated_event = {'event': event}
     current_key = get_annotated_event_key(annotated_event)

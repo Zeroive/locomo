@@ -812,6 +812,8 @@ def validate_llm_next_event_result(result, allowed_events, default_subject, pers
     annotated_event = result.get('annotated_event')
     if not isinstance(annotated_event, dict):
         raise ValueError("should_continue=true but annotated_event is missing")
+    if isinstance(annotated_event.get('event'), dict):
+        annotated_event['event']['subject_id'] = default_subject
 
     current_key = get_annotated_event_key(annotated_event)
     used_keys = {get_annotated_event_key(event) for event in previous_events}
@@ -1208,7 +1210,7 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
     
     allowed_event_map = {
         (
-            event.get('subject_id', default_subject),
+            default_subject,
             event.get('event_type', ''),
             event.get('predicate', ''),
             event.get('object_id', '')
@@ -1217,7 +1219,7 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
     }
     required_event_keys = {
         (
-            event.get('subject_id', default_subject),
+            default_subject,
             event.get('event_type', ''),
             event.get('predicate', ''),
             event.get('object_id', '')
@@ -1244,6 +1246,7 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
             raise ValueError(f"Event {i} missing object_id")
         if 'attributes' not in event:
             event['attributes'] = {}
+        event['subject_id'] = default_subject
         
         # 验证 subject_id 在可用人员列表或系统执行主体中
         if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_assistant', 'system', 'visitor'}:
