@@ -34,13 +34,11 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 1. 判断当天该场景是否应该发生：
    - 如果是上班离家/下班回家，休息日、请假日、居家办公日可以不发生
    - 如果场景主体当天不在家或不符合角色作息，也可以不发生
-2. 如果发生，先根据家庭成员画像、当天其他情景和场景语义，从候选发生时段中选择一个合理的具体 scenario_time，再生成 daily_state_description，描述当前场景开始前后的家庭状态：
-   - 家庭成员的位置和活动状态
-   - 每个相关房间是否有人，以及是谁
-   - 主要设备的当前状态
-   - 环境氛围（如安静、热闹、温馨等）
-   - 任何特殊情况（如休息日、请假、加班、有访客等）
-3. 如果不发生，daily_state_description 仍需解释不发生的原因。
+2. 如果发生，先根据家庭成员画像、当天其他情景和场景语义，从候选发生时段中选择一个合理的具体 scenario_time，再分开生成两部分描述：
+   - household_state_description: 当前情景开始前后，所有家庭成员的位置、活动状态、相关房间占用、环境氛围和特殊情况。
+   - device_event_description: 当前情景预期触发或需要操作的设备事件，只描述设备动作/联动/状态变化，不要重复展开人物状态。
+3. daily_state_description 必须由上述两部分合并而成，用于给后续事件生成提供完整上下文。
+4. 如果不发生，三段描述仍需解释不发生的原因。
 
 ## 输出格式
 请严格按照以下 JSON 格式输出，不要包含其他解释文字：
@@ -49,7 +47,9 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
     "scenario_should_happen": true,
     "scenario_time": "2022-03-16T08:00:00+08:00",
     "skip_reason": "",
-    "daily_state_description": "当天该情景下的家庭状态自然语言描述，50-120字，必须写明具体小时",
+    "household_state_description": "当前情景下所有家庭人员的状态描述，必须写明具体小时/分钟",
+    "device_event_description": "当前情景下需要操作或预期发生的设备事件描述",
+    "daily_state_description": "家庭人员状态：... 设备事件：...",
     "sampled_context": {{
         "persons": ["person_005"],
         "devices": ["door_main"]
@@ -60,8 +60,9 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 - 输出必须是合法的 JSON 格式
 - scenario_should_happen 必须是布尔值
 - scenario_time 使用 ISO8601 格式，必须落在“候选发生时段”之一；不要机械照抄参考时间
-- daily_state_description 必须写明模型选择的具体小时/分钟，并与 scenario_time 保持一致
-- daily_state_description 必须是自然语言描述
+- household_state_description 必须覆盖所有家庭成员，写明模型选择的具体小时/分钟，并与 scenario_time 保持一致
+- device_event_description 必须聚焦当前情景预期发生的设备动作或联动，不能混入无关设备
+- daily_state_description 必须是自然语言描述，并清晰包含“家庭人员状态”和“设备事件”两部分
 - daily_state_description 不能与当天已生成的其他情景描述出现人物位置、设备状态或时间顺序冲突
 - daily_state_description 中提到的设备状态应来自“设备状态枚举”
 
