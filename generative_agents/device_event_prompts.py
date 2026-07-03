@@ -140,7 +140,13 @@ LLM_EVENT_ITEM_PROMPT = """你是一个智能家居系统分析师。请基于�
 ## 可控设备
 {devices_info}
 
-## 当天家庭状态描述
+## 当前情景下所有家庭人员的状态描述
+{household_state_description}
+
+## 当前情景下需要操作或预期发生的设备事件描述
+{device_event_description}
+
+## 当前情景完整描述
 {daily_state_description}
 
 ## 已生成事件摘要与最新 state_snapshot
@@ -154,7 +160,7 @@ LLM_EVENT_ITEM_PROMPT = """你是一个智能家居系统分析师。请基于�
 2. 如果不应该发生，输出 should_generate=false，并说明 reason。
 3. 如果应该发生，输出 should_generate=true，并生成一个 annotated_event。
 4. annotated_event.event 的 subject_id、predicate、object_id、attributes.event_type 必须和当前候选事件完全一致。
-5. state_snapshot 表示该候选事件发生前/发生瞬间的全局状态切片，必须与 daily_state_description 和 previous_events 的时间顺序一致。
+5. state_snapshot 表示该候选事件发生前/发生瞬间的全局状态切片，必须与 household_state_description、device_event_description 和 previous_events 的时间顺序一致。
 6. state_snapshot.persons 中每个人的 location 必须来自“人物房间状态枚举”的房间，status 必须来自该房间允许状态。
 7. state_snapshot.devices 中每个设备的 state 必须来自“设备状态枚举”。
 8. 不要生成候选事件之外的动作拆解细节。
@@ -237,7 +243,13 @@ LLM_NEXT_EVENT_PROMPT = """你是一个智能家居系统分析师。请基于�
 ## 当天所有已生成的情景描述
 {all_scenario_descriptions}
 
-## 当前情景描述
+## 当前情景下所有家庭人员的状态描述
+{household_state_description}
+
+## 当前情景下需要操作或预期发生的设备事件描述
+{device_event_description}
+
+## 当前情景完整描述
 {daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
@@ -249,8 +261,8 @@ LLM_NEXT_EVENT_PROMPT = """你是一个智能家居系统分析师。请基于�
 ## 任务要求
 1. 每次只输出一个“下一个事件”；如果当前情景已经结束，输出 should_continue=false。
 2. 下一个事件必须来自“当前情景允许生成的事件集合”，不要生成集合之外的泛化事件或过程细节。
-3. 事件顺序由当前情景描述、已生成事件和 state_snapshot 推演决定，例如离家可能是开门、关灯、关门，也可能先关灯再开门关门。
-4. state_snapshot 表示该事件发生前/发生瞬间的全局状态切片，必须与当前情景描述和已生成事件连续一致。
+3. 事件顺序由 household_state_description、device_event_description、已生成事件和 state_snapshot 推演决定，例如离家可能是开门、关灯、关门，也可能先关灯再开门关门。
+4. state_snapshot 表示该事件发生前/发生瞬间的全局状态切片，人员状态必须参考 household_state_description，设备状态必须参考 device_event_description，并与已生成事件连续一致。
 5. state_snapshot.persons 中每个人的 location 必须来自“人物房间状态枚举”的房间，status 必须来自该房间允许状态。
 6. state_snapshot.devices 中每个设备的 state 必须来自“设备状态枚举”。
 7. 不要重复生成已经出现过的相同 subject_id/predicate/object_id/event_type 事件。
@@ -312,7 +324,13 @@ LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基
 日期: {episode_date}
 情景发生时间: {scenario_time}
 
-## 当前情景描述
+## 当前情景下所有家庭人员的状态描述
+{household_state_description}
+
+## 当前情景下需要操作或预期发生的设备事件描述
+{device_event_description}
+
+## 当前情景完整描述
 这是整个当前情景预期发生的事情。请结合当前情景已生成事件、最新 state_snapshot 和允许事件集合，判断相关事件是否还应该发生。
 {daily_state_description}
 
@@ -326,7 +344,7 @@ LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基
 1. 每次只输出一个“下一个 event”；如果当前情景已经结束，输出 should_continue=false。
 2. event.subject_id 必须固定为当前场景主体 {subject_id}，不要输出 home_assistant，除非当前场景主体本身就是 home_assistant。
 3. event 的 predicate、object_id、attributes.event_type 必须来自“当前情景尚未生成且允许生成的事件集合”。
-4. 需要根据当前情景描述表达的预期、已生成事件摘要和最新 state_snapshot，选择是否发生尚未生成的相关事件。
+4. 需要根据 household_state_description、device_event_description 表达的预期、已生成事件摘要和最新 state_snapshot，选择是否发生尚未生成的相关事件。
 5. 不要重复生成已经出现过的相同 subject_id/predicate/object_id/event_type 事件。
 6. 不要生成候选集合之外的泛化事件或动作拆解细节。
 
@@ -357,7 +375,13 @@ LLM_EVENT_TIMESTAMP_PROMPT = """你是一个智能家居系统分析师。请只
 日期: {episode_date}
 情景发生时间: {scenario_time}
 
-## 当前情景描述
+## 当前情景下所有家庭人员的状态描述
+{household_state_description}
+
+## 当前情景下需要操作或预期发生的设备事件描述
+{device_event_description}
+
+## 当前情景完整描述
 {daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
@@ -401,7 +425,13 @@ LLM_EVENT_PERSONS_PROMPT = """你是一个智能家居系统分析师。请只�
 ## 人物房间状态枚举
 {person_room_status_schema}
 
-## 当前情景描述
+## 当前情景下所有家庭人员的状态描述
+{household_state_description}
+
+## 当前情景下需要操作或预期发生的设备事件描述
+{device_event_description}
+
+## 当前情景完整描述
 {daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
@@ -425,6 +455,7 @@ LLM_EVENT_PERSONS_PROMPT = """你是一个智能家居系统分析师。请只�
 - 每个人的 location 必须来自“人物房间状态枚举”
 - 每个人的 status 必须来自该 location 允许状态
 - 只输出人物状态，不要输出设备状态或 timestamp
+- 人物状态必须优先参考 household_state_description，不要从 device_event_description 推断无关人物位置
 
 请生成 persons："""
 
@@ -448,7 +479,13 @@ LLM_EVENT_DEVICES_PROMPT = """你是一个智能家居系统分析师。请只�
 ## 当前家庭存在的设备 ID
 {household_device_ids}
 
-## 当前情景描述
+## 当前情景下所有家庭人员的状态描述
+{household_state_description}
+
+## 当前情景下需要操作或预期发生的设备事件描述
+{device_event_description}
+
+## 当前情景完整描述
 {daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
@@ -471,8 +508,9 @@ LLM_EVENT_DEVICES_PROMPT = """你是一个智能家居系统分析师。请只�
 - devices 必须包含“当前家庭存在的设备 ID”中的每一个设备，不能遗漏
 - 不要输出“当前家庭存在的设备 ID”之外的设备
 - 每个设备 state 必须来自“设备状态枚举”
-- state_snapshot 表示事件发生前/发生瞬间的设备状态
+- state_snapshot 表示事件发生前/发生瞬间的设备状态，必须优先参考 device_event_description
 - 只输出设备状态，不要输出人物状态或 timestamp
+- 设备状态必须优先参考 device_event_description，不要从 household_state_description 推断无关设备动作
 
 请生成 devices："""
 
@@ -494,7 +532,13 @@ LLM_SINGLE_DEVICE_STATE_PROMPT = """你是一个智能家居系统分析师。�
 ## 可控设备
 {devices_info}
 
-## 当前情景描述
+## 当前情景下所有家庭人员的状态描述
+{household_state_description}
+
+## 当前情景下需要操作或预期发生的设备事件描述
+{device_event_description}
+
+## 当前情景完整描述
 {daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
@@ -517,7 +561,7 @@ LLM_SINGLE_DEVICE_STATE_PROMPT = """你是一个智能家居系统分析师。�
 ## 重要约束
 - 只输出当前设备 {device_id} 的状态
 - state 必须来自当前设备的允许状态
-- state_snapshot 表示事件发生前/发生瞬间的设备状态
+- state_snapshot 表示事件发生前/发生瞬间的设备状态，必须优先参考 device_event_description
 - 不要输出其他设备、人物状态或 timestamp
 
 请生成该设备状态："""
