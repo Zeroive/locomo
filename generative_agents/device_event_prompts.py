@@ -37,8 +37,8 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 2. 如果发生，先根据家庭成员画像、当天其他情景和场景语义，从候选发生时段中选择一个合理的具体 scenario_time，再分开生成两部分描述：
    - household_state_description: 当前情景开始前后，所有家庭成员的位置、活动状态、相关房间占用、环境氛围和特殊情况。
    - device_event_description: 当前情景预期触发或需要操作的设备事件，只描述设备动作/联动/状态变化，不要重复展开人物状态。离家/回家场景可以包含前序、伴随和后续联动事件，例如打开玄关灯/客厅灯/厨房灯，关闭客厅灯/厨房灯/电视/空调，门锁开关与落锁、摄像头识别、音箱提醒等。
-3. daily_state_description 必须由上述两部分合并而成，用于给后续事件生成提供完整上下文。
-4. 如果不发生，scenario_should_happen=false，scenario_time 可以为 null，skip_reason 必须说明不发生原因，household_state_description、device_event_description、daily_state_description 输出空字符串。
+3. 不要生成额外的合并描述字段；后续事件生成只使用上述两部分描述。
+4. 如果不发生，scenario_should_happen=false，scenario_time 可以为 null，skip_reason 必须说明不发生原因，household_state_description、device_event_description 输出空字符串。
 
 ## 输出格式
 请严格按照以下 JSON 格式输出，不要包含其他解释文字：
@@ -49,7 +49,6 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
     "skip_reason": "",
     "household_state_description": "当前情景下所有家庭人员的状态描述，必须写明具体小时/分钟",
     "device_event_description": "当前情景下需要操作或预期发生的设备事件描述",
-    "daily_state_description": "家庭人员状态：... 设备事件：...",
     "sampled_context": {{
         "persons": ["person_005"],
         "devices": ["door_main"]
@@ -59,15 +58,14 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 ## 重要约束
 - 输出必须是合法的 JSON 格式
 - scenario_should_happen 必须是布尔值
-- scenario_should_happen=false 时，必须提供 skip_reason，三个描述字段必须为空字符串
+- scenario_should_happen=false 时，必须提供 skip_reason，两个描述字段必须为空字符串
 - scenario_time 使用 ISO8601 格式，必须落在“候选发生时段”之一；不要机械照抄参考时间
-- scenario_should_happen=true 时，以下三个描述字段都不能为空
+- scenario_should_happen=true 时，household_state_description 和 device_event_description 都不能为空
 - household_state_description 必须覆盖所有家庭成员，写明模型选择的具体小时/分钟，并与 scenario_time 保持一致
 - device_event_description 必须聚焦当前情景预期发生的设备动作或联动，不能混入无关设备
 - device_event_description 中的设备动作必须能从房间与设备布局、可控设备、场景候选事件设备对象中找到依据；不要描述不存在的设备
-- daily_state_description 必须是自然语言描述，并清晰包含“家庭人员状态”和“设备事件”两部分
-- daily_state_description 不能与当天已生成的其他情景描述出现人物位置、设备状态或时间顺序冲突
-- daily_state_description 中提到的设备状态应来自“设备状态枚举”
+- household_state_description 和 device_event_description 不能与当天已生成的其他情景描述出现人物位置、设备状态或时间顺序冲突
+- device_event_description 中提到的设备状态应来自“设备状态枚举”
 
 请生成场景发生判断和家庭状态描述："""
 
@@ -149,8 +147,6 @@ LLM_EVENT_ITEM_PROMPT = """你是一个智能家居系统分析师。请基于�
 ## 当前情景下需要操作或预期发生的设备事件描述
 {device_event_description}
 
-## 当前情景完整描述
-{daily_state_description}
 
 ## 已生成事件摘要与最新 state_snapshot
 {previous_events}
@@ -252,8 +248,6 @@ LLM_NEXT_EVENT_PROMPT = """你是一个智能家居系统分析师。请基于�
 ## 当前情景下需要操作或预期发生的设备事件描述
 {device_event_description}
 
-## 当前情景完整描述
-{daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
@@ -333,9 +327,6 @@ LLM_NEXT_EVENT_ONLY_PROMPT = """你是一个智能家居系统分析师。请基
 ## 当前情景下需要操作或预期发生的设备事件描述
 {device_event_description}
 
-## 当前情景完整描述
-这是整个当前情景预期发生的事情。请结合当前情景已生成事件、最新 state_snapshot 和允许事件集合，判断相关事件是否还应该发生。
-{daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
@@ -384,8 +375,6 @@ LLM_EVENT_TIMESTAMP_PROMPT = """你是一个智能家居系统分析师。请只
 ## 当前情景下需要操作或预期发生的设备事件描述
 {device_event_description}
 
-## 当前情景完整描述
-{daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
@@ -434,8 +423,6 @@ LLM_EVENT_PERSONS_PROMPT = """你是一个智能家居系统分析师。请只�
 ## 当前情景下需要操作或预期发生的设备事件描述
 {device_event_description}
 
-## 当前情景完整描述
-{daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
@@ -488,8 +475,6 @@ LLM_EVENT_DEVICES_PROMPT = """你是一个智能家居系统分析师。请只�
 ## 当前情景下需要操作或预期发生的设备事件描述
 {device_event_description}
 
-## 当前情景完整描述
-{daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}
@@ -541,8 +526,6 @@ LLM_SINGLE_DEVICE_STATE_PROMPT = """你是一个智能家居系统分析师。�
 ## 当前情景下需要操作或预期发生的设备事件描述
 {device_event_description}
 
-## 当前情景完整描述
-{daily_state_description}
 
 ## 当前情景已生成事件摘要与最新 state_snapshot
 {previous_events}

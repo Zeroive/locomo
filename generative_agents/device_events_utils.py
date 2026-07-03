@@ -47,7 +47,6 @@ def _log_llm_failure(stage, error, context=None, prompt=None, result=None,
         ),
         "subject_id": context.get("default_subject"),
         "scenario_time": context.get("scenario_time"),
-        "daily_state_description": context.get("daily_state_description"),
         "previous_events": previous_events,
         "result": result,
         "prompt": prompt,
@@ -224,7 +223,7 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
         max_retries: 最大重试次数
         
     Returns:
-        dict: episode字典，包含 daily_state_description 和 annotated_events
+        dict: episode字典，包含情景描述和 annotated_events
     """
     # 检查 LLM 是否可用
     run_json_trials_func = get_run_json_trials()
@@ -251,9 +250,10 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
     person_room_status_schema = format_person_room_status_schema()
     device_state_schema = format_device_state_schema()
     
-    # 准备设备信息
-    devices_info = format_devices_info(device_file)
     primary_device_ids = [event.get('object_id') for event in allowed_events if event.get('object_id')]
+    household_device_ids = list(dict.fromkeys(get_layout_device_ids(household_profile) + primary_device_ids))
+    # 准备设备信息：只展示当前家庭存在的设备和本场景候选事件对象
+    devices_info = format_devices_info(device_file, household_device_ids)
     if primary_device_ids:
         devices_info += "\n\n## 场景候选事件设备对象\n"
         devices_info += "\n".join(f"- {device_id}: 场景候选事件对象" for device_id in primary_device_ids)
@@ -267,7 +267,7 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
     for device_id in primary_device_ids:
         if device_id not in available_devices:
             available_devices.append(device_id)
-    sampled_devices = random.sample(available_devices, min(5, len(available_devices)))
+    sampled_devices = random.sample(household_device_ids, min(5, len(household_device_ids)))
     
     common_prompt_args = {
         "scenario": scenario,
@@ -331,7 +331,6 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
                     **common_prompt_args,
                     household_state_description=state_result['household_state_description'],
                     device_event_description=state_result['device_event_description'],
-                    daily_state_description=state_result['daily_state_description'],
                     previous_events=format_previous_events_for_prompt(annotated_events),
                     candidate_event_info=format_candidate_event_info(candidate_event, default_subject),
                 )
@@ -354,7 +353,6 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
                             "scenario": scenario,
                             "episode_date": episode_date,
                             "default_subject": default_subject,
-                            "daily_state_description": state_result.get('daily_state_description'),
                         },
                         prompt=item_prompt,
                         result=item_result,
@@ -368,7 +366,6 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
             llm_result = {
                 'household_state_description': state_result['household_state_description'],
                 'device_event_description': state_result['device_event_description'],
-                'daily_state_description': state_result['daily_state_description'],
                 'annotated_events': annotated_events,
             }
             try:
@@ -393,7 +390,6 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
                         "scenario": scenario,
                         "episode_date": episode_date,
                         "default_subject": default_subject,
-                        "daily_state_description": state_result.get('daily_state_description'),
                     },
                     result=llm_result,
                     previous_events=annotated_events,
@@ -482,8 +478,6 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
     room_device_layout = format_room_device_layout(household_profile)
     person_room_status_schema = format_person_room_status_schema()
     device_state_schema = format_device_state_schema()
-    devices_info = format_devices_info(device_file)
-
     start_date = datetime.now().date() - timedelta(days=num_days - 1)
     
     def generate_one_day(day_offset):
@@ -515,11 +509,11 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
             event_device_ids = list(dict.fromkeys(
                 event.get('object_id') for event in allowed_events if event.get('object_id')
             ))
-            context_devices_info = devices_info
+            household_device_ids = list(dict.fromkeys(layout_device_ids + event_device_ids))
+            context_devices_info = format_devices_info(device_file, household_device_ids)
             if event_device_ids:
                 context_devices_info += "\n\n## 场景候选事件设备对象\n"
                 context_devices_info += "\n".join(f"- {device_id}: 场景候选事件对象" for device_id in event_device_ids)
-            household_device_ids = list(dict.fromkeys(layout_device_ids + event_device_ids))
 
             contexts.append({
                 'scenario': scenario,
@@ -543,6 +537,7 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
                 'person_room_status_schema': person_room_status_schema,
                 'device_state_schema': device_state_schema,
                 'devices_info': context_devices_info,
+                'prompt_device_ids': household_device_ids,
                 'subject_profile': plan_item.get('member'),
             })
 
@@ -552,7 +547,8 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
         active_contexts = []
         for context in contexts:
             sampled_persons = random.sample(person_ids, min(3, len(person_ids))) if person_ids else []
-            sampled_devices = random.sample(available_devices, min(5, len(available_devices))) if available_devices else []
+            prompt_device_ids = context.get('prompt_device_ids') or []
+            sampled_devices = random.sample(prompt_device_ids, min(5, len(prompt_device_ids))) if prompt_device_ids else []
             state_prompt = LLM_STATE_DESCRIPTION_PROMPT.format(
                 scenario=context['scenario'],
                 scenario_desc=context['scenario_desc'],
@@ -589,7 +585,7 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
                 )
             except Exception as e:
                 _log_llm_failure(
-                    "daily_state_description",
+                    "state_descriptions",
                     e,
                     context=context,
                     prompt=state_prompt,
@@ -608,7 +604,6 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
 
             scenario_time = state_result.get('scenario_time') or context['planned_scene_time']
             context['scenario_time'] = scenario_time
-            context['daily_state_description'] = state_result['daily_state_description']
             context['household_state_description'] = state_result['household_state_description']
             context['device_event_description'] = state_result['device_event_description']
             context['sampled_context'] = {
@@ -619,7 +614,6 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
                 'scenario': context['scenario'],
                 'subject_id': context['default_subject'],
                 'scenario_time': scenario_time,
-                'daily_state_description': context['daily_state_description'],
                 'household_state_description': context['household_state_description'],
                 'device_event_description': context['device_event_description'],
             })
@@ -757,7 +751,6 @@ def generate_single_device_state_llm(context, run_json_trials_func, device_id, t
         devices_info=context['devices_info'],
         household_state_description=context['household_state_description'],
         device_event_description=context['device_event_description'],
-        daily_state_description=context['daily_state_description'],
         previous_events=previous_events_text,
         event_json=event_json,
         persons_json=json.dumps(persons, ensure_ascii=False, indent=2),
@@ -886,7 +879,6 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         scenario_time=context['scenario_time'],
         household_state_description=context['household_state_description'],
         device_event_description=context['device_event_description'],
-        daily_state_description=context['daily_state_description'],
         previous_events=previous_events_text,
         allowed_events_info=allowed_events_info,
     )
@@ -934,7 +926,6 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         scenario_time=context['scenario_time'],
         household_state_description=context['household_state_description'],
         device_event_description=context['device_event_description'],
-        daily_state_description=context['daily_state_description'],
         previous_events=previous_events_text,
         event_json=event_json,
     )
@@ -971,7 +962,6 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         all_scenario_descriptions=all_scenario_descriptions,
         household_state_description=context['household_state_description'],
         device_event_description=context['device_event_description'],
-        daily_state_description=context['daily_state_description'],
         previous_events=previous_events_persons_text,
         event_json=event_json,
     )
@@ -1112,7 +1102,6 @@ def generate_scenario_events_from_description_llm(context, run_json_trials_func,
             llm_result = {
                 'household_state_description': context['household_state_description'],
                 'device_event_description': context['device_event_description'],
-                'daily_state_description': context['daily_state_description'],
                 'annotated_events': annotated_events,
             }
             try:
@@ -1207,9 +1196,10 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
         ValueError: 验证失败时抛出异常
     """
     # 检查必需字段
-    if 'daily_state_description' not in result:
-        raise ValueError("Missing daily_state_description")
-    
+    if 'household_state_description' not in result:
+        raise ValueError("Missing household_state_description")
+    if 'device_event_description' not in result:
+        raise ValueError("Missing device_event_description")
     if 'annotated_events' not in result:
         raise ValueError("Missing annotated_events")
     
@@ -1329,7 +1319,6 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
         "household_layout": household_layout or get_household_room_layout({}),
         "household_state_description": result['household_state_description'],
         "device_event_description": result['device_event_description'],
-        "daily_state_description": result['daily_state_description'],
         "annotated_events": annotated_events
     }
     
@@ -1545,7 +1534,8 @@ def generate_single_day_episode_rule_based(scenario, episode_date, day_offset, t
         "confidence": round(0.85 + random.random() * 0.1, 2),
         "date": episode_date.isoformat(),
         "household_layout": get_household_room_layout(household_profile),
-        "daily_state_description": f"基于规则模板生成的{template.get('name', scenario)}场景，只记录当天的场景主要事件和对应设备状态。",
+        "household_state_description": f"基于规则模板生成的{template.get('name', scenario)}场景，家庭成员状态由规则状态机生成。",
+        "device_event_description": f"基于规则模板生成的{template.get('name', scenario)}场景，只记录当天的场景主要事件和对应设备状态。",
         "annotated_events": annotated_events
     }
     
@@ -1645,6 +1635,8 @@ def generate_single_day_episode(scenario, episode_date, day_offset, template,
         "subject_id": default_subject,
         "confidence": round(0.85 + random.random() * 0.1, 2),
         "date": episode_date.isoformat(),
+        "household_state_description": f"基于规则模板生成的{template.get('name', scenario)}场景，家庭成员状态由规则状态机生成。",
+        "device_event_description": f"基于规则模板生成的{template.get('name', scenario)}场景，只记录当天的场景主要事件和对应设备状态。",
         "annotated_events": annotated_events
     }
     
