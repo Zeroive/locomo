@@ -124,6 +124,11 @@ from generative_agents.device_event_validation import (
     validate_llm_persons_result,
     validate_llm_devices_result,
     validate_llm_single_device_state_result,
+    get_event_subject_id,
+    get_event_predicate,
+    get_event_object_id,
+    get_event_attributes,
+    get_event_type,
 )
 from generative_agents.household_context import (
     format_members_info,
@@ -353,6 +358,12 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
                     )
                     raise
                 if annotated_event:
+                    annotated_event = ensure_annotated_event_record(
+                        annotated_event,
+                        scenario,
+                        len(annotated_events),
+                        default_subject,
+                    )
                     annotated_events.append(annotated_event)
             
             llm_result = {
@@ -759,6 +770,84 @@ def ensure_event_timestamp_progresses(timestamp, scenario_time, previous_events,
     return current.isoformat()
 
 
+SUBJECT_TYPE_BY_ROLE_ID = {
+    "dad": "person_001",
+    "mom": "person_002",
+    "child": "person_003",
+    "grandpa": "person_004",
+    "grandma": "person_005",
+}
+
+
+def get_event_subject_type(subject_id, subject_profile=None):
+    if isinstance(subject_profile, dict):
+        profile_id = subject_profile.get('person_id') or subject_profile.get('id')
+        if profile_id:
+            return profile_id
+    return SUBJECT_TYPE_BY_ROLE_ID.get(subject_id, subject_id)
+
+
+def get_event_space_room(object_id, subject_id, persons):
+    for room_id, device_ids in DEFAULT_ROOM_DEVICE_LAYOUT.items():
+        if object_id in device_ids:
+            return room_id
+    subject_state = persons.get(subject_id, {}) if isinstance(persons, dict) else {}
+    return subject_state.get('location') or 'unknown'
+
+
+def build_event_record(event_data, timestamp, persons, scenario, event_index,
+                       default_subject, subject_profile=None, confidence=0.92):
+    subject_id = default_subject
+    object_id = event_data.get('object_id', '')
+    room = get_event_space_room(object_id, subject_id, persons)
+    subject_type = get_event_subject_type(subject_id, subject_profile)
+    event_id = f"{subject_type}_{scenario}:event:{event_index}"
+    attributes = event_data.get('attributes', {}) if isinstance(event_data.get('attributes'), dict) else {}
+    if event_data.get('event_type'):
+        attributes.setdefault('event_type', event_data.get('event_type', ''))
+    if event_data.get('description'):
+        attributes.setdefault('description', event_data.get('description', ''))
+
+    return {
+        "event_id": event_id,
+        "timestamp": timestamp,
+        "subject": {
+            "type": subject_type,
+            "id": subject_id,
+            "confidence": 1.0,
+        },
+        "space": {
+            "room": room,
+            "zone": None,
+        },
+        "object": {
+            "type": "device",
+            "id": object_id,
+        },
+        "predicate": event_data.get('predicate', ''),
+        "attributes": attributes,
+        "confidence": confidence,
+    }
+
+
+def ensure_annotated_event_record(annotated_event, scenario, event_index,
+                                  default_subject, subject_profile=None):
+    event = annotated_event.get('event', {}) if isinstance(annotated_event, dict) else {}
+    if isinstance(event.get('subject'), dict) and isinstance(event.get('object'), dict):
+        return annotated_event
+    snapshot = annotated_event.get('state_snapshot', {}) if isinstance(annotated_event, dict) else {}
+    annotated_event['event'] = build_event_record(
+        event,
+        snapshot.get('timestamp', ''),
+        snapshot.get('persons', {}),
+        scenario,
+        event_index,
+        default_subject,
+        subject_profile,
+    )
+    return annotated_event
+
+
 
 
 def generate_single_device_state_llm(context, run_json_trials_func, device_id, timestamp,
@@ -1036,8 +1125,17 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
         )
         raise
 
+    event_record = build_event_record(
+        event,
+        timestamp,
+        persons,
+        scenario,
+        len(previous_events),
+        default_subject,
+        context.get('subject_profile'),
+    )
     annotated_event = {
-        'event': event,
+        'event': event_record,
         'state_snapshot': {
             'timestamp': timestamp,
             'persons': persons,
@@ -1270,27 +1368,39 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
         
         event = event_data['event']
         
+        subject_id = get_event_subject_id(event)
+        predicate = get_event_predicate(event)
+        object_id = get_event_object_id(event)
+        attributes = get_event_attributes(event)
+
         # 检查必需的 event 字段
-        if 'subject_id' not in event:
-            raise ValueError(f"Event {i} missing subject_id")
-        if 'predicate' not in event:
+        for required_key in ('event_id', 'timestamp', 'subject', 'space', 'object', 'predicate', 'attributes', 'confidence'):
+            if required_key not in event:
+                raise ValueError(f"Event {i} missing {required_key}")
+        if not subject_id:
+            raise ValueError(f"Event {i} missing subject")
+        if not predicate:
             raise ValueError(f"Event {i} missing predicate")
-        if 'object_id' not in event:
-            raise ValueError(f"Event {i} missing object_id")
-        if 'attributes' not in event:
-            event['attributes'] = {}
-        event['subject_id'] = default_subject
+        if not object_id:
+            raise ValueError(f"Event {i} missing object")
+        if not isinstance(event.get('subject'), dict):
+            raise ValueError(f"Event {i} subject must be an object")
+        if not isinstance(event.get('space'), dict):
+            raise ValueError(f"Event {i} space must be an object")
+        if not isinstance(event.get('object'), dict):
+            raise ValueError(f"Event {i} object must be an object")
+        event['attributes'] = attributes
         
         # 验证 subject_id 在可用人员列表或系统执行主体中
-        if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_assistant', 'system', 'visitor'}:
-            raise ValueError(f"Event {i} has invalid subject_id: {event['subject_id']}")
+        if subject_id not in person_ids and subject_id not in {'home_assistant', 'system', 'visitor'}:
+            raise ValueError(f"Event {i} has invalid subject_id: {subject_id}")
         
         # 验证 object_id 在可用设备列表中
-        if event['object_id'] not in available_devices:
-            raise ValueError(f"Event {i} has invalid object_id: {event['object_id']}")
+        if object_id not in available_devices:
+            raise ValueError(f"Event {i} has invalid object_id: {object_id}")
         
-        actual_type = event.get('attributes', {}).get('event_type', '')
-        event_key = (event['subject_id'], actual_type, event['predicate'], event['object_id'])
+        actual_type = get_event_type(event)
+        event_key = (subject_id, actual_type, predicate, object_id)
         if allowed_event_map and event_key not in allowed_event_map:
             raise ValueError(f"Event {i} is not an allowed scene event: {event_key}")
         if event_key in seen_event_keys:
@@ -1312,6 +1422,8 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
             raise ValueError(f"Event {i} missing devices in state_snapshot")
         if 'space_occupancy' not in snapshot:
             raise ValueError(f"Event {i} missing space_occupancy in state_snapshot")
+        if event.get('timestamp') != snapshot.get('timestamp'):
+            raise ValueError(f"Event {i} event timestamp does not match state_snapshot timestamp")
         validate_person_states(snapshot, person_ids)
         validate_device_states(snapshot)
         validate_space_occupancy(snapshot)
@@ -1527,17 +1639,18 @@ def generate_single_day_episode_rule_based(scenario, episode_date, day_offset, t
             space_occupancy=current_state['space_occupancy'].copy()
         )
         
+        event_record = build_event_record(
+            event_data,
+            state_snapshot['timestamp'],
+            state_snapshot['persons'],
+            scenario,
+            len(annotated_events),
+            default_subject,
+        )
+
         # 创建事件对象
         event_obj = {
-            "event": {
-                "subject_id": event_data.get('subject_id', default_subject),
-                "predicate": event_data['predicate'],
-                "object_id": event_data['object_id'],
-                "attributes": {
-                    "event_type": event_data.get('event_type', ''),
-                    "description": event_data.get('description', '')
-                }
-            },
+            "event": event_record,
             "state_snapshot": state_snapshot
         }
         
@@ -1629,17 +1742,18 @@ def generate_single_day_episode(scenario, episode_date, day_offset, template,
             devices=current_state['devices'].copy()
         )
         
+        event_record = build_event_record(
+            event_data,
+            state_snapshot['timestamp'],
+            state_snapshot['persons'],
+            scenario,
+            len(annotated_events),
+            default_subject,
+        )
+
         # 创建事件对象
         event_obj = {
-            "event": {
-                "subject_id": event_data.get('subject_id', default_subject),
-                "predicate": event_data['predicate'],
-                "object_id": event_data['object_id'],
-                "attributes": {
-                    "event_type": event_data.get('event_type', ''),
-                    "description": event_data.get('description', '')
-                }
-            },
+            "event": event_record,
             "state_snapshot": state_snapshot
         }
         

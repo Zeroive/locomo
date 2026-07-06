@@ -181,6 +181,33 @@ def format_candidate_event_info(event, default_subject):
     }, ensure_ascii=False, indent=2)
 
 
+def get_event_subject_id(event):
+    subject = event.get('subject') if isinstance(event, dict) else None
+    if isinstance(subject, dict) and subject.get('id'):
+        return subject.get('id')
+    return event.get('subject_id', '') if isinstance(event, dict) else ''
+
+
+def get_event_predicate(event):
+    return event.get('predicate', '') if isinstance(event, dict) else ''
+
+
+def get_event_object_id(event):
+    obj = event.get('object') if isinstance(event, dict) else None
+    if isinstance(obj, dict) and obj.get('id'):
+        return obj.get('id')
+    return event.get('object_id', '') if isinstance(event, dict) else ''
+
+
+def get_event_attributes(event):
+    attributes = event.get('attributes', {}) if isinstance(event, dict) else {}
+    return attributes if isinstance(attributes, dict) else {}
+
+
+def get_event_type(event):
+    return get_event_attributes(event).get('event_type', '')
+
+
 def validate_llm_state_result(result):
     if not isinstance(result, dict):
         raise ValueError(f"State description result must be a dict, got {type(result)}")
@@ -228,25 +255,28 @@ def validate_llm_event_item_result(result, candidate_event, default_subject, per
     snapshot = annotated_event.get('state_snapshot')
     if not isinstance(event, dict) or not isinstance(snapshot, dict):
         raise ValueError("annotated_event must contain event and state_snapshot")
-    event['subject_id'] = default_subject
 
     expected_subject = default_subject
     expected_type = candidate_event.get('event_type', '')
-    if event.get('subject_id') != expected_subject:
-        raise ValueError(f"Invalid subject_id: {event.get('subject_id')}, expected {expected_subject}")
-    if event.get('predicate') != candidate_event.get('predicate'):
-        raise ValueError(f"Invalid predicate: {event.get('predicate')}, expected {candidate_event.get('predicate')}")
-    if event.get('object_id') != candidate_event.get('object_id'):
-        raise ValueError(f"Invalid object_id: {event.get('object_id')}, expected {candidate_event.get('object_id')}")
-    event.setdefault('attributes', {})
-    if event['attributes'].get('event_type') != expected_type:
-        raise ValueError(f"Invalid event_type: {event['attributes'].get('event_type')}, expected {expected_type}")
+    subject_id = get_event_subject_id(event)
+    predicate = get_event_predicate(event)
+    object_id = get_event_object_id(event)
+    attributes = get_event_attributes(event)
+    if subject_id != expected_subject:
+        raise ValueError(f"Invalid subject_id: {subject_id}, expected {expected_subject}")
+    if predicate != candidate_event.get('predicate'):
+        raise ValueError(f"Invalid predicate: {predicate}, expected {candidate_event.get('predicate')}")
+    if object_id != candidate_event.get('object_id'):
+        raise ValueError(f"Invalid object_id: {object_id}, expected {candidate_event.get('object_id')}")
+    event['attributes'] = attributes
+    if attributes.get('event_type') != expected_type:
+        raise ValueError(f"Invalid event_type: {attributes.get('event_type')}, expected {expected_type}")
     event['attributes'].setdefault('description', candidate_event.get('description', ''))
 
-    if event['subject_id'] not in person_ids and event['subject_id'] not in {'home_assistant', 'system', 'visitor'}:
-        raise ValueError(f"Invalid subject_id: {event['subject_id']}")
-    if event['object_id'] not in available_devices:
-        raise ValueError(f"Invalid object_id: {event['object_id']}")
+    if subject_id not in person_ids and subject_id not in {'home_assistant', 'system', 'visitor'}:
+        raise ValueError(f"Invalid subject_id: {subject_id}")
+    if object_id not in available_devices:
+        raise ValueError(f"Invalid object_id: {object_id}")
 
     for key in ('timestamp', 'persons', 'devices', 'space_occupancy'):
         if key not in snapshot:
@@ -354,12 +384,11 @@ def refresh_space_occupancy_from_persons(state):
 
 def get_annotated_event_key(annotated_event):
     event = annotated_event.get('event', {}) if isinstance(annotated_event, dict) else {}
-    attributes = event.get('attributes', {}) if isinstance(event.get('attributes'), dict) else {}
     return (
-        event.get('subject_id', ''),
-        attributes.get('event_type', ''),
-        event.get('predicate', ''),
-        event.get('object_id', ''),
+        get_event_subject_id(event),
+        get_event_type(event),
+        get_event_predicate(event),
+        get_event_object_id(event),
     )
 
 
@@ -374,15 +403,15 @@ def format_previous_events_for_prompt(previous_events, include_devices=True):
     latest_state_snapshot = None
     for index, annotated_event in enumerate(previous_events, start=1):
         event = annotated_event.get('event', {}) if isinstance(annotated_event, dict) else {}
-        attributes = event.get('attributes', {}) if isinstance(event.get('attributes'), dict) else {}
+        attributes = get_event_attributes(event)
         snapshot = annotated_event.get('state_snapshot', {}) if isinstance(annotated_event, dict) else {}
         latest_state_snapshot = snapshot or latest_state_snapshot
         event_history.append({
             "index": index,
-            "timestamp": snapshot.get('timestamp', ''),
-            "subject_id": event.get('subject_id', ''),
-            "predicate": event.get('predicate', ''),
-            "object_id": event.get('object_id', ''),
+            "timestamp": event.get('timestamp') or snapshot.get('timestamp', ''),
+            "subject_id": get_event_subject_id(event),
+            "predicate": get_event_predicate(event),
+            "object_id": get_event_object_id(event),
             "event_type": attributes.get('event_type', ''),
             "description": attributes.get('description', ''),
         })
