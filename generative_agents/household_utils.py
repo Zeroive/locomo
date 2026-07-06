@@ -118,7 +118,7 @@ ROLE_DISPLAY = {
 
 
 FAMILY_TEMPLATES = {
-    "couple_only": ["spouse", "spouse"],
+    "couple_only": ["father", "mother"],
     "nuclear_family": ["father", "mother", "child"],
     "three_generation_family": ["grandfather", "grandmother", "father", "mother", "child"],
     "single_parent_family": ["single_parent", "child"],
