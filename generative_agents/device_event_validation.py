@@ -260,8 +260,8 @@ def validate_llm_event_item_result(result, candidate_event, default_subject, per
         prev_timestamp = datetime.fromisoformat(
             previous_events[-1]['state_snapshot']['timestamp'].replace('+08:00', '')
         )
-        if current_timestamp < prev_timestamp:
-            raise ValueError(f"timestamp goes backwards: {snapshot['timestamp']}")
+        if current_timestamp <= prev_timestamp:
+            raise ValueError(f"timestamp must increase: {snapshot['timestamp']}")
 
     return annotated_event
 
@@ -477,13 +477,7 @@ def validate_llm_timestamp_result(result, previous_events):
     timestamp = result.get('timestamp')
     if not timestamp:
         raise ValueError("Missing timestamp")
-    current_timestamp = datetime.fromisoformat(timestamp.replace('+08:00', ''))
-    if previous_events:
-        prev_timestamp = datetime.fromisoformat(
-            previous_events[-1]['state_snapshot']['timestamp'].replace('+08:00', '')
-        )
-        if current_timestamp < prev_timestamp:
-            raise ValueError(f"timestamp goes backwards: {timestamp}")
+    datetime.fromisoformat(timestamp.replace('+08:00', ''))
     return timestamp
 
 

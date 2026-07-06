@@ -722,6 +722,43 @@ def build_scene_time(episode_date, time_range, fallback_hour=8):
     return scene_datetime.strftime('%Y-%m-%dT%H:%M:%S+08:00')
 
 
+def parse_event_datetime(timestamp):
+    if isinstance(timestamp, datetime):
+        return timestamp
+    return datetime.fromisoformat(str(timestamp).replace('Z', '+00:00'))
+
+
+def align_datetime_for_comparison(value, reference):
+    if value.tzinfo and reference.tzinfo is None:
+        return value.replace(tzinfo=None)
+    if value.tzinfo is None and reference.tzinfo:
+        return value.replace(tzinfo=reference.tzinfo)
+    return value
+
+
+def ensure_event_timestamp_progresses(timestamp, scenario_time, previous_events, step_seconds=60):
+    """
+    Ensure events inside one scenario advance in time.
+
+    LLMs may reuse scenario_time or the previous timestamp for closely related
+    device actions; downstream trajectories are easier to consume when each
+    event has a strictly later timestamp.
+    """
+    current = parse_event_datetime(timestamp)
+    anchor = parse_event_datetime(scenario_time)
+    anchor = align_datetime_for_comparison(anchor, current)
+
+    if previous_events:
+        previous = parse_event_datetime(previous_events[-1]['state_snapshot']['timestamp'])
+        previous = align_datetime_for_comparison(previous, current)
+        if current <= previous:
+            current = previous + timedelta(seconds=step_seconds)
+    elif current <= anchor:
+        current = anchor + timedelta(seconds=step_seconds)
+
+    return current.isoformat()
+
+
 
 
 def generate_single_device_state_llm(context, run_json_trials_func, device_id, timestamp,
@@ -923,6 +960,11 @@ def generate_split_annotated_event_llm(context, run_json_trials_func, previous_e
             temperature=0.4,
         )
         timestamp = validate_llm_timestamp_result(timestamp_result, previous_events)
+        timestamp = ensure_event_timestamp_progresses(
+            timestamp,
+            context['scenario_time'],
+            previous_events,
+        )
     except Exception as e:
         _log_llm_failure(
             "event_timestamp",
@@ -1277,8 +1319,8 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
         # 验证时间戳格式和递增性
         try:
             current_timestamp = datetime.fromisoformat(snapshot['timestamp'].replace('+08:00', ''))
-            if prev_timestamp and current_timestamp < prev_timestamp:
-                raise ValueError(f"Event {i} timestamp goes backwards: {snapshot['timestamp']}")
+            if prev_timestamp and current_timestamp <= prev_timestamp:
+                raise ValueError(f"Event {i} timestamp must increase: {snapshot['timestamp']}")
             prev_timestamp = current_timestamp
         except ValueError as e:
             raise ValueError(f"Event {i} has invalid timestamp format: {e}")
