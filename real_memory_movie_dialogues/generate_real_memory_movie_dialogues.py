@@ -13,6 +13,8 @@ import random
 import re
 import sys
 import time
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -116,6 +118,7 @@ def parse_args():
     parser.add_argument("--max-retries", type=int, default=3)
     parser.add_argument("--temperature", type=float, default=0.8)
     parser.add_argument("--max-turns-per-session", type=int, default=4)
+    parser.add_argument("--max-workers", type=int, default=1, help="Parallel ability workers. 1 keeps serial generation.")
     parser.add_argument(
         "--household-structure",
         choices=["cycle", *HOUSEHOLD_STRUCTURE_ORDER],
@@ -479,8 +482,7 @@ def previous_sessions_text(sessions):
     return "\n\n".join(blocks)
 
 
-def build_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, speaker_role, turn_idx):
-    speaker_label = "用户" if speaker_role == "user" else "AI助手"
+def build_turn_context(profile, plan, session, prior_sessions, conv_so_far):
     household_context = summarize_household_context(profile["household"])
     memory_lines = "；".join(profile["memory_lines"]) or "无"
     memory_points = "；".join(profile.get("memory_points", [])) or memory_lines
@@ -489,19 +491,6 @@ def build_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, speak
     session_idx = int(session["session_id"].replace("S", "")) - 1
     session_goals = plan.get("session_goals") or []
     session_goal = session_goals[session_idx] if session_idx < len(session_goals) else (session_goals[-1] if session_goals else "围绕主题自然生成本会话。")
-    role_hint = (
-        "你只能扮演用户，生成用户接下来对AI助手说的一句自然口语。"
-        if speaker_role == "user"
-        else "你只能扮演AI助手，生成对用户上一句话的简短日常回应。"
-    )
-    first_turn_hint = ""
-    if turn_idx == 1 and plan["category"] != "adversarial":
-        first_turn_hint = f"- 首轮或本会话中要自然带出至少一个记忆关键词：{keywords}。\n"
-    if plan["category"] == "adversarial":
-        first_turn_hint = (
-            f"- 仍要自然带出至少一个记忆关键词：{keywords}。\n"
-            "- 但不要补充记忆内容之外的片源、歌手、演员、年份、平台、具体含义等额外细节，保持问题无法从上下文确定。\n"
-        )
     return f"""
 你在为家庭观影/客厅娱乐场景生成用户与AI助手的短对话，每次只生成一个说话方的一句话。
 
@@ -522,18 +511,58 @@ def build_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, speak
 {previous_sessions_text(prior_sessions)}
 当前会话已有对话：
 {conv_so_far or "无"}
+""".strip(), keywords
+
+
+def build_user_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, turn_idx):
+    context, keywords = build_turn_context(profile, plan, session, prior_sessions, conv_so_far)
+    first_turn_hint = ""
+    if turn_idx == 1 and plan["category"] != "adversarial":
+        first_turn_hint = f"- 首轮或本会话中要自然带出至少一个记忆关键词：{keywords}。\n"
+    if plan["category"] == "adversarial":
+        first_turn_hint = (
+            f"- 仍要自然带出至少一个记忆关键词：{keywords}。\n"
+            "- 但不要补充记忆内容之外的片源、歌手、演员、年份、平台、具体含义等额外细节，保持问题无法从上下文确定。\n"
+        )
+    return f"""
+{context}
 
 要求：
-- 当前说话方：{speaker_label}
-- {role_hint}
+- 当前说话方：用户。
+- 你只能扮演 person_001 用户，生成用户接下来对AI助手说的一句自然口语。
+- 用户说话要日常、随意，可以像在客厅里随口吩咐、补一句偏好或简单解释原因。
+- 用户可以表达播放影片、听歌、小品、切换内容、调音量、开关投影等需求。
+- 用户可以自然提到其他家庭成员，但其他家庭成员不能直接发言。
 - 只输出一句话，不要输出说话人名字，不要输出JSON。
-- 本段对话只有 person_001 用户和AI助手两个说话方，其他家庭成员只能被提及，不能直接发言。
-- 内容围绕播放影片、听歌、小品、观影设备或常用AI助手功能。
-- 对话内容要建立在行时间戳下，并自然包含相关记忆点里的信息。
+- 内容要建立在行时间戳下，并自然包含相关记忆点里的信息。
 - 优先服务“对话主题”和“当前会话目标”，不要偏离到无关家庭闲聊。
-- 口语化、随意、简短，不超过35个中文字。
+- 语气轻松，不超过35个中文字。
 {first_turn_hint}
 """.strip()
+
+
+def build_assistant_turn_prompt(profile, plan, session, prior_sessions, conv_so_far):
+    context, _ = build_turn_context(profile, plan, session, prior_sessions, conv_so_far)
+    return f"""
+{context}
+
+要求：
+- 当前说话方：AI助手。
+- 你只能扮演AI助手，回复用户上一句话。
+- 回复要简短正式，以确认操作、说明已执行、简单询问必要信息为主。
+- 不主动扩展事实，不补充用户没有说过的片源、歌手、演员、年份、平台、剧情、家庭安排或个人评价。
+- 不主动制造新记忆，不解释测评类别、证据、推理过程或内部目标。
+- 如果用户请求明确，直接确认执行；如果缺少必要信息，只问一个简短澄清问题。
+- 只输出一句话，不要输出说话人名字，不要输出JSON。
+- 本段对话只有 person_001 用户和AI助手两个说话方，其他家庭成员只能被提及，不能直接发言。
+- 语气稳妥、克制，不超过30个中文字。
+""".strip()
+
+
+def build_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, speaker_role, turn_idx):
+    if speaker_role == "user":
+        return build_user_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, turn_idx)
+    return build_assistant_turn_prompt(profile, plan, session, prior_sessions, conv_so_far)
 
 
 def generate_session(profile, plan, session_id, date_time, prior_sessions, args):
@@ -815,32 +844,91 @@ def generate_row(row, row_index, args):
     return row_output, failures
 
 
+def row_ability(row):
+    return classify_ability(row_value(row, "记忆内容"), row_value(row, "用户输入"))
+
+
+def grouped_rows_by_ability(rows):
+    groups = defaultdict(list)
+    for row_index, row in enumerate(rows, start=1):
+        groups[row_ability(row)].append((row_index, row))
+    return groups
+
+
+def process_row(row_index, row, args):
+    row_id = f"RMR-{row_index:03d}"
+    out_path = args.out_dir / f"{row_id}.json"
+    if out_path.exists() and not args.overwrite:
+        logging.info("%s exists, loading existing file", out_path)
+        with out_path.open("r", encoding="utf-8") as f:
+            existing = json.load(f)
+        return row_index, existing, []
+
+    logging.info("Generating %s", row_id)
+    row_output, failures = generate_row(row, row_index, args)
+    save_json(row_output, out_path)
+    if failures:
+        logging.warning("%s saved with %s failed case(s)", row_id, len(failures))
+    else:
+        logging.info("%s saved with 5 cases", row_id)
+    return row_index, row_output, failures
+
+
+def process_ability_group(ability, indexed_rows, args):
+    logging.info("Starting ability group %s with %s row(s)", ability, len(indexed_rows))
+    results = []
+    for row_index, row in indexed_rows:
+        results.append(process_row(row_index, row, args))
+    logging.info("Finished ability group %s", ability)
+    return ability, results
+
+
+def generate_rows_serial(rows, args):
+    results = []
+    for row_index, row in enumerate(rows, start=1):
+        results.append(process_row(row_index, row, args))
+    return results
+
+
+def generate_rows_parallel_by_ability(rows, args):
+    groups = grouped_rows_by_ability(rows)
+    max_workers = max(1, min(args.max_workers, len(groups)))
+    logging.info(
+        "Parallel generation by ability: groups=%s, max_workers=%s",
+        {ability: len(items) for ability, items in groups.items()},
+        max_workers,
+    )
+    results = []
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(process_ability_group, ability, indexed_rows, args): ability
+            for ability, indexed_rows in groups.items()
+        }
+        for future in as_completed(futures):
+            ability, group_results = future.result()
+            logging.info("Collected ability group %s", ability)
+            results.extend(group_results)
+    return sorted(results, key=lambda item: item[0])
+
+
 def main():
     args = parse_args()
     random.seed(args.seed)
     args.out_dir.mkdir(parents=True, exist_ok=True)
     rows = load_csv_rows(args.input_csv, args.limit)
+
+    if args.max_workers > 1:
+        row_results = generate_rows_parallel_by_ability(rows, args)
+    else:
+        row_results = generate_rows_serial(rows, args)
+
     all_rows = []
     failed_rows = []
-
-    for row_index, row in enumerate(rows, start=1):
+    for row_index, row_output, failures in row_results:
         row_id = f"RMR-{row_index:03d}"
-        out_path = args.out_dir / f"{row_id}.json"
-        if out_path.exists() and not args.overwrite:
-            logging.info("%s exists, loading existing file", out_path)
-            with out_path.open("r", encoding="utf-8") as f:
-                existing = json.load(f)
-            all_rows.append(existing)
-            continue
-        logging.info("Generating %s", row_id)
-        row_output, failures = generate_row(row, row_index, args)
-        save_json(row_output, out_path)
         all_rows.append(row_output)
         if failures:
             failed_rows.append({"row_id": row_id, "failures": failures})
-            logging.warning("%s saved with %s failed case(s)", row_id, len(failures))
-        else:
-            logging.info("%s saved with 5 cases", row_id)
 
     save_json(all_rows, args.out_dir / "all_rows.json")
     if failed_rows:
