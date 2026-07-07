@@ -1,0 +1,301 @@
+{
+  "case_id": "HC-034",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我平时最喜欢用联通智家看电视连续剧。"
+        ],
+        "memory": [
+          "用户在观看电视剧《最后的较量》第8集"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想看刘德华的电影。"
+        ],
+        "memory": [
+          "用户偏好纪录片和电影，对周星驰和刘德华的电影有明确兴趣",
+          "用户喜欢周星驰、刘德华和黄晓明的电影"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "放个电影。"
+        ],
+        "memory": [
+          "用户播放了绘本小红帽",
+          "用户要跳舞"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "帮我发一下我刚才要的那种视频，立即就下载集数要多。",
+          "帮我发一种视频，现在就能看的还是末日播放，二年级和三年级都可以看。"
+        ],
+        "memory": [
+          "用户请求帮忙拍摄并发布一个适合二年级或三年级小孩观看的视频"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈清和",
+      "date_time": "2026-07-01 21:00",
+      "QA_details": [
+        {
+          "user": "打开联通智家。",
+          "assistant": "联通智家电视页已打开。"
+        },
+        {
+          "user": "看电视剧。",
+          "assistant": "电视剧专区已显示。"
+        },
+        {
+          "user": "最后的较量。",
+          "assistant": "《最后的较量》已找到。"
+        },
+        {
+          "user": "第8集。",
+          "assistant": "第8集开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "沈清和",
+      "date_time": "2026-07-04 20:15",
+      "QA_details": [
+        {
+          "user": "继续我的电视剧。",
+          "assistant": "继续播放《最后的较量》第8集。"
+        },
+        {
+          "user": "换清晰点。",
+          "assistant": "清晰度已调高。"
+        },
+        {
+          "user": "看下历史。",
+          "assistant": "播放历史里有《最后的较量》第8集。"
+        },
+        {
+          "user": "用联通智家看。",
+          "assistant": "已保持联通智家播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈望舒",
+      "date_time": "2026-07-02 19:20",
+      "QA_details": [
+        {
+          "user": "我想看刘德华电影。",
+          "assistant": "刘德华电影列表已打开。"
+        },
+        {
+          "user": "周星驰也行。",
+          "assistant": "周星驰电影也为你列出来了。"
+        },
+        {
+          "user": "黄晓明的呢。",
+          "assistant": "黄晓明电影专区已显示。"
+        },
+        {
+          "user": "纪录片也留着。",
+          "assistant": "纪录片分类已加入推荐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈望舒",
+      "date_time": "2026-07-05 21:05",
+      "QA_details": [
+        {
+          "user": "推荐个电影。",
+          "assistant": "按你的偏好推荐刘德华电影。"
+        },
+        {
+          "user": "换周星驰。",
+          "assistant": "已切到周星驰电影。"
+        },
+        {
+          "user": "再看纪录片。",
+          "assistant": "纪录片推荐已打开。"
+        },
+        {
+          "user": "还是刘德华。",
+          "assistant": "刘德华电影继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "沈小羽",
+      "date_time": "2026-07-01 17:30",
+      "QA_details": [
+        {
+          "user": "放小红帽。",
+          "assistant": "绘本《小红帽》开始播放。"
+        },
+        {
+          "user": "换个电影。",
+          "assistant": "已切到儿童电影推荐。"
+        },
+        {
+          "user": "我要跳舞。",
+          "assistant": "跳舞视频已打开。"
+        },
+        {
+          "user": "再放小红帽。",
+          "assistant": "绘本《小红帽》继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "沈小羽",
+      "date_time": "2026-07-04 18:10",
+      "QA_details": [
+        {
+          "user": "放个电影。",
+          "assistant": "给你推荐儿童电影。"
+        },
+        {
+          "user": "要像小红帽。",
+          "assistant": "已筛选童话绘本风格电影。"
+        },
+        {
+          "user": "跳舞那个。",
+          "assistant": "切到你看过的跳舞视频。"
+        },
+        {
+          "user": "电影继续。",
+          "assistant": "儿童电影继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "顾文英",
+      "date_time": "2026-07-02 16:40",
+      "QA_details": [
+        {
+          "user": "找二年级看的视频。",
+          "assistant": "二年级适合的视频已筛选。"
+        },
+        {
+          "user": "三年级也行。",
+          "assistant": "三年级可看的内容也加入了。"
+        },
+        {
+          "user": "集数多的。",
+          "assistant": "已按集数多的系列排序。"
+        },
+        {
+          "user": "现在能看。",
+          "assistant": "已筛选可立即播放的视频。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "顾文英",
+      "date_time": "2026-07-05 19:45",
+      "QA_details": [
+        {
+          "user": "帮我发刚才那种视频。",
+          "assistant": "刚才那类二三年级可看的视频已找回。"
+        },
+        {
+          "user": "立即下载。",
+          "assistant": "已打开下载选项。"
+        },
+        {
+          "user": "末日播放那个。",
+          "assistant": "末日题材视频已加入筛选。"
+        },
+        {
+          "user": "集数要多。",
+          "assistant": "已优先显示集数多的系列。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "我平时用联通智家看什么来着。",
+      "answer": "《最后的较量》第8集",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "按我喜欢的演员推荐电影。",
+      "answer": "刘德华电影",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "放个像我看过的小红帽那种。",
+      "answer": "童话绘本电影",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "帮我找二三年级能看的集数多视频。",
+      "answer": "集数多儿童视频",
+      "category": "open_domain"
+    }
+  ]
+}

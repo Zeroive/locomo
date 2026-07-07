@@ -1,0 +1,349 @@
+{
+  "case_id": "HC-028",
+  "dimension_tags": {
+    "household_size": "5人",
+    "household_structure": "双亲 + 1个孩子 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要听dj改编版。"
+        ],
+        "memory": [
+          "用户喜欢听《阿刁》这首歌"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "播放快乐有氧舞。"
+        ],
+        "memory": [
+          "用户进行了健身活动"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我想着看鬼鬼园。"
+        ],
+        "memory": [
+          "用户想看桂桂圆的视频",
+          "用户的哥哥喜欢《奇妙萌可》动画片"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "杰克逊演唱会。"
+        ],
+        "memory": [
+          "用户喜欢经典老歌和《我的中国芯》这首歌"
+        ]
+      },
+      "person_005": {
+        "question": [
+          "想看宠物旅店，我也想看。"
+        ],
+        "memory": [
+          "用户在2026年7月1日9:48提到要看宠物旅店"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "梁远舟",
+      "date_time": "2026-07-01 19:00",
+      "QA_details": [
+        {
+          "user": "播放阿刁。",
+          "assistant": "正在播放《阿刁》。"
+        },
+        {
+          "user": "再听一遍。",
+          "assistant": "已重新播放《阿刁》。"
+        },
+        {
+          "user": "换个版本。",
+          "assistant": "为你切换其他版本。"
+        },
+        {
+          "user": "收藏这个。",
+          "assistant": "这个版本已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "梁远舟",
+      "date_time": "2026-07-03 20:10",
+      "QA_details": [
+        {
+          "user": "打开音乐。",
+          "assistant": "音乐页面已打开。"
+        },
+        {
+          "user": "找阿刁改编版。",
+          "assistant": "正在查找《阿刁》改编版。"
+        },
+        {
+          "user": "我要听dj改编版。",
+          "assistant": "已切到《阿刁》DJ改编版。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "现在播放DJ改编版。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏锦棠",
+      "date_time": "2026-07-02 08:30",
+      "QA_details": [
+        {
+          "user": "打开健身。",
+          "assistant": "健身专区已打开。"
+        },
+        {
+          "user": "播放热身操。",
+          "assistant": "开始播放热身操。"
+        },
+        {
+          "user": "换有氧舞。",
+          "assistant": "已切到有氧舞。"
+        },
+        {
+          "user": "暂停。",
+          "assistant": "已暂停播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏锦棠",
+      "date_time": "2026-07-03 08:10",
+      "QA_details": [
+        {
+          "user": "继续健身。",
+          "assistant": "继续打开健身内容。"
+        },
+        {
+          "user": "找快乐有氧舞。",
+          "assistant": "已找到《快乐有氧舞》。"
+        },
+        {
+          "user": "播放快乐有氧舞。",
+          "assistant": "正在播放《快乐有氧舞》。"
+        },
+        {
+          "user": "下一段。",
+          "assistant": "已切到下一段动作。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小满",
+      "date_time": "2026-07-01 17:00",
+      "QA_details": [
+        {
+          "user": "找桂桂圆。",
+          "assistant": "正在搜索桂桂圆视频。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "开始播放桂桂圆视频。"
+        },
+        {
+          "user": "哥哥看奇妙萌可。",
+          "assistant": "已为哥哥打开《奇妙萌可》。"
+        },
+        {
+          "user": "换回来。",
+          "assistant": "已切回你的播放内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小满",
+      "date_time": "2026-07-03 18:20",
+      "QA_details": [
+        {
+          "user": "找鬼鬼园。",
+          "assistant": "正在查找鬼鬼园相关视频。"
+        },
+        {
+          "user": "我想着看鬼鬼园。",
+          "assistant": "已为你播放鬼鬼园相关内容。"
+        },
+        {
+          "user": "别放哥哥的。",
+          "assistant": "已避开《奇妙萌可》。"
+        },
+        {
+          "user": "继续。",
+          "assistant": "继续播放鬼鬼园。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "梁建国",
+      "date_time": "2026-07-01 20:00",
+      "QA_details": [
+        {
+          "user": "播放经典老歌。",
+          "assistant": "正在播放经典老歌。"
+        },
+        {
+          "user": "找我的中国芯。",
+          "assistant": "已找到《我的中国芯》。"
+        },
+        {
+          "user": "播放这首。",
+          "assistant": "开始播放《我的中国芯》。"
+        },
+        {
+          "user": "再找老歌。",
+          "assistant": "继续推荐经典老歌。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "梁建国",
+      "date_time": "2026-07-03 20:30",
+      "QA_details": [
+        {
+          "user": "找杰克逊。",
+          "assistant": "已搜索迈克尔杰克逊相关内容。"
+        },
+        {
+          "user": "杰克逊演唱会。",
+          "assistant": "正在播放杰克逊演唱会。"
+        },
+        {
+          "user": "声音大点。",
+          "assistant": "音量已经调高。"
+        },
+        {
+          "user": "下一段。",
+          "assistant": "已切换下一段演唱会视频。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "梁玉梅",
+      "date_time": "2026-07-01 09:48",
+      "QA_details": [
+        {
+          "user": "我要看宠物旅店。",
+          "assistant": "已找到《宠物旅店》。"
+        },
+        {
+          "user": "先收藏。",
+          "assistant": "《宠物旅店》已收藏。"
+        },
+        {
+          "user": "播放预告。",
+          "assistant": "开始播放预告片。"
+        },
+        {
+          "user": "晚点再看。",
+          "assistant": "已返回推荐页。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "梁玉梅",
+      "date_time": "2026-07-03 19:20",
+      "QA_details": [
+        {
+          "user": "打开收藏。",
+          "assistant": "收藏列表已打开。"
+        },
+        {
+          "user": "找宠物旅店。",
+          "assistant": "已找到收藏的《宠物旅店》。"
+        },
+        {
+          "user": "想看宠物旅店，我也想看。",
+          "assistant": "现在播放《宠物旅店》。"
+        },
+        {
+          "user": "继续看。",
+          "assistant": "继续播放《宠物旅店》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "别放早些时候的原版，放后来要听的版本。",
+      "answer": "播放《阿刁》DJ改编版。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "继续我后来做健身时看的舞蹈。",
+      "answer": "播放《快乐有氧舞》。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "别放哥哥后来喜欢的动画，放我后来想看的。",
+      "answer": "播放鬼鬼园。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "别放早些时候的老歌，放后来找的演唱会。",
+      "answer": "播放杰克逊演唱会。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_005",
+      "question": "继续我7月1日上午提到的影片。",
+      "answer": "播放《宠物旅店》。",
+      "category": "temporal"
+    }
+  ]
+}

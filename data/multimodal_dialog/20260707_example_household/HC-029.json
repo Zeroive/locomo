@@ -1,0 +1,358 @@
+{
+  "case_id": "HC-029",
+  "dimension_tags": {
+    "household_size": "5人",
+    "household_structure": "双亲 + 1个孩子 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 开放知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要听去无人岛旅行。",
+          "我要听无人岛。"
+        ],
+        "memory": [
+          "用户喜欢周杰伦的《红尘客栈》和《心墙》",
+          "用户喜欢看恐怖片、《名侦探柯南》和灰原哀",
+          "用户喜欢听周杰伦的《红尘客栈》和《心墙》"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我要看先生。",
+          "我要看千香。",
+          "给我搜一个鬼妈妈。"
+        ],
+        "memory": [
+          "用户要找儿童动画片",
+          "用户要看开心锤锤动画片",
+          "用户要看书《一梦》",
+          "用户喜欢儿童动画片"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "歌呀或者是啥的都可以啊，这个一点呢，一般的都是啥，家里的老年人他不会使遥控器，你看我妈岁数大了就不会使遥控器，你就让他经帮你就是打完了个后的。"
+        ],
+        "memory": [
+          "用户提到的'排的门'是针对上有老下有小的家庭问题设计的"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "我想看兽王争锋，不想看兽王争锋。"
+        ],
+        "memory": [
+          "用户想看《兽王争锋》"
+        ]
+      },
+      "person_005": {
+        "question": [
+          "能不能帮我播放美食一家呀？"
+        ],
+        "memory": [
+          "用户让通通播放奥特曼",
+          "用户重新播放了动画片",
+          "用户让通通播放中央一"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "梁远舟",
+      "date_time": "2026-07-02 18:00",
+      "QA_details": [
+        {
+          "user": "放红尘客栈。",
+          "assistant": "正在播放周杰伦的《红尘客栈》。"
+        },
+        {
+          "user": "换心墙。",
+          "assistant": "已切到《心墙》。"
+        },
+        {
+          "user": "找柯南。",
+          "assistant": "正在查找《名侦探柯南》。"
+        },
+        {
+          "user": "找灰原哀。",
+          "assistant": "已搜索灰原哀相关内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "梁远舟",
+      "date_time": "2026-07-03 19:30",
+      "QA_details": [
+        {
+          "user": "我要听无人岛。",
+          "assistant": "为你播放歌曲《无人岛》。"
+        },
+        {
+          "user": "我要听去无人岛旅行。",
+          "assistant": "为你查找无人岛旅行相关视频。"
+        },
+        {
+          "user": "换成歌。",
+          "assistant": "已切回歌曲《无人岛》。"
+        },
+        {
+          "user": "再放周杰伦。",
+          "assistant": "继续播放周杰伦歌曲。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏锦棠",
+      "date_time": "2026-07-02 17:10",
+      "QA_details": [
+        {
+          "user": "找儿童动画片。",
+          "assistant": "为你推荐儿童动画片。"
+        },
+        {
+          "user": "播放开心锤锤。",
+          "assistant": "正在播放《开心锤锤》。"
+        },
+        {
+          "user": "找一梦这本书。",
+          "assistant": "已查找《一梦》相关内容。"
+        },
+        {
+          "user": "换个动画。",
+          "assistant": "已切换到儿童动画列表。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏锦棠",
+      "date_time": "2026-07-03 20:00",
+      "QA_details": [
+        {
+          "user": "我要看先生。",
+          "assistant": "正在查找“先生”相关内容。"
+        },
+        {
+          "user": "我要看千香。",
+          "assistant": "已为你搜索“千香”。"
+        },
+        {
+          "user": "给我搜一个鬼妈妈。",
+          "assistant": "正在搜索《鬼妈妈》。"
+        },
+        {
+          "user": "要动画的。",
+          "assistant": "已筛选动画相关内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小满",
+      "date_time": "2026-07-02 20:00",
+      "QA_details": [
+        {
+          "user": "找适合老人看的。",
+          "assistant": "已打开简洁操作的推荐页。"
+        },
+        {
+          "user": "我妈不会使遥控器。",
+          "assistant": "可以用语音帮她查找内容。"
+        },
+        {
+          "user": "歌也行。",
+          "assistant": "为老人推荐易播放的歌曲。"
+        },
+        {
+          "user": "别太复杂。",
+          "assistant": "已切换到大字版播放页。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小满",
+      "date_time": "2026-07-03 20:20",
+      "QA_details": [
+        {
+          "user": "找排的门。",
+          "assistant": "正在查找上有老下有小家庭相关内容。"
+        },
+        {
+          "user": "给老人放点歌。",
+          "assistant": "已播放适合老人听的歌曲。"
+        },
+        {
+          "user": "打开语音帮助。",
+          "assistant": "语音帮助页面已打开。"
+        },
+        {
+          "user": "随便放个简单的。",
+          "assistant": "已播放简洁操作的内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "梁建国",
+      "date_time": "2026-07-02 18:50",
+      "QA_details": [
+        {
+          "user": "我要看兽王争锋。",
+          "assistant": "正在播放《兽王争锋》。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "已播放下一集。"
+        },
+        {
+          "user": "暂停。",
+          "assistant": "已暂停播放。"
+        },
+        {
+          "user": "继续。",
+          "assistant": "继续播放《兽王争锋》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "梁建国",
+      "date_time": "2026-07-03 19:10",
+      "QA_details": [
+        {
+          "user": "我想看兽王争锋。",
+          "assistant": "已打开《兽王争锋》。"
+        },
+        {
+          "user": "不想看兽王争锋。",
+          "assistant": "已退出《兽王争锋》。"
+        },
+        {
+          "user": "换个动画。",
+          "assistant": "正在推荐其他动画。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "开始播放新动画。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "梁玉梅",
+      "date_time": "2026-07-02 16:30",
+      "QA_details": [
+        {
+          "user": "通通播放奥特曼。",
+          "assistant": "正在播放《奥特曼》。"
+        },
+        {
+          "user": "重新播放动画片。",
+          "assistant": "已重新播放动画片。"
+        },
+        {
+          "user": "播放中央一。",
+          "assistant": "已切到中央一台。"
+        },
+        {
+          "user": "换回动画。",
+          "assistant": "已返回动画片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "梁玉梅",
+      "date_time": "2026-07-03 17:40",
+      "QA_details": [
+        {
+          "user": "找美食一家。",
+          "assistant": "正在查找《美食一家》。"
+        },
+        {
+          "user": "能不能帮我播放美食一家呀？",
+          "assistant": "可以，现在播放《美食一家》。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "已切换下一集。"
+        },
+        {
+          "user": "声音大点。",
+          "assistant": "音量已经调高。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "按我喜欢的歌和恐怖动画口味，区分无人岛是歌还是旅行。",
+      "answer": "听《无人岛》放歌；去无人岛旅行找视频。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "按我喜欢的儿童动画，给我搜一个偏暗黑的动画。",
+      "answer": "搜索《鬼妈妈》。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "按我说的上有老下有小，给老人放简单点的。",
+      "answer": "播放简洁操作的歌曲或视频。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "我又想看又不想看之前那部，怎么处理？",
+      "answer": "退出《兽王争锋》并推荐其他动画。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_005",
+      "question": "别放刚才的奥特曼，放我后面找的动画。",
+      "answer": "播放《美食一家》。",
+      "category": "open_domain"
+    }
+  ]
+}

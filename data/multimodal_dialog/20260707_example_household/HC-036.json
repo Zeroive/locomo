@@ -1,0 +1,313 @@
+{
+  "case_id": "HC-036",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 单跳能力",
+    "question_type": "单跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "播放上次唱过的人间。"
+        ],
+        "memory": [
+          "用户描述了一个小宇航员穿着蓝色宇航服，背着大大的氧气罐",
+          "用户提到小宇航员穿着蓝色宇航服，背着大大的氧气罐，道为您推荐主要关节拉伸运动"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "看一部电影。"
+        ],
+        "memory": [
+          "用户喜欢左右弯弓射大雕这个动作",
+          "用户的名字是李红梅",
+          "用户播放了八段锦"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "播放一个适合下班的时候听的音乐。"
+        ],
+        "memory": [
+          "用户喜欢林俊杰的歌曲"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "我要看",
+          "我要看莫里"
+        ],
+        "memory": [
+          "用户喜欢看《美人心计》",
+          "用户喜欢看冯小刚导演的电影"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "李明远",
+      "date_time": "2026-07-01 19:10",
+      "QA_details": [
+        {
+          "user": "找小宇航员。",
+          "assistant": "小宇航员视频已找到。"
+        },
+        {
+          "user": "蓝色宇航服那个。",
+          "assistant": "已筛选蓝色宇航服的小宇航员内容。"
+        },
+        {
+          "user": "背氧气罐的。",
+          "assistant": "背着大氧气罐的视频开始播放。"
+        },
+        {
+          "user": "推荐拉伸运动。",
+          "assistant": "主要关节拉伸运动已打开。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "李明远",
+      "date_time": "2026-07-04 20:30",
+      "QA_details": [
+        {
+          "user": "播放上次唱过的人间。",
+          "assistant": "正在查找上次唱过的《人间》。"
+        },
+        {
+          "user": "还是看宇航员。",
+          "assistant": "已切回小宇航员视频。"
+        },
+        {
+          "user": "蓝衣服那个。",
+          "assistant": "蓝色宇航服片段继续播放。"
+        },
+        {
+          "user": "再放拉伸。",
+          "assistant": "关节拉伸运动已继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "李红梅",
+      "date_time": "2026-07-01 07:40",
+      "QA_details": [
+        {
+          "user": "播放八段锦。",
+          "assistant": "八段锦视频开始播放。"
+        },
+        {
+          "user": "左右弯弓射大雕。",
+          "assistant": "已跳到左右弯弓射大雕动作。"
+        },
+        {
+          "user": "慢一点。",
+          "assistant": "播放速度已调慢。"
+        },
+        {
+          "user": "记住我是李红梅。",
+          "assistant": "已记住你的名字是李红梅。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "李红梅",
+      "date_time": "2026-07-03 21:15",
+      "QA_details": [
+        {
+          "user": "看一部电影。",
+          "assistant": "为你打开电影推荐。"
+        },
+        {
+          "user": "先练八段锦。",
+          "assistant": "八段锦已重新播放。"
+        },
+        {
+          "user": "就弯弓那个。",
+          "assistant": "已切到左右弯弓射大雕。"
+        },
+        {
+          "user": "再回电影。",
+          "assistant": "电影推荐页已恢复。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "李嘉树",
+      "date_time": "2026-07-02 18:50",
+      "QA_details": [
+        {
+          "user": "放林俊杰。",
+          "assistant": "林俊杰歌曲列表已打开。"
+        },
+        {
+          "user": "下班听的。",
+          "assistant": "已切到适合下班听的轻松歌单。"
+        },
+        {
+          "user": "别太快。",
+          "assistant": "换成舒缓节奏。"
+        },
+        {
+          "user": "收藏这个。",
+          "assistant": "这首林俊杰歌曲已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "李嘉树",
+      "date_time": "2026-07-05 19:20",
+      "QA_details": [
+        {
+          "user": "播放一个适合下班的时候听的音乐。",
+          "assistant": "给你播放林俊杰的放松歌单。"
+        },
+        {
+          "user": "换一首林俊杰。",
+          "assistant": "已切到下一首林俊杰歌曲。"
+        },
+        {
+          "user": "声音小点。",
+          "assistant": "音量已调低。"
+        },
+        {
+          "user": "继续这个。",
+          "assistant": "当前歌曲继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "李小沐",
+      "date_time": "2026-07-02 20:10",
+      "QA_details": [
+        {
+          "user": "我要看美人心计。",
+          "assistant": "《美人心计》开始播放。"
+        },
+        {
+          "user": "找冯小刚电影。",
+          "assistant": "冯小刚导演电影已列出。"
+        },
+        {
+          "user": "我要看。",
+          "assistant": "继续为你播放推荐内容。"
+        },
+        {
+          "user": "我要看莫里。",
+          "assistant": "正在按“莫里”搜索相关内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "李小沐",
+      "date_time": "2026-07-05 18:35",
+      "QA_details": [
+        {
+          "user": "继续美人心计。",
+          "assistant": "《美人心计》继续播放。"
+        },
+        {
+          "user": "换冯小刚。",
+          "assistant": "已切到冯小刚导演电影。"
+        },
+        {
+          "user": "再找莫里。",
+          "assistant": "“莫里”相关结果已显示。"
+        },
+        {
+          "user": "先看美人心计。",
+          "assistant": "已切回《美人心计》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我上次看的小宇航员。",
+      "answer": "蓝色宇航服小宇航员",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "播放我喜欢的八段锦动作。",
+      "answer": "左右弯弓射大雕",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "播放我下班爱听的歌。",
+      "answer": "林俊杰歌曲",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "我要看我喜欢的电视剧。",
+      "answer": "《美人心计》",
+      "category": "single_hop"
+    }
+  ]
+}

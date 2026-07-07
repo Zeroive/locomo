@@ -1,0 +1,302 @@
+{
+  "case_id": "HC-031",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 单跳能力",
+    "question_type": "单跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我想着看鬼鬼园。"
+        ],
+        "memory": [
+          "用户想看桂桂圆的视频",
+          "用户的哥哥喜欢《奇妙萌可》动画片"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "可以倍速吗？把这个电影。"
+        ],
+        "memory": [
+          "用户喜欢赵本山的电影",
+          "用户想观看电影《落叶归根》",
+          "用户喜欢周润发的电影"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "播放一首丑八怪降调版。"
+        ],
+        "memory": [
+          "用户在看电视"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "全屏。你好痛，刘德华的电影。"
+        ],
+        "memory": [
+          "用户偏好喜剧类和打斗类的动作片影视内容，尤其喜欢刘德华的电影、经典IP作品、《爱在零纬度》以及想看刘德华的电影",
+          "用户是拆弹专家"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林知夏",
+      "date_time": "2026-07-01 19:12",
+      "QA_details": [
+        {
+          "user": "找桂桂圆。",
+          "assistant": "正在查找桂桂圆的视频。"
+        },
+        {
+          "user": "就看这个。",
+          "assistant": "桂桂圆视频已开始播放。"
+        },
+        {
+          "user": "换一个桂桂圆。",
+          "assistant": "已切到另一条桂桂圆视频。"
+        },
+        {
+          "user": "声音小点。",
+          "assistant": "音量调低了。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "林知夏",
+      "date_time": "2026-07-03 20:08",
+      "QA_details": [
+        {
+          "user": "我想着看鬼鬼园。",
+          "assistant": "给你按桂桂圆相关视频找。"
+        },
+        {
+          "user": "哥哥那个奇妙萌可呢。",
+          "assistant": "《奇妙萌可》也给你找出来了。"
+        },
+        {
+          "user": "先放桂桂圆。",
+          "assistant": "桂桂圆视频继续播放。"
+        },
+        {
+          "user": "等会给哥哥看萌可。",
+          "assistant": "已记下，稍后可切到《奇妙萌可》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林一诺",
+      "date_time": "2026-07-01 20:20",
+      "QA_details": [
+        {
+          "user": "放落叶归根。",
+          "assistant": "《落叶归根》正在播放。"
+        },
+        {
+          "user": "赵本山那个。",
+          "assistant": "已为你打开赵本山主演的版本。"
+        },
+        {
+          "user": "可以倍速吗？",
+          "assistant": "倍速选项已打开。"
+        },
+        {
+          "user": "调快一点。",
+          "assistant": "播放速度已调快。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林一诺",
+      "date_time": "2026-07-04 21:05",
+      "QA_details": [
+        {
+          "user": "找周润发电影。",
+          "assistant": "周润发电影列表已打开。"
+        },
+        {
+          "user": "切回落叶归根。",
+          "assistant": "已切回《落叶归根》。"
+        },
+        {
+          "user": "这个电影倍速。",
+          "assistant": "当前电影已开启倍速播放。"
+        },
+        {
+          "user": "下次记着赵本山。",
+          "assistant": "会按你喜欢的赵本山电影推荐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "林小川",
+      "date_time": "2026-07-02 18:45",
+      "QA_details": [
+        {
+          "user": "打开电视。",
+          "assistant": "电视页已打开。"
+        },
+        {
+          "user": "换一个台。",
+          "assistant": "频道已切换。"
+        },
+        {
+          "user": "暂停一下。",
+          "assistant": "播放已暂停。"
+        },
+        {
+          "user": "继续看。",
+          "assistant": "已继续播放电视内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "林小川",
+      "date_time": "2026-07-04 19:30",
+      "QA_details": [
+        {
+          "user": "切到音乐。",
+          "assistant": "音乐页面打开了。"
+        },
+        {
+          "user": "找丑八怪。",
+          "assistant": "《丑八怪》已搜索到。"
+        },
+        {
+          "user": "播放一首丑八怪降调版。",
+          "assistant": "开始播放《丑八怪》降调版。"
+        },
+        {
+          "user": "下一首吧。",
+          "assistant": "已为你切歌。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周桂兰",
+      "date_time": "2026-07-02 21:10",
+      "QA_details": [
+        {
+          "user": "找刘德华电影。",
+          "assistant": "刘德华电影专区已打开。"
+        },
+        {
+          "user": "要打斗的。",
+          "assistant": "已筛选打斗类动作片。"
+        },
+        {
+          "user": "全屏。",
+          "assistant": "画面已切到全屏。"
+        },
+        {
+          "user": "找拆弹专家。",
+          "assistant": "《拆弹专家》已准备播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周桂兰",
+      "date_time": "2026-07-05 20:40",
+      "QA_details": [
+        {
+          "user": "我要喜剧动作。",
+          "assistant": "喜剧动作片已为你筛好。"
+        },
+        {
+          "user": "刘德华的。",
+          "assistant": "正在播放刘德华相关电影。"
+        },
+        {
+          "user": "爱在零纬度。",
+          "assistant": "《爱在零纬度》已找到。"
+        },
+        {
+          "user": "还是看拆弹专家。",
+          "assistant": "这就切回《拆弹专家》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "我想着看那个视频。",
+      "answer": "桂桂圆视频",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "把我想看的赵本山电影倍速。",
+      "answer": "《落叶归根》倍速",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "播放我刚找的歌。",
+      "answer": "《丑八怪》降调版",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "全屏放我喜欢的刘德华动作片。",
+      "answer": "《拆弹专家》",
+      "category": "single_hop"
+    }
+  ]
+}

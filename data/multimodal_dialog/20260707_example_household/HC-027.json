@@ -1,0 +1,350 @@
+{
+  "case_id": "HC-027",
+  "dimension_tags": {
+    "household_size": "5人",
+    "household_structure": "双亲 + 1个孩子 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 多跳能力",
+    "question_type": "多跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "电影10天。"
+        ],
+        "memory": [
+          "用户提到了《熊出没之小小世界》"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想看经典的短视频。"
+        ],
+        "memory": [
+          "用户想看《机灵姐》动画片"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "播放爱丽丝梦游仙境电影四电视是啥玩意儿啊？看是谁？"
+        ],
+        "memory": [
+          "用户关闭了电视机播放的世界杯",
+          "白色的遥控器被梁雨欣在2026-06-23拿走了",
+          "2026-06-23梁雨欣拿来了白遥控器"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "有小孩看的电视吗？"
+        ],
+        "memory": [
+          "用户退出歌曲"
+        ]
+      },
+      "person_005": {
+        "question": [
+          "帮我播放一首放空事情。"
+        ],
+        "memory": [
+          "用户计划闯天涯"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "梁远舟",
+      "date_time": "2026-07-01 18:00",
+      "QA_details": [
+        {
+          "user": "找熊出没之小小世界。",
+          "assistant": "已找到《熊出没之小小世界》。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "开始播放《熊出没之小小世界》。"
+        },
+        {
+          "user": "找电影。",
+          "assistant": "已切到电影搜索。"
+        },
+        {
+          "user": "电影10天。",
+          "assistant": "正在查找与“10天”相关的电影内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "梁远舟",
+      "date_time": "2026-07-01 20:00",
+      "QA_details": [
+        {
+          "user": "看短一点的。",
+          "assistant": "已筛选较短的视频。"
+        },
+        {
+          "user": "换熊出没。",
+          "assistant": "已切回熊出没相关内容。"
+        },
+        {
+          "user": "再找10天电影。",
+          "assistant": "继续为你找“10天”相关电影。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "马上播放搜索结果。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏锦棠",
+      "date_time": "2026-07-02 16:40",
+      "QA_details": [
+        {
+          "user": "找机灵姐。",
+          "assistant": "正在搜索《机灵姐》动画片。"
+        },
+        {
+          "user": "播放机灵姐。",
+          "assistant": "这就播放《机灵姐》。"
+        },
+        {
+          "user": "换短视频。",
+          "assistant": "已切到短视频列表。"
+        },
+        {
+          "user": "我想看经典的短视频。",
+          "assistant": "为你推荐经典短视频。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏锦棠",
+      "date_time": "2026-07-02 17:20",
+      "QA_details": [
+        {
+          "user": "找经典动画。",
+          "assistant": "已筛选经典动画内容。"
+        },
+        {
+          "user": "要短一点。",
+          "assistant": "已筛选短时长内容。"
+        },
+        {
+          "user": "换机灵姐相关的。",
+          "assistant": "为你切回《机灵姐》相关内容。"
+        },
+        {
+          "user": "播放这个短的。",
+          "assistant": "正在播放这条短视频。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小满",
+      "date_time": "2026-06-23 19:00",
+      "QA_details": [
+        {
+          "user": "关掉世界杯。",
+          "assistant": "已关闭世界杯播放。"
+        },
+        {
+          "user": "白遥控器拿来了。",
+          "assistant": "电视播放界面已恢复。"
+        },
+        {
+          "user": "找爱丽丝。",
+          "assistant": "正在查找《爱丽丝梦游仙境》。"
+        },
+        {
+          "user": "播放电影版。",
+          "assistant": "开始播放电影版《爱丽丝梦游仙境》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小满",
+      "date_time": "2026-06-23 20:10",
+      "QA_details": [
+        {
+          "user": "看是谁演的。",
+          "assistant": "已打开影片详情。"
+        },
+        {
+          "user": "播放爱丽丝梦游仙境电影四电视是啥玩意儿啊？看是谁？",
+          "assistant": "为你播放《爱丽丝梦游仙境》并展示影片信息。"
+        },
+        {
+          "user": "退出详情。",
+          "assistant": "已返回播放页面。"
+        },
+        {
+          "user": "继续看。",
+          "assistant": "继续播放电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "梁建国",
+      "date_time": "2026-07-03 18:20",
+      "QA_details": [
+        {
+          "user": "退出歌曲。",
+          "assistant": "已退出音乐播放。"
+        },
+        {
+          "user": "打开电视。",
+          "assistant": "电视专区已打开。"
+        },
+        {
+          "user": "有小孩看的电视吗？",
+          "assistant": "正在推荐儿童电视内容。"
+        },
+        {
+          "user": "换动画频道。",
+          "assistant": "已切到动画频道。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "梁建国",
+      "date_time": "2026-07-03 19:00",
+      "QA_details": [
+        {
+          "user": "别放歌。",
+          "assistant": "已保持在电视内容。"
+        },
+        {
+          "user": "找儿童频道。",
+          "assistant": "为你查找儿童频道。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "正在播放儿童电视内容。"
+        },
+        {
+          "user": "下一台。",
+          "assistant": "已切到下一个儿童频道。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "梁玉梅",
+      "date_time": "2026-07-03 20:00",
+      "QA_details": [
+        {
+          "user": "找闯天涯。",
+          "assistant": "正在搜索《闯天涯》。"
+        },
+        {
+          "user": "先收藏。",
+          "assistant": "已加入收藏。"
+        },
+        {
+          "user": "切到音乐。",
+          "assistant": "音乐页面已打开。"
+        },
+        {
+          "user": "找放空事情。",
+          "assistant": "已找到《放空事情》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "梁玉梅",
+      "date_time": "2026-07-03 20:40",
+      "QA_details": [
+        {
+          "user": "帮我播放一首放空事情。",
+          "assistant": "现在播放《放空事情》。"
+        },
+        {
+          "user": "声音小点。",
+          "assistant": "音量已调低。"
+        },
+        {
+          "user": "再放一遍。",
+          "assistant": "重新播放《放空事情》。"
+        },
+        {
+          "user": "返回收藏。",
+          "assistant": "已返回收藏内容。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "先按我提过的熊出没，再找那个10天电影。",
+      "answer": "先找《熊出没之小小世界》，再搜10天电影。",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "按我想看的动画，换成经典短视频。",
+      "answer": "从《机灵姐》切到经典短视频。",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "关掉之前的直播后，继续我找的电影并看详情。",
+      "answer": "播放《爱丽丝梦游仙境》并看影片信息。",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "退出我刚才的歌曲后，找小孩看的电视。",
+      "answer": "推荐儿童电视内容。",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_005",
+      "question": "先按我计划的内容收藏，再放我想听的歌。",
+      "answer": "收藏《闯天涯》，播放《放空事情》。",
+      "category": "multi_hop"
+    }
+  ]
+}

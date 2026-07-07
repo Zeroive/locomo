@@ -1,0 +1,309 @@
+{
+  "case_id": "HC-040",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "帮我发一下我刚才要的那种视频，立即就下载集数要多。",
+          "帮我发一种视频，现在就能看的还是末日播放，二年级和三年级都可以看。"
+        ],
+        "memory": [
+          "用户请求帮忙拍摄并发布一个适合二年级或三年级小孩观看的视频"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想看贝乐看。"
+        ],
+        "memory": [
+          "用户想看小猪佩奇第10季免费版"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我想看兽王争锋，不想看兽王争锋。"
+        ],
+        "memory": [
+          "用户想看《兽王争锋》"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "播放小猪佩奇歌牛什么牛羽喜欢我要听嗯唱的歌。"
+        ],
+        "memory": [
+          "用户表示不喜欢需要花钱的小马宝莉，并请求寻找不花钱的小马宝莉"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "赵清越",
+      "date_time": "2026-07-01 16:30",
+      "QA_details": [
+        {
+          "user": "找二年级看的视频。",
+          "assistant": "二年级适合的视频已筛选。"
+        },
+        {
+          "user": "三年级也行。",
+          "assistant": "三年级可看的内容也加进来了。"
+        },
+        {
+          "user": "集数要多。",
+          "assistant": "已按集数多排序。"
+        },
+        {
+          "user": "现在能看。",
+          "assistant": "可立即播放的视频已显示。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "赵清越",
+      "date_time": "2026-07-04 18:55",
+      "QA_details": [
+        {
+          "user": "帮我发刚才那种视频。",
+          "assistant": "刚才那类二三年级视频已找回。"
+        },
+        {
+          "user": "立即下载。",
+          "assistant": "下载选项已打开。"
+        },
+        {
+          "user": "末日播放。",
+          "assistant": "末日题材可播放内容已筛选。"
+        },
+        {
+          "user": "集数多。",
+          "assistant": "已保留集数多的系列。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "赵晚晴",
+      "date_time": "2026-07-02 17:25",
+      "QA_details": [
+        {
+          "user": "看小猪佩奇。",
+          "assistant": "《小猪佩奇》已打开。"
+        },
+        {
+          "user": "第10季。",
+          "assistant": "第10季内容已找到。"
+        },
+        {
+          "user": "要免费的。",
+          "assistant": "已筛选免费版。"
+        },
+        {
+          "user": "播放一集。",
+          "assistant": "《小猪佩奇》第10季免费版开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "赵晚晴",
+      "date_time": "2026-07-05 18:10",
+      "QA_details": [
+        {
+          "user": "我想看贝乐看。",
+          "assistant": "正在按“贝乐看”搜索。"
+        },
+        {
+          "user": "还是佩奇。",
+          "assistant": "已切回《小猪佩奇》第10季免费版。"
+        },
+        {
+          "user": "别要钱。",
+          "assistant": "继续只显示免费内容。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "下一集已播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "赵一辰",
+      "date_time": "2026-07-02 19:00",
+      "QA_details": [
+        {
+          "user": "我想看兽王争锋。",
+          "assistant": "《兽王争锋》正在播放。"
+        },
+        {
+          "user": "不想看兽王争锋。",
+          "assistant": "已暂停《兽王争锋》。"
+        },
+        {
+          "user": "换个动画。",
+          "assistant": "其他动画推荐已打开。"
+        },
+        {
+          "user": "先收藏。",
+          "assistant": "《兽王争锋》已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "赵一辰",
+      "date_time": "2026-07-05 20:05",
+      "QA_details": [
+        {
+          "user": "打开兽王争锋。",
+          "assistant": "《兽王争锋》继续播放。"
+        },
+        {
+          "user": "又不想看。",
+          "assistant": "播放已暂停。"
+        },
+        {
+          "user": "推荐别的。",
+          "assistant": "已推荐相似动画。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "历史里有《兽王争锋》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "赵小棠",
+      "date_time": "2026-07-01 18:35",
+      "QA_details": [
+        {
+          "user": "找小马宝莉。",
+          "assistant": "小马宝莉内容已打开。"
+        },
+        {
+          "user": "不要花钱。",
+          "assistant": "免费小马宝莉已筛选。"
+        },
+        {
+          "user": "这个要钱。",
+          "assistant": "付费内容已跳过。"
+        },
+        {
+          "user": "就看免费的。",
+          "assistant": "免费版开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "赵小棠",
+      "date_time": "2026-07-04 17:50",
+      "QA_details": [
+        {
+          "user": "播放小猪佩奇歌。",
+          "assistant": "小猪佩奇歌曲已播放。"
+        },
+        {
+          "user": "牛什么牛那个。",
+          "assistant": "正在查找相关歌曲。"
+        },
+        {
+          "user": "回小马宝莉。",
+          "assistant": "已切回免费小马宝莉。"
+        },
+        {
+          "user": "别收费。",
+          "assistant": "继续播放免费内容。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "帮我下载幼儿园小班看的那种视频。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "播放我喜欢的海底小纵队第8季。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "继续我上次看的奥特曼电影。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "播放我最喜欢的付费小马宝莉。",
+      "answer": "不喜欢付费",
+      "category": "adversarial"
+    }
+  ]
+}

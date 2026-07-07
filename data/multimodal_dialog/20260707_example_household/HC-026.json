@@ -1,0 +1,375 @@
+{
+  "case_id": "HC-026",
+  "dimension_tags": {
+    "household_size": "5人",
+    "household_structure": "双亲 + 1个孩子 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 单跳能力",
+    "question_type": "单跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "播放胡图图，你又吃我巧克力了？"
+        ],
+        "memory": [
+          "用户吃了巧克力"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "音乐偏向。",
+          "音音乐偏向。"
+        ],
+        "memory": [
+          "用户计划播放小荷风采群舞《等风来》的视频"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我想看新。",
+          "我想看乐玩哥哥。"
+        ],
+        "memory": [
+          "用户想看恐怖动物",
+          "用户想看节奏盒子的鬼子角色"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "我平时喜欢看搞笑类的。"
+        ],
+        "memory": [
+          "用户不喜欢一般的搞笑视频，喜欢让小孩子笑到肚子疼的特别搞笑视频",
+          "用户最近表示要看《奇妙萌可》",
+          "用户要观看《哈小浪》"
+        ]
+      },
+      "person_005": {
+        "question": [
+          "你能不能给我弄一个，你能不能帮我找一个免费能看的儿童看的，谢谢你。",
+          "我平时吃雪糕的时候，喜欢边看动画片边跟你一起聊天。"
+        ],
+        "memory": [
+          "用户比较喜欢直接吃水果和做成果盘，最爱吃的雪糕是甜甜的水果味，非常好吃",
+          "用户想看免费电视，但发现需要交钱"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_005",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "梁远舟",
+      "date_time": "2026-07-01 18:20",
+      "QA_details": [
+        {
+          "user": "找巧克力那集。",
+          "assistant": "已找到巧克力相关动画片段。"
+        },
+        {
+          "user": "找胡图图。",
+          "assistant": "正在为你搜索《大耳朵图图》。"
+        },
+        {
+          "user": "播放胡图图。",
+          "assistant": "这就播放胡图图相关动画。"
+        },
+        {
+          "user": "换个吃巧克力的。",
+          "assistant": "已切到巧克力相关片段。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "梁远舟",
+      "date_time": "2026-07-01 20:05",
+      "QA_details": [
+        {
+          "user": "播放胡图图，你又吃我巧克力了？",
+          "assistant": "正在播放胡图图巧克力相关片段。"
+        },
+        {
+          "user": "声音小点。",
+          "assistant": "音量已经调低。"
+        },
+        {
+          "user": "下一段。",
+          "assistant": "已切到下一段动画。"
+        },
+        {
+          "user": "再找巧克力。",
+          "assistant": "继续为你找巧克力相关内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏锦棠",
+      "date_time": "2026-07-01 17:30",
+      "QA_details": [
+        {
+          "user": "找小荷风采。",
+          "assistant": "正在搜索小荷风采相关视频。"
+        },
+        {
+          "user": "找等风来群舞。",
+          "assistant": "已找到群舞《等风来》。"
+        },
+        {
+          "user": "先收藏这个。",
+          "assistant": "这个视频已加入收藏。"
+        },
+        {
+          "user": "播放看看。",
+          "assistant": "开始播放小荷风采群舞《等风来》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏锦棠",
+      "date_time": "2026-07-01 19:10",
+      "QA_details": [
+        {
+          "user": "音乐偏向。",
+          "assistant": "已切到音乐舞蹈类推荐。"
+        },
+        {
+          "user": "音音乐偏向。",
+          "assistant": "继续为你推荐音乐舞蹈视频。"
+        },
+        {
+          "user": "找刚才那个舞蹈。",
+          "assistant": "已打开《等风来》的播放记录。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "正在播放群舞《等风来》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小满",
+      "date_time": "2026-07-02 16:20",
+      "QA_details": [
+        {
+          "user": "找恐怖动物。",
+          "assistant": "为你筛选恐怖动物相关视频。"
+        },
+        {
+          "user": "找节奏盒子鬼子角色。",
+          "assistant": "已搜索节奏盒子鬼子角色内容。"
+        },
+        {
+          "user": "换个新的。",
+          "assistant": "给你换一个新视频。"
+        },
+        {
+          "user": "我想看新。",
+          "assistant": "已切到新内容推荐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "梁小满",
+      "date_time": "2026-07-02 17:05",
+      "QA_details": [
+        {
+          "user": "找乐玩哥哥。",
+          "assistant": "正在查找乐玩哥哥视频。"
+        },
+        {
+          "user": "我想看乐玩哥哥。",
+          "assistant": "开始播放乐玩哥哥相关内容。"
+        },
+        {
+          "user": "换一个吓人的。",
+          "assistant": "已切到偏恐怖风格的视频。"
+        },
+        {
+          "user": "不要太吓人。",
+          "assistant": "为你换成轻一点的内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "梁建国",
+      "date_time": "2026-07-02 19:30",
+      "QA_details": [
+        {
+          "user": "找特别搞笑的。",
+          "assistant": "已为你筛选特别搞笑的视频。"
+        },
+        {
+          "user": "不要一般搞笑。",
+          "assistant": "已避开普通搞笑内容。"
+        },
+        {
+          "user": "找小孩笑到肚子疼的。",
+          "assistant": "正在推荐爆笑儿童向视频。"
+        },
+        {
+          "user": "放哈小浪。",
+          "assistant": "开始播放《哈小浪》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "梁建国",
+      "date_time": "2026-07-02 20:00",
+      "QA_details": [
+        {
+          "user": "找奇妙萌可。",
+          "assistant": "已找到《奇妙萌可》。"
+        },
+        {
+          "user": "我平时喜欢看搞笑类的。",
+          "assistant": "给你推荐特别搞笑的儿童向视频。"
+        },
+        {
+          "user": "换哈小浪。",
+          "assistant": "已切到《哈小浪》。"
+        },
+        {
+          "user": "再换个爆笑的。",
+          "assistant": "正在播放更搞笑的片段。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "梁玉梅",
+      "date_time": "2026-07-03 15:20",
+      "QA_details": [
+        {
+          "user": "找免费电视。",
+          "assistant": "为你筛选免费可看的内容。"
+        },
+        {
+          "user": "不要交钱的。",
+          "assistant": "已排除付费内容。"
+        },
+        {
+          "user": "找儿童看的。",
+          "assistant": "正在推荐免费儿童动画。"
+        },
+        {
+          "user": "我吃雪糕看。",
+          "assistant": "已为你打开轻松儿童动画。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_005",
+      "person_name": "梁玉梅",
+      "date_time": "2026-07-03 16:00",
+      "QA_details": [
+        {
+          "user": "你能不能帮我找一个免费能看的儿童看的。",
+          "assistant": "可以，正在找免费儿童动画。"
+        },
+        {
+          "user": "边吃雪糕边看。",
+          "assistant": "已打开适合轻松观看的动画片。"
+        },
+        {
+          "user": "换一个不收费的。",
+          "assistant": "已切换到免费内容。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "马上播放这部免费儿童动画。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "按我刚才吃的东西，放个相关动画。",
+      "answer": "播放胡图图巧克力片段。",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "继续放我计划看的舞蹈视频。",
+      "answer": "播放群舞《等风来》。",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "按我喜欢的新奇内容推荐一个。",
+      "answer": "推荐恐怖动物或节奏盒子鬼子角色。",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "按我喜欢的搞笑程度推荐。",
+      "answer": "推荐特别搞笑的《哈小浪》。",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_005",
+      "question": "找个我吃雪糕时能看的免费内容。",
+      "answer": "播放免费儿童动画。",
+      "category": "single_hop"
+    }
+  ]
+}

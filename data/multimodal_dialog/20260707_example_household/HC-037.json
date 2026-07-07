@@ -1,0 +1,309 @@
+{
+  "case_id": "HC-037",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 多跳能力",
+    "question_type": "多跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "全屏。你好痛，刘德华的电影。"
+        ],
+        "memory": [
+          "用户偏好喜剧类和打斗类的动作片影视内容，尤其喜欢刘德华的电影、经典IP作品、《爱在零纬度》以及想看刘德华的电影",
+          "用户是拆弹专家"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "叮咚电影地道战。"
+        ],
+        "memory": [
+          "用户要求播放一个会说话的仓鼠"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "想看宠物旅店，我也想看。"
+        ],
+        "memory": [
+          "用户在2026年7月1日9:48提到要看宠物旅店"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "帮我推荐几个免费的电视。"
+        ],
+        "memory": [
+          "用户喜欢看科幻电影"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "高启明",
+      "date_time": "2026-07-01 20:00",
+      "QA_details": [
+        {
+          "user": "找刘德华电影。",
+          "assistant": "刘德华电影专区已打开。"
+        },
+        {
+          "user": "要打斗的。",
+          "assistant": "已筛选打斗类动作片。"
+        },
+        {
+          "user": "加点喜剧。",
+          "assistant": "喜剧动作片推荐已更新。"
+        },
+        {
+          "user": "全屏。",
+          "assistant": "画面已切到全屏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "高启明",
+      "date_time": "2026-07-04 21:10",
+      "QA_details": [
+        {
+          "user": "你好痛，刘德华的电影。",
+          "assistant": "按刘德华电影继续查找。"
+        },
+        {
+          "user": "拆弹专家。",
+          "assistant": "《拆弹专家》已准备播放。"
+        },
+        {
+          "user": "经典IP也行。",
+          "assistant": "经典IP动作片已加入推荐。"
+        },
+        {
+          "user": "爱在零纬度。",
+          "assistant": "《爱在零纬度》已找到。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "宋知微",
+      "date_time": "2026-07-02 18:20",
+      "QA_details": [
+        {
+          "user": "播放会说话的仓鼠。",
+          "assistant": "会说话的仓鼠视频开始播放。"
+        },
+        {
+          "user": "换一个仓鼠。",
+          "assistant": "已切到另一条仓鼠视频。"
+        },
+        {
+          "user": "叮咚电影地道战。",
+          "assistant": "《地道战》电影已搜索到。"
+        },
+        {
+          "user": "先看仓鼠。",
+          "assistant": "会说话的仓鼠继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "宋知微",
+      "date_time": "2026-07-05 19:00",
+      "QA_details": [
+        {
+          "user": "打开地道战。",
+          "assistant": "《地道战》开始播放。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "历史里有会说话的仓鼠。"
+        },
+        {
+          "user": "切回仓鼠。",
+          "assistant": "已切回会说话的仓鼠视频。"
+        },
+        {
+          "user": "再找地道战。",
+          "assistant": "《地道战》播放页已恢复。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "高小川",
+      "date_time": "2026-07-01 09:48",
+      "QA_details": [
+        {
+          "user": "想看宠物旅店。",
+          "assistant": "《宠物旅店》已找到。"
+        },
+        {
+          "user": "我也想看。",
+          "assistant": "正在播放《宠物旅店》。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "已切到下一集。"
+        },
+        {
+          "user": "记住这个。",
+          "assistant": "已记住你想看《宠物旅店》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "高小川",
+      "date_time": "2026-07-04 18:45",
+      "QA_details": [
+        {
+          "user": "看上次9点那个。",
+          "assistant": "已找到7月1日9:48提到的《宠物旅店》。"
+        },
+        {
+          "user": "继续宠物旅店。",
+          "assistant": "《宠物旅店》继续播放。"
+        },
+        {
+          "user": "换一集。",
+          "assistant": "下一集已切换。"
+        },
+        {
+          "user": "声音大一点。",
+          "assistant": "音量调高了。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "高小宁",
+      "date_time": "2026-07-02 19:40",
+      "QA_details": [
+        {
+          "user": "推荐科幻电影。",
+          "assistant": "科幻电影推荐已打开。"
+        },
+        {
+          "user": "要免费的。",
+          "assistant": "已筛选免费可看的科幻电影。"
+        },
+        {
+          "user": "电视也行。",
+          "assistant": "免费电视内容也加入推荐。"
+        },
+        {
+          "user": "先看电影。",
+          "assistant": "免费科幻电影开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "高小宁",
+      "date_time": "2026-07-05 20:25",
+      "QA_details": [
+        {
+          "user": "帮我推荐几个免费的电视。",
+          "assistant": "免费电视推荐已列出。"
+        },
+        {
+          "user": "科幻的。",
+          "assistant": "已筛选科幻相关免费内容。"
+        },
+        {
+          "user": "换一个。",
+          "assistant": "已切到下一部免费科幻内容。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "这条免费科幻内容已收藏。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "全屏放我喜欢的刘德华打斗电影。",
+      "answer": "《拆弹专家》",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "打开我看过的会说话动物视频。",
+      "answer": "会说话的仓鼠",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "继续我7月1日上午想看的。",
+      "answer": "《宠物旅店》",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "推荐我喜欢的免费电影电视。",
+      "answer": "免费科幻内容",
+      "category": "multi_hop"
+    }
+  ]
+}

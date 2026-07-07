@@ -1,0 +1,314 @@
+{
+  "case_id": "HC-033",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "成龙的电影。喜马拉雅山有多高也支持连续对话？"
+        ],
+        "memory": [
+          "用户喜欢动画片",
+          "用户已打开以前收藏过的电影",
+          "用户喜欢刘德华的电影",
+          "用户喜欢成龙的电影和动画片",
+          "用户计划到北京旅游"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想看23号牛乃唐。",
+          "我想看开心锤锤的视频。"
+        ],
+        "memory": [
+          "用户想看牛乃糖的视频"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我喜欢看武打片。",
+          "我喜欢看刘德华的电影，我喜欢看武打片，我喜欢吃甜的。",
+          "嗯，记住我喜欢看刘德华的电影，我喜欢吃甜的。"
+        ],
+        "memory": [
+          "用户表示喜欢吃甜的",
+          "用户想看成龙的电影和《捕风捉影》",
+          "用户喜欢看武打片",
+          "用户要玩双影奇境",
+          "用户喜欢吃甜的",
+          "用户喜欢看武打片和刘德华的电影",
+          "用户偏好动画片和喜剧类电影"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "放个汪汪队。"
+        ],
+        "memory": [
+          "用户提到哥哥汪汪队",
+          "用户播放了汪汪队立大功",
+          "用户播放了汪汪队",
+          "用户在抖音播放了汪汪队国语版"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许澄",
+      "date_time": "2026-06-28 20:18",
+      "QA_details": [
+        {
+          "user": "打开以前收藏的电影。",
+          "assistant": "以前收藏过的电影已打开。"
+        },
+        {
+          "user": "找刘德华的。",
+          "assistant": "刘德华电影列表已显示。"
+        },
+        {
+          "user": "换成动画片。",
+          "assistant": "已切到动画片内容。"
+        },
+        {
+          "user": "北京旅游的也看看。",
+          "assistant": "北京旅游视频已加入播放列表。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "许澄",
+      "date_time": "2026-07-04 21:00",
+      "QA_details": [
+        {
+          "user": "成龙的电影。",
+          "assistant": "成龙电影已为你打开。"
+        },
+        {
+          "user": "再看看动画片。",
+          "assistant": "按你最近偏好切到动画片。"
+        },
+        {
+          "user": "回到收藏电影。",
+          "assistant": "收藏电影继续播放。"
+        },
+        {
+          "user": "下次先成龙。",
+          "assistant": "已记住最近要优先成龙电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小米",
+      "date_time": "2026-06-23 18:12",
+      "QA_details": [
+        {
+          "user": "我想看23号牛乃唐。",
+          "assistant": "23号的牛乃糖视频已打开。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "牛乃糖视频开始播放。"
+        },
+        {
+          "user": "换一集。",
+          "assistant": "已切到下一集牛乃糖。"
+        },
+        {
+          "user": "记住这个。",
+          "assistant": "牛乃糖视频偏好已保留。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小米",
+      "date_time": "2026-07-03 17:40",
+      "QA_details": [
+        {
+          "user": "我想看开心锤锤的视频。",
+          "assistant": "开心锤锤视频已找到。"
+        },
+        {
+          "user": "还是牛乃糖。",
+          "assistant": "已切回牛乃糖视频。"
+        },
+        {
+          "user": "看上次那个。",
+          "assistant": "继续播放上次的牛乃糖内容。"
+        },
+        {
+          "user": "声音大点。",
+          "assistant": "音量调高了。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许星野",
+      "date_time": "2026-06-29 19:50",
+      "QA_details": [
+        {
+          "user": "我喜欢看武打片。",
+          "assistant": "武打片偏好已记住。"
+        },
+        {
+          "user": "成龙电影。",
+          "assistant": "成龙电影已开始播放。"
+        },
+        {
+          "user": "找捕风捉影。",
+          "assistant": "《捕风捉影》已找到。"
+        },
+        {
+          "user": "等会玩双影奇境。",
+          "assistant": "双影奇境已放到历史记录里。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许星野",
+      "date_time": "2026-07-05 20:30",
+      "QA_details": [
+        {
+          "user": "我喜欢刘德华电影。",
+          "assistant": "刘德华电影偏好已更新。"
+        },
+        {
+          "user": "也喜欢吃甜的。",
+          "assistant": "已记住你喜欢吃甜的。"
+        },
+        {
+          "user": "放个武打片。",
+          "assistant": "武打片专区已打开。"
+        },
+        {
+          "user": "要刘德华的。",
+          "assistant": "已筛选刘德华武打片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "何淑芬",
+      "date_time": "2026-06-30 16:05",
+      "QA_details": [
+        {
+          "user": "放个汪汪队。",
+          "assistant": "《汪汪队立大功》正在播放。"
+        },
+        {
+          "user": "哥哥那个汪汪队。",
+          "assistant": "已切到哥哥看过的汪汪队内容。"
+        },
+        {
+          "user": "国语版。",
+          "assistant": "汪汪队国语版已打开。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "已切到下一集。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "何淑芬",
+      "date_time": "2026-07-04 18:25",
+      "QA_details": [
+        {
+          "user": "打开抖音那个汪汪队。",
+          "assistant": "抖音播放过的汪汪队国语版已找到。"
+        },
+        {
+          "user": "接着播。",
+          "assistant": "继续播放汪汪队。"
+        },
+        {
+          "user": "不要英文。",
+          "assistant": "已保持国语版。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "最近播放的汪汪队记录已显示。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "按我最近说的，先放我喜欢的电影。",
+      "answer": "成龙电影",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "看我之前23号要的那个。",
+      "answer": "牛乃糖视频",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "放我最新记住的刘德华武打片。",
+      "answer": "刘德华武打片",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "继续我最近看的国语版。",
+      "answer": "汪汪队国语版",
+      "category": "temporal"
+    }
+  ]
+}

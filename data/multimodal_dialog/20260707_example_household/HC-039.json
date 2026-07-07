@@ -1,0 +1,308 @@
+{
+  "case_id": "HC-039",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "看影片。"
+        ],
+        "memory": [
+          "用户想看《植物大战僵尸》"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我要看cctv1不？你得要那个主主编，他那个有这个。"
+        ],
+        "memory": [
+          "用户要观看CCTV1"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "唉呀，你给我搜这个电影好吗？你个老。"
+        ],
+        "memory": [
+          "用户想观看电影《变形金刚》的1986年大电影及动画版的港版中文版本"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "我想看兽王争锋，不想看兽王争锋。"
+        ],
+        "memory": [
+          "用户想看《兽王争锋》"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周景行",
+      "date_time": "2026-07-01 19:30",
+      "QA_details": [
+        {
+          "user": "找植物大战僵尸。",
+          "assistant": "《植物大战僵尸》相关影片已找到。"
+        },
+        {
+          "user": "看影片。",
+          "assistant": "影片播放页已打开。"
+        },
+        {
+          "user": "换一个僵尸的。",
+          "assistant": "已切到另一条植物大战僵尸影片。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "这条影片已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "周景行",
+      "date_time": "2026-07-04 20:05",
+      "QA_details": [
+        {
+          "user": "继续植物大战僵尸。",
+          "assistant": "《植物大战僵尸》影片继续播放。"
+        },
+        {
+          "user": "推荐类似的。",
+          "assistant": "已推荐游戏改编动画影片。"
+        },
+        {
+          "user": "还是这个。",
+          "assistant": "已切回《植物大战僵尸》。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "下一集开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周南音",
+      "date_time": "2026-07-02 07:20",
+      "QA_details": [
+        {
+          "user": "我要看CCTV1。",
+          "assistant": "CCTV1频道已打开。"
+        },
+        {
+          "user": "主频道。",
+          "assistant": "已保持中央一套播放。"
+        },
+        {
+          "user": "声音大一点。",
+          "assistant": "音量调高了。"
+        },
+        {
+          "user": "记住这个台。",
+          "assistant": "CCTV1已加入最近频道。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周南音",
+      "date_time": "2026-07-05 08:10",
+      "QA_details": [
+        {
+          "user": "我要看cctv1不？",
+          "assistant": "CCTV1正在播放。"
+        },
+        {
+          "user": "换清楚点。",
+          "assistant": "清晰度已调高。"
+        },
+        {
+          "user": "看历史频道。",
+          "assistant": "最近频道里有CCTV1。"
+        },
+        {
+          "user": "回CCTV1。",
+          "assistant": "已切回CCTV1。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "周亦辰",
+      "date_time": "2026-07-01 21:10",
+      "QA_details": [
+        {
+          "user": "搜变形金刚。",
+          "assistant": "《变形金刚》电影与动画已列出。"
+        },
+        {
+          "user": "1986大电影。",
+          "assistant": "1986年大电影版本已找到。"
+        },
+        {
+          "user": "港版中文。",
+          "assistant": "已筛选港版中文版本。"
+        },
+        {
+          "user": "动画版。",
+          "assistant": "动画版内容已打开。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "周亦辰",
+      "date_time": "2026-07-04 19:40",
+      "QA_details": [
+        {
+          "user": "给我搜这个电影。",
+          "assistant": "按你想看的《变形金刚》继续搜索。"
+        },
+        {
+          "user": "要86那个。",
+          "assistant": "1986年大电影已准备播放。"
+        },
+        {
+          "user": "中文港版。",
+          "assistant": "港版中文版本已选中。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "《变形金刚》1986年大电影开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周小满",
+      "date_time": "2026-07-02 18:00",
+      "QA_details": [
+        {
+          "user": "我想看兽王争锋。",
+          "assistant": "《兽王争锋》已打开。"
+        },
+        {
+          "user": "不想看兽王争锋。",
+          "assistant": "已暂停《兽王争锋》。"
+        },
+        {
+          "user": "换一个动画。",
+          "assistant": "已推荐其他动画片。"
+        },
+        {
+          "user": "还是先收藏。",
+          "assistant": "《兽王争锋》已加入收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "周小满",
+      "date_time": "2026-07-05 18:20",
+      "QA_details": [
+        {
+          "user": "打开兽王争锋。",
+          "assistant": "《兽王争锋》继续播放。"
+        },
+        {
+          "user": "又不想看。",
+          "assistant": "播放已暂停。"
+        },
+        {
+          "user": "推荐相似的。",
+          "assistant": "已推荐战斗冒险类动画。"
+        },
+        {
+          "user": "先放一集。",
+          "assistant": "《兽王争锋》第1集开始播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "看我喜欢的游戏改编影片。",
+      "answer": "《植物大战僵尸》",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "给我调到我常看的主频道。",
+      "answer": "CCTV1",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "搜我想看的86年港版中文电影。",
+      "answer": "《变形金刚》",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "推荐我这个战斗冒险动画。",
+      "answer": "《兽王争锋》",
+      "category": "open_domain"
+    }
+  ]
+}

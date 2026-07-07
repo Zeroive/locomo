@@ -1,0 +1,314 @@
+{
+  "case_id": "HC-032",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 多跳能力",
+    "question_type": "多跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "请打开叫什么影音来着？"
+        ],
+        "memory": [
+          "用户要查看云盘里聚会的照片",
+          "用户要跳舞"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "播放一个适合下班的时候听的音乐。"
+        ],
+        "memory": [
+          "用户喜欢林俊杰的歌曲"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "放妈妈妈妈最好儿歌。",
+          "要播放你谢谢你的儿歌。",
+          "播放宝宝巴士。"
+        ],
+        "memory": [
+          "用户播放了关于受伤动物的动画片",
+          "用户播放了三岁幼儿的动画片"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "我想看我的同学是美人鱼。",
+          "你好好，我想看看我的同学是美人鱼。",
+          "我想看5分钟的电影。",
+          "我想看音乐公主爱美丽。",
+          "我想看音乐公主爱美莉。",
+          "你告诉我要看莉亚公主爱美丽。",
+          "我想看音乐公主。",
+          "你好嘟嘟，我想看我的同学是美人鱼。",
+          "我要看同我的同学是美人鱼。"
+        ],
+        "memory": [
+          "用户的同学是美人鱼",
+          "用户想看他的同学，提到同学是美人鱼",
+          "用户喜欢观看《音乐公主爱美丽》",
+          "用户计划看莫斯科",
+          "用户想看包粽子"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "程安然",
+      "date_time": "2026-07-01 18:50",
+      "QA_details": [
+        {
+          "user": "打开云盘。",
+          "assistant": "云盘内容已打开。"
+        },
+        {
+          "user": "找聚会照片。",
+          "assistant": "聚会照片相册已找到。"
+        },
+        {
+          "user": "放成照片视频。",
+          "assistant": "已按照片轮播播放。"
+        },
+        {
+          "user": "配个跳舞的歌。",
+          "assistant": "跳舞音乐已配上。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "程安然",
+      "date_time": "2026-07-03 19:35",
+      "QA_details": [
+        {
+          "user": "请打开叫什么影音来着？",
+          "assistant": "为你打开影音播放页。"
+        },
+        {
+          "user": "看聚会那个。",
+          "assistant": "聚会照片视频继续播放。"
+        },
+        {
+          "user": "切成能跳舞的。",
+          "assistant": "已切到适合跳舞的播放模式。"
+        },
+        {
+          "user": "再看一遍。",
+          "assistant": "聚会照片视频重新播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "程予白",
+      "date_time": "2026-07-01 22:05",
+      "QA_details": [
+        {
+          "user": "放林俊杰。",
+          "assistant": "林俊杰歌曲列表打开了。"
+        },
+        {
+          "user": "下班听的。",
+          "assistant": "已推荐适合下班放松听的林俊杰歌单。"
+        },
+        {
+          "user": "别太吵。",
+          "assistant": "换成舒缓一点的版本。"
+        },
+        {
+          "user": "收藏这个。",
+          "assistant": "这首已加入收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "程予白",
+      "date_time": "2026-07-04 18:55",
+      "QA_details": [
+        {
+          "user": "播放一个适合下班的时候听的音乐。",
+          "assistant": "给你放林俊杰的轻松歌单。"
+        },
+        {
+          "user": "换一首林俊杰。",
+          "assistant": "已切到下一首林俊杰歌曲。"
+        },
+        {
+          "user": "声音大一点。",
+          "assistant": "音量已调高。"
+        },
+        {
+          "user": "记住下班听这个。",
+          "assistant": "下班歌单已为你保留。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "程小禾",
+      "date_time": "2026-07-02 16:20",
+      "QA_details": [
+        {
+          "user": "看受伤动物动画。",
+          "assistant": "受伤动物主题动画已打开。"
+        },
+        {
+          "user": "三岁看的。",
+          "assistant": "已筛选三岁幼儿适合内容。"
+        },
+        {
+          "user": "放妈妈妈妈最好。",
+          "assistant": "《妈妈妈妈最好》儿歌开始播放。"
+        },
+        {
+          "user": "播放宝宝巴士。",
+          "assistant": "切到宝宝巴士儿歌。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "程小禾",
+      "date_time": "2026-07-04 17:10",
+      "QA_details": [
+        {
+          "user": "要你谢谢你的儿歌。",
+          "assistant": "《谢谢你》儿歌已找到。"
+        },
+        {
+          "user": "还是宝宝巴士。",
+          "assistant": "宝宝巴士继续播放。"
+        },
+        {
+          "user": "找动物受伤那个。",
+          "assistant": "受伤动物动画又切回来了。"
+        },
+        {
+          "user": "要小宝宝看的。",
+          "assistant": "已保留三岁幼儿适合内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "罗月琴",
+      "date_time": "2026-07-01 20:15",
+      "QA_details": [
+        {
+          "user": "我想看我的同学是美人鱼。",
+          "assistant": "《我的同学是美人鱼》已打开。"
+        },
+        {
+          "user": "再找音乐公主爱美丽。",
+          "assistant": "《音乐公主爱美丽》也找到了。"
+        },
+        {
+          "user": "五分钟电影。",
+          "assistant": "已筛选5分钟左右的短片。"
+        },
+        {
+          "user": "等会看莫斯科。",
+          "assistant": "莫斯科相关内容已加入待播。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "罗月琴",
+      "date_time": "2026-07-05 19:25",
+      "QA_details": [
+        {
+          "user": "我要看同学美人鱼。",
+          "assistant": "继续播放《我的同学是美人鱼》。"
+        },
+        {
+          "user": "换音乐公主。",
+          "assistant": "已切到《音乐公主爱美丽》。"
+        },
+        {
+          "user": "还有包粽子。",
+          "assistant": "包粽子视频已搜索到。"
+        },
+        {
+          "user": "先看美人鱼。",
+          "assistant": "《我的同学是美人鱼》恢复播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "打开那个能看聚会照片还配跳舞的。",
+      "answer": "云盘聚会照片",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "放个我下班爱听的。",
+      "answer": "林俊杰歌单",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "播放我常看的小宝宝动物儿歌。",
+      "answer": "宝宝巴士",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "我要看我喜欢的美人鱼那个，再切音乐公主。",
+      "answer": "《我的同学是美人鱼》",
+      "category": "multi_hop"
+    }
+  ]
+}

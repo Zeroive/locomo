@@ -1,0 +1,303 @@
+{
+  "case_id": "HC-035",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "单亲 + 2个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "帮我找这个动画片儿。"
+        ],
+        "memory": [
+          "用户在2026-06-13提到《疯狂动物园2》",
+          "用户在2026-06-13提到《疯狂动物园》",
+          "用户提到小志和玩具"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "播放小猪佩奇歌牛什么牛羽喜欢我要听嗯唱的歌。"
+        ],
+        "memory": [
+          "用户表示不喜欢需要花钱的小马宝莉，并请求寻找不花钱的小马宝莉"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我要看的是熊猫和小鼹鼠。"
+        ],
+        "memory": [
+          "用户想看关于明星男生的电影和《猪儿》这部电影"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "放妈妈妈妈最好儿歌。",
+          "要播放你谢谢你的儿歌。",
+          "播放宝宝巴士。"
+        ],
+        "memory": [
+          "用户播放了关于受伤动物的动画片",
+          "用户播放了三岁幼儿的动画片"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_003",
+      "type": "GRANDPARENT_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐以宁",
+      "date_time": "2026-06-13 19:05",
+      "QA_details": [
+        {
+          "user": "找疯狂动物园。",
+          "assistant": "《疯狂动物园》已找到。"
+        },
+        {
+          "user": "还有第二个。",
+          "assistant": "《疯狂动物园2》也已显示。"
+        },
+        {
+          "user": "看小志玩具。",
+          "assistant": "小志和玩具相关视频已打开。"
+        },
+        {
+          "user": "先看动画片。",
+          "assistant": "动画片播放中。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "唐以宁",
+      "date_time": "2026-07-03 18:25",
+      "QA_details": [
+        {
+          "user": "帮我找这个动画片儿。",
+          "assistant": "按你看过的《疯狂动物园》帮你找。"
+        },
+        {
+          "user": "第二部。",
+          "assistant": "切到《疯狂动物园2》。"
+        },
+        {
+          "user": "换小志玩具。",
+          "assistant": "小志和玩具视频已切换。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "历史里有《疯狂动物园》和小志玩具。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐小雨",
+      "date_time": "2026-07-01 17:50",
+      "QA_details": [
+        {
+          "user": "找小马宝莉。",
+          "assistant": "小马宝莉内容已打开。"
+        },
+        {
+          "user": "不要花钱的。",
+          "assistant": "已筛选免费可看的小马宝莉。"
+        },
+        {
+          "user": "这个要钱。",
+          "assistant": "已跳过付费内容。"
+        },
+        {
+          "user": "找免费的。",
+          "assistant": "免费小马宝莉列表已更新。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐小雨",
+      "date_time": "2026-07-04 18:40",
+      "QA_details": [
+        {
+          "user": "播放小猪佩奇歌。",
+          "assistant": "小猪佩奇歌曲已开始播放。"
+        },
+        {
+          "user": "牛什么牛那个。",
+          "assistant": "正在查找相关歌曲。"
+        },
+        {
+          "user": "还是找小马宝莉。",
+          "assistant": "已回到免费小马宝莉内容。"
+        },
+        {
+          "user": "不要付费。",
+          "assistant": "继续只显示免费内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "唐小舟",
+      "date_time": "2026-07-02 20:05",
+      "QA_details": [
+        {
+          "user": "找明星男生电影。",
+          "assistant": "明星男生相关电影已搜索。"
+        },
+        {
+          "user": "还有猪儿。",
+          "assistant": "《猪儿》这部电影已找到。"
+        },
+        {
+          "user": "放个电影。",
+          "assistant": "电影播放页打开了。"
+        },
+        {
+          "user": "换一个。",
+          "assistant": "已切换到另一部电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "唐小舟",
+      "date_time": "2026-07-05 19:15",
+      "QA_details": [
+        {
+          "user": "我要看的是熊猫和小鼹鼠。",
+          "assistant": "正在查找《熊猫和小鼹鼠》。"
+        },
+        {
+          "user": "不是猪儿。",
+          "assistant": "已避开《猪儿》。"
+        },
+        {
+          "user": "看明星男生那个。",
+          "assistant": "切回明星男生电影推荐。"
+        },
+        {
+          "user": "再搜熊猫小鼹鼠。",
+          "assistant": "《熊猫和小鼹鼠》搜索结果已显示。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "秦素珍",
+      "date_time": "2026-07-01 16:15",
+      "QA_details": [
+        {
+          "user": "放动物动画。",
+          "assistant": "关于受伤动物的动画片已打开。"
+        },
+        {
+          "user": "三岁看的。",
+          "assistant": "已筛选三岁幼儿适合内容。"
+        },
+        {
+          "user": "放妈妈妈妈最好儿歌。",
+          "assistant": "《妈妈妈妈最好》儿歌开始播放。"
+        },
+        {
+          "user": "播放宝宝巴士。",
+          "assistant": "宝宝巴士已切换播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "秦素珍",
+      "date_time": "2026-07-04 17:30",
+      "QA_details": [
+        {
+          "user": "要谢谢你的儿歌。",
+          "assistant": "《谢谢你》儿歌已找到。"
+        },
+        {
+          "user": "看受伤动物。",
+          "assistant": "受伤动物动画继续播放。"
+        },
+        {
+          "user": "小宝宝看的。",
+          "assistant": "三岁幼儿内容已保留。"
+        },
+        {
+          "user": "再放宝宝巴士。",
+          "assistant": "宝宝巴士儿歌继续播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "帮我找昨天说的海底小纵队。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "播放我喜欢的付费小马宝莉。",
+      "answer": "不喜欢付费",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "继续我看过的熊猫电影第三集。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "放我常看的奥特曼。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

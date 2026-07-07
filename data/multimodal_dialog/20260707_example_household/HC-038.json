@@ -1,0 +1,311 @@
+{
+  "case_id": "HC-038",
+  "dimension_tags": {
+    "household_size": "4人",
+    "household_structure": "双亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "多元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我想看什。"
+        ],
+        "memory": [
+          "用户想看忍者电视剧"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "嗯，我想看关于。"
+        ],
+        "memory": [
+          "用户想听时代少年团的《绝配》",
+          "用户喜欢时代少年团的歌曲《绝配》"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我看看帮我播熊出没。"
+        ],
+        "memory": [
+          "用户让播放九台"
+        ]
+      },
+      "person_004": {
+        "question": [
+          "电影800。"
+        ],
+        "memory": [
+          "用户喜欢绿色",
+          "用户最喜欢用捞头玩儿。",
+          "用户提到18岁太奶奶驾到"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_004",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陈予安",
+      "date_time": "2026-06-29 20:05",
+      "QA_details": [
+        {
+          "user": "找忍者电视剧。",
+          "assistant": "忍者题材电视剧已找到。"
+        },
+        {
+          "user": "播放第一集。",
+          "assistant": "第1集开始播放。"
+        },
+        {
+          "user": "收藏一下。",
+          "assistant": "这部忍者电视剧已收藏。"
+        },
+        {
+          "user": "明天接着看。",
+          "assistant": "观看进度已保留。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陈予安",
+      "date_time": "2026-07-04 21:35",
+      "QA_details": [
+        {
+          "user": "我想看什。",
+          "assistant": "按你最近想看的忍者电视剧推荐。"
+        },
+        {
+          "user": "接着上次。",
+          "assistant": "忍者电视剧从上次进度继续播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "已切到下一集。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "最近历史里有忍者电视剧。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈静姝",
+      "date_time": "2026-06-30 18:30",
+      "QA_details": [
+        {
+          "user": "放时代少年团。",
+          "assistant": "时代少年团歌曲已打开。"
+        },
+        {
+          "user": "我要绝配。",
+          "assistant": "《绝配》开始播放。"
+        },
+        {
+          "user": "收藏这首。",
+          "assistant": "《绝配》已加入收藏。"
+        },
+        {
+          "user": "下次还听。",
+          "assistant": "歌曲偏好已保留。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈静姝",
+      "date_time": "2026-07-05 19:00",
+      "QA_details": [
+        {
+          "user": "嗯，我想看关于。",
+          "assistant": "你最近常听时代少年团《绝配》。"
+        },
+        {
+          "user": "那就放绝配。",
+          "assistant": "《绝配》继续播放。"
+        },
+        {
+          "user": "切歌再切回来。",
+          "assistant": "已切歌，并可随时回到《绝配》。"
+        },
+        {
+          "user": "回绝配。",
+          "assistant": "已切回时代少年团《绝配》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈小枫",
+      "date_time": "2026-06-28 17:25",
+      "QA_details": [
+        {
+          "user": "播放九台。",
+          "assistant": "九台频道已播放。"
+        },
+        {
+          "user": "换大点声。",
+          "assistant": "音量已调高。"
+        },
+        {
+          "user": "看会儿。",
+          "assistant": "九台频道继续播放。"
+        },
+        {
+          "user": "记住这个台。",
+          "assistant": "九台已加入最近播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈小枫",
+      "date_time": "2026-07-04 18:15",
+      "QA_details": [
+        {
+          "user": "我看看帮我播熊出没。",
+          "assistant": "《熊出没》已搜索到。"
+        },
+        {
+          "user": "先播九台。",
+          "assistant": "已切回最近播放的九台。"
+        },
+        {
+          "user": "再看熊出没。",
+          "assistant": "《熊出没》继续播放。"
+        },
+        {
+          "user": "看刚才那个台。",
+          "assistant": "刚才的九台频道已恢复。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "陈小禾",
+      "date_time": "2026-06-27 19:45",
+      "QA_details": [
+        {
+          "user": "我喜欢绿色。",
+          "assistant": "已记住你喜欢绿色。"
+        },
+        {
+          "user": "用捞头玩儿。",
+          "assistant": "已记录你最喜欢用捞头玩儿。"
+        },
+        {
+          "user": "找太奶奶驾到。",
+          "assistant": "《18岁太奶奶驾到》已找到。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "《18岁太奶奶驾到》开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_004",
+      "person_name": "陈小禾",
+      "date_time": "2026-07-05 20:40",
+      "QA_details": [
+        {
+          "user": "电影800。",
+          "assistant": "正在按“电影800”搜索。"
+        },
+        {
+          "user": "看太奶奶那个。",
+          "assistant": "已切回《18岁太奶奶驾到》。"
+        },
+        {
+          "user": "要绿色封面。",
+          "assistant": "已优先显示绿色封面内容。"
+        },
+        {
+          "user": "继续刚才。",
+          "assistant": "《18岁太奶奶驾到》继续播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续我最近想看的电视剧。",
+      "answer": "忍者电视剧",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "放我最近收藏的歌。",
+      "answer": "《绝配》",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "播刚才那个频道。",
+      "answer": "九台",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_004",
+      "question": "继续我刚才看的太奶奶。",
+      "answer": "《18岁太奶奶驾到》",
+      "category": "temporal"
+    }
+  ]
+}
