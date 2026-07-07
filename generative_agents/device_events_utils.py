@@ -459,7 +459,7 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
                 extra={"attempt": attempt + 1, "max_retries": max_retries},
             )
             if attempt == max_retries - 1:
-                logging.error(f"All {max_retries} attempts failed for {episode_date}, falling back to rule-based generation")
+                logging.error(f"All {max_retries} attempts failed for {episode_date}; skipping this scenario/date")
                 return None
     
     return None
@@ -660,24 +660,11 @@ def generate_daily_device_episodes(generation_plan, num_days=7, day_interval=1, 
             episode = generate_scenario_events_from_description_llm(context, run_json_trials_func)
             if not episode:
                 logging.warning(
-                    "LLM event generation failed for %s/%s, falling back to rule-based episode",
+                    "LLM event generation failed for %s/%s after retries; skipping this scenario/date",
                     context['scenario'],
                     episode_date,
                 )
-                template = context['template']
-                episode = generate_single_day_episode_rule_based(
-                    scenario=context['scenario'],
-                    episode_date=episode_date,
-                    day_offset=day_offset,
-                    template=template,
-                    core_events=template.get('core_events', []),
-                    noise_events=template.get('noise_events', []),
-                    time_window=template.get('time_window', {}),
-                    default_subject=context['default_subject'],
-                    default_home=context['default_home'],
-                    household_profile=household_profile,
-                    person_ids=person_ids,
-                )
+                continue
             if episode:
                 if context.get('subject_profile'):
                     episode['subject_profile'] = context['subject_profile']
@@ -1584,22 +1571,13 @@ def generate_scenario_device_episodes(scenario, num_days=7, day_interval=1, date
             if episode and episode.get('_skip'):
                 continue
             
-            # 如果 LLM 生成失败，回退到规则模板生成
             if not episode:
-                logging.warning(f"LLM generation failed for {episode_date}, falling back to rule-based generation")
-                episode = generate_single_day_episode_rule_based(
-                    scenario=scenario,
-                    episode_date=episode_date,
-                    day_offset=day_offset,
-                    template=template,
-                    core_events=core_events,
-                    noise_events=noise_events,
-                    time_window=time_window,
-                    default_subject=default_subject,
-                    default_home=default_home,
-                    household_profile=household_profile,
-                    person_ids=person_ids
+                logging.warning(
+                    "LLM generation failed for %s/%s after retries; skipping this scenario/date",
+                    scenario,
+                    episode_date,
                 )
+                continue
         else:
             # 使用规则模板生成
             episode = generate_single_day_episode_rule_based(
