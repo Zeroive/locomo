@@ -335,7 +335,7 @@ LLM_EVENT_PERSONS_PROMPT = """你是一个智能家居系统分析师。请只�
 - 每个人的 location 必须来自“人物房间状态枚举”
 - 每个人的 status 必须来自该 location 允许状态
 - 只输出人物状态，不要输出设备状态或 timestamp
-- 人物状态必须优先参考 household_state_description，不要从 device_event_description 推断无关人物位置
+- 人物状态必须优先参考“当前情景下所有家庭人员的状态描述”，不要从“当前情景下需要操作或预期发生的设备事件描述”推断无关人物位置
 
 请生成 persons："""
 
