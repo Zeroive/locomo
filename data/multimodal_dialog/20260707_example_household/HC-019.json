@@ -1,0 +1,237 @@
+{
+  "case_id": "HC-019",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 开放知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "帮我播放一首放空事情。"
+        ],
+        "memory": [
+          "用户请求帮忙拍摄并发布一个适合二年级或三年级小孩观看的视频"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "播放小猪佩奇歌牛什么牛羽喜欢我要听嗯唱的歌。"
+        ],
+        "memory": [
+          "用户要看峰峰",
+          "用户有一个小可爱娜斯佳",
+          "用户的昵称是小可爱娜斯佳"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我现在比较无聊，想随便看点啥。"
+        ],
+        "memory": [
+          "用户喜欢看积木方块",
+          "用户的昵称是光头强",
+          "用户寻找光头强",
+          "用户找汪汪队",
+          "用户要观看名为嘟嘟的动画片",
+          "用户看了汪汪队",
+          "用户打开了《熊出没》",
+          "用户找寻《熊出没》中的熊大熊二"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆景行",
+      "date_time": "2026-06-25 18:00",
+      "QA_details": [
+        {
+          "user": "找二年级能看的视频。",
+          "assistant": "好的，为您筛选二年级可看的视频。"
+        },
+        {
+          "user": "三年级也能看。",
+          "assistant": "好的，为您筛选二三年级都适合的视频。"
+        },
+        {
+          "user": "找能发布的。",
+          "assistant": "好的，为您查找适合发布的视频。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陆景行",
+      "date_time": "2026-06-27 20:20",
+      "QA_details": [
+        {
+          "user": "放首歌。",
+          "assistant": "好的，为您播放歌曲。"
+        },
+        {
+          "user": "找放空事情。",
+          "assistant": "好的，为您查找《放空事情》。"
+        },
+        {
+          "user": "帮我播放一首放空事情。",
+          "assistant": "好的，正在播放《放空事情》。"
+        },
+        {
+          "user": "单曲循环。",
+          "assistant": "好的，已开启单曲循环。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许棠音",
+      "date_time": "2026-06-26 17:30",
+      "QA_details": [
+        {
+          "user": "我要看峰峰。",
+          "assistant": "好的，为您查找峰峰相关内容。"
+        },
+        {
+          "user": "找小可爱娜斯佳。",
+          "assistant": "好的，为您查找小可爱娜斯佳相关视频。"
+        },
+        {
+          "user": "播放娜斯佳。",
+          "assistant": "好的，正在播放娜斯佳相关视频。"
+        },
+        {
+          "user": "换个儿歌。",
+          "assistant": "好的，为您切换儿歌。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许棠音",
+      "date_time": "2026-06-27 19:10",
+      "QA_details": [
+        {
+          "user": "找小猪佩奇歌。",
+          "assistant": "好的，为您查找小猪佩奇歌曲。"
+        },
+        {
+          "user": "找牛什么牛。",
+          "assistant": "好的，为您匹配“牛什么牛”相关歌曲。"
+        },
+        {
+          "user": "播放小猪佩奇歌牛什么牛羽喜欢我要听嗯唱的歌。",
+          "assistant": "好的，为您播放匹配到的小猪佩奇相关歌曲。"
+        },
+        {
+          "user": "再来一首。",
+          "assistant": "好的，为您播放下一首儿歌。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆砚",
+      "date_time": "2026-06-25 16:20",
+      "QA_details": [
+        {
+          "user": "找积木方块。",
+          "assistant": "好的，为您查找积木方块视频。"
+        },
+        {
+          "user": "找光头强。",
+          "assistant": "好的，为您查找光头强相关内容。"
+        },
+        {
+          "user": "打开熊出没。",
+          "assistant": "好的，正在播放《熊出没》。"
+        },
+        {
+          "user": "找熊大熊二。",
+          "assistant": "好的，为您查找熊大熊二片段。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆砚",
+      "date_time": "2026-06-27 20:00",
+      "QA_details": [
+        {
+          "user": "找汪汪队。",
+          "assistant": "好的，为您查找《汪汪队立大功》。"
+        },
+        {
+          "user": "找嘟嘟动画片。",
+          "assistant": "好的，为您查找名为嘟嘟的动画片。"
+        },
+        {
+          "user": "我现在比较无聊。",
+          "assistant": "好的，为您推荐动画和儿童视频。"
+        },
+        {
+          "user": "想随便看点啥。",
+          "assistant": "好的，为您推荐《熊出没》和《汪汪队立大功》相关内容。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "别按儿童视频来，放我刚找的那首歌。",
+      "answer": "播放《放空事情》。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "按我常看的儿童内容，放刚才那首儿歌。",
+      "answer": "播放小猪佩奇相关儿歌。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "我无聊了，按我平时看的动画推荐。",
+      "answer": "推荐《熊出没》或《汪汪队》。",
+      "category": "open_domain"
+    }
+  ]
+}

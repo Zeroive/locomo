@@ -1,0 +1,253 @@
+{
+  "case_id": "HC-007",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 多跳能力",
+    "question_type": "多跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "你喜欢什么样的电影？",
+          "一个a点a点ny。查找记忆爱的播放内容。",
+          "查找a点a点one。我想听邓紫棋的歌。"
+        ],
+        "memory": [
+          "用户喜欢看积木方块",
+          "用户的昵称是光头强",
+          "用户寻找光头强",
+          "用户找汪汪队",
+          "用户要观看名为嘟嘟的动画片",
+          "用户看了汪汪队",
+          "用户打开了《熊出没》",
+          "用户找寻《熊出没》中的熊大熊二"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想我想看。"
+        ],
+        "memory": [
+          "用户使用快手看小说",
+          "用户用快手看小说"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我要看艾莎公主，不要影视。",
+          "我要看我要看我要看什么来着哦。",
+          "我要看艾莎公主，不要看影视。",
+          "联通联通，我要看宝贝jojo。",
+          "我要看宝贝jojo。",
+          "我要看宝贝jojo。",
+          "通通我要看宝贝jojo。",
+          "我要看宝贝jojo。",
+          "好多呀，那我就那我就看上午看的这个芭比吧。",
+          "这个芭比我要看看，哪个好看我就要看哪个。",
+          "你拿拿出来影片，我要自己选7号。"
+        ],
+        "memory": [
+          "用户拍了照片发给妈妈",
+          "用户现在在姥姥那里",
+          "用户现在在姥姥那。",
+          "用户播放了第7个",
+          "用户表示想花花草草",
+          "用户打电话给妈妈"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周景明",
+      "date_time": "2026-06-25 18:30",
+      "QA_details": [
+        {
+          "user": "找积木方块。",
+          "assistant": "好的，为您查找积木方块视频。"
+        },
+        {
+          "user": "找光头强。",
+          "assistant": "好的，为您查找光头强相关内容。"
+        },
+        {
+          "user": "打开熊出没。",
+          "assistant": "好的，正在播放《熊出没》。"
+        },
+        {
+          "user": "找熊大熊二。",
+          "assistant": "好的，为您查找熊大熊二片段。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "周景明",
+      "date_time": "2026-06-25 21:05",
+      "QA_details": [
+        {
+          "user": "找汪汪队。",
+          "assistant": "好的，为您查找《汪汪队立大功》。"
+        },
+        {
+          "user": "找嘟嘟动画片。",
+          "assistant": "好的，为您查找名为嘟嘟的动画片。"
+        },
+        {
+          "user": "查找a点a点one。",
+          "assistant": "好的，为您查找相关播放内容。"
+        },
+        {
+          "user": "我想听邓紫棋的歌。",
+          "assistant": "好的，正在播放邓紫棋的歌曲。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "江映雪",
+      "date_time": "2026-06-26 15:20",
+      "QA_details": [
+        {
+          "user": "打开快手。",
+          "assistant": "好的，已打开快手。"
+        },
+        {
+          "user": "看小说。",
+          "assistant": "好的，为您打开小说内容。"
+        },
+        {
+          "user": "换一本。",
+          "assistant": "好的，为您切换下一本小说。"
+        },
+        {
+          "user": "继续看。",
+          "assistant": "好的，继续为您播放小说内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "江映雪",
+      "date_time": "2026-06-26 19:10",
+      "QA_details": [
+        {
+          "user": "打开快手小说。",
+          "assistant": "好的，已打开快手小说。"
+        },
+        {
+          "user": "找我刚才看的。",
+          "assistant": "好的，为您查找最近看过的小说内容。"
+        },
+        {
+          "user": "我想我想看。",
+          "assistant": "好的，为您继续播放最近观看内容。"
+        },
+        {
+          "user": "下一段。",
+          "assistant": "好的，为您播放下一段。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "江月琴",
+      "date_time": "2026-06-27 09:30",
+      "QA_details": [
+        {
+          "user": "找花花草草。",
+          "assistant": "好的，为您查找花草相关视频。"
+        },
+        {
+          "user": "找姥姥那里看的。",
+          "assistant": "好的，为您查看最近播放内容。"
+        },
+        {
+          "user": "播放第7个。",
+          "assistant": "好的，正在播放第7个内容。"
+        },
+        {
+          "user": "换成芭比。",
+          "assistant": "好的，为您查找《芭比》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "江月琴",
+      "date_time": "2026-06-27 10:10",
+      "QA_details": [
+        {
+          "user": "我要看艾莎公主。",
+          "assistant": "好的，为您查找艾莎公主相关内容。"
+        },
+        {
+          "user": "我要看宝贝jojo。",
+          "assistant": "好的，正在播放《宝贝JoJo》。"
+        },
+        {
+          "user": "那看上午的芭比。",
+          "assistant": "好的，为您打开上午看过的《芭比》。"
+        },
+        {
+          "user": "你拿出来影片，我要自己选7号。",
+          "assistant": "好的，已展示影片列表，可选择第7个。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "先找我常看的动画人物，再放我想听的歌。",
+      "answer": "找光头强/熊大熊二，再播邓紫棋。",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "打开我平时看的小说，再继续刚才的内容。",
+      "answer": "打开快手小说并续播。",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "找上午看的芭比，再让我选之前那个序号。",
+      "answer": "打开芭比列表，选择第7个。",
+      "category": "multi_hop"
+    }
+  ]
+}

@@ -1,0 +1,241 @@
+{
+  "case_id": "HC-015",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要看周末后宫。"
+        ],
+        "memory": [
+          "用户喜欢看《美人心计》",
+          "用户喜欢看冯小刚导演的电影"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我要看艾莎公主，不要影视。",
+          "我要看我要看我要看什么来着哦。",
+          "我要看艾莎公主，不要看影视。",
+          "联通联通，我要看宝贝jojo。",
+          "我要看宝贝jojo。",
+          "我要看宝贝jojo。",
+          "通通我要看宝贝jojo。",
+          "我要看宝贝jojo。",
+          "好多呀，那我就那我就看上午看的这个芭比吧。",
+          "这个芭比我要看看，哪个好看我就要看哪个。",
+          "你拿拿出来影片，我要自己选7号。"
+        ],
+        "memory": [
+          "白色的遥控器被梁雨欣在2026-06-23拿走了",
+          "用户关闭了电视机播放的世界杯",
+          "2026-06-23梁雨欣拿来了白遥控器"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我想听小美满。"
+        ],
+        "memory": [
+          "用户播放了《飞驰人生3》"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许明澈",
+      "date_time": "2026-06-24 20:10",
+      "QA_details": [
+        {
+          "user": "找美人心计。",
+          "assistant": "好的，为您查找《美人心计》。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放《美人心计》。"
+        },
+        {
+          "user": "找冯小刚电影。",
+          "assistant": "好的，为您查找冯小刚导演的电影。"
+        },
+        {
+          "user": "换一部。",
+          "assistant": "好的，为您切换另一部影片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "许明澈",
+      "date_time": "2026-06-27 19:00",
+      "QA_details": [
+        {
+          "user": "打开电视剧。",
+          "assistant": "好的，已打开电视剧专区。"
+        },
+        {
+          "user": "找周末后宫。",
+          "assistant": "好的，为您查找《周末后宫》。"
+        },
+        {
+          "user": "我要看周末后宫。",
+          "assistant": "好的，正在播放《周末后宫》。"
+        },
+        {
+          "user": "不要冯小刚那个。",
+          "assistant": "好的，为您保留当前《周末后宫》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小森",
+      "date_time": "2026-06-23 18:30",
+      "QA_details": [
+        {
+          "user": "打开电视。",
+          "assistant": "好的，已打开电视。"
+        },
+        {
+          "user": "关掉世界杯。",
+          "assistant": "好的，已退出世界杯播放。"
+        },
+        {
+          "user": "找白遥控器看的。",
+          "assistant": "好的，为您查看最近播放内容。"
+        },
+        {
+          "user": "播放第7个。",
+          "assistant": "好的，正在播放第7个内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小森",
+      "date_time": "2026-06-27 10:20",
+      "QA_details": [
+        {
+          "user": "我要看艾莎公主，不要影视。",
+          "assistant": "好的，为您查找艾莎公主相关动画内容。"
+        },
+        {
+          "user": "我要看宝贝jojo。",
+          "assistant": "好的，正在播放《宝贝JoJo》。"
+        },
+        {
+          "user": "那看上午的芭比。",
+          "assistant": "好的，为您打开上午看过的《芭比》。"
+        },
+        {
+          "user": "你拿拿出来影片，我要自己选7号。",
+          "assistant": "好的，已展示影片列表，可选择第7个。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰芝",
+      "date_time": "2026-06-26 20:00",
+      "QA_details": [
+        {
+          "user": "播放飞驰人生3。",
+          "assistant": "好的，正在播放《飞驰人生3》。"
+        },
+        {
+          "user": "暂停一下。",
+          "assistant": "好的，已暂停。"
+        },
+        {
+          "user": "继续。",
+          "assistant": "好的，继续播放《飞驰人生3》。"
+        },
+        {
+          "user": "看完了。",
+          "assistant": "好的，已返回推荐页。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰芝",
+      "date_time": "2026-06-27 20:20",
+      "QA_details": [
+        {
+          "user": "不看电影了。",
+          "assistant": "好的，已退出电影。"
+        },
+        {
+          "user": "放首歌。",
+          "assistant": "好的，为您播放歌曲。"
+        },
+        {
+          "user": "我想听小美满。",
+          "assistant": "好的，正在播放《小美满》。"
+        },
+        {
+          "user": "声音小点。",
+          "assistant": "好的，已调低音量。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "别按我以前喜欢的电影，放我刚说要看的剧。",
+      "answer": "播放《周末后宫》。",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "别管遥控器记录，把上午看的列表拿出来让我选。",
+      "answer": "展示芭比列表第7个。",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "别继续刚才的电影了，放我想听的歌。",
+      "answer": "播放《小美满》。",
+      "category": "adversarial"
+    }
+  ]
+}

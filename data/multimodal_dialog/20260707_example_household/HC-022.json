@@ -1,0 +1,246 @@
+{
+  "case_id": "HC-022",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 多跳能力",
+    "question_type": "多跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "嗯，我要看小智。"
+        ],
+        "memory": [
+          "用户播放了第5个",
+          "用户播放了小品《一家人》",
+          "用户播放了小品一家人",
+          "用户播放了第9个内容",
+          "用户喜欢观看小品《一家人》",
+          "用户要求播放小品",
+          "用户播放了第7个",
+          "用户播放了第9个"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "watchthismovieonme.",
+          "iwanttowatchadisneymovieandanswermeinenglish.",
+          "iiwanttowatchamovieabouttheduringweatherer.",
+          "嗯，我想看即兴。"
+        ],
+        "memory": [
+          "用户播放了第5个",
+          "用户播放了小品《一家人》",
+          "用户播放了小品一家人",
+          "用户播放了第9个内容",
+          "用户喜欢观看小品《一家人》",
+          "用户要求播放小品",
+          "用户播放了第7个",
+          "用户播放了第9个"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "播放成都。",
+          "换一首成都。"
+        ],
+        "memory": [
+          "用户的名字是孙楠"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陈予安",
+      "date_time": "2026-06-24 19:30",
+      "QA_details": [
+        {
+          "user": "播放小品。",
+          "assistant": "好的，为您推荐小品内容。"
+        },
+        {
+          "user": "找小品一家人。",
+          "assistant": "好的，为您查找《小品一家人》。"
+        },
+        {
+          "user": "播放第5个。",
+          "assistant": "好的，正在播放第5个内容。"
+        },
+        {
+          "user": "换第9个。",
+          "assistant": "好的，正在播放第9个内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陈予安",
+      "date_time": "2026-06-27 20:10",
+      "QA_details": [
+        {
+          "user": "再找小品一家人。",
+          "assistant": "好的，为您打开《小品一家人》。"
+        },
+        {
+          "user": "播放第7个。",
+          "assistant": "好的，正在播放第7个内容。"
+        },
+        {
+          "user": "打开动画。",
+          "assistant": "好的，已打开动画片专区。"
+        },
+        {
+          "user": "嗯，我要看小智。",
+          "assistant": "好的，为您查找并播放小智相关动画。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈明德",
+      "date_time": "2026-06-25 18:40",
+      "QA_details": [
+        {
+          "user": "播放小品一家人。",
+          "assistant": "好的，正在播放《小品一家人》。"
+        },
+        {
+          "user": "播放第5个。",
+          "assistant": "好的，正在播放第5个内容。"
+        },
+        {
+          "user": "换第9个。",
+          "assistant": "好的，正在播放第9个内容。"
+        },
+        {
+          "user": "再放小品。",
+          "assistant": "好的，为您继续推荐小品。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈明德",
+      "date_time": "2026-06-27 20:35",
+      "QA_details": [
+        {
+          "user": "watchthismovieonme.",
+          "assistant": "OK, playing this movie for you."
+        },
+        {
+          "user": "iwanttowatchadisneymovieandanswermeinenglish.",
+          "assistant": "OK, finding a Disney movie for you."
+        },
+        {
+          "user": "iiwanttowatchamovieabouttheduringweatherer.",
+          "assistant": "OK, finding weather-related movies for you."
+        },
+        {
+          "user": "嗯，我想看即兴。",
+          "assistant": "好的，为您查找《即兴》相关影片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈素琴",
+      "date_time": "2026-06-26 19:00",
+      "QA_details": [
+        {
+          "user": "我是孙楠。",
+          "assistant": "好的，为您打开音乐推荐。"
+        },
+        {
+          "user": "放首歌。",
+          "assistant": "好的，为您播放歌曲。"
+        },
+        {
+          "user": "找成都。",
+          "assistant": "好的，为您查找《成都》。"
+        },
+        {
+          "user": "播放成都。",
+          "assistant": "好的，正在播放《成都》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈素琴",
+      "date_time": "2026-06-27 19:50",
+      "QA_details": [
+        {
+          "user": "继续放成都。",
+          "assistant": "好的，继续播放《成都》。"
+        },
+        {
+          "user": "换一首成都。",
+          "assistant": "好的，为您切换另一个版本的《成都》。"
+        },
+        {
+          "user": "声音小点。",
+          "assistant": "好的，已调低音量。"
+        },
+        {
+          "user": "再换一个版本。",
+          "assistant": "好的，为您切换另一个《成都》版本。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "先按我常看的小品历史找，再换成动画。",
+      "answer": "从《小品一家人》切到小智动画。",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "先打开我常看的小品，再按英文要求找电影。",
+      "answer": "先播《小品一家人》，再找 Disney movie。",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "记住我的名字后，给我换一版刚听的歌。",
+      "answer": "给孙楠换一版《成都》。",
+      "category": "multi_hop"
+    }
+  ]
+}

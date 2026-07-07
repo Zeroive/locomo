@@ -1,0 +1,237 @@
+{
+  "case_id": "HC-016",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 单跳能力",
+    "question_type": "单跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "播放成都。",
+          "换一首成都。"
+        ],
+        "memory": [
+          "用户请求帮忙拍摄并发布一个适合二年级或三年级小孩观看的视频"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "不想看刘德华的电影。"
+        ],
+        "memory": [
+          "用户要玩《蛋仔派对》",
+          "用户喜欢变形金刚电影",
+          "用户喜欢变形金刚音乐"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我要看",
+          "我要看莫里"
+        ],
+        "memory": [
+          "用户拍了照片发给妈妈",
+          "用户现在在姥姥那里",
+          "用户现在在姥姥那。",
+          "用户播放了第7个",
+          "用户表示想花花草草",
+          "用户打电话给妈妈"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆景行",
+      "date_time": "2026-06-24 18:20",
+      "QA_details": [
+        {
+          "user": "找二年级能看的视频。",
+          "assistant": "好的，为您筛选二年级可看的视频。"
+        },
+        {
+          "user": "三年级也能看。",
+          "assistant": "好的，为您筛选二三年级都适合的视频。"
+        },
+        {
+          "user": "帮我找能发布的。",
+          "assistant": "好的，为您查找适合发布的视频内容。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陆景行",
+      "date_time": "2026-06-27 20:00",
+      "QA_details": [
+        {
+          "user": "放首歌。",
+          "assistant": "好的，为您播放歌曲。"
+        },
+        {
+          "user": "播放成都。",
+          "assistant": "好的，正在播放《成都》。"
+        },
+        {
+          "user": "换一首成都。",
+          "assistant": "好的，为您切换另一个版本的《成都》。"
+        },
+        {
+          "user": "声音大点。",
+          "assistant": "好的，已调高音量。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许棠音",
+      "date_time": "2026-06-25 17:30",
+      "QA_details": [
+        {
+          "user": "打开蛋仔派对。",
+          "assistant": "好的，已打开《蛋仔派对》相关内容。"
+        },
+        {
+          "user": "找变形金刚电影。",
+          "assistant": "好的，为您查找变形金刚电影。"
+        },
+        {
+          "user": "放变形金刚音乐。",
+          "assistant": "好的，正在播放变形金刚音乐。"
+        },
+        {
+          "user": "换个电影。",
+          "assistant": "好的，为您推荐电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许棠音",
+      "date_time": "2026-06-27 20:25",
+      "QA_details": [
+        {
+          "user": "找刘德华电影。",
+          "assistant": "好的，为您查找刘德华的电影。"
+        },
+        {
+          "user": "不想看刘德华的电影。",
+          "assistant": "好的，为您推荐非刘德华主演的电影。"
+        },
+        {
+          "user": "换变形金刚。",
+          "assistant": "好的，为您切换到变形金刚电影。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "好的，正在播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆砚",
+      "date_time": "2026-06-26 16:00",
+      "QA_details": [
+        {
+          "user": "找花花草草。",
+          "assistant": "好的，为您查找花草相关视频。"
+        },
+        {
+          "user": "看第7个。",
+          "assistant": "好的，正在播放第7个内容。"
+        },
+        {
+          "user": "找姥姥那里看的。",
+          "assistant": "好的，为您查看最近播放内容。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆砚",
+      "date_time": "2026-06-27 19:40",
+      "QA_details": [
+        {
+          "user": "我要看。",
+          "assistant": "好的，为您推荐最近看过的内容。"
+        },
+        {
+          "user": "我要看莫里。",
+          "assistant": "好的，为您查找莫里相关内容。"
+        },
+        {
+          "user": "换一个。",
+          "assistant": "好的，为您切换另一个莫里相关视频。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "好的，正在播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "别放视频了，放我刚点过的歌。",
+      "answer": "播放《成都》。",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "按我喜欢的电影推荐，但不要刘德华。",
+      "answer": "推荐变形金刚电影。",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "继续找我刚才想看的那个莫里。",
+      "answer": "播放莫里相关内容。",
+      "category": "single_hop"
+    }
+  ]
+}

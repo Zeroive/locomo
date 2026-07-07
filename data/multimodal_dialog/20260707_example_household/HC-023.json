@@ -1,0 +1,232 @@
+{
+  "case_id": "HC-023",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要看李博雅。"
+        ],
+        "memory": [
+          "用户计划闯天涯"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "银龙影院。"
+        ],
+        "memory": [
+          "用户想看益智类视频",
+          "用户请求推荐一些动画片",
+          "用户想看益智类游戏",
+          "用户喜欢成龙的电影和刘德华的电影",
+          "用户想看刘德华的电影"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "播放我的纸飞机呀，飞呀飞这首歌。"
+        ],
+        "memory": [
+          "用户喜欢手绘风格的荒岛求生动漫"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陈予安",
+      "date_time": "2026-06-24 18:30",
+      "QA_details": [
+        {
+          "user": "找闯天涯。",
+          "assistant": "好的，为您查找《闯天涯》相关内容。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放。"
+        },
+        {
+          "user": "暂停一下。",
+          "assistant": "好的，已暂停。"
+        },
+        {
+          "user": "继续。",
+          "assistant": "好的，继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陈予安",
+      "date_time": "2026-06-27 19:20",
+      "QA_details": [
+        {
+          "user": "打开搜索。",
+          "assistant": "好的，已打开搜索。"
+        },
+        {
+          "user": "找李博雅。",
+          "assistant": "好的，为您查找李博雅相关内容。"
+        },
+        {
+          "user": "我要看李博雅。",
+          "assistant": "好的，正在播放李博雅相关视频。"
+        },
+        {
+          "user": "下一条。",
+          "assistant": "好的，为您播放下一条。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈明德",
+      "date_time": "2026-06-25 17:10",
+      "QA_details": [
+        {
+          "user": "找益智视频。",
+          "assistant": "好的，为您推荐益智类视频。"
+        },
+        {
+          "user": "推荐动画片。",
+          "assistant": "好的，为您推荐动画片。"
+        },
+        {
+          "user": "找益智游戏。",
+          "assistant": "好的，为您查找益智游戏视频。"
+        },
+        {
+          "user": "找刘德华电影。",
+          "assistant": "好的，为您查找刘德华的电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈明德",
+      "date_time": "2026-06-27 20:00",
+      "QA_details": [
+        {
+          "user": "找成龙电影。",
+          "assistant": "好的，为您查找成龙的电影。"
+        },
+        {
+          "user": "打开影院。",
+          "assistant": "好的，为您打开影院专区。"
+        },
+        {
+          "user": "银龙影院。",
+          "assistant": "好的，已为您打开银龙影院。"
+        },
+        {
+          "user": "推荐电影。",
+          "assistant": "好的，为您推荐影院电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈素琴",
+      "date_time": "2026-06-26 18:20",
+      "QA_details": [
+        {
+          "user": "找荒岛求生动漫。",
+          "assistant": "好的，为您查找荒岛求生动漫。"
+        },
+        {
+          "user": "要手绘风格。",
+          "assistant": "好的，为您筛选手绘风格内容。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈素琴",
+      "date_time": "2026-06-27 20:25",
+      "QA_details": [
+        {
+          "user": "切到听歌。",
+          "assistant": "好的，已切到音乐。"
+        },
+        {
+          "user": "找纸飞机。",
+          "assistant": "好的，为您查找《纸飞机》。"
+        },
+        {
+          "user": "播放我的纸飞机呀，飞呀飞这首歌。",
+          "assistant": "好的，正在播放《纸飞机》。"
+        },
+        {
+          "user": "再来一遍。",
+          "assistant": "好的，为您重新播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "别放早些时候计划看的了，继续后来搜索的内容。",
+      "answer": "播放李博雅相关视频。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "后来我打开的影院叫什么？继续进去。",
+      "answer": "进入银龙影院。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "别继续早些时候的动漫了，放后来找的歌。",
+      "answer": "播放《纸飞机》。",
+      "category": "temporal"
+    }
+  ]
+}

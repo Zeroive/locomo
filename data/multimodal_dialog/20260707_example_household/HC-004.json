@@ -1,0 +1,236 @@
+{
+  "case_id": "HC-004",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 开放知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "嗯，我要看小智。"
+        ],
+        "memory": [
+          "用户想看益智类视频",
+          "用户请求推荐一些动画片",
+          "用户想看益智类游戏",
+          "用户喜欢成龙的电影和刘德华的电影",
+          "用户想看刘德华的电影"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我要看。"
+        ],
+        "memory": [
+          "用户要玩《蛋仔派对》",
+          "用户喜欢变形金刚电影",
+          "用户喜欢变形金刚音乐"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我想看音乐公主爱美丽。",
+          "我想看5分钟的电影。"
+        ],
+        "memory": [
+          "今天小明和小红去上学路上，小明迟到了，他回家去拿书包，到学校之后老师呃。",
+          "用户玩了切水果游戏"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐予安",
+      "date_time": "2026-06-22 15:10",
+      "QA_details": [
+        {
+          "user": "找益智视频。",
+          "assistant": "好的，为您推荐益智类视频。"
+        },
+        {
+          "user": "换动画片。",
+          "assistant": "好的，为您推荐动画片。"
+        },
+        {
+          "user": "找益智游戏视频。",
+          "assistant": "好的，为您查找益智游戏视频。"
+        },
+        {
+          "user": "找刘德华电影。",
+          "assistant": "好的，为您查找刘德华的电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "唐予安",
+      "date_time": "2026-06-26 19:00",
+      "QA_details": [
+        {
+          "user": "找成龙电影。",
+          "assistant": "好的，为您查找成龙的电影。"
+        },
+        {
+          "user": "换个儿童能看的。",
+          "assistant": "好的，为您推荐适合儿童观看的内容。"
+        },
+        {
+          "user": "找小智。",
+          "assistant": "好的，为您查找小智相关内容。"
+        },
+        {
+          "user": "嗯，我要看小智。",
+          "assistant": "好的，结合您常看益智和动画内容，正在播放小智相关动画。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐小川",
+      "date_time": "2026-06-23 18:25",
+      "QA_details": [
+        {
+          "user": "打开蛋仔派对。",
+          "assistant": "好的，已打开《蛋仔派对》相关内容。"
+        },
+        {
+          "user": "找变形金刚电影。",
+          "assistant": "好的，为您查找变形金刚电影。"
+        },
+        {
+          "user": "放变形金刚音乐。",
+          "assistant": "好的，正在播放变形金刚音乐。"
+        },
+        {
+          "user": "换一个热闹的。",
+          "assistant": "好的，为您切换更热闹的内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐小川",
+      "date_time": "2026-06-26 20:10",
+      "QA_details": [
+        {
+          "user": "我要看。",
+          "assistant": "好的，结合您看过《蛋仔派对》和变形金刚的记录，为您推荐变形金刚相关视频。"
+        },
+        {
+          "user": "不要游戏。",
+          "assistant": "好的，为您切换到影视内容。"
+        },
+        {
+          "user": "放电影。",
+          "assistant": "好的，为您播放变形金刚电影。"
+        },
+        {
+          "user": "下一部。",
+          "assistant": "好的，为您切换下一部。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "唐小鹿",
+      "date_time": "2026-06-24 17:45",
+      "QA_details": [
+        {
+          "user": "打开切水果。",
+          "assistant": "好的，已打开切水果相关内容。"
+        },
+        {
+          "user": "找上学路上的故事。",
+          "assistant": "好的，为您查找上学故事视频。"
+        },
+        {
+          "user": "找小明小红。",
+          "assistant": "好的，为您查找小明小红相关故事。"
+        },
+        {
+          "user": "换短一点的。",
+          "assistant": "好的，为您筛选短视频。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "唐小鹿",
+      "date_time": "2026-06-26 20:35",
+      "QA_details": [
+        {
+          "user": "我想看音乐公主爱美丽。",
+          "assistant": "好的，正在播放《音乐公主爱美丽》。"
+        },
+        {
+          "user": "换个短电影。",
+          "assistant": "好的，为您推荐短电影。"
+        },
+        {
+          "user": "我想看5分钟的电影。",
+          "assistant": "好的，结合您看过小明小红故事和切水果内容，为您筛选5分钟左右的短电影。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "按我喜欢的类型推荐动画。",
+      "answer": "推荐小智或益智动画。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "我无聊了，按我喜欢的来点能看的。",
+      "answer": "推荐变形金刚电影。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "按我刚才的兴趣推荐一个短点的。",
+      "answer": "推荐5分钟儿童短片。",
+      "category": "open_domain"
+    }
+  ]
+}

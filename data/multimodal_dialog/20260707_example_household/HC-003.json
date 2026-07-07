@@ -1,0 +1,230 @@
+{
+  "case_id": "HC-003",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我平时最喜欢用联通智家看电视连续剧。"
+        ],
+        "memory": [
+          "用户喜欢冯小刚导演的电影，尤其是《甲方乙方》，也喜欢看《美人心计》和冯小刚导演的作品"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想听小美满。"
+        ],
+        "memory": [
+          "用户播放了关于受伤动物的动画片",
+          "用户播放了三岁幼儿的动画片"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "嗯，我要看小智。"
+        ],
+        "memory": [
+          "用户播放了关于受伤动物的动画片",
+          "用户播放了三岁幼儿的动画片"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾清和",
+      "date_time": "2026-06-23 20:00",
+      "QA_details": [
+        {
+          "user": "找冯小刚电影。",
+          "assistant": "好的，为您查找冯小刚导演的电影。"
+        },
+        {
+          "user": "放甲方乙方。",
+          "assistant": "好的，正在播放《甲方乙方》。"
+        },
+        {
+          "user": "再找美人心计。",
+          "assistant": "好的，为您查找《美人心计》。"
+        },
+        {
+          "user": "先收藏。",
+          "assistant": "好的，已加入收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "顾清和",
+      "date_time": "2026-06-27 19:35",
+      "QA_details": [
+        {
+          "user": "打开联通智家。",
+          "assistant": "好的，已打开联通智家。"
+        },
+        {
+          "user": "看电视剧。",
+          "assistant": "好的，为您打开电视剧专区。"
+        },
+        {
+          "user": "找我平时看的连续剧。",
+          "assistant": "好的，为您查看最近播放的连续剧。"
+        },
+        {
+          "user": "我平时最喜欢用联通智家看电视连续剧。",
+          "assistant": "好的，为您在联通智家继续推荐电视连续剧。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "顾小满",
+      "date_time": "2026-06-24 16:20",
+      "QA_details": [
+        {
+          "user": "放受伤动物动画片。",
+          "assistant": "好的，正在播放受伤动物动画片。"
+        },
+        {
+          "user": "换一个三岁看的。",
+          "assistant": "好的，为您切换三岁幼儿动画片。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        },
+        {
+          "user": "暂停。",
+          "assistant": "好的，已暂停。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "顾小满",
+      "date_time": "2026-06-27 20:05",
+      "QA_details": [
+        {
+          "user": "不看动画了。",
+          "assistant": "好的，已退出动画片。"
+        },
+        {
+          "user": "放首歌。",
+          "assistant": "好的，为您播放歌曲。"
+        },
+        {
+          "user": "我想听小美满。",
+          "assistant": "好的，正在播放《小美满》。"
+        },
+        {
+          "user": "再放一遍。",
+          "assistant": "好的，为您重新播放《小美满》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾小禾",
+      "date_time": "2026-06-24 16:40",
+      "QA_details": [
+        {
+          "user": "找动物动画。",
+          "assistant": "好的，为您查找动物动画片。"
+        },
+        {
+          "user": "要受伤动物那个。",
+          "assistant": "好的，正在播放受伤动物动画片。"
+        },
+        {
+          "user": "换三岁看的。",
+          "assistant": "好的，为您切换三岁幼儿动画片。"
+        },
+        {
+          "user": "声音小点。",
+          "assistant": "好的，已调低音量。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "顾小禾",
+      "date_time": "2026-06-27 20:25",
+      "QA_details": [
+        {
+          "user": "打开动画片。",
+          "assistant": "好的，已打开动画片专区。"
+        },
+        {
+          "user": "找小智。",
+          "assistant": "好的，为您查找小智相关内容。"
+        },
+        {
+          "user": "嗯，我要看小智。",
+          "assistant": "好的，正在播放小智相关动画。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "用我平时常用的方式继续看剧。",
+      "answer": "用联通智家看连续剧。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "现在不看刚才的动画了，放我后来想听的歌。",
+      "answer": "播放《小美满》。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "继续放我后来要看的动画。",
+      "answer": "播放小智相关动画。",
+      "category": "temporal"
+    }
+  ]
+}

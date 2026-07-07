@@ -1,0 +1,232 @@
+{
+  "case_id": "HC-005",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要听无人之岛dj版，我要看刚才那。"
+        ],
+        "memory": [
+          "用户喜欢冯小刚导演的电影，尤其是《甲方乙方》，也喜欢看《美人心计》和冯小刚导演的作品"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "今天天气怎么样？然后三分钟后提醒我关火，然后我要看飞驰人生三。"
+        ],
+        "memory": [
+          "用户想看他的同学，提到同学是美人鱼",
+          "用户的同学是美人鱼",
+          "用户计划看莫斯科",
+          "用户喜欢观看《音乐公主爱美丽》"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "播放我的纸飞机呀，飞呀飞这首歌。"
+        ],
+        "memory": [
+          "用户播放了通通舞蹈",
+          "用户喜欢周杰伦的歌曲"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "宋知秋",
+      "date_time": "2026-06-22 20:30",
+      "QA_details": [
+        {
+          "user": "找冯小刚电影。",
+          "assistant": "好的，为您查找冯小刚导演的电影。"
+        },
+        {
+          "user": "播放甲方乙方。",
+          "assistant": "好的，正在播放《甲方乙方》。"
+        },
+        {
+          "user": "再找美人心计。",
+          "assistant": "好的，为您查找《美人心计》。"
+        },
+        {
+          "user": "先看这个。",
+          "assistant": "好的，正在播放《美人心计》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "宋知秋",
+      "date_time": "2026-06-26 21:00",
+      "QA_details": [
+        {
+          "user": "查看刚才看的。",
+          "assistant": "好的，为您打开最近观看记录。"
+        },
+        {
+          "user": "放刚才那。",
+          "assistant": "好的，继续播放刚才的视频。"
+        },
+        {
+          "user": "我要听无人之岛dj版。",
+          "assistant": "好的，正在播放《无人之岛》DJ版。"
+        },
+        {
+          "user": "我要听无人之岛dj版，我要看刚才那。",
+          "assistant": "好的，先为您播放《无人之岛》DJ版；如需视频，可继续切回刚才观看记录。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "宋小南",
+      "date_time": "2026-06-23 19:20",
+      "QA_details": [
+        {
+          "user": "找音乐公主爱美丽。",
+          "assistant": "好的，正在播放《音乐公主爱美丽》。"
+        },
+        {
+          "user": "找美人鱼同学。",
+          "assistant": "好的，为您查找美人鱼相关视频。"
+        },
+        {
+          "user": "找莫斯科。",
+          "assistant": "好的，为您查找莫斯科相关影片。"
+        },
+        {
+          "user": "换一个电影。",
+          "assistant": "好的，为您推荐电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "宋小南",
+      "date_time": "2026-06-26 18:05",
+      "QA_details": [
+        {
+          "user": "找飞驰人生。",
+          "assistant": "好的，为您查找《飞驰人生》系列。"
+        },
+        {
+          "user": "我要看飞驰人生三。",
+          "assistant": "好的，为您查找《飞驰人生3》。"
+        },
+        {
+          "user": "今天天气怎么样？",
+          "assistant": "我可以继续帮您找影视和音乐内容。"
+        },
+        {
+          "user": "今天天气怎么样？然后三分钟后提醒我关火，然后我要看飞驰人生三。",
+          "assistant": "我可以为您查找并播放《飞驰人生3》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "宋小北",
+      "date_time": "2026-06-24 17:50",
+      "QA_details": [
+        {
+          "user": "播放通通舞蹈。",
+          "assistant": "好的，正在播放通通舞蹈。"
+        },
+        {
+          "user": "换个舞蹈。",
+          "assistant": "好的，为您切换舞蹈视频。"
+        },
+        {
+          "user": "放周杰伦。",
+          "assistant": "好的，正在播放周杰伦的歌曲。"
+        },
+        {
+          "user": "下一首。",
+          "assistant": "好的，为您切换下一首。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "宋小北",
+      "date_time": "2026-06-26 19:40",
+      "QA_details": [
+        {
+          "user": "找纸飞机。",
+          "assistant": "好的，为您查找《纸飞机》。"
+        },
+        {
+          "user": "纸飞机呀飞呀飞。",
+          "assistant": "好的，正在为您匹配这首歌。"
+        },
+        {
+          "user": "播放我的纸飞机呀，飞呀飞这首歌。",
+          "assistant": "好的，正在播放《纸飞机》。"
+        },
+        {
+          "user": "再来一遍。",
+          "assistant": "好的，为您重新播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "先放我想听的DJ版，再切回刚才看的。",
+      "answer": "播《无人之岛》DJ版，再回到《美人心计》。",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "别管天气和提醒，放我刚说要看的电影。",
+      "answer": "播放《飞驰人生3》。",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "播放我刚才找的那首纸飞机。",
+      "answer": "播放《纸飞机》。",
+      "category": "adversarial"
+    }
+  ]
+}

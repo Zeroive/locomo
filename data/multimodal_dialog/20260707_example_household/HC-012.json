@@ -1,0 +1,242 @@
+{
+  "case_id": "HC-012",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 多跳能力",
+    "question_type": "多跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我想看刘德华的电影。"
+        ],
+        "memory": [
+          "用户喜欢手绘风格的荒岛求生动漫"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "watchthismovieonme.",
+          "iwanttowatchadisneymovieandanswermeinenglish.",
+          "iiwanttowatchamovieabouttheduringweatherer.",
+          "嗯，我想看即兴。"
+        ],
+        "memory": [
+          "用户想看他的同学，提到同学是美人鱼",
+          "用户的同学是美人鱼",
+          "用户计划看莫斯科",
+          "用户喜欢观看《音乐公主爱美丽》"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "帮我发一下我刚才要的那种视频，立即就下载集数要多。",
+          "帮我发一种视频，现在就能看的还是末日播放，二年级和三年级都可以看。"
+        ],
+        "memory": [
+          "用户喜欢看积木方块",
+          "用户的昵称是光头强",
+          "用户寻找光头强",
+          "用户找汪汪队",
+          "用户要观看名为嘟嘟的动画片",
+          "用户看了汪汪队",
+          "用户打开了《熊出没》",
+          "用户找寻《熊出没》中的熊大熊二"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许明澈",
+      "date_time": "2026-06-24 19:00",
+      "QA_details": [
+        {
+          "user": "找荒岛求生动漫。",
+          "assistant": "好的，为您查找荒岛求生动漫。"
+        },
+        {
+          "user": "要手绘风格的。",
+          "assistant": "好的，为您筛选手绘风格内容。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "许明澈",
+      "date_time": "2026-06-27 20:10",
+      "QA_details": [
+        {
+          "user": "找电影。",
+          "assistant": "好的，为您推荐电影。"
+        },
+        {
+          "user": "找刘德华。",
+          "assistant": "好的，为您查找刘德华相关电影。"
+        },
+        {
+          "user": "我想看刘德华的电影。",
+          "assistant": "好的，为您播放刘德华的电影。"
+        },
+        {
+          "user": "换一部。",
+          "assistant": "好的，为您切换另一部刘德华电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小森",
+      "date_time": "2026-06-25 17:35",
+      "QA_details": [
+        {
+          "user": "找美人鱼。",
+          "assistant": "好的，为您查找美人鱼相关视频。"
+        },
+        {
+          "user": "找同学那个。",
+          "assistant": "好的，为您继续查找美人鱼同学相关内容。"
+        },
+        {
+          "user": "找莫斯科。",
+          "assistant": "好的，为您查找莫斯科相关影片。"
+        },
+        {
+          "user": "放音乐公主爱美丽。",
+          "assistant": "好的，正在播放《音乐公主爱美丽》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小森",
+      "date_time": "2026-06-27 20:30",
+      "QA_details": [
+        {
+          "user": "watchthismovieonme.",
+          "assistant": "OK, playing this movie for you."
+        },
+        {
+          "user": "iwanttowatchadisneymovieandanswermeinenglish.",
+          "assistant": "OK, finding a Disney movie for you."
+        },
+        {
+          "user": "iiwanttowatchamovieabouttheduringweatherer.",
+          "assistant": "OK, finding weather-related movies for you."
+        },
+        {
+          "user": "嗯，我想看即兴。",
+          "assistant": "好的，为您查找《即兴》相关影片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰芝",
+      "date_time": "2026-06-26 18:20",
+      "QA_details": [
+        {
+          "user": "找积木方块。",
+          "assistant": "好的，为您查找积木方块视频。"
+        },
+        {
+          "user": "找光头强。",
+          "assistant": "好的，为您查找光头强相关内容。"
+        },
+        {
+          "user": "找汪汪队。",
+          "assistant": "好的，为您查找《汪汪队立大功》。"
+        },
+        {
+          "user": "打开熊出没。",
+          "assistant": "好的，正在播放《熊出没》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰芝",
+      "date_time": "2026-06-27 19:50",
+      "QA_details": [
+        {
+          "user": "找熊大熊二。",
+          "assistant": "好的，为您查找熊大熊二相关片段。"
+        },
+        {
+          "user": "找二三年级能看的。",
+          "assistant": "好的，为您筛选二年级和三年级可看的内容。"
+        },
+        {
+          "user": "要集数多的。",
+          "assistant": "好的，为您筛选集数较多的视频。"
+        },
+        {
+          "user": "帮我发一种视频，现在就能看的还是末日播放，二年级和三年级都可以看。",
+          "assistant": "好的，为您找现在能看的、适合二三年级的末日题材视频。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "先按我喜欢的动漫口味找，再换成我想看的明星电影。",
+      "answer": "先找手绘荒岛动漫，再播刘德华电影。",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "先按我喜欢的公主内容找，再用英文给我放迪士尼电影。",
+      "answer": "先找《音乐公主爱美丽》，再放 Disney movie。",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "按我常看的动画口味，找个二三年级能看的长视频。",
+      "answer": "推荐熊出没/汪汪队类长视频。",
+      "category": "multi_hop"
+    }
+  ]
+}

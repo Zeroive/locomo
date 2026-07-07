@@ -1,0 +1,236 @@
+{
+  "case_id": "HC-011",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 单跳能力",
+    "question_type": "单跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "播放爱丽丝梦游仙境电影四电视是啥玩意儿啊？看是谁？"
+        ],
+        "memory": [
+          "用户喜欢观看艾莎公主相关的电影",
+          "用户最近在看《芭比》，特别关注有裙子的第7集",
+          "用户特别喜欢《芭比》中有关裙子的场景，喜欢观看《芭比》电影",
+          "用户喜欢观看艾莎公主相关的电影，想看《白雪公主》和《艾莎公主》",
+          "用户喜欢第7号的芭比"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "你喜欢什么样的电影？",
+          "一个a点a点ny。查找记忆爱的播放内容。",
+          "查找a点a点one。我想听邓紫棋的歌。"
+        ],
+        "memory": [
+          "用户重新播放了动画片",
+          "用户让通通播放奥特曼",
+          "用户让通通播放中央一"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我想看古代片，免费的都是就是免费的，不是速看我就看免费的，完了那呃就是要现代的啊，嗯，不不要太老的。"
+        ],
+        "memory": [
+          "用户想看《兽王争锋》"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许明澈",
+      "date_time": "2026-06-24 18:40",
+      "QA_details": [
+        {
+          "user": "找艾莎公主电影。",
+          "assistant": "好的，为您查找艾莎公主相关电影。"
+        },
+        {
+          "user": "找白雪公主。",
+          "assistant": "好的，为您查找《白雪公主》。"
+        },
+        {
+          "user": "打开芭比。",
+          "assistant": "好的，为您打开《芭比》。"
+        },
+        {
+          "user": "看第7个芭比。",
+          "assistant": "好的，为您播放第7个《芭比》内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "许明澈",
+      "date_time": "2026-06-27 19:20",
+      "QA_details": [
+        {
+          "user": "找爱丽丝。",
+          "assistant": "好的，为您查找《爱丽丝梦游仙境》。"
+        },
+        {
+          "user": "播放电影版。",
+          "assistant": "好的，正在播放电影版《爱丽丝梦游仙境》。"
+        },
+        {
+          "user": "看是谁演的。",
+          "assistant": "好的，为您打开影片详情。"
+        },
+        {
+          "user": "播放爱丽丝梦游仙境电影四电视是啥玩意儿啊？看是谁？",
+          "assistant": "好的，为您播放《爱丽丝梦游仙境》电影，并打开影片信息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小森",
+      "date_time": "2026-06-25 17:00",
+      "QA_details": [
+        {
+          "user": "重新播放动画片。",
+          "assistant": "好的，已重新播放动画片。"
+        },
+        {
+          "user": "通通播放奥特曼。",
+          "assistant": "好的，正在播放《奥特曼》。"
+        },
+        {
+          "user": "换中央一。",
+          "assistant": "好的，正在播放中央一台。"
+        },
+        {
+          "user": "返回动画。",
+          "assistant": "好的，已返回动画片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小森",
+      "date_time": "2026-06-27 20:05",
+      "QA_details": [
+        {
+          "user": "你喜欢什么样的电影？",
+          "assistant": "我可以按您常看的动画和奥特曼推荐。"
+        },
+        {
+          "user": "查找记忆爱的播放内容。",
+          "assistant": "好的，为您查找相关播放内容。"
+        },
+        {
+          "user": "查找a点a点one。",
+          "assistant": "好的，为您查找相关内容。"
+        },
+        {
+          "user": "我想听邓紫棋的歌。",
+          "assistant": "好的，正在播放邓紫棋的歌曲。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰芝",
+      "date_time": "2026-06-26 18:30",
+      "QA_details": [
+        {
+          "user": "我要看兽王争锋。",
+          "assistant": "好的，正在播放《兽王争锋》。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        },
+        {
+          "user": "暂停一下。",
+          "assistant": "好的，已暂停。"
+        },
+        {
+          "user": "继续。",
+          "assistant": "好的，继续播放《兽王争锋》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰芝",
+      "date_time": "2026-06-27 20:30",
+      "QA_details": [
+        {
+          "user": "找古代片。",
+          "assistant": "好的，为您查找古装片。"
+        },
+        {
+          "user": "要免费的。",
+          "assistant": "好的，为您筛选免费内容。"
+        },
+        {
+          "user": "现代的别太老。",
+          "assistant": "好的，为您推荐较新的现代片。"
+        },
+        {
+          "user": "我想看古代片，免费的都是就是免费的，不是速看我就看免费的，完了那呃就是要现代的啊，嗯，不不要太老的。",
+          "assistant": "好的，为您推荐免费的古装片；如果看现代片，会选择不太老的内容。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续给我放我喜欢的童话公主类电影。",
+      "answer": "播放艾莎、白雪公主或芭比相关电影。",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "继续播放我之前让你放的动画。",
+      "answer": "播放《奥特曼》。",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "继续放我想看的动画。",
+      "answer": "播放《兽王争锋》。",
+      "category": "single_hop"
+    }
+  ]
+}

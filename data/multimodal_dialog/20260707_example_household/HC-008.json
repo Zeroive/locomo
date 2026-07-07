@@ -1,0 +1,237 @@
+{
+  "case_id": "HC-008",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "watchthismovieonme.",
+          "iwanttowatchadisneymovieandanswermeinenglish.",
+          "iiwanttowatchamovieabouttheduringweatherer.",
+          "嗯，我想看即兴。"
+        ],
+        "memory": [
+          "用户喜欢看末世题材的动画",
+          "用户要观看棋牌",
+          "用户喜欢末世题材的动画",
+          "用户要看直播",
+          "用户喜欢与棋牌相关的影视作品",
+          "用户要查看刚才看的内容"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我要看周末后宫。"
+        ],
+        "memory": [
+          "用户选择了《水浒传》",
+          "用户喜欢看幽默喜剧"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我想看刘德华的电影。"
+        ],
+        "memory": [
+          "用户播放了《飞驰人生3》"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周景明",
+      "date_time": "2026-06-24 19:00",
+      "QA_details": [
+        {
+          "user": "找末世动画。",
+          "assistant": "好的，为您推荐末世题材动画。"
+        },
+        {
+          "user": "换个棋牌的。",
+          "assistant": "好的，为您查找棋牌相关影视。"
+        },
+        {
+          "user": "我要看直播。",
+          "assistant": "好的，为您打开直播。"
+        },
+        {
+          "user": "查看刚才看的。",
+          "assistant": "好的，为您打开最近观看记录。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "周景明",
+      "date_time": "2026-06-27 20:20",
+      "QA_details": [
+        {
+          "user": "watchthismovieonme.",
+          "assistant": "OK, playing this movie for you."
+        },
+        {
+          "user": "iwanttowatchadisneymovieandanswermeinenglish.",
+          "assistant": "OK, finding a Disney movie for you."
+        },
+        {
+          "user": "iiwanttowatchamovieabouttheduringweatherer.",
+          "assistant": "OK, finding weather-related movies for you."
+        },
+        {
+          "user": "嗯，我想看即兴。",
+          "assistant": "好的，为您查找《即兴》相关影片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "江映雪",
+      "date_time": "2026-06-25 18:15",
+      "QA_details": [
+        {
+          "user": "播放水浒传。",
+          "assistant": "好的，正在播放《水浒传》。"
+        },
+        {
+          "user": "换个轻松的。",
+          "assistant": "好的，为您切换轻松内容。"
+        },
+        {
+          "user": "找幽默喜剧。",
+          "assistant": "好的，为您推荐幽默喜剧。"
+        },
+        {
+          "user": "播放这个喜剧。",
+          "assistant": "好的，正在播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "江映雪",
+      "date_time": "2026-06-27 20:45",
+      "QA_details": [
+        {
+          "user": "打开电视剧。",
+          "assistant": "好的，为您打开电视剧专区。"
+        },
+        {
+          "user": "找周末后宫。",
+          "assistant": "好的，为您查找《周末后宫》。"
+        },
+        {
+          "user": "我要看周末后宫。",
+          "assistant": "好的，正在播放《周末后宫》。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "江月琴",
+      "date_time": "2026-06-26 20:00",
+      "QA_details": [
+        {
+          "user": "播放飞驰人生3。",
+          "assistant": "好的，正在播放《飞驰人生3》。"
+        },
+        {
+          "user": "暂停一下。",
+          "assistant": "好的，已暂停。"
+        },
+        {
+          "user": "继续。",
+          "assistant": "好的，继续播放《飞驰人生3》。"
+        },
+        {
+          "user": "看完了。",
+          "assistant": "好的，为您返回电影推荐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "江月琴",
+      "date_time": "2026-06-27 21:05",
+      "QA_details": [
+        {
+          "user": "找电影。",
+          "assistant": "好的，为您推荐电影。"
+        },
+        {
+          "user": "找刘德华。",
+          "assistant": "好的，为您查找刘德华相关电影。"
+        },
+        {
+          "user": "我想看刘德华的电影。",
+          "assistant": "好的，为您播放刘德华的电影。"
+        },
+        {
+          "user": "换一部。",
+          "assistant": "好的，为您切换另一部刘德华电影。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "先打开我刚才看的，再按后来想看的找片。",
+      "answer": "查看历史后找《即兴》。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "后来我不看水浒传了，想看什么？",
+      "answer": "看《周末后宫》。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "看完刚才那部电影后，给我推荐后来想看的。",
+      "answer": "推荐刘德华电影。",
+      "category": "temporal"
+    }
+  ]
+}

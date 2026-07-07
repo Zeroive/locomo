@@ -1,0 +1,234 @@
+{
+  "case_id": "HC-014",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 开放知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要看周末后宫。"
+        ],
+        "memory": [
+          "用户想看益智类视频",
+          "用户请求推荐一些动画片",
+          "用户想看益智类游戏",
+          "用户喜欢成龙的电影和刘德华的电影",
+          "用户想看刘德华的电影"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想看兽王争锋，不想看兽王争锋。"
+        ],
+        "memory": [
+          "用户播放了关于受伤动物的动画片",
+          "用户播放了三岁幼儿的动画片"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "帮我打开除诸葛九九之极限挑战，剩下的诸葛九九。"
+        ],
+        "memory": [
+          "用户使用快手看小说",
+          "用户用快手看小说"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许明澈",
+      "date_time": "2026-06-24 17:20",
+      "QA_details": [
+        {
+          "user": "找益智视频。",
+          "assistant": "好的，为您推荐益智类视频。"
+        },
+        {
+          "user": "推荐动画片。",
+          "assistant": "好的，为您推荐动画片。"
+        },
+        {
+          "user": "找益智游戏。",
+          "assistant": "好的，为您查找益智游戏视频。"
+        },
+        {
+          "user": "找刘德华电影。",
+          "assistant": "好的，为您查找刘德华的电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "许明澈",
+      "date_time": "2026-06-27 19:10",
+      "QA_details": [
+        {
+          "user": "找成龙电影。",
+          "assistant": "好的，为您查找成龙的电影。"
+        },
+        {
+          "user": "打开电视剧。",
+          "assistant": "好的，已打开电视剧专区。"
+        },
+        {
+          "user": "找周末后宫。",
+          "assistant": "好的，为您查找《周末后宫》。"
+        },
+        {
+          "user": "我要看周末后宫。",
+          "assistant": "好的，正在播放《周末后宫》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小森",
+      "date_time": "2026-06-25 16:30",
+      "QA_details": [
+        {
+          "user": "放受伤动物动画片。",
+          "assistant": "好的，正在播放受伤动物动画片。"
+        },
+        {
+          "user": "换三岁看的。",
+          "assistant": "好的，为您切换三岁幼儿动画片。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        },
+        {
+          "user": "暂停。",
+          "assistant": "好的，已暂停。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小森",
+      "date_time": "2026-06-27 19:35",
+      "QA_details": [
+        {
+          "user": "找兽王争锋。",
+          "assistant": "好的，为您查找《兽王争锋》。"
+        },
+        {
+          "user": "播放兽王争锋。",
+          "assistant": "好的，正在播放《兽王争锋》。"
+        },
+        {
+          "user": "不看了。",
+          "assistant": "好的，已退出播放。"
+        },
+        {
+          "user": "我想看兽王争锋，不想看兽王争锋。",
+          "assistant": "您前后指令冲突，我先不播放《兽王争锋》，可为您推荐其他动画。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰芝",
+      "date_time": "2026-06-26 15:40",
+      "QA_details": [
+        {
+          "user": "打开快手。",
+          "assistant": "好的，已打开快手。"
+        },
+        {
+          "user": "看小说。",
+          "assistant": "好的，为您打开小说内容。"
+        },
+        {
+          "user": "换一本。",
+          "assistant": "好的，为您切换下一本。"
+        },
+        {
+          "user": "继续看。",
+          "assistant": "好的，继续为您播放小说内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰芝",
+      "date_time": "2026-06-27 20:00",
+      "QA_details": [
+        {
+          "user": "找诸葛九九。",
+          "assistant": "好的，为您查找《诸葛九九》。"
+        },
+        {
+          "user": "找极限挑战。",
+          "assistant": "好的，为您查找极限挑战相关内容。"
+        },
+        {
+          "user": "不要极限挑战。",
+          "assistant": "好的，已排除极限挑战相关内容。"
+        },
+        {
+          "user": "帮我打开除诸葛九九之极限挑战，剩下的诸葛九九。",
+          "assistant": "好的，为您打开《诸葛九九》中除《极限挑战》以外的内容。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "按我喜欢的影视口味推荐点能看的。",
+      "answer": "推荐刘德华或成龙电影。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "按我之前看的幼儿动画，换个别的动画。",
+      "answer": "推荐三岁幼儿动画。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "别放我平时看的小说了，打开我刚找的那个系列。",
+      "answer": "打开《诸葛九九》。",
+      "category": "open_domain"
+    }
+  ]
+}

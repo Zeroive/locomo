@@ -1,0 +1,233 @@
+{
+  "case_id": "HC-025",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要听，不要唐金属狂人。"
+        ],
+        "memory": [
+          "用户的名字是孙楠"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "播放宝宝巴士。"
+        ],
+        "memory": [
+          "用户播放了吃播视频",
+          "用户播放了免费的搞笑视频",
+          "用户播放了搞笑视频",
+          "用户播放了快手",
+          "用户播放了通通听书",
+          "用户播放了吃播的视频"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "播放宝宝巴士。"
+        ],
+        "memory": [
+          "用户在电视上观看直播"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陈予安",
+      "date_time": "2026-06-24 18:30",
+      "QA_details": [
+        {
+          "user": "我是孙楠。",
+          "assistant": "好的，为您打开音乐推荐。"
+        },
+        {
+          "user": "放首歌。",
+          "assistant": "好的，为您播放歌曲。"
+        },
+        {
+          "user": "换一首。",
+          "assistant": "好的，为您切换下一首。"
+        },
+        {
+          "user": "暂停。",
+          "assistant": "好的，已暂停。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陈予安",
+      "date_time": "2026-06-27 19:20",
+      "QA_details": [
+        {
+          "user": "继续听歌。",
+          "assistant": "好的，继续为您播放歌曲。"
+        },
+        {
+          "user": "不要金属狂人。",
+          "assistant": "好的，已避开《金属狂人》。"
+        },
+        {
+          "user": "我要听，不要唐金属狂人。",
+          "assistant": "好的，为您播放其他歌曲，不播放《金属狂人》。"
+        },
+        {
+          "user": "再换一首。",
+          "assistant": "好的，为您切换下一首。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈明德",
+      "date_time": "2026-06-25 17:10",
+      "QA_details": [
+        {
+          "user": "打开快手。",
+          "assistant": "好的，已打开快手。"
+        },
+        {
+          "user": "播放吃播。",
+          "assistant": "好的，正在播放吃播视频。"
+        },
+        {
+          "user": "换搞笑视频。",
+          "assistant": "好的，为您切换搞笑视频。"
+        },
+        {
+          "user": "要免费的。",
+          "assistant": "好的，为您筛选免费搞笑视频。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈明德",
+      "date_time": "2026-06-27 20:00",
+      "QA_details": [
+        {
+          "user": "打开通通听书。",
+          "assistant": "好的，已打开通通听书。"
+        },
+        {
+          "user": "不看吃播了。",
+          "assistant": "好的，已退出吃播视频。"
+        },
+        {
+          "user": "播放宝宝巴士。",
+          "assistant": "好的，正在播放《宝宝巴士》。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈素琴",
+      "date_time": "2026-06-26 19:00",
+      "QA_details": [
+        {
+          "user": "打开直播。",
+          "assistant": "好的，已打开电视直播。"
+        },
+        {
+          "user": "换台。",
+          "assistant": "好的，为您切换频道。"
+        },
+        {
+          "user": "声音大点。",
+          "assistant": "好的，已调高音量。"
+        },
+        {
+          "user": "返回直播。",
+          "assistant": "好的，已返回直播。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈素琴",
+      "date_time": "2026-06-27 20:30",
+      "QA_details": [
+        {
+          "user": "不看直播了。",
+          "assistant": "好的，已退出直播。"
+        },
+        {
+          "user": "找儿童动画。",
+          "assistant": "好的，为您推荐儿童动画。"
+        },
+        {
+          "user": "播放宝宝巴士。",
+          "assistant": "好的，正在播放《宝宝巴士》。"
+        },
+        {
+          "user": "声音小点。",
+          "assistant": "好的，已调低音量。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "记住我的听歌要求，别放我排除的那首。",
+      "answer": "播放非《金属狂人》歌曲。",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "别按我之前看的吃播搞笑，放我刚点的动画。",
+      "answer": "播放《宝宝巴士》。",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "别继续直播了，放我刚找的儿童动画。",
+      "answer": "播放《宝宝巴士》。",
+      "category": "adversarial"
+    }
+  ]
+}

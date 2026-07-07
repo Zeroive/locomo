@@ -1,0 +1,228 @@
+{
+  "case_id": "HC-013",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 1个孩子 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "嗯，我要看小智。"
+        ],
+        "memory": [
+          "用户在观看电视剧《最后的较量》第8集"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "帮我播放一首放空事情。"
+        ],
+        "memory": [
+          "用户播放了《飞驰人生3》"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我想听我的名字叫郝有才。"
+        ],
+        "memory": [
+          "用户喜欢手绘风格的荒岛求生动漫"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许明澈",
+      "date_time": "2026-06-25 20:00",
+      "QA_details": [
+        {
+          "user": "继续最后的较量第8集。",
+          "assistant": "好的，继续播放《最后的较量》第8集。"
+        },
+        {
+          "user": "快进一点。",
+          "assistant": "好的，已为您快进。"
+        },
+        {
+          "user": "暂停。",
+          "assistant": "好的，已暂停。"
+        },
+        {
+          "user": "先退出。",
+          "assistant": "好的，已退出播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "许明澈",
+      "date_time": "2026-06-27 19:35",
+      "QA_details": [
+        {
+          "user": "打开动画。",
+          "assistant": "好的，已打开动画片专区。"
+        },
+        {
+          "user": "找小智。",
+          "assistant": "好的，为您查找小智相关内容。"
+        },
+        {
+          "user": "嗯，我要看小智。",
+          "assistant": "好的，正在播放小智相关动画。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小森",
+      "date_time": "2026-06-26 19:20",
+      "QA_details": [
+        {
+          "user": "播放飞驰人生3。",
+          "assistant": "好的，正在播放《飞驰人生3》。"
+        },
+        {
+          "user": "声音大一点。",
+          "assistant": "好的，已调高音量。"
+        },
+        {
+          "user": "暂停一下。",
+          "assistant": "好的，已暂停。"
+        },
+        {
+          "user": "继续看。",
+          "assistant": "好的，继续播放《飞驰人生3》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许小森",
+      "date_time": "2026-06-27 20:05",
+      "QA_details": [
+        {
+          "user": "不看电影了。",
+          "assistant": "好的，已退出电影。"
+        },
+        {
+          "user": "放首歌。",
+          "assistant": "好的，为您播放歌曲。"
+        },
+        {
+          "user": "帮我播放一首放空事情。",
+          "assistant": "好的，为您播放《放空事情》。"
+        },
+        {
+          "user": "循环播放。",
+          "assistant": "好的，已开启循环播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰芝",
+      "date_time": "2026-06-26 18:10",
+      "QA_details": [
+        {
+          "user": "找荒岛求生动漫。",
+          "assistant": "好的，为您查找荒岛求生动漫。"
+        },
+        {
+          "user": "要手绘的。",
+          "assistant": "好的，为您筛选手绘风格内容。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "许兰芝",
+      "date_time": "2026-06-27 20:30",
+      "QA_details": [
+        {
+          "user": "换成听歌。",
+          "assistant": "好的，为您切换到音乐。"
+        },
+        {
+          "user": "找郝有才。",
+          "assistant": "好的，为您查找郝有才相关歌曲。"
+        },
+        {
+          "user": "我想听我的名字叫郝有才。",
+          "assistant": "好的，正在播放《我的名字叫郝有才》。"
+        },
+        {
+          "user": "再放一遍。",
+          "assistant": "好的，为您重新播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "别放早些时候的电视剧了，继续我后来要看的动画。",
+      "answer": "播放小智相关动画。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "看完刚才那部电影后，放我后来想听的歌。",
+      "answer": "播放《放空事情》。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "别继续早些时候的动漫了，放我后来想听的歌。",
+      "answer": "播放《我的名字叫郝有才》。",
+      "category": "temporal"
+    }
+  ]
+}

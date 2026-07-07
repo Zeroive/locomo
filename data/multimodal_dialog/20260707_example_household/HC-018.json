@@ -1,0 +1,231 @@
+{
+  "case_id": "HC-018",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "双亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "啊，给我推荐点最近啊比较火的综艺，然后那个演员都是谁？"
+        ],
+        "memory": [
+          "用户喜欢周杰伦的歌"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "播放我的楼兰。"
+        ],
+        "memory": [
+          "白色的遥控器被梁雨欣在2026-06-23拿走了",
+          "用户关闭了电视机播放的世界杯",
+          "2026-06-23梁雨欣拿来了白遥控器"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我要听，不要唐金属狂人。"
+        ],
+        "memory": [
+          "用户想看熊出没",
+          "用户要观看爆笑吃播"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆景行",
+      "date_time": "2026-06-25 19:00",
+      "QA_details": [
+        {
+          "user": "放周杰伦。",
+          "assistant": "好的，正在播放周杰伦的歌曲。"
+        },
+        {
+          "user": "换一首。",
+          "assistant": "好的，为您切换下一首。"
+        },
+        {
+          "user": "来个现场版。",
+          "assistant": "好的，为您查找周杰伦现场版歌曲。"
+        },
+        {
+          "user": "暂停。",
+          "assistant": "好的，已暂停。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陆景行",
+      "date_time": "2026-06-27 21:00",
+      "QA_details": [
+        {
+          "user": "打开综艺。",
+          "assistant": "好的，已打开综艺专区。"
+        },
+        {
+          "user": "找最近火的。",
+          "assistant": "好的，为您推荐最近热播综艺。"
+        },
+        {
+          "user": "看演员。",
+          "assistant": "好的，为您打开节目嘉宾和演员信息。"
+        },
+        {
+          "user": "啊，给我推荐点最近啊比较火的综艺，然后那个演员都是谁？",
+          "assistant": "好的，为您推荐最近热播综艺，并展示嘉宾和演员信息。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许棠音",
+      "date_time": "2026-06-23 20:00",
+      "QA_details": [
+        {
+          "user": "关掉世界杯。",
+          "assistant": "好的，已关闭世界杯播放。"
+        },
+        {
+          "user": "看下遥控器最近播的。",
+          "assistant": "好的，为您查看最近播放记录。"
+        },
+        {
+          "user": "白遥控器拿来了。",
+          "assistant": "好的，已切回电视播放界面。"
+        },
+        {
+          "user": "返回音乐。",
+          "assistant": "好的，已打开音乐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "许棠音",
+      "date_time": "2026-06-27 20:30",
+      "QA_details": [
+        {
+          "user": "找我的楼兰。",
+          "assistant": "好的，为您查找《我的楼兰》。"
+        },
+        {
+          "user": "播放我的楼兰。",
+          "assistant": "好的，正在播放《我的楼兰》。"
+        },
+        {
+          "user": "声音大一点。",
+          "assistant": "好的，已调高音量。"
+        },
+        {
+          "user": "再放一遍。",
+          "assistant": "好的，为您重新播放《我的楼兰》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆砚",
+      "date_time": "2026-06-26 17:20",
+      "QA_details": [
+        {
+          "user": "我要看熊出没。",
+          "assistant": "好的，正在播放《熊出没》。"
+        },
+        {
+          "user": "换爆笑吃播。",
+          "assistant": "好的，为您切换爆笑吃播视频。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        },
+        {
+          "user": "暂停。",
+          "assistant": "好的，已暂停。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陆砚",
+      "date_time": "2026-06-27 19:40",
+      "QA_details": [
+        {
+          "user": "切到听歌。",
+          "assistant": "好的，已切到音乐。"
+        },
+        {
+          "user": "不要金属狂人。",
+          "assistant": "好的，已避开《金属狂人》。"
+        },
+        {
+          "user": "我要听，不要唐金属狂人。",
+          "assistant": "好的，为您播放其他歌曲，不播放《金属狂人》。"
+        },
+        {
+          "user": "换一首。",
+          "assistant": "好的，为您切换下一首。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "别放我之前喜欢的歌了，按后来看的分类推荐。",
+      "answer": "推荐热播综艺。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "别管前面那个频道记录，放我后来找的歌。",
+      "answer": "播放《我的楼兰》。",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "别继续刚才看的视频了，按后来要求听歌。",
+      "answer": "播放非《金属狂人》歌曲。",
+      "category": "temporal"
+    }
+  ]
+}

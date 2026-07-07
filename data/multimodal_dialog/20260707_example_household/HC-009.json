@@ -1,0 +1,234 @@
+{
+  "case_id": "HC-009",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "夫妻 + 1位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 开放知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "你喜欢什么样的电影？",
+          "一个a点a点ny。查找记忆爱的播放内容。",
+          "查找a点a点one。我想听邓紫棋的歌。"
+        ],
+        "memory": [
+          "用户喜欢看《美人心计》",
+          "用户喜欢看冯小刚导演的电影"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我现在比较无聊，想随便看点啥。"
+        ],
+        "memory": [
+          "用户喜欢周杰伦的歌"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我要听多播小品一家人。",
+          "导航小影院。",
+          "播放小品一家人，咱们把水果吃了，最爱炖给你妈妈喝。"
+        ],
+        "memory": [
+          "用户喜欢看《美人心计》",
+          "用户喜欢看冯小刚导演的电影"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_IN_LAW_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_IN_LAW_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周景明",
+      "date_time": "2026-06-25 19:10",
+      "QA_details": [
+        {
+          "user": "找美人心计。",
+          "assistant": "好的，为您查找《美人心计》。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放《美人心计》。"
+        },
+        {
+          "user": "找冯小刚电影。",
+          "assistant": "好的，为您查找冯小刚导演的电影。"
+        },
+        {
+          "user": "推荐一部。",
+          "assistant": "好的，为您推荐冯小刚导演的电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "周景明",
+      "date_time": "2026-06-27 20:00",
+      "QA_details": [
+        {
+          "user": "你喜欢什么样的电影？",
+          "assistant": "我可以按您的偏好推荐冯小刚导演作品或古装剧。"
+        },
+        {
+          "user": "查找记忆爱的播放内容。",
+          "assistant": "好的，为您查找相关播放内容。"
+        },
+        {
+          "user": "查找a点a点one。",
+          "assistant": "好的，为您查找相关内容。"
+        },
+        {
+          "user": "我想听邓紫棋的歌。",
+          "assistant": "好的，正在播放邓紫棋的歌曲。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "江映雪",
+      "date_time": "2026-06-26 17:40",
+      "QA_details": [
+        {
+          "user": "放周杰伦。",
+          "assistant": "好的，正在播放周杰伦的歌曲。"
+        },
+        {
+          "user": "换一首。",
+          "assistant": "好的，为您切换下一首。"
+        },
+        {
+          "user": "来个轻松的。",
+          "assistant": "好的，为您播放轻松歌曲。"
+        },
+        {
+          "user": "暂停。",
+          "assistant": "好的，已暂停。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "江映雪",
+      "date_time": "2026-06-27 21:00",
+      "QA_details": [
+        {
+          "user": "我现在比较无聊。",
+          "assistant": "好的，为您推荐轻松内容。"
+        },
+        {
+          "user": "随便看点啥。",
+          "assistant": "好的，为您推荐电影和综艺。"
+        },
+        {
+          "user": "别太闷。",
+          "assistant": "好的，为您换成轻松娱乐内容。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "江月琴",
+      "date_time": "2026-06-26 20:20",
+      "QA_details": [
+        {
+          "user": "找美人心计。",
+          "assistant": "好的，为您查找《美人心计》。"
+        },
+        {
+          "user": "找冯小刚电影。",
+          "assistant": "好的，为您查找冯小刚导演的电影。"
+        },
+        {
+          "user": "换个小品。",
+          "assistant": "好的，为您推荐小品内容。"
+        },
+        {
+          "user": "打开小影院。",
+          "assistant": "好的，已打开小影院。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "江月琴",
+      "date_time": "2026-06-27 19:45",
+      "QA_details": [
+        {
+          "user": "我要听多播小品一家人。",
+          "assistant": "好的，为您查找《小品一家人》。"
+        },
+        {
+          "user": "导航小影院。",
+          "assistant": "好的，已进入小影院。"
+        },
+        {
+          "user": "播放小品一家人。",
+          "assistant": "好的，正在播放《小品一家人》。"
+        },
+        {
+          "user": "继续这个。",
+          "assistant": "好的，继续播放《小品一家人》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "按我喜欢的影视口味推荐一个。",
+      "answer": "推荐《美人心计》或冯小刚电影。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "我无聊了，按我喜欢的来点内容。",
+      "answer": "播放周杰伦或轻松综艺。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "我不看之前那些电影了，换成我刚找的小品。",
+      "answer": "播放《小品一家人》。",
+      "category": "open_domain"
+    }
+  ]
+}

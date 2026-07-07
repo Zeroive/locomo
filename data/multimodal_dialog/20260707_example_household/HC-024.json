@@ -1,0 +1,237 @@
+{
+  "case_id": "HC-024",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2位祖辈",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 开放知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我想看音乐公主爱美丽。",
+          "我想看5分钟的电影。"
+        ],
+        "memory": [
+          "用户播放了第5个",
+          "用户播放了小品《一家人》",
+          "用户播放了小品一家人",
+          "用户播放了第9个内容",
+          "用户喜欢观看小品《一家人》",
+          "用户要求播放小品",
+          "用户播放了第7个",
+          "用户播放了第9个"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "播放成都。",
+          "换一首成都。"
+        ],
+        "memory": [
+          "用户喜欢听《金属狂人》"
+        ]
+      },
+      "person_003": {
+        "question": [
+          "我要听，不要唐金属狂人。"
+        ],
+        "memory": [
+          "用户表示不喜欢需要花钱的小马宝莉，并请求寻找不花钱的小马宝莉"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陈予安",
+      "date_time": "2026-06-24 19:10",
+      "QA_details": [
+        {
+          "user": "播放小品。",
+          "assistant": "好的，为您推荐小品内容。"
+        },
+        {
+          "user": "播放小品一家人。",
+          "assistant": "好的，正在播放《小品一家人》。"
+        },
+        {
+          "user": "播放第5个。",
+          "assistant": "好的，正在播放第5个内容。"
+        },
+        {
+          "user": "换第9个。",
+          "assistant": "好的，正在播放第9个内容。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陈予安",
+      "date_time": "2026-06-27 20:10",
+      "QA_details": [
+        {
+          "user": "我想看音乐公主爱美丽。",
+          "assistant": "好的，正在播放《音乐公主爱美丽》。"
+        },
+        {
+          "user": "换个短电影。",
+          "assistant": "好的，为您推荐短电影。"
+        },
+        {
+          "user": "我想看5分钟的电影。",
+          "assistant": "好的，为您筛选5分钟左右的电影。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "好的，正在播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈明德",
+      "date_time": "2026-06-25 18:40",
+      "QA_details": [
+        {
+          "user": "播放金属狂人。",
+          "assistant": "好的，正在播放《金属狂人》。"
+        },
+        {
+          "user": "声音大点。",
+          "assistant": "好的，已调高音量。"
+        },
+        {
+          "user": "换首同类的。",
+          "assistant": "好的，为您切换相近风格歌曲。"
+        },
+        {
+          "user": "暂停一下。",
+          "assistant": "好的，已暂停。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陈明德",
+      "date_time": "2026-06-27 19:30",
+      "QA_details": [
+        {
+          "user": "放首民谣。",
+          "assistant": "好的，为您播放民谣歌曲。"
+        },
+        {
+          "user": "播放成都。",
+          "assistant": "好的，正在播放《成都》。"
+        },
+        {
+          "user": "换一首成都。",
+          "assistant": "好的，为您切换另一个版本的《成都》。"
+        },
+        {
+          "user": "循环播放。",
+          "assistant": "好的，已开启循环播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈素琴",
+      "date_time": "2026-06-26 17:20",
+      "QA_details": [
+        {
+          "user": "找小马宝莉。",
+          "assistant": "好的，为您查找《小马宝莉》。"
+        },
+        {
+          "user": "不要花钱的。",
+          "assistant": "好的，为您筛选免费内容。"
+        },
+        {
+          "user": "播放免费的。",
+          "assistant": "好的，正在播放免费的《小马宝莉》。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "好的，为您播放下一集。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "陈素琴",
+      "date_time": "2026-06-27 20:20",
+      "QA_details": [
+        {
+          "user": "切到听歌。",
+          "assistant": "好的，已切到音乐。"
+        },
+        {
+          "user": "不要金属狂人。",
+          "assistant": "好的，已避开《金属狂人》。"
+        },
+        {
+          "user": "我要听，不要唐金属狂人。",
+          "assistant": "好的，为您播放其他歌曲，不播放《金属狂人》。"
+        },
+        {
+          "user": "换一首。",
+          "assistant": "好的，为您切换下一首。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "不看之前的小品了，按我后来想看的推荐短片。",
+      "answer": "推荐《音乐公主爱美丽》或5分钟短片。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "按我听歌口味，从金属换成民谣。",
+      "answer": "播放《成都》。",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_003",
+      "question": "别放我不要的歌，按我现在想听的来。",
+      "answer": "播放非《金属狂人》歌曲。",
+      "category": "open_domain"
+    }
+  ]
+}
