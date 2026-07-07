@@ -50,6 +50,21 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
     }}
 }}
 
+## 示例
+以下是符合要求的输出示例：
+
+{{
+    "scenario_should_happen": true,
+    "scenario_time": "2026-06-24T12:57:00+08:00",
+    "skip_reason": "",
+    "household_state_description": "2026-06-24 12:57，李芳（person_002）正在客厅准备离家上班，张伟（person_001）此时正在卧室休息。客厅灯（light_living_room）、电视（tv_living_room）、空调（ac_living_room）和窗帘（curtain_living_room）均开启，光线明亮；卧室灯（light_bedroom）关闭，空调（ac_bedroom）保持舒适温度，环境安静。李芳在玄关处整理随身物品，玄关灯（light_hallway）尚未打开。张伟尚未起床，仍在卧室休息。",
+    "device_event_description": "李芳关闭客厅灯（light_living_room）、关闭客厅电视（tv_living_room）、关闭客厅空调（ac_living_room），关闭卧室灯（light_bedroom）、关闭卧室空调（ac_bedroom），根据日晒情况关闭客厅窗帘（curtain_living_room），经过玄关时打开玄关灯（light_hallway），智能音箱（smart_speaker）播报通勤时间和天气提醒，开门（door_main）出门，出门后落锁（door_main）。",
+    "sampled_context": {{
+        "persons": ["person_002", "person_001"],
+        "devices": ["light_living_room", "tv_living_room", "ac_living_room", "light_bedroom", "ac_bedroom", "curtain_living_room", "light_hallway", "door_main", "smart_speaker"]
+    }}
+}}
+
 ## 重要约束
 - 输出必须是合法的 JSON 格式
 - scenario_should_happen 必须是布尔值
