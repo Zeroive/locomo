@@ -77,19 +77,19 @@
       "QA_details": [
         {
           "user": "找闯天涯。",
-          "assistant": "好的，为您查找《闯天涯》相关内容。"
+          "assistant": "为您查找《闯天涯》相关内容。"
         },
         {
           "user": "播放这个。",
-          "assistant": "好的，正在播放。"
+          "assistant": "正在播放。"
         },
         {
           "user": "暂停一下。",
-          "assistant": "好的，已暂停。"
+          "assistant": "已暂停。"
         },
         {
           "user": "继续。",
-          "assistant": "好的，继续播放。"
+          "assistant": "继续播放。"
         }
       ]
     },
@@ -100,19 +100,19 @@
       "QA_details": [
         {
           "user": "打开搜索。",
-          "assistant": "好的，已打开搜索。"
+          "assistant": "已打开搜索。"
         },
         {
           "user": "找李博雅。",
-          "assistant": "好的，为您查找李博雅相关内容。"
+          "assistant": "为您查找李博雅相关内容。"
         },
         {
           "user": "我要看李博雅。",
-          "assistant": "好的，正在播放李博雅相关视频。"
+          "assistant": "正在播放李博雅相关视频。"
         },
         {
           "user": "下一条。",
-          "assistant": "好的，为您播放下一条。"
+          "assistant": "为您播放下一条。"
         }
       ]
     },
@@ -123,19 +123,19 @@
       "QA_details": [
         {
           "user": "找益智视频。",
-          "assistant": "好的，为您推荐益智类视频。"
+          "assistant": "为您推荐益智类视频。"
         },
         {
           "user": "推荐动画片。",
-          "assistant": "好的，为您推荐动画片。"
+          "assistant": "为您推荐动画片。"
         },
         {
           "user": "找益智游戏。",
-          "assistant": "好的，为您查找益智游戏视频。"
+          "assistant": "为您查找益智游戏视频。"
         },
         {
           "user": "找刘德华电影。",
-          "assistant": "好的，为您查找刘德华的电影。"
+          "assistant": "为您查找刘德华的电影。"
         }
       ]
     },
@@ -146,19 +146,19 @@
       "QA_details": [
         {
           "user": "找成龙电影。",
-          "assistant": "好的，为您查找成龙的电影。"
+          "assistant": "为您查找成龙的电影。"
         },
         {
           "user": "打开影院。",
-          "assistant": "好的，为您打开影院专区。"
+          "assistant": "为您打开影院专区。"
         },
         {
           "user": "银龙影院。",
-          "assistant": "好的，已为您打开银龙影院。"
+          "assistant": "已为您打开银龙影院。"
         },
         {
           "user": "推荐电影。",
-          "assistant": "好的，为您推荐影院电影。"
+          "assistant": "为您推荐影院电影。"
         }
       ]
     },
@@ -169,19 +169,19 @@
       "QA_details": [
         {
           "user": "找荒岛求生动漫。",
-          "assistant": "好的，为您查找荒岛求生动漫。"
+          "assistant": "为您查找荒岛求生动漫。"
         },
         {
           "user": "要手绘风格。",
-          "assistant": "好的，为您筛选手绘风格内容。"
+          "assistant": "为您筛选手绘风格内容。"
         },
         {
           "user": "播放这个。",
-          "assistant": "好的，正在播放。"
+          "assistant": "正在播放。"
         },
         {
           "user": "下一集。",
-          "assistant": "好的，为您播放下一集。"
+          "assistant": "为您播放下一集。"
         }
       ]
     },
@@ -192,19 +192,19 @@
       "QA_details": [
         {
           "user": "切到听歌。",
-          "assistant": "好的，已切到音乐。"
+          "assistant": "已切到音乐。"
         },
         {
           "user": "找纸飞机。",
-          "assistant": "好的，为您查找《纸飞机》。"
+          "assistant": "为您查找《纸飞机》。"
         },
         {
           "user": "播放我的纸飞机呀，飞呀飞这首歌。",
-          "assistant": "好的，正在播放《纸飞机》。"
+          "assistant": "正在播放《纸飞机》。"
         },
         {
           "user": "再来一遍。",
-          "assistant": "好的，为您重新播放。"
+          "assistant": "为您重新播放。"
         }
       ]
     }

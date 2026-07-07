@@ -77,11 +77,11 @@
       "QA_details": [
         {
           "user": "播放水浒传。",
-          "assistant": "好的，正在播放《水浒传》。"
+          "assistant": "正在播放《水浒传》。"
         },
         {
           "user": "换个幽默喜剧。",
-          "assistant": "好的，为您推荐幽默喜剧。"
+          "assistant": "为您推荐幽默喜剧。"
         },
         {
           "user": "watchthismovieonme.",
@@ -108,11 +108,11 @@
         },
         {
           "user": "嗯，我想看即兴。",
-          "assistant": "好的，为您查找《即兴》相关影片。"
+          "assistant": "为您查找《即兴》相关影片。"
         },
         {
           "user": "播放这个。",
-          "assistant": "好的，正在播放。"
+          "assistant": "正在播放。"
         }
       ]
     },
@@ -123,19 +123,19 @@
       "QA_details": [
         {
           "user": "打开河北卫视。",
-          "assistant": "好的，正在为您播放河北卫视。"
+          "assistant": "正在为您播放河北卫视。"
         },
         {
           "user": "声音大点。",
-          "assistant": "好的，已调高音量。"
+          "assistant": "已调高音量。"
         },
         {
           "user": "看节目单。",
-          "assistant": "好的，为您打开河北卫视节目单。"
+          "assistant": "为您打开河北卫视节目单。"
         },
         {
           "user": "返回直播。",
-          "assistant": "好的，已返回河北卫视直播。"
+          "assistant": "已返回河北卫视直播。"
         }
       ]
     },
@@ -146,19 +146,19 @@
       "QA_details": [
         {
           "user": "放首歌。",
-          "assistant": "好的，为您播放歌曲。"
+          "assistant": "为您播放歌曲。"
         },
         {
           "user": "找纸飞机。",
-          "assistant": "好的，为您查找《纸飞机》。"
+          "assistant": "为您查找《纸飞机》。"
         },
         {
           "user": "播放我的纸飞机呀，飞呀飞这首歌。",
-          "assistant": "好的，正在播放《纸飞机》。"
+          "assistant": "正在播放《纸飞机》。"
         },
         {
           "user": "下一首。",
-          "assistant": "好的，为您切换下一首。"
+          "assistant": "为您切换下一首。"
         }
       ]
     },
@@ -169,19 +169,19 @@
       "QA_details": [
         {
           "user": "我要看兽王争锋。",
-          "assistant": "好的，正在播放《兽王争锋》。"
+          "assistant": "正在播放《兽王争锋》。"
         },
         {
           "user": "下一集。",
-          "assistant": "好的，为您播放下一集。"
+          "assistant": "为您播放下一集。"
         },
         {
           "user": "暂停一下。",
-          "assistant": "好的，已暂停。"
+          "assistant": "已暂停。"
         },
         {
           "user": "继续。",
-          "assistant": "好的，继续播放《兽王争锋》。"
+          "assistant": "继续播放《兽王争锋》。"
         }
       ]
     },
@@ -192,19 +192,19 @@
       "QA_details": [
         {
           "user": "看刚才那。",
-          "assistant": "好的，继续播放刚才的视频。"
+          "assistant": "继续播放刚才的视频。"
         },
         {
           "user": "我要听无人之岛dj版。",
-          "assistant": "好的，正在播放《无人之岛》DJ版。"
+          "assistant": "正在播放《无人之岛》DJ版。"
         },
         {
           "user": "我要听无人之岛dj版，我要看刚才那。",
-          "assistant": "好的，先播放《无人之岛》DJ版；刚才的视频可从历史里继续看。"
+          "assistant": "先播放《无人之岛》DJ版；刚才的视频可从历史里继续看。"
         },
         {
           "user": "切回刚才的视频。",
-          "assistant": "好的，已切回刚才的视频。"
+          "assistant": "已切回刚才的视频。"
         }
       ]
     }

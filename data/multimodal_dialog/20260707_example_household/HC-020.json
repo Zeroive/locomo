@@ -79,19 +79,19 @@
       "QA_details": [
         {
           "user": "放受伤动物动画片。",
-          "assistant": "好的，正在播放受伤动物动画片。"
+          "assistant": "正在播放受伤动物动画片。"
         },
         {
           "user": "换三岁看的。",
-          "assistant": "好的，为您切换三岁幼儿动画片。"
+          "assistant": "为您切换三岁幼儿动画片。"
         },
         {
           "user": "下一集。",
-          "assistant": "好的，为您播放下一集。"
+          "assistant": "为您播放下一集。"
         },
         {
           "user": "暂停一下。",
-          "assistant": "好的，已暂停。"
+          "assistant": "已暂停。"
         }
       ]
     },
@@ -102,19 +102,19 @@
       "QA_details": [
         {
           "user": "打开云超清。",
-          "assistant": "好的，已打开云超清。"
+          "assistant": "已打开云超清。"
         },
         {
           "user": "我想看一部电影。",
-          "assistant": "好的，为您推荐电影。"
+          "assistant": "为您推荐电影。"
         },
         {
           "user": "播放这个。",
-          "assistant": "好的，正在播放。"
+          "assistant": "正在播放。"
         },
         {
           "user": "然后就可以跟它给它发送指令，就比如说我想打开云超清，我想看一部电影。",
-          "assistant": "好的，我可以按指令打开云超清并为您找电影。"
+          "assistant": "我可以按指令打开云超清并为您找电影。"
         }
       ]
     },
@@ -125,19 +125,19 @@
       "QA_details": [
         {
           "user": "找古代片。",
-          "assistant": "好的，为您查找古代题材影视。"
+          "assistant": "为您查找古代题材影视。"
         },
         {
           "user": "换个古装的。",
-          "assistant": "好的，为您切换古装片。"
+          "assistant": "为您切换古装片。"
         },
         {
           "user": "播放这个。",
-          "assistant": "好的，正在播放。"
+          "assistant": "正在播放。"
         },
         {
           "user": "下一集。",
-          "assistant": "好的，为您播放下一集。"
+          "assistant": "为您播放下一集。"
         }
       ]
     },
@@ -148,19 +148,19 @@
       "QA_details": [
         {
           "user": "打开推荐。",
-          "assistant": "好的，为您打开推荐页。"
+          "assistant": "为您打开推荐页。"
         },
         {
           "user": "我想我想看。",
-          "assistant": "好的，为您推荐古代题材影视。"
+          "assistant": "为您推荐古代题材影视。"
         },
         {
           "user": "换一个。",
-          "assistant": "好的，为您切换另一部古装片。"
+          "assistant": "为您切换另一部古装片。"
         },
         {
           "user": "播放。",
-          "assistant": "好的，正在播放。"
+          "assistant": "正在播放。"
         }
       ]
     },
@@ -171,19 +171,19 @@
       "QA_details": [
         {
           "user": "调到234频道。",
-          "assistant": "好的，已切换到234频道。"
+          "assistant": "已切换到234频道。"
         },
         {
           "user": "播放奥特曼频道。",
-          "assistant": "好的，正在播放奥特曼频道。"
+          "assistant": "正在播放奥特曼频道。"
         },
         {
           "user": "换戏曲频道。",
-          "assistant": "好的，已切换到戏曲频道。"
+          "assistant": "已切换到戏曲频道。"
         },
         {
           "user": "播放梨园春频道。",
-          "assistant": "好的，正在播放梨园春频道。"
+          "assistant": "正在播放梨园春频道。"
         }
       ]
     },
@@ -194,19 +194,19 @@
       "QA_details": [
         {
           "user": "调到233频道。",
-          "assistant": "好的，已切换到233频道。"
+          "assistant": "已切换到233频道。"
         },
         {
           "user": "切到235频道。",
-          "assistant": "好的，已切换到235频道。"
+          "assistant": "已切换到235频道。"
         },
         {
           "user": "明天晚上看电影。",
-          "assistant": "好的，可为您查找电影。"
+          "assistant": "可为您查找电影。"
         },
         {
           "user": "明天晚上看电影，频道不调。",
-          "assistant": "好的，为您保留当前频道，不切换频道。"
+          "assistant": "为您保留当前频道，不切换频道。"
         }
       ]
     }

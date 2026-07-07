@@ -73,19 +73,19 @@
       "QA_details": [
         {
           "user": "继续最后的较量第8集。",
-          "assistant": "好的，继续播放《最后的较量》第8集。"
+          "assistant": "继续播放《最后的较量》第8集。"
         },
         {
           "user": "快进一点。",
-          "assistant": "好的，已为您快进。"
+          "assistant": "已为您快进。"
         },
         {
           "user": "暂停。",
-          "assistant": "好的，已暂停。"
+          "assistant": "已暂停。"
         },
         {
           "user": "先退出。",
-          "assistant": "好的，已退出播放。"
+          "assistant": "已退出播放。"
         }
       ]
     },
@@ -96,19 +96,19 @@
       "QA_details": [
         {
           "user": "打开动画。",
-          "assistant": "好的，已打开动画片专区。"
+          "assistant": "已打开动画片专区。"
         },
         {
           "user": "找小智。",
-          "assistant": "好的，为您查找小智相关内容。"
+          "assistant": "为您查找小智相关内容。"
         },
         {
           "user": "嗯，我要看小智。",
-          "assistant": "好的，正在播放小智相关动画。"
+          "assistant": "正在播放小智相关动画。"
         },
         {
           "user": "下一集。",
-          "assistant": "好的，为您播放下一集。"
+          "assistant": "为您播放下一集。"
         }
       ]
     },
@@ -119,19 +119,19 @@
       "QA_details": [
         {
           "user": "播放飞驰人生3。",
-          "assistant": "好的，正在播放《飞驰人生3》。"
+          "assistant": "正在播放《飞驰人生3》。"
         },
         {
           "user": "声音大一点。",
-          "assistant": "好的，已调高音量。"
+          "assistant": "已调高音量。"
         },
         {
           "user": "暂停一下。",
-          "assistant": "好的，已暂停。"
+          "assistant": "已暂停。"
         },
         {
           "user": "继续看。",
-          "assistant": "好的，继续播放《飞驰人生3》。"
+          "assistant": "继续播放《飞驰人生3》。"
         }
       ]
     },
@@ -142,19 +142,19 @@
       "QA_details": [
         {
           "user": "不看电影了。",
-          "assistant": "好的，已退出电影。"
+          "assistant": "已退出电影。"
         },
         {
           "user": "放首歌。",
-          "assistant": "好的，为您播放歌曲。"
+          "assistant": "为您播放歌曲。"
         },
         {
           "user": "帮我播放一首放空事情。",
-          "assistant": "好的，为您播放《放空事情》。"
+          "assistant": "为您播放《放空事情》。"
         },
         {
           "user": "循环播放。",
-          "assistant": "好的，已开启循环播放。"
+          "assistant": "已开启循环播放。"
         }
       ]
     },
@@ -165,19 +165,19 @@
       "QA_details": [
         {
           "user": "找荒岛求生动漫。",
-          "assistant": "好的，为您查找荒岛求生动漫。"
+          "assistant": "为您查找荒岛求生动漫。"
         },
         {
           "user": "要手绘的。",
-          "assistant": "好的，为您筛选手绘风格内容。"
+          "assistant": "为您筛选手绘风格内容。"
         },
         {
           "user": "播放这个。",
-          "assistant": "好的，正在播放。"
+          "assistant": "正在播放。"
         },
         {
           "user": "下一集。",
-          "assistant": "好的，为您播放下一集。"
+          "assistant": "为您播放下一集。"
         }
       ]
     },
@@ -188,19 +188,19 @@
       "QA_details": [
         {
           "user": "换成听歌。",
-          "assistant": "好的，为您切换到音乐。"
+          "assistant": "为您切换到音乐。"
         },
         {
           "user": "找郝有才。",
-          "assistant": "好的，为您查找郝有才相关歌曲。"
+          "assistant": "为您查找郝有才相关歌曲。"
         },
         {
           "user": "我想听我的名字叫郝有才。",
-          "assistant": "好的，正在播放《我的名字叫郝有才》。"
+          "assistant": "正在播放《我的名字叫郝有才》。"
         },
         {
           "user": "再放一遍。",
-          "assistant": "好的，为您重新播放。"
+          "assistant": "为您重新播放。"
         }
       ]
     }

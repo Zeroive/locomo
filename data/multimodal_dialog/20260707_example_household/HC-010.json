@@ -77,19 +77,19 @@
       "QA_details": [
         {
           "user": "找益智视频。",
-          "assistant": "好的，为您推荐益智类视频。"
+          "assistant": "为您推荐益智类视频。"
         },
         {
           "user": "推荐动画片。",
-          "assistant": "好的，为您推荐动画片。"
+          "assistant": "为您推荐动画片。"
         },
         {
           "user": "找益智游戏。",
-          "assistant": "好的，为您查找益智游戏视频。"
+          "assistant": "为您查找益智游戏视频。"
         },
         {
           "user": "找刘德华电影。",
-          "assistant": "好的，为您查找刘德华的电影。"
+          "assistant": "为您查找刘德华的电影。"
         }
       ]
     },
@@ -100,19 +100,19 @@
       "QA_details": [
         {
           "user": "找成龙电影。",
-          "assistant": "好的，为您查找成龙的电影。"
+          "assistant": "为您查找成龙的电影。"
         },
         {
           "user": "我要看。",
-          "assistant": "好的，为您优先推荐刘德华和成龙相关电影。"
+          "assistant": "为您优先推荐刘德华和成龙相关电影。"
         },
         {
           "user": "换一个。",
-          "assistant": "好的，为您切换另一部推荐内容。"
+          "assistant": "为您切换另一部推荐内容。"
         },
         {
           "user": "播放。",
-          "assistant": "好的，正在播放。"
+          "assistant": "正在播放。"
         }
       ]
     },
@@ -123,19 +123,19 @@
       "QA_details": [
         {
           "user": "找蒙古族节目。",
-          "assistant": "好的，为您查找蒙古族相关节目。"
+          "assistant": "为您查找蒙古族相关节目。"
         },
         {
           "user": "放蒙古族音乐。",
-          "assistant": "好的，正在播放蒙古族音乐。"
+          "assistant": "正在播放蒙古族音乐。"
         },
         {
           "user": "换个纪录片。",
-          "assistant": "好的，为您推荐蒙古族相关纪录片。"
+          "assistant": "为您推荐蒙古族相关纪录片。"
         },
         {
           "user": "播放这个。",
-          "assistant": "好的，正在播放。"
+          "assistant": "正在播放。"
         }
       ]
     },
@@ -146,19 +146,19 @@
       "QA_details": [
         {
           "user": "找电影。",
-          "assistant": "好的，为您推荐电影。"
+          "assistant": "为您推荐电影。"
         },
         {
           "user": "不要刘德华。",
-          "assistant": "好的，已避开刘德华电影。"
+          "assistant": "已避开刘德华电影。"
         },
         {
           "user": "不想看刘德华的电影。",
-          "assistant": "好的，为您推荐非刘德华主演的电影。"
+          "assistant": "为您推荐非刘德华主演的电影。"
         },
         {
           "user": "换个蒙古族的。",
-          "assistant": "好的，为您查找蒙古族相关影片。"
+          "assistant": "为您查找蒙古族相关影片。"
         }
       ]
     },
@@ -169,19 +169,19 @@
       "QA_details": [
         {
           "user": "找蒙古族。",
-          "assistant": "好的，为您查找蒙古族相关内容。"
+          "assistant": "为您查找蒙古族相关内容。"
         },
         {
           "user": "放蒙古族歌。",
-          "assistant": "好的，正在播放蒙古族歌曲。"
+          "assistant": "正在播放蒙古族歌曲。"
         },
         {
           "user": "换成动画。",
-          "assistant": "好的，为您切换动画片。"
+          "assistant": "为您切换动画片。"
         },
         {
           "user": "推荐儿童的。",
-          "assistant": "好的，为您推荐儿童动画。"
+          "assistant": "为您推荐儿童动画。"
         }
       ]
     },
@@ -192,19 +192,19 @@
       "QA_details": [
         {
           "user": "找宝宝巴士。",
-          "assistant": "好的，为您查找《宝宝巴士》。"
+          "assistant": "为您查找《宝宝巴士》。"
         },
         {
           "user": "播放宝宝巴士。",
-          "assistant": "好的，正在播放《宝宝巴士》。"
+          "assistant": "正在播放《宝宝巴士》。"
         },
         {
           "user": "下一集。",
-          "assistant": "好的，为您播放下一集。"
+          "assistant": "为您播放下一集。"
         },
         {
           "user": "声音小一点。",
-          "assistant": "好的，已调低音量。"
+          "assistant": "已调低音量。"
         }
       ]
     }

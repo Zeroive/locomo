@@ -82,19 +82,19 @@
       "QA_details": [
         {
           "user": "播放小品。",
-          "assistant": "好的，为您推荐小品内容。"
+          "assistant": "为您推荐小品内容。"
         },
         {
           "user": "播放小品一家人。",
-          "assistant": "好的，正在播放《小品一家人》。"
+          "assistant": "正在播放《小品一家人》。"
         },
         {
           "user": "播放第5个。",
-          "assistant": "好的，正在播放第5个内容。"
+          "assistant": "正在播放第5个内容。"
         },
         {
           "user": "换第9个。",
-          "assistant": "好的，正在播放第9个内容。"
+          "assistant": "正在播放第9个内容。"
         }
       ]
     },
@@ -105,19 +105,19 @@
       "QA_details": [
         {
           "user": "我想看音乐公主爱美丽。",
-          "assistant": "好的，正在播放《音乐公主爱美丽》。"
+          "assistant": "正在播放《音乐公主爱美丽》。"
         },
         {
           "user": "换个短电影。",
-          "assistant": "好的，为您推荐短电影。"
+          "assistant": "为您推荐短电影。"
         },
         {
           "user": "我想看5分钟的电影。",
-          "assistant": "好的，为您筛选5分钟左右的电影。"
+          "assistant": "为您筛选5分钟左右的电影。"
         },
         {
           "user": "播放这个。",
-          "assistant": "好的，正在播放。"
+          "assistant": "正在播放。"
         }
       ]
     },
@@ -128,19 +128,19 @@
       "QA_details": [
         {
           "user": "播放金属狂人。",
-          "assistant": "好的，正在播放《金属狂人》。"
+          "assistant": "正在播放《金属狂人》。"
         },
         {
           "user": "声音大点。",
-          "assistant": "好的，已调高音量。"
+          "assistant": "已调高音量。"
         },
         {
           "user": "换首同类的。",
-          "assistant": "好的，为您切换相近风格歌曲。"
+          "assistant": "为您切换相近风格歌曲。"
         },
         {
           "user": "暂停一下。",
-          "assistant": "好的，已暂停。"
+          "assistant": "已暂停。"
         }
       ]
     },
@@ -151,19 +151,19 @@
       "QA_details": [
         {
           "user": "放首民谣。",
-          "assistant": "好的，为您播放民谣歌曲。"
+          "assistant": "为您播放民谣歌曲。"
         },
         {
           "user": "播放成都。",
-          "assistant": "好的，正在播放《成都》。"
+          "assistant": "正在播放《成都》。"
         },
         {
           "user": "换一首成都。",
-          "assistant": "好的，为您切换另一个版本的《成都》。"
+          "assistant": "为您切换另一个版本的《成都》。"
         },
         {
           "user": "循环播放。",
-          "assistant": "好的，已开启循环播放。"
+          "assistant": "已开启循环播放。"
         }
       ]
     },
@@ -174,19 +174,19 @@
       "QA_details": [
         {
           "user": "找小马宝莉。",
-          "assistant": "好的，为您查找《小马宝莉》。"
+          "assistant": "为您查找《小马宝莉》。"
         },
         {
           "user": "不要花钱的。",
-          "assistant": "好的，为您筛选免费内容。"
+          "assistant": "为您筛选免费内容。"
         },
         {
           "user": "播放免费的。",
-          "assistant": "好的，正在播放免费的《小马宝莉》。"
+          "assistant": "正在播放免费的《小马宝莉》。"
         },
         {
           "user": "下一集。",
-          "assistant": "好的，为您播放下一集。"
+          "assistant": "为您播放下一集。"
         }
       ]
     },
@@ -197,19 +197,19 @@
       "QA_details": [
         {
           "user": "切到听歌。",
-          "assistant": "好的，已切到音乐。"
+          "assistant": "已切到音乐。"
         },
         {
           "user": "不要金属狂人。",
-          "assistant": "好的，已避开《金属狂人》。"
+          "assistant": "已避开《金属狂人》。"
         },
         {
           "user": "我要听，不要唐金属狂人。",
-          "assistant": "好的，为您播放其他歌曲，不播放《金属狂人》。"
+          "assistant": "为您播放其他歌曲，不播放《金属狂人》。"
         },
         {
           "user": "换一首。",
-          "assistant": "好的，为您切换下一首。"
+          "assistant": "为您切换下一首。"
         }
       ]
     }
