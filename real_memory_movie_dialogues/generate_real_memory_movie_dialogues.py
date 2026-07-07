@@ -174,6 +174,12 @@ def parse_args():
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument(
+        "--num-cases",
+        type=int,
+        default=None,
+        help="Number of final cases to generate. In row mode this limits CSV rows; in sampled-household mode this sets household count.",
+    )
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--max-retries", type=int, default=3)
     parser.add_argument("--temperature", type=float, default=0.8)
@@ -212,6 +218,14 @@ def load_csv_rows(path, limit=None):
     if limit is not None:
         rows = rows[:limit]
     return rows
+
+
+def resolve_num_cases(args):
+    if args.num_cases is not None and args.num_cases < 1:
+        raise ValueError("--num-cases must be a positive integer")
+    if args.num_sampled_households > 0:
+        return args.num_cases or args.num_sampled_households
+    return args.num_cases or args.limit
 
 
 def call_llm(prompt, temperature=0.8, num_tokens_request=256):
@@ -364,7 +378,6 @@ def build_memory_points_prompt(profile):
 请根据真实记忆内容，总结后续生成用户与AI助手对话时必须体现的相关记忆点。
 
 行时间戳：{profile['source']['timestamp']}
-用户输入：{profile['source']['user_input']}
 记忆内容：
 {profile['source']['memory_content']}
 能力类型：{profile['ability']}
@@ -414,7 +427,9 @@ def generate_memory_points(profile, args):
     for attempt in range(1, args.max_retries + 1):
         try:
             logging.info("%s summarizing memory points attempt %s", profile["row_id"], attempt)
-            response = call_llm(build_memory_points_prompt(profile), temperature=0.4, num_tokens_request=600)
+            prompt = build_memory_points_prompt(profile)
+            assert_dialogue_prompt_has_no_question(profile, prompt)
+            response = call_llm(prompt, temperature=0.4, num_tokens_request=600)
             return normalize_memory_points(profile, parse_json_value(response))
         except Exception as exc:
             last_error = exc
@@ -429,7 +444,6 @@ def build_dialogue_topics_prompt(profile):
     return f"""
 请根据模型总结的记忆点、当前能力类型和五类测评要求，先规划后续对话主题。
 
-用户输入（测评问题，不能改写）：{profile['source']['user_input']}
 能力类型：{profile['ability']}
 家庭结构：{summarize_household_context(profile['household'])}
 记忆内容：{profile['source']['memory_content']}
@@ -517,7 +531,9 @@ def generate_dialogue_topics(profile, args):
     for attempt in range(1, args.max_retries + 1):
         try:
             logging.info("%s generating dialogue topics attempt %s", profile["row_id"], attempt)
-            response = call_llm(build_dialogue_topics_prompt(profile), temperature=0.5, num_tokens_request=1000)
+            prompt = build_dialogue_topics_prompt(profile)
+            assert_dialogue_prompt_has_no_question(profile, prompt)
+            response = call_llm(prompt, temperature=0.5, num_tokens_request=1000)
             return normalize_dialogue_topics(profile, parse_json_value(response))
         except Exception as exc:
             last_error = exc
@@ -586,7 +602,6 @@ def build_turn_context(profile, plan, session, prior_sessions, conv_so_far):
 家庭：{profile['household']['family_name']}
 家庭结构上下文：{household_context}
 行时间戳：{profile['source']['timestamp']}
-当前测评问题（必须来自CSV，不能改写）：{profile['source']['user_input']}
 记忆内容：{memory_lines}
 模型总结的相关记忆点：{memory_points}
 记忆关键词：{keywords}
@@ -658,6 +673,12 @@ def build_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, speak
     return build_assistant_turn_prompt(profile, plan, session, prior_sessions, conv_so_far)
 
 
+def assert_dialogue_prompt_has_no_question(profile, prompt):
+    question = profile.get("source", {}).get("user_input", "")
+    if question and question in prompt:
+        raise ValueError("dialogue-generation prompt must not include CSV user_input question")
+
+
 def generate_session(profile, plan, session_id, date_time, prior_sessions, args):
     session = {"session_id": session_id, "date_time": date_time, "QA_details": []}
     conv_so_far = ""
@@ -669,6 +690,7 @@ def generate_session(profile, plan, session_id, date_time, prior_sessions, args)
     for turn_idx in range(1, max_turns + 1):
         speaker_role = "user" if turn_idx % 2 == 1 else "assistant"
         prompt = build_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, speaker_role, turn_idx)
+        assert_dialogue_prompt_has_no_question(profile, prompt)
         output = clean_turn_text(call_llm(prompt, temperature=args.temperature, num_tokens_request=140), "用户" if speaker_role == "user" else "AI助手")
         if not output:
             raise ValueError(f"empty {speaker_role} turn")
@@ -1077,7 +1099,8 @@ def process_sampled_household(household_index, indexed_rows, args):
 
 def generate_sampled_households(rows, args):
     indexed_rows = list(enumerate(rows, start=1))
-    household_indices = list(range(1, args.num_sampled_households + 1))
+    household_count = resolve_num_cases(args)
+    household_indices = list(range(1, household_count + 1))
     if args.max_workers <= 1 or len(household_indices) <= 1:
         return [
             process_sampled_household(household_index, indexed_rows, args)
@@ -1168,9 +1191,11 @@ def main():
     args = parse_args()
     random.seed(args.seed)
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    rows = load_csv_rows(args.input_csv, args.limit)
+    row_limit = None if args.num_sampled_households > 0 else resolve_num_cases(args)
+    rows = load_csv_rows(args.input_csv, row_limit)
 
     if args.num_sampled_households > 0:
+        logging.info("Sampled-household mode: generating %s household case(s)", resolve_num_cases(args))
         household_results = generate_sampled_households(rows, args)
         all_households = []
         failed_households = []
@@ -1188,8 +1213,10 @@ def main():
         return
 
     if args.max_workers > 1:
+        logging.info("Row mode: generating %s row case(s)", len(rows))
         row_results = generate_rows_parallel_by_ability(rows, args)
     else:
+        logging.info("Row mode: generating %s row case(s)", len(rows))
         row_results = generate_rows_serial(rows, args)
 
     all_rows = []
