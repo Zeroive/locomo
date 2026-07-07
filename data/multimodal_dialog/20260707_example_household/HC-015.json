@@ -221,20 +221,20 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "别按我以前喜欢的电影，放我刚说要看的剧。",
-      "answer": "播放《周末后宫》。",
+      "question": "周末后宫刚才播放到第几集？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     },
     {
       "entity_id": "person_002",
-      "question": "别管遥控器记录，把上午看的列表拿出来让我选。",
-      "answer": "展示芭比列表第7个。",
+      "question": "白色遥控器现在放在哪个房间？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     },
     {
       "entity_id": "person_003",
-      "question": "别继续刚才的电影了，放我想听的歌。",
-      "answer": "播放《小美满》。",
+      "question": "小美满这首歌的歌手生日是哪天？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     }
   ]

@@ -214,20 +214,20 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "别继续刚才的幼儿动画了，打开我后面说的电影入口。",
-      "answer": "打开云超清找电影。",
+      "question": "云超清里那部电影的导演是谁？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     },
     {
       "entity_id": "person_002",
-      "question": "我没说清楚，按我喜欢的题材推荐。",
-      "answer": "推荐古代题材影视。",
+      "question": "我喜欢的古代题材影片具体是哪位主演？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     },
     {
       "entity_id": "person_003",
-      "question": "按我当前频道记忆来，别再调台。",
-      "answer": "保留频道235。",
+      "question": "明天晚上电影开始的准确时间是几点？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     }
   ]

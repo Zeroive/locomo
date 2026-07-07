@@ -212,20 +212,20 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "先放我想听的DJ版，再切回刚才看的。",
-      "answer": "播《无人之岛》DJ版，再回到《美人心计》。",
+      "question": "我刚才看的冯小刚电影是哪一年上映的？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     },
     {
       "entity_id": "person_002",
-      "question": "别管天气和提醒，放我刚说要看的电影。",
-      "answer": "播放《飞驰人生3》。",
+      "question": "今天的天气具体多少度？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     },
     {
       "entity_id": "person_003",
-      "question": "播放我刚才找的那首纸飞机。",
-      "answer": "播放《纸飞机》。",
+      "question": "纸飞机这首歌是谁作词的？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     }
   ]

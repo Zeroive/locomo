@@ -212,20 +212,20 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "我要看，按我之前喜欢的推荐。",
-      "answer": "推荐刘德华或成龙电影。",
+      "question": "我上次看的刘德华电影具体是哪一年拍的？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     },
     {
       "entity_id": "person_002",
-      "question": "别放刘德华，按我最喜欢的推荐。",
-      "answer": "推荐蒙古族相关内容。",
+      "question": "我最喜欢的蒙古族节目主持人叫什么？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     },
     {
       "entity_id": "person_003",
-      "question": "别按我的民族偏好，播放我刚点的动画。",
-      "answer": "播放《宝宝巴士》。",
+      "question": "宝宝巴士我刚才看到第几集了？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     }
   ]

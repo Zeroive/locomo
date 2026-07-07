@@ -213,20 +213,20 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "记住我的听歌要求，别放我排除的那首。",
-      "answer": "播放非《金属狂人》歌曲。",
+      "question": "我刚才听的那首歌播放了几分几秒？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     },
     {
       "entity_id": "person_002",
-      "question": "别按我之前看的吃播搞笑，放我刚点的动画。",
-      "answer": "播放《宝宝巴士》。",
+      "question": "我看的免费搞笑视频是谁上传的？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     },
     {
       "entity_id": "person_003",
-      "question": "别继续直播了，放我刚找的儿童动画。",
-      "answer": "播放《宝宝巴士》。",
+      "question": "刚才电视直播的节目主持人是谁？",
+      "answer": "未提到，无法确定。",
       "category": "adversarial"
     }
   ]
