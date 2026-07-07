@@ -1,0 +1,127 @@
+{
+  "case_id": "HC-001",
+  "dimension_tags": {
+    "household_size": "3人",
+    "household_structure": "单亲 + 2个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 单跳能力"
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_001",
+      "to": "person_003",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_003",
+      "type": "SIBLING_OF"
+    },
+    {
+      "from": "person_003",
+      "to": "person_002",
+      "type": "SIBLING_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林舒然",
+      "date_time": "2026-06-28 20:15",
+      "QA_details": [
+        {
+          "user": "给孩子们播放第2个吧，他们刚才说想接着看。",
+          "assistant": "好的，已为您播放第2个。"
+        },
+        {
+          "user": "第2个看完了，再播放第3个。",
+          "assistant": "明白，已为您播放第3个。"
+        },
+        {
+          "user": "我想看世界杯宣传片，最好是预选赛相关的。",
+          "assistant": "好的，为您查找世界杯宣传片和世界杯预选赛内容。"
+        },
+        {
+          "user": "我喜欢吃甜食，看片的时候帮我记着别推荐太辣的零食。",
+          "assistant": "已记下，您喜欢吃甜食。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "林舒然",
+      "date_time": "2026-06-30 19:42",
+      "QA_details": [
+        {
+          "user": "我想看嗡嗡优的电影。",
+          "assistant": "好的，正在为您查找嗡嗡优相关电影。"
+        },
+        {
+          "user": "找一下徐峥演外卖员的电影。",
+          "assistant": "已为您查找徐峥演的外卖员题材电影。"
+        },
+        {
+          "user": "我喜欢刘德华的电影，也想看徐峥的电影，科幻片和外卖骑手题材也挺喜欢。",
+          "assistant": "已记录，您喜欢刘德华、徐峥、科幻片和外卖骑手题材电影。"
+        },
+        {
+          "user": "以后帮我多找杜比的片子，还有太空科技类科幻片。",
+          "assistant": "好的，已补充记录您想看杜比片源和太空科技类科幻片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林小满",
+      "date_time": "2026-07-01 18:20",
+      "QA_details": [
+        {
+          "user": "妈妈说她想了解外卖骑手题材电影的票房情况。",
+          "assistant": "好的，我会为她整理外卖骑手题材电影的票房信息。"
+        },
+        {
+          "user": "她还说想看刘德华的电影，别给我弟弟误播成动画片。",
+          "assistant": "明白，会优先按妈妈的刘德华电影偏好查找。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_003",
+      "person_name": "林小舟",
+      "date_time": "2026-07-02 16:35",
+      "QA_details": [
+        {
+          "user": "妈妈上次播放了第2个和第3个，我记得不是第4个。",
+          "assistant": "已记下，之前播放记录是第2个和第3个。"
+        },
+        {
+          "user": "如果妈妈问爱丽丝梦游仙境电影四，你先看记忆里有没有。",
+          "assistant": "好的，会先根据已有播放记忆核对。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放爱丽丝梦游仙境电影四电视是啥玩意儿啊？看是谁？",
+      "answer": "记忆中只明确记录用户播放了第2个和第3个，没有记录《爱丽丝梦游仙境电影四》或对应电视内容，因此无法确定要播放的是哪一部。",
+      "category": "single_hop"
+    }
+  ]
+}
