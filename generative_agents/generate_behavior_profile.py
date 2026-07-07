@@ -47,6 +47,51 @@ PRESET_SCENARIOS = [
     # "anomaly_detection",
 ]
 
+WORK_COMMUTE_TIME_GROUPS = [
+    {
+        "slug": "late_night_shift",
+        "label": "深夜班",
+        "leave_work": {"slug": "late_night", "label": "深夜", "start": "00:00", "end": "02:59"},
+        "family_return": {"slug": "morning", "label": "上午", "start": "08:00", "end": "10:59"},
+    },
+    {
+        "slug": "early_shift",
+        "label": "早班",
+        "leave_work": {"slug": "early_morning", "label": "早上", "start": "06:00", "end": "08:59"},
+        "family_return": {"slug": "afternoon", "label": "下午", "start": "14:00", "end": "16:59"},
+    },
+    {
+        "slug": "standard_day_shift",
+        "label": "标准日班",
+        "leave_work": {"slug": "morning", "label": "上午", "start": "09:00", "end": "10:59"},
+        "family_return": {"slug": "evening", "label": "晚上", "start": "17:00", "end": "18:59"},
+    },
+    {
+        "slug": "midday_shift",
+        "label": "午班",
+        "leave_work": {"slug": "noon", "label": "中午", "start": "12:00", "end": "13:59"},
+        "family_return": {"slug": "evening", "label": "晚上", "start": "20:00", "end": "21:59"},
+    },
+    {
+        "slug": "afternoon_shift",
+        "label": "下午班",
+        "leave_work": {"slug": "afternoon", "label": "下午", "start": "14:00", "end": "15:59"},
+        "family_return": {"slug": "evening", "label": "晚上", "start": "22:00", "end": "23:59"},
+    },
+    {
+        "slug": "evening_shift",
+        "label": "晚班",
+        "leave_work": {"slug": "evening", "label": "晚上", "start": "18:00", "end": "20:59"},
+        "family_return": {"slug": "late_night", "label": "深夜", "start": "02:00", "end": "04:59", "date_offset_days": 1},
+    },
+]
+
+WORK_COMMUTE_SCENARIOS = {"leave_work", "family_return"}
+
+
+def select_member_work_commute_group():
+    return random.choice(WORK_COMMUTE_TIME_GROUPS)
+
 
 def household_profile_path(out_dir):
     return os.path.join(out_dir, "household_profile.json")
@@ -143,16 +188,44 @@ def scenarios_for_member(member):
 
 def build_generation_plan(household_profile):
     plan = []
+    member_work_groups = {}
     for member in normalize_members(household_profile):
         person_id = member.get('person_id') or member.get('id') or member.get('name')
         if not person_id:
             continue
         for scenario in scenarios_for_member(member):
-            plan.append({
-                'person_id': person_id,
-                'scenario': scenario,
-                'member': member
-            })
+            if scenario in WORK_COMMUTE_SCENARIOS:
+                commute_group = member_work_groups.setdefault(person_id, select_member_work_commute_group())
+                segment = commute_group[scenario]
+                plan.append({
+                    'person_id': person_id,
+                    'scenario': scenario,
+                    'member': member,
+                    'commute_group': commute_group,
+                    'time_segment': segment,
+                    'time_range': {
+                        "start": segment["start"],
+                        "end": segment["end"],
+                        "date_offset_days": segment.get("date_offset_days", 0),
+                    },
+                    'scenario_desc_suffix': (
+                        f"{member.get('name') or person_id}的上下班预制班次为{commute_group['label']}；"
+                        f"上班离家时间窗是{commute_group['leave_work']['label']}"
+                        f"({commute_group['leave_work']['start']}-{commute_group['leave_work']['end']})，"
+                        f"下班回家时间窗是{commute_group['family_return']['label']}"
+                        f"({commute_group['family_return']['start']}-{commute_group['family_return']['end']})，"
+                        "两者按约8小时工作时长配对；"
+                        f"请生成其在该时间段发生的"
+                        f"{'上班离家' if scenario == 'leave_work' else '下班回家'}行为，"
+                        "并结合个人工作偏好、家庭设备和该时间段环境生成合理描述。"
+                    ),
+                })
+            else:
+                plan.append({
+                    'person_id': person_id,
+                    'scenario': scenario,
+                    'member': member
+                })
     plan.extend([
         {'person_id': 'visitor', 'scenario': 'visitor_arrival', 'member': {'person_id': 'visitor', 'name': '访客'}},
         {'person_id': 'home_assistant', 'scenario': 'all_leave_arm', 'member': {'person_id': 'home_assistant', 'name': '全屋系统'}},

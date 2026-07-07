@@ -245,6 +245,29 @@ def get_scene_templates(device_file=None):
     return templates
 
 
+def apply_plan_template_overrides(template, plan_item):
+    """
+    为单条生成计划应用局部模板覆盖，例如上班/下班的时间段变体。
+    """
+    if not isinstance(template, dict):
+        return template
+
+    overridden = copy.deepcopy(template)
+    time_range = plan_item.get('time_range') if isinstance(plan_item, dict) else None
+    if isinstance(time_range, dict):
+        overridden['time_window'] = {
+            'normal': time_range.copy(),
+            'late': time_range.copy(),
+        }
+
+    desc_suffix = plan_item.get('scenario_desc_suffix') if isinstance(plan_item, dict) else None
+    if desc_suffix:
+        base_desc = overridden.get('description', '')
+        overridden['description'] = f"{base_desc} {desc_suffix}".strip()
+
+    return overridden
+
+
 def generate_single_day_episode_llm(scenario, episode_date, day_offset, template,
                                    household_profile, person_ids, device_file=None, subject_id=None,
                                    max_retries=3):
@@ -341,13 +364,7 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
             state_result = run_json_trials_func(state_prompt, num_gen=1, num_tokens_request=1400, temperature=0.8)
             
             state_result = validate_llm_state_result(state_result)
-            state_result['scenario_time'] = normalize_llm_scenario_time(
-                state_result.get('scenario_time'),
-                planned_scene_time,
-                time_range,
-                scenario,
-                episode_date,
-            )
+            state_result['scenario_time'] = planned_scene_time
             if not state_result['scenario_should_happen']:
                 logging.info(
                     "Skipping episode for %s %s: %s",
@@ -480,17 +497,25 @@ def generate_daily_device_episodes(generation_plan, num_days=7, day_interval=1, 
     if not use_llm:
         episodes = []
         for plan_item in generation_plan:
+            scenario = canonicalize_scenario(plan_item['scenario'])
+            template = scene_templates.get(scenario)
+            plan_scene_templates = scene_templates
+            if template and (plan_item.get('time_range') or plan_item.get('scenario_desc_suffix')):
+                plan_scene_templates = scene_templates.copy()
+                plan_scene_templates[scenario] = apply_plan_template_overrides(template, plan_item)
             episodes.extend(generate_scenario_device_episodes(
-                scenario=plan_item['scenario'],
+                scenario=scenario,
                 num_days=num_days,
                 day_interval=day_interval,
                 date_type=date_type,
                 household_profile=household_profile,
-                scene_templates=scene_templates,
+                scene_templates=plan_scene_templates,
                 device_file=device_file,
                 use_llm=False,
                 subject_id=plan_item['person_id'],
                 subject_profile=plan_item.get('member'),
+                time_segment=plan_item.get('time_segment'),
+                commute_group=plan_item.get('commute_group'),
             ))
         return episodes
 
@@ -530,7 +555,8 @@ def generate_daily_device_episodes(generation_plan, num_days=7, day_interval=1, 
 
         for plan_index, plan_item in enumerate(generation_plan):
             scenario = canonicalize_scenario(plan_item['scenario'])
-            template = scene_templates.get(scenario)
+            base_template = scene_templates.get(scenario)
+            template = apply_plan_template_overrides(base_template, plan_item) if base_template else None
             if not template:
                 logging.warning("Unknown scenario in generation plan: %s", scenario)
                 continue
@@ -578,6 +604,8 @@ def generate_daily_device_episodes(generation_plan, num_days=7, day_interval=1, 
                 'devices_info': context_devices_info,
                 'prompt_device_ids': household_device_ids,
                 'subject_profile': plan_item.get('member'),
+                'time_segment': plan_item.get('time_segment'),
+                'commute_group': plan_item.get('commute_group'),
             })
 
         contexts.sort(key=lambda item: item['planned_scene_time'])
@@ -611,13 +639,7 @@ def generate_daily_device_episodes(generation_plan, num_days=7, day_interval=1, 
                     temperature=0.8,
                 )
                 state_result = validate_llm_state_result(state_result)
-                state_result['scenario_time'] = normalize_llm_scenario_time(
-                    state_result.get('scenario_time'),
-                    context['planned_scene_time'],
-                    context['time_range'],
-                    context['scenario'],
-                    episode_date,
-                )
+                state_result['scenario_time'] = context['planned_scene_time']
             except Exception as e:
                 _log_llm_failure(
                     "state_descriptions",
@@ -648,6 +670,7 @@ def generate_daily_device_episodes(generation_plan, num_days=7, day_interval=1, 
             generated_descriptions.append({
                 'scenario': context['scenario'],
                 'subject_id': context['default_subject'],
+                'time_segment': context.get('time_segment'),
                 'scenario_time': scenario_time,
                 'household_state_description': context['household_state_description'],
                 'device_event_description': context['device_event_description'],
@@ -668,6 +691,10 @@ def generate_daily_device_episodes(generation_plan, num_days=7, day_interval=1, 
             if episode:
                 if context.get('subject_profile'):
                     episode['subject_profile'] = context['subject_profile']
+                if context.get('time_segment'):
+                    episode['time_segment'] = context['time_segment']
+                if context.get('commute_group'):
+                    episode['commute_group'] = context['commute_group']
                 day_episodes.append(episode)
 
         return day_offset, day_episodes
@@ -750,18 +777,30 @@ def get_allowed_scene_events(template):
 
 def build_scene_time(episode_date, time_range, fallback_hour=8):
     """
-    根据场景时间窗生成一个 ISO8601 时间。只固定到小时，分钟默认为 00。
+    根据场景时间窗随机生成一个 ISO8601 时间，精确到分钟。
     """
-    start = (time_range or {}).get('start') if isinstance(time_range, dict) else None
-    hour = fallback_hour
-    minute = 0
-    if isinstance(start, str) and ':' in start:
+    date_offset_days = 0
+    if isinstance(time_range, dict):
         try:
-            hour, minute = [int(part) for part in start.split(':')[:2]]
-        except ValueError:
-            hour, minute = fallback_hour, 0
-    hour = hour % 24
-    scene_datetime = datetime.combine(episode_date, datetime.min.time()).replace(hour=hour, minute=minute)
+            date_offset_days = int(time_range.get('date_offset_days') or 0)
+        except (TypeError, ValueError):
+            date_offset_days = 0
+    timestamp_date = episode_date + timedelta(days=date_offset_days)
+    start = (time_range or {}).get('start') if isinstance(time_range, dict) else None
+    end = (time_range or {}).get('end') if isinstance(time_range, dict) else None
+    if isinstance(start, str) and isinstance(end, str) and ':' in start and ':' in end:
+        try:
+            scene_datetime = generate_timestamp(timestamp_date, start, end)
+        except Exception:
+            scene_datetime = datetime.combine(timestamp_date, datetime.min.time()).replace(
+                hour=fallback_hour % 24,
+                minute=random.randint(0, 59),
+            )
+    else:
+        scene_datetime = datetime.combine(timestamp_date, datetime.min.time()).replace(
+            hour=fallback_hour % 24,
+            minute=random.randint(0, 59),
+        )
     return scene_datetime.strftime('%Y-%m-%dT%H:%M:%S+08:00')
 
 
@@ -1496,7 +1535,7 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
 
 def generate_scenario_device_episodes(scenario, num_days=7, day_interval=1, date_type=None, household_profile=None, 
                                       scene_templates=None, device_file=None, use_llm=True,
-                                      subject_id=None, subject_profile=None):
+                                      subject_id=None, subject_profile=None, time_segment=None, commute_group=None):
     """
     生成连续多日的设备事件episodes。
     
@@ -1509,6 +1548,8 @@ def generate_scenario_device_episodes(scenario, num_days=7, day_interval=1, date
         scene_templates: 场景模板字典（可选）
         device_file: 设备配置文件路径（可选）
         use_llm: 是否使用LLM生成（默认True）
+        time_segment: 计划覆盖的时间段（可选）
+        commute_group: 上下班预制班次组（可选）
         
     Returns:
         list: episodes列表，每个episode包含annotated_events
@@ -1597,6 +1638,10 @@ def generate_scenario_device_episodes(scenario, num_days=7, day_interval=1, date
         if episode:
             if subject_profile:
                 episode['subject_profile'] = subject_profile
+            if time_segment:
+                episode['time_segment'] = time_segment
+            if commute_group:
+                episode['commute_group'] = commute_group
             episodes.append(episode)
     
     logging.info(f"Generated {len(episodes)} episodes for scenario '{scenario}'")
@@ -1642,9 +1687,13 @@ def generate_single_day_episode_rule_based(scenario, episode_date, day_offset, t
     
     start_time = time_range.get('start', '17:00')
     end_time = time_range.get('end', '22:30')
+    try:
+        timestamp_date = episode_date + timedelta(days=int(time_range.get('date_offset_days') or 0))
+    except (TypeError, ValueError):
+        timestamp_date = episode_date
     
     # 生成时间戳
-    base_timestamp = generate_timestamp(episode_date, start_time, end_time)
+    base_timestamp = generate_timestamp(timestamp_date, start_time, end_time)
     
     current_state = initialize_state(person_ids)
     all_events = get_primary_events(template)
@@ -1735,9 +1784,13 @@ def generate_single_day_episode(scenario, episode_date, day_offset, template,
     
     start_time = time_range.get('start', '17:00')
     end_time = time_range.get('end', '22:30')
+    try:
+        timestamp_date = episode_date + timedelta(days=int(time_range.get('date_offset_days') or 0))
+    except (TypeError, ValueError):
+        timestamp_date = episode_date
     
     # 生成时间戳
-    base_timestamp = generate_timestamp(episode_date, start_time, end_time)
+    base_timestamp = generate_timestamp(timestamp_date, start_time, end_time)
     
     # 选择核心事件数量（2-5条）
     num_core_events = random.randint(2, min(5, len(core_events)))

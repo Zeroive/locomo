@@ -1,6 +1,6 @@
 """智能家居设备事件生成使用的 LLM Prompt 模板。"""
 
-LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根据给定的家庭画像和场景，先判断当天该场景是否应该发生；如果发生，在当天已生成情景的约束下，生成两部分内容：(1) 当前场景下所有家庭成员的状态与位置；(2) 当前场景主体为完成该场景预期需要操作的一系列设备事件，包括其日常习惯触发的设备联动。
+LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根据给定的家庭画像、预制场景和代码指定的发生时间，判断当天该场景是否应该发生；如果发生，在当天已生成情景的约束下，生成两部分内容：(1) 当前场景下所有家庭成员的状态与位置；(2) 当前场景主体为完成该场景预期需要操作的一系列设备事件，包括其日常习惯触发的设备联动。
 
 ## 家庭成员
 {members_info}
@@ -15,7 +15,7 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 日期: {episode_date}
 候选发生时段:
 {time_period_options}
-参考时间: {planned_scene_time}
+代码指定的情景发生时间: {planned_scene_time}
 
 ## 当天已生成的其他情景描述
 {previous_scenario_descriptions}
@@ -28,7 +28,8 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 1. 判断当天该场景是否应该发生：
    - 如果是上班离家/下班回家，休息日、请假日、居家办公日可以不发生
    - 如果场景主体当天不在家或不符合角色作息，也可以不发生
-2. 如果发生，先根据家庭成员画像、当天其他情景和场景语义，从候选发生时段中选择一个合理的具体 scenario_time，再分开生成两部分描述：
+   - 如果场景描述明确说明当前成员使用某个预制上下班班次，应把该班次视为已经由代码选定；不要仅因为该班次非常规就判定不发生，可结合人物偏好、轮班或临时安排生成该班次内的合理行为
+2. 如果发生，必须原样使用“代码指定的情景发生时间”作为 scenario_time，不要自行选择、随机、推迟或改写时间；再分开生成两部分描述：
    - household_state_description: 当前情景开始前后，所有家庭成员的位置、活动状态、相关房间占用、环境氛围和特殊情况。需覆盖所有家庭成员，写明具体小时/分钟，体现各人员在当前场景下的状态差异。
    - device_event_description: 当前场景主体为完成该场景预期需要操作的一系列设备事件，只描述设备动作/联动/状态变化，不要重复展开人物状态。可包含用户日常习惯触发的设备联动，例如离家时关闭客厅灯/电视/空调、落锁、摄像头识别，回家时打开玄关灯/客厅灯、音箱问候等。
 3. 不要生成额外的合并描述字段；后续事件生成只使用上述两部分描述。
@@ -53,9 +54,9 @@ LLM_STATE_DESCRIPTION_PROMPT = """你是一个智能家居系统分析师。根�
 - 输出必须是合法的 JSON 格式
 - scenario_should_happen 必须是布尔值
 - scenario_should_happen=false 时，必须提供 skip_reason，两个描述字段必须为空字符串
-- scenario_time 使用 ISO8601 格式，必须落在“候选发生时段”之一；不要机械照抄参考时间
+- scenario_time 必须等于“代码指定的情景发生时间”，不要由模型另行生成或调整
 - scenario_should_happen=true 时，household_state_description 和 device_event_description 都不能为空
-- household_state_description 必须覆盖所有家庭成员，写明模型选择的具体小时/分钟，并与 scenario_time 保持一致
+- household_state_description 必须覆盖所有家庭成员，写明 scenario_time 对应的具体小时/分钟，并与 scenario_time 保持一致
 - device_event_description 必须聚焦当前场景主体预期操作的设备动作或联动，不能混入与当前场景无关的设备操作
 - device_event_description 中的设备动作必须能从可控设备中找到依据；不要描述不存在的设备
 - household_state_description 和 device_event_description 不能与当天已生成的其他情景描述出现人物位置、设备状态或时间顺序冲突
