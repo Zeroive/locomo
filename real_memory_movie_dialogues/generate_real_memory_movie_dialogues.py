@@ -80,6 +80,60 @@ HOUSEHOLD_STRUCTURES = {
             {"from": "person_002", "to": "person_001", "type": "CHILD_OF"},
         ],
     },
+    "single_parent_two_children": {
+        "household_type": "single_parent_two_children",
+        "household_size": "3人",
+        "household_structure": "单亲 + 2个孩子",
+        "members": [
+            {"entity_id": "person_001", "person_name": "用户", "family_role_label": "单亲家长", "can_chat_with_ai": True},
+            {"entity_id": "person_002", "person_name": "孩子A", "family_role_label": "孩子", "can_chat_with_ai": False},
+            {"entity_id": "person_003", "person_name": "孩子B", "family_role_label": "孩子", "can_chat_with_ai": False},
+        ],
+        "relations": [
+            {"from": "person_001", "to": "person_002", "type": "PARENT_OF"},
+            {"from": "person_002", "to": "person_001", "type": "CHILD_OF"},
+            {"from": "person_001", "to": "person_003", "type": "PARENT_OF"},
+            {"from": "person_003", "to": "person_001", "type": "CHILD_OF"},
+            {"from": "person_002", "to": "person_003", "type": "SIBLING_OF"},
+            {"from": "person_003", "to": "person_002", "type": "SIBLING_OF"},
+        ],
+    },
+    "couple_with_grandparent": {
+        "household_type": "couple_with_grandparent",
+        "household_size": "3人",
+        "household_structure": "夫妻 + 1个祖辈",
+        "members": [
+            {"entity_id": "person_001", "person_name": "用户", "family_role_label": "伴侣", "can_chat_with_ai": True},
+            {"entity_id": "person_002", "person_name": "伴侣", "family_role_label": "伴侣", "can_chat_with_ai": False},
+            {"entity_id": "person_003", "person_name": "长辈", "family_role_label": "祖辈", "can_chat_with_ai": False},
+        ],
+        "relations": [
+            {"from": "person_001", "to": "person_002", "type": "SPOUSE_OF"},
+            {"from": "person_002", "to": "person_001", "type": "SPOUSE_OF"},
+            {"from": "person_003", "to": "person_001", "type": "PARENT_OF"},
+            {"from": "person_001", "to": "person_003", "type": "CHILD_OF"},
+            {"from": "person_003", "to": "person_002", "type": "IN_LAW_OF"},
+            {"from": "person_002", "to": "person_003", "type": "IN_LAW_OF"},
+        ],
+    },
+    "single_parent_child_grandparent": {
+        "household_type": "single_parent_child_grandparent",
+        "household_size": "3人",
+        "household_structure": "单亲 + 1个孩子 + 1个祖辈",
+        "members": [
+            {"entity_id": "person_001", "person_name": "用户", "family_role_label": "单亲家长", "can_chat_with_ai": True},
+            {"entity_id": "person_002", "person_name": "孩子", "family_role_label": "孩子", "can_chat_with_ai": False},
+            {"entity_id": "person_003", "person_name": "长辈", "family_role_label": "祖辈", "can_chat_with_ai": False},
+        ],
+        "relations": [
+            {"from": "person_001", "to": "person_002", "type": "PARENT_OF"},
+            {"from": "person_002", "to": "person_001", "type": "CHILD_OF"},
+            {"from": "person_003", "to": "person_001", "type": "PARENT_OF"},
+            {"from": "person_001", "to": "person_003", "type": "CHILD_OF"},
+            {"from": "person_003", "to": "person_002", "type": "GRANDPARENT_OF"},
+            {"from": "person_002", "to": "person_003", "type": "GRANDCHILD_OF"},
+        ],
+    },
     "three_generation_family": {
         "household_type": "three_generation_family",
         "household_size": "4人",
@@ -103,6 +157,12 @@ HOUSEHOLD_STRUCTURES = {
     },
 }
 HOUSEHOLD_STRUCTURE_ORDER = list(HOUSEHOLD_STRUCTURES)
+MULTI_PERSON_STRUCTURE_ORDER = [
+    "nuclear_family",
+    "single_parent_two_children",
+    "couple_with_grandparent",
+    "single_parent_child_grandparent",
+]
 
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(message)s")
@@ -119,6 +179,17 @@ def parse_args():
     parser.add_argument("--temperature", type=float, default=0.8)
     parser.add_argument("--max-turns-per-session", type=int, default=4)
     parser.add_argument("--max-workers", type=int, default=1, help="Parallel ability workers. 1 keeps serial generation.")
+    parser.add_argument(
+        "--num-sampled-households",
+        type=int,
+        default=0,
+        help="Generate this many multi-person households by randomly sampling one CSV memory row per member.",
+    )
+    parser.add_argument(
+        "--sample-without-replacement",
+        action="store_true",
+        help="When generating sampled households, avoid reusing CSV rows until all rows are exhausted.",
+    )
     parser.add_argument(
         "--household-structure",
         choices=["cycle", *HOUSEHOLD_STRUCTURE_ORDER],
@@ -238,10 +309,41 @@ def summarize_household_context(household):
     ])
 
 
-def make_profile(row, row_index, household_structure="cycle"):
-    row_id = f"RMR-{row_index:03d}"
+def get_household_member(household, entity_id):
+    for member in household.get("members", []):
+        if member.get("entity_id") == entity_id:
+            return member
+    raise ValueError(f"unknown household member: {entity_id}")
+
+
+def make_source(row, row_index):
     memory_content = row_value(row, "记忆内容")
     user_input = row_value(row, "用户输入")
+    return {
+        "row_index": row_index,
+        "timestamp": row_value(row, "时间戳"),
+        "user_id": row_value(row, "用户ID"),
+        "user_input": user_input,
+        "memory_content": memory_content,
+    }
+
+
+def make_profile_from_source(profile_id, source, household, current_user_id="person_001"):
+    current_user = get_household_member(household, current_user_id)
+    return {
+        "row_id": profile_id,
+        "source": source,
+        "household": {**household, "current_user_id": current_user_id},
+        "current_user_id": current_user_id,
+        "current_user_name": current_user.get("person_name", current_user_id),
+        "memory_lines": split_memory_lines(source["memory_content"]),
+        "memory_keywords": extract_memory_keywords(source["memory_content"]),
+        "ability": classify_ability(source["memory_content"], source["user_input"]),
+    }
+
+
+def make_profile(row, row_index, household_structure="cycle"):
+    row_id = f"RMR-{row_index:03d}"
     household_template = select_household_structure(row_index, household_structure)
     household = {
         "family_id": f"family_{row_index:03d}",
@@ -254,20 +356,7 @@ def make_profile(row, row_index, household_structure="cycle"):
         "relations": household_template["relations"],
         "assistant": {"entity_id": "agent_a", "person_name": "AI助手"},
     }
-    return {
-        "row_id": row_id,
-        "source": {
-            "row_index": row_index,
-            "timestamp": row_value(row, "时间戳"),
-            "user_id": row_value(row, "用户ID"),
-            "user_input": user_input,
-            "memory_content": memory_content,
-        },
-        "household": household,
-        "memory_lines": split_memory_lines(memory_content),
-        "memory_keywords": extract_memory_keywords(memory_content),
-        "ability": classify_ability(memory_content, user_input),
-    }
+    return make_profile_from_source(row_id, make_source(row, row_index), household, "person_001")
 
 
 def build_memory_points_prompt(profile):
@@ -516,6 +605,8 @@ def build_turn_context(profile, plan, session, prior_sessions, conv_so_far):
 
 def build_user_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, turn_idx):
     context, keywords = build_turn_context(profile, plan, session, prior_sessions, conv_so_far)
+    current_user_id = profile.get("current_user_id", "person_001")
+    current_user_name = profile.get("current_user_name", "用户")
     first_turn_hint = ""
     if turn_idx == 1 and plan["category"] != "adversarial":
         first_turn_hint = f"- 首轮或本会话中要自然带出至少一个记忆关键词：{keywords}。\n"
@@ -529,7 +620,7 @@ def build_user_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, 
 
 要求：
 - 当前说话方：用户。
-- 你只能扮演 person_001 用户，生成用户接下来对AI助手说的一句自然口语。
+- 你只能扮演 {current_user_id}（{current_user_name}），生成该用户接下来对AI助手说的一句自然口语。
 - 用户说话要日常、随意，可以像在客厅里随口吩咐。
 - 用户可以表达播放影片、听歌、小品、切换内容、调音量、开关投影等需求。
 - 用户可以自然提到其他家庭成员，但其他家庭成员不能直接发言。
@@ -543,6 +634,8 @@ def build_user_turn_prompt(profile, plan, session, prior_sessions, conv_so_far, 
 
 def build_assistant_turn_prompt(profile, plan, session, prior_sessions, conv_so_far):
     context, _ = build_turn_context(profile, plan, session, prior_sessions, conv_so_far)
+    current_user_id = profile.get("current_user_id", "person_001")
+    current_user_name = profile.get("current_user_name", "用户")
     return f"""
 {context}
 
@@ -554,7 +647,7 @@ def build_assistant_turn_prompt(profile, plan, session, prior_sessions, conv_so_
 - 不主动制造新记忆，不解释测评类别、证据、推理过程或内部目标。
 - 如果用户请求明确，直接确认执行；如果缺少必要信息，只问一个简短澄清问题。
 - 只输出一句话，不要输出说话人名字，不要输出JSON。
-- 本段对话只有 person_001 用户和AI助手两个说话方，其他家庭成员只能被提及，不能直接发言。
+- 本段对话只有 {current_user_id}（{current_user_name}）和AI助手两个说话方，其他家庭成员只能被提及，不能直接发言。
 - 语气稳妥、克制，不超过30个中文字。
 """.strip()
 
@@ -762,6 +855,8 @@ def generate_case(profile, plan, args):
     case = {
         "case_id": plan["case_id"],
         "category": plan["category"],
+        "current_user_id": profile.get("current_user_id", "person_001"),
+        "current_user_name": profile.get("current_user_name", "用户"),
         "dimension_tags": {
             "scene": "观影场景",
             "ability": plan["ability"],
@@ -844,6 +939,164 @@ def generate_row(row, row_index, args):
     return row_output, failures
 
 
+def select_multi_person_structure(household_index, requested="cycle"):
+    if requested == "cycle":
+        requested = MULTI_PERSON_STRUCTURE_ORDER[(household_index - 1) % len(MULTI_PERSON_STRUCTURE_ORDER)]
+    return select_household_structure(household_index, requested)
+
+
+def make_sampled_household(household_index, args):
+    household_template = select_multi_person_structure(household_index, args.household_structure)
+    members = []
+    for member in household_template["members"]:
+        member_data = dict(member)
+        member_data["can_chat_with_ai"] = True
+        members.append(member_data)
+    return {
+        "family_id": f"sampled_family_{household_index:03d}",
+        "family_name": f"采样家庭{household_index:03d}",
+        "household_type": household_template["household_type"],
+        "household_size": household_template["household_size"],
+        "household_structure": household_template["household_structure"],
+        "members": members,
+        "relations": household_template["relations"],
+        "assistant": {"entity_id": "agent_a", "person_name": "AI助手"},
+    }
+
+
+def make_member_profile(household_id, household, member, source):
+    profile_id = f"{household_id}-{member['entity_id']}"
+    return make_profile_from_source(profile_id, source, household, member["entity_id"])
+
+
+def sample_sources_for_members(indexed_rows, member_count, rng, sample_without_replacement=False):
+    if not indexed_rows:
+        raise ValueError("cannot sample member memories from an empty CSV")
+    if sample_without_replacement and member_count <= len(indexed_rows):
+        sampled = rng.sample(indexed_rows, member_count)
+    elif sample_without_replacement:
+        shuffled = list(indexed_rows)
+        rng.shuffle(shuffled)
+        sampled = [shuffled[idx % len(shuffled)] for idx in range(member_count)]
+    else:
+        sampled = [rng.choice(indexed_rows) for _ in range(member_count)]
+    return [make_source(row, row_index) for row_index, row in sampled]
+
+
+def generate_member_cases(member_profile, args):
+    memory_summary = generate_memory_points(member_profile, args)
+    member_profile["memory_points"] = memory_summary["memory_points"]
+    member_profile["required_keywords"] = memory_summary["required_keywords"]
+    member_profile["scene_hint"] = memory_summary["scene_hint"]
+    member_profile["dialogue_topics"] = generate_dialogue_topics(member_profile, args)
+
+    cases = []
+    failures = []
+    for category in CASE_CATEGORIES:
+        plan = build_case_plan(member_profile, category)
+        try:
+            cases.append(generate_case_with_retries(member_profile, plan, args))
+        except Exception as exc:
+            failures.append({"case_id": plan["case_id"], "category": category, "error": str(exc)})
+    return {
+        "profile_id": member_profile["row_id"],
+        "entity_id": member_profile["current_user_id"],
+        "person_name": member_profile["current_user_name"],
+        "source": member_profile["source"],
+        "ability": member_profile["ability"],
+        "memory_points": member_profile.get("memory_points", []),
+        "required_keywords": member_profile.get("required_keywords", []),
+        "scene_hint": member_profile.get("scene_hint", ""),
+        "dialogue_topics": member_profile.get("dialogue_topics", {}),
+        "cases": cases,
+    }, failures
+
+
+def generate_sampled_household(household_index, indexed_rows, args):
+    household_id = f"HMR-{household_index:03d}"
+    household = make_sampled_household(household_index, args)
+    sources = sample_sources_for_members(
+        indexed_rows,
+        len(household["members"]),
+        random.Random(args.seed + household_index),
+        sample_without_replacement=args.sample_without_replacement,
+    )
+    member_tasks = []
+    for member, source in zip(household["members"], sources):
+        member_tasks.append((member, make_member_profile(household_id, household, member, source)))
+
+    generated_members = []
+    failures = []
+    for member, member_profile in member_tasks:
+        try:
+            member_output, member_failures = generate_member_cases(member_profile, args)
+            member_output["family_role_label"] = member.get("family_role_label", "")
+            generated_members.append(member_output)
+            if member_failures:
+                failures.append({"entity_id": member["entity_id"], "failures": member_failures})
+        except Exception as exc:
+            failures.append({"entity_id": member["entity_id"], "error": str(exc)})
+
+    household_output = {
+        "household_id": household_id,
+        "household": household,
+        "members": generated_members,
+    }
+    if not failures:
+        validate_sampled_household_output(household_output)
+    return household_output, failures
+
+
+def validate_sampled_household_output(household_output):
+    household = household_output.get("household", {})
+    members = household_output.get("members", [])
+    if len(members) != len(household.get("members", [])):
+        raise ValueError("sampled household must include generated output for every member")
+    for member in members:
+        source = member.get("source", {})
+        if "memory_token" in source or "total_token" in source:
+            raise ValueError("member source must not include memory_token or total_token")
+        categories = [case.get("category") for case in member.get("cases", [])]
+        if categories and categories != CASE_CATEGORIES:
+            raise ValueError(f"member case categories mismatch: {categories}")
+
+
+def process_sampled_household(household_index, indexed_rows, args):
+    household_id = f"HMR-{household_index:03d}"
+    out_path = args.out_dir / f"{household_id}.json"
+    if out_path.exists() and not args.overwrite:
+        logging.info("%s exists, loading existing file", out_path)
+        with out_path.open("r", encoding="utf-8") as f:
+            existing = json.load(f)
+        return household_index, existing, []
+    logging.info("Generating sampled household %s", household_id)
+    household_output, failures = generate_sampled_household(household_index, indexed_rows, args)
+    save_json(household_output, out_path)
+    return household_index, household_output, failures
+
+
+def generate_sampled_households(rows, args):
+    indexed_rows = list(enumerate(rows, start=1))
+    household_indices = list(range(1, args.num_sampled_households + 1))
+    if args.max_workers <= 1 or len(household_indices) <= 1:
+        return [
+            process_sampled_household(household_index, indexed_rows, args)
+            for household_index in household_indices
+        ]
+
+    max_workers = max(1, min(args.max_workers, len(household_indices)))
+    logging.info("Parallel sampled household generation: households=%s, max_workers=%s", len(household_indices), max_workers)
+    results = []
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(process_sampled_household, household_index, indexed_rows, args): household_index
+            for household_index in household_indices
+        }
+        for future in as_completed(futures):
+            results.append(future.result())
+    return sorted(results, key=lambda item: item[0])
+
+
 def row_ability(row):
     return classify_ability(row_value(row, "记忆内容"), row_value(row, "用户输入"))
 
@@ -916,6 +1169,23 @@ def main():
     random.seed(args.seed)
     args.out_dir.mkdir(parents=True, exist_ok=True)
     rows = load_csv_rows(args.input_csv, args.limit)
+
+    if args.num_sampled_households > 0:
+        household_results = generate_sampled_households(rows, args)
+        all_households = []
+        failed_households = []
+        for household_index, household_output, failures in household_results:
+            household_id = f"HMR-{household_index:03d}"
+            all_households.append(household_output)
+            if failures:
+                failed_households.append({"household_id": household_id, "failures": failures})
+        save_json(all_households, args.out_dir / "all_households.json")
+        if failed_households:
+            save_json(failed_households, args.out_dir / "failed_households.json")
+            logging.warning("Finished sampled households with failures: %s", args.out_dir / "failed_households.json")
+        else:
+            logging.info("Finished sampled households successfully: %s", args.out_dir / "all_households.json")
+        return
 
     if args.max_workers > 1:
         row_results = generate_rows_parallel_by_ability(rows, args)
