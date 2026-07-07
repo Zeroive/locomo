@@ -44,7 +44,8 @@ python locomo/generative_agents/generate_behavior_profile.py \
 |------|------|--------|
 | `--out-dir` | 输出目录路径（必需） | - |
 | `--scenario` | 场景类型 | `family_return` |
-| `--num-days` | 生成连续天数 | `7` |
+| `--num-days` | 生成日期点数量 | `7` |
+| `--day-interval` | 日期点之间的间隔天数，可选 `1`、`7`、`15`、`30` | `1` |
 | `--device-event-days` | 设备事件生成天数 | 与 `--num-days` 相同 |
 | `--overwrite-events` | 覆盖已存在的设备事件 | `False` |
 | `--use-llm` | 使用 LLM 生成（默认启用） | `True` |
@@ -230,7 +231,7 @@ python locomo/generative_agents/generate_behavior_profile.py \
 1. **LLM 可用性**：LLM 生成模式需要配置好 `openai` 或其他 LLM 服务，否则会自动回退到规则模板生成
 2. **设备文件**：确保 `home_devices.json` 文件存在且格式正确
 3. **家庭画像**：如果没有提供家庭画像，系统会使用默认的家庭成员模板
-4. **时间连续性**：生成的 episodes 日期是连续的，从今天往前推 `num_days` 天
+4. **时间间隔**：默认生成连续日期；设置 `--day-interval 7/15/30` 后，生成的日期点会按对应天数间隔从今天往前推
 5. **事件数量**：每天生成 2-8 个设备事件（核心事件 2-5 条，噪声事件 0-3 条）
 
 ## 故障排查

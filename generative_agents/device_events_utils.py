@@ -430,7 +430,7 @@ def generate_single_day_episode_llm(scenario, episode_date, day_offset, template
     return None
 
 
-def generate_daily_device_episodes(generation_plan, num_days=7, household_profile=None,
+def generate_daily_device_episodes(generation_plan, num_days=7, day_interval=1, household_profile=None,
                                    scene_templates=None, device_file=None, use_llm=True,
                                    day_workers=1):
     """
@@ -448,6 +448,7 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
             episodes.extend(generate_scenario_device_episodes(
                 scenario=plan_item['scenario'],
                 num_days=num_days,
+                day_interval=day_interval,
                 household_profile=household_profile,
                 scene_templates=scene_templates,
                 device_file=device_file,
@@ -463,6 +464,7 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
         return generate_daily_device_episodes(
             generation_plan,
             num_days=num_days,
+            day_interval=day_interval,
             household_profile=household_profile,
             scene_templates=scene_templates,
             device_file=device_file,
@@ -481,10 +483,11 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
     room_device_layout = format_room_device_layout(household_profile)
     person_room_status_schema = format_person_room_status_schema()
     device_state_schema = format_device_state_schema()
-    start_date = datetime.now().date() - timedelta(days=num_days - 1)
+    day_interval = int(day_interval or 1)
+    start_date = datetime.now().date() - timedelta(days=(num_days - 1) * day_interval)
     
     def generate_one_day(day_offset):
-        episode_date = start_date + timedelta(days=day_offset)
+        episode_date = start_date + timedelta(days=day_offset * day_interval)
         day_episodes = []
         contexts = []
         available_devices = list(base_available_devices)
@@ -673,7 +676,12 @@ def generate_daily_device_episodes(generation_plan, num_days=7, household_profil
         for day_offset in range(num_days):
             episodes.extend(day_results.get(day_offset, []))
 
-    logging.info("Generated %s episodes for %s days with daily planning", len(episodes), num_days)
+    logging.info(
+        "Generated %s episodes for %s date points with %s-day interval and daily planning",
+        len(episodes),
+        num_days,
+        day_interval,
+    )
     return episodes
 
 
@@ -1462,7 +1470,7 @@ def validate_llm_episode_result(result, scenario, episode_date, default_subject,
     return episode
 
 
-def generate_scenario_device_episodes(scenario, num_days=7, household_profile=None, 
+def generate_scenario_device_episodes(scenario, num_days=7, day_interval=1, household_profile=None, 
                                       scene_templates=None, device_file=None, use_llm=True,
                                       subject_id=None, subject_profile=None):
     """
@@ -1471,6 +1479,7 @@ def generate_scenario_device_episodes(scenario, num_days=7, household_profile=No
     Args:
         scenario: 场景类型（如 'family_return'）
         num_days: 生成天数，默认7天
+        day_interval: 生成日期之间的间隔天数，默认1天
         household_profile: 家庭画像字典（可选）
         scene_templates: 场景模板字典（可选）
         device_file: 设备配置文件路径（可选）
@@ -1512,12 +1521,13 @@ def generate_scenario_device_episodes(scenario, num_days=7, household_profile=No
     if default_subject not in person_ids:
         person_ids.append(default_subject)
     
-    # 确定起始日期（从今天往前推num_days天）
-    start_date = datetime.now().date() - timedelta(days=num_days - 1)
+    # 确定起始日期（从今天往前推日期点数量和间隔）
+    day_interval = int(day_interval or 1)
+    start_date = datetime.now().date() - timedelta(days=(num_days - 1) * day_interval)
     
     # 为每一天生成一个episode
     for day_offset in range(num_days):
-        episode_date = start_date + timedelta(days=day_offset)
+        episode_date = start_date + timedelta(days=day_offset * day_interval)
         if should_skip_scene_by_calendar(scenario, episode_date):
             logging.info("Skipping %s for %s due to calendar constraints", scenario, episode_date)
             continue

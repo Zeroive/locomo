@@ -178,7 +178,9 @@ def parse_args():
     
     # 时间参数
     parser.add_argument('--num-days', type=int, default=7, 
-                        help="生成连续天数，默认为7天")
+                        help="生成日期点数量，默认为7个")
+    parser.add_argument('--day-interval', type=int, default=1, choices=[1, 7, 15, 30],
+                        help="生成日期之间的间隔天数，可选1、7、15、30，默认1")
     parser.add_argument('--device-event-days', type=int, default=None, 
                         help="设备事件生成天数，未指定时使用--num-days")
     parser.add_argument('--day-workers', type=int, default=1,
@@ -245,11 +247,12 @@ def main():
         logging.warning("No member/scenario generation plan found. Nothing to generate.")
         return
     
-    # 生成连续多日的设备事件episodes
+    # 生成多个日期点的设备事件episodes
     generation_method = "LLM" if use_llm else "rule-based"
     logging.info(
-        "Generating %s days of device episodes for %s member-scenario plans using %s method",
+        "Generating %s date points of device episodes every %s day(s) for %s member-scenario plans using %s method",
         args.device_event_days,
+        args.day_interval,
         len(generation_plan),
         generation_method,
     )
@@ -265,6 +268,7 @@ def main():
     episodes = generate_daily_device_episodes(
         generation_plan=generation_plan,
         num_days=args.device_event_days,
+        day_interval=args.day_interval,
         household_profile=household_profile,
         scene_templates=scene_templates,
         device_file=args.device_file,
