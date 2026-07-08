@@ -146,7 +146,7 @@
     },
     {
       "entity_id": "person_002",
-      "question": "唱完播放我喜欢的日本内容。",
+      "question": "唱完播放刚才留着的日本内容。",
       "answer": "日本动漫",
       "category": "temporal"
     }

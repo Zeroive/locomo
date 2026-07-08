@@ -137,7 +137,7 @@
     {
       "entity_id": "person_001",
       "question": "放我喜欢的古装剧，再找导演电影。",
-      "answer": "《美人心计》",
+      "answer": "《美人心计》和冯小刚电影",
       "category": "multi_hop"
     },
     {

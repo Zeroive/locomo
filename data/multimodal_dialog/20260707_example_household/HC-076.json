@@ -70,7 +70,7 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "继续我刚才看的电影。",
+      "question": "播放我看过的电影。",
       "answer": "《飞驰人生3》",
       "category": "single_hop"
     }

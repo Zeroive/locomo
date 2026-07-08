@@ -142,7 +142,7 @@
     },
     {
       "entity_id": "person_002",
-      "question": "放我提过的绿色封面电影。",
+      "question": "按我喜欢的颜色，放我提过的太奶奶电影。",
       "answer": "《18岁太奶奶驾到》",
       "category": "multi_hop"
     }

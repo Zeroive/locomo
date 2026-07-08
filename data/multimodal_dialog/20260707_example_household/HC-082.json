@@ -69,7 +69,7 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "播放我想看的游戏改编影片。",
+      "question": "先播放我想看的僵尸影片，再推荐类似游戏改编的。",
       "answer": "《植物大战僵尸》",
       "category": "multi_hop"
     }

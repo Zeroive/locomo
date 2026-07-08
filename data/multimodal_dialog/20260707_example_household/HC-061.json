@@ -137,13 +137,13 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "推荐我最近看的电影。",
+      "question": "推荐我喜欢的电影。",
       "answer": "刘德华电影",
       "category": "single_hop"
     },
     {
       "entity_id": "person_002",
-      "question": "播放我刚听过的相声。",
+      "question": "播放我听过的相声。",
       "answer": "郭德纲相声",
       "category": "single_hop"
     }

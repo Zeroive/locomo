@@ -70,8 +70,8 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "打开我想看的那部剧接着播。",
-      "answer": "《星汉灿烂》",
+      "question": "打开我想看的那部剧，再切到下一集。",
+      "answer": "《星汉灿烂》下一集",
       "category": "multi_hop"
     }
   ]

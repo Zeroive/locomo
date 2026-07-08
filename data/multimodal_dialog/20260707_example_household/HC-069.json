@@ -158,8 +158,8 @@
     },
     {
       "entity_id": "person_002",
-      "question": "给彤彤同学放最近的电视台。",
-      "answer": "河北一台",
+      "question": "彤彤同学要看电视，放哪个台。",
+      "answer": "北京一台",
       "category": "open_domain"
     }
   ]

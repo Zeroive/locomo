@@ -80,7 +80,7 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "上午给我推荐我喜欢的电影。",
+      "question": "给我推荐我喜欢的电影。",
       "answer": "吴京电影",
       "category": "open_domain"
     }

@@ -135,13 +135,13 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "放我边洗边听的歌。",
+      "question": "边洗边听歌，等会玩切西瓜，放什么。",
       "answer": "《辞九门回忆》",
       "category": "open_domain"
     },
     {
       "entity_id": "person_002",
-      "question": "找我喜欢的忍者动画片。",
+      "question": "我喜欢忍者动画，找什么看。",
       "answer": "《幻影忍者》",
       "category": "open_domain"
     }

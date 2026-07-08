@@ -148,7 +148,7 @@
     },
     {
       "entity_id": "person_002",
-      "question": "继续我想看的那部剧。",
+      "question": "播放我想看的那部剧。",
       "answer": "《星汉灿烂》",
       "category": "single_hop"
     }

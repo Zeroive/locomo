@@ -70,7 +70,7 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "打开我云盘里配跳舞的照片视频。",
+      "question": "我想看聚会照片还想跳舞，放什么。",
       "answer": "聚会照片视频",
       "category": "open_domain"
     }
