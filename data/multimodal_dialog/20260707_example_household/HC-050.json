@@ -1,0 +1,164 @@
+{
+  "case_id": "HC-050",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "夫妻 / 伴侣家庭",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要看。",
+          "我要听无人之岛dj版，我要看刚才那。",
+          "我要看我有神话。",
+          "我要看神话。",
+          "我要听无人之岛dj版。"
+        ],
+        "memory": [
+          "用户说'我要看奇才'",
+          "用户囤积了千亿物资",
+          "用户要观看抖音",
+          "用户想要观看奇才",
+          "用户说我要看奇才",
+          "用户喜欢看末世题材的动画",
+          "用户喜欢与棋牌相关的影视作品",
+          "用户要观看棋牌",
+          "用户打造了神级避难所",
+          "用户查看电视",
+          "用户要查看刚才看的内容",
+          "用户喜欢末世题材的动画",
+          "用户要看直播"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想看经典的短视频。"
+        ],
+        "memory": [
+          "用户想看《机灵姐》动画片"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾临川",
+      "date_time": "2026-07-01 20:40",
+      "QA_details": [
+        {
+          "user": "我要看奇才。",
+          "assistant": "奇才相关内容已打开。"
+        },
+        {
+          "user": "看末世动画。",
+          "assistant": "末世题材动画已推荐。"
+        },
+        {
+          "user": "打开棋牌。",
+          "assistant": "棋牌相关影视内容已显示。"
+        },
+        {
+          "user": "看直播。",
+          "assistant": "直播页面已打开。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "顾临川",
+      "date_time": "2026-07-05 21:20",
+      "QA_details": [
+        {
+          "user": "我要听无人之岛dj版。",
+          "assistant": "《无人之岛》DJ版已搜索到。"
+        },
+        {
+          "user": "我要看刚才那。",
+          "assistant": "刚才看的内容已找回。"
+        },
+        {
+          "user": "我要看神话。",
+          "assistant": "《神话》相关内容已打开。"
+        },
+        {
+          "user": "回抖音。",
+          "assistant": "抖音播放页已恢复。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶知秋",
+      "date_time": "2026-07-02 18:30",
+      "QA_details": [
+        {
+          "user": "找机灵姐。",
+          "assistant": "《机灵姐》动画片已找到。"
+        },
+        {
+          "user": "播放一集。",
+          "assistant": "《机灵姐》开始播放。"
+        },
+        {
+          "user": "换短一点。",
+          "assistant": "已切到较短片段。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "《机灵姐》已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶知秋",
+      "date_time": "2026-07-06 19:15",
+      "QA_details": [
+        {
+          "user": "我想看经典的短视频。",
+          "assistant": "经典短视频推荐已打开。"
+        },
+        {
+          "user": "像机灵姐。",
+          "assistant": "已按《机灵姐》风格推荐。"
+        },
+        {
+          "user": "继续机灵姐。",
+          "assistant": "《机灵姐》继续播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "下一集已切换。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续我昨天看的海底小纵队。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "播放我收藏的汪汪队电影。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

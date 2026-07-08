@@ -1,0 +1,77 @@
+{
+  "case_id": "HC-089",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "女主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "给我放首梦想家。"
+        ],
+        "memory": [
+          "用户的名字是孙楠"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "孙楠",
+      "date_time": "2026-07-01 19:25",
+      "QA_details": [
+        {
+          "user": "我叫孙楠。",
+          "assistant": "已记住你的名字是孙楠。"
+        },
+        {
+          "user": "打开音乐。",
+          "assistant": "音乐页面已打开。"
+        },
+        {
+          "user": "找梦想家。",
+          "assistant": "《梦想家》已找到。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "《梦想家》开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "孙楠",
+      "date_time": "2026-07-06 18:45",
+      "QA_details": [
+        {
+          "user": "给我放首梦想家。",
+          "assistant": "《梦想家》继续播放。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "音乐历史里有《梦想家》。"
+        },
+        {
+          "user": "下一首。",
+          "assistant": "已切到下一首。"
+        },
+        {
+          "user": "回梦想家。",
+          "assistant": "已切回《梦想家》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "按我的名字播放刚才那首歌。",
+      "answer": "《梦想家》",
+      "category": "open_domain"
+    }
+  ]
+}

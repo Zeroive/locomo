@@ -1,0 +1,78 @@
+{
+  "case_id": "HC-076",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "男主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 单跳能力",
+    "question_type": "单跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "播放成都。",
+          "换一首成都。"
+        ],
+        "memory": [
+          "用户播放了《飞驰人生3》"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "程远航",
+      "date_time": "2026-07-01 20:05",
+      "QA_details": [
+        {
+          "user": "播放飞驰人生3。",
+          "assistant": "《飞驰人生3》开始播放。"
+        },
+        {
+          "user": "全屏。",
+          "assistant": "画面已全屏。"
+        },
+        {
+          "user": "暂停一下。",
+          "assistant": "播放已暂停。"
+        },
+        {
+          "user": "继续。",
+          "assistant": "《飞驰人生3》继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "程远航",
+      "date_time": "2026-07-05 19:30",
+      "QA_details": [
+        {
+          "user": "播放成都。",
+          "assistant": "《成都》已找到。"
+        },
+        {
+          "user": "换一首成都。",
+          "assistant": "已切到另一版《成都》。"
+        },
+        {
+          "user": "看刚才电影。",
+          "assistant": "已切回《飞驰人生3》。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "播放历史里有《飞驰人生3》和《成都》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续我刚才看的电影。",
+      "answer": "《飞驰人生3》",
+      "category": "single_hop"
+    }
+  ]
+}

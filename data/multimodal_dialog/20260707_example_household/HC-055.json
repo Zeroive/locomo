@@ -1,0 +1,150 @@
+{
+  "case_id": "HC-055",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "单亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "小东东，我要看枫枫玩物。"
+        ],
+        "memory": [
+          "用户要看枫枫玩具动画片",
+          "用户喜欢看枫枫玩具动画片"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想听影歌。"
+        ],
+        "memory": [
+          "用户喜欢王菲的歌和《匆匆那年》",
+          "用户想听喜马拉雅"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周远宁",
+      "date_time": "2026-07-01 18:25",
+      "QA_details": [
+        {
+          "user": "找枫枫玩具。",
+          "assistant": "枫枫玩具动画片已找到。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "枫枫玩具动画片开始播放。"
+        },
+        {
+          "user": "换一集。",
+          "assistant": "已切到下一集。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "枫枫玩具动画片已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "周远宁",
+      "date_time": "2026-07-05 19:00",
+      "QA_details": [
+        {
+          "user": "小东东，我要看枫枫玩物。",
+          "assistant": "按枫枫玩具动画片为你查找。"
+        },
+        {
+          "user": "继续上次。",
+          "assistant": "枫枫玩具动画片继续播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "下一集已播放。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "历史里有枫枫玩具动画片。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周小雨",
+      "date_time": "2026-07-02 21:10",
+      "QA_details": [
+        {
+          "user": "放王菲。",
+          "assistant": "王菲歌曲列表已打开。"
+        },
+        {
+          "user": "匆匆那年。",
+          "assistant": "《匆匆那年》开始播放。"
+        },
+        {
+          "user": "打开喜马拉雅。",
+          "assistant": "喜马拉雅音频页已打开。"
+        },
+        {
+          "user": "回歌。",
+          "assistant": "已切回王菲歌曲。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "周小雨",
+      "date_time": "2026-07-06 20:20",
+      "QA_details": [
+        {
+          "user": "我想听影歌。",
+          "assistant": "按你喜欢的王菲电影歌曲查找。"
+        },
+        {
+          "user": "就匆匆那年。",
+          "assistant": "《匆匆那年》继续播放。"
+        },
+        {
+          "user": "喜马拉雅也行。",
+          "assistant": "喜马拉雅相关音频已显示。"
+        },
+        {
+          "user": "先听王菲。",
+          "assistant": "已回到王菲歌曲播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续我昨天看的海底小纵队。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "播放我收藏的周杰伦新歌。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

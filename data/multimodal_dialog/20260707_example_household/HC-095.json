@@ -1,0 +1,77 @@
+{
+  "case_id": "HC-095",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "女主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "播放我的爱情之恋。"
+        ],
+        "memory": [
+          "用户最喜欢的是蒙古族"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "宋清棠",
+      "date_time": "2026-07-01 20:10",
+      "QA_details": [
+        {
+          "user": "我最喜欢蒙古族。",
+          "assistant": "已记住你最喜欢蒙古族。"
+        },
+        {
+          "user": "找蒙古族歌。",
+          "assistant": "蒙古族风格歌曲已打开。"
+        },
+        {
+          "user": "播放一首。",
+          "assistant": "歌曲开始播放。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "这首蒙古族风格歌曲已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "宋清棠",
+      "date_time": "2026-07-06 19:55",
+      "QA_details": [
+        {
+          "user": "播放我的爱情之恋。",
+          "assistant": "正在搜索《爱情之恋》。"
+        },
+        {
+          "user": "蒙古族的。",
+          "assistant": "已优先推荐蒙古族风格版本。"
+        },
+        {
+          "user": "声音大点。",
+          "assistant": "音量已调高。"
+        },
+        {
+          "user": "下一首。",
+          "assistant": "已切到下一首蒙古族歌曲。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我喜欢的周杰伦歌曲。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

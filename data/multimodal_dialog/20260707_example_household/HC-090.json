@@ -1,0 +1,80 @@
+{
+  "case_id": "HC-090",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "女主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要看"
+        ],
+        "memory": [
+          "用户喜欢黄渤导演的电影",
+          "用户想观看《好好的时光》",
+          "用户喜欢刘德华的电影",
+          "用户偏好韩国战争片和武打片"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐知夏",
+      "date_time": "2026-07-01 20:20",
+      "QA_details": [
+        {
+          "user": "找黄渤导演电影。",
+          "assistant": "黄渤导演电影已打开。"
+        },
+        {
+          "user": "好好的时光。",
+          "assistant": "《好好的时光》已找到。"
+        },
+        {
+          "user": "刘德华电影也找。",
+          "assistant": "刘德华电影列表已显示。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "相关电影已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "唐知夏",
+      "date_time": "2026-07-06 19:55",
+      "QA_details": [
+        {
+          "user": "我要看。",
+          "assistant": "按你的偏好打开电影推荐。"
+        },
+        {
+          "user": "韩国战争片。",
+          "assistant": "韩国战争片已筛选。"
+        },
+        {
+          "user": "武打片。",
+          "assistant": "武打片推荐已显示。"
+        },
+        {
+          "user": "先看刘德华。",
+          "assistant": "刘德华电影开始播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续我昨天看的小猪佩奇。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

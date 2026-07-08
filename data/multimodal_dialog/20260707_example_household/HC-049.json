@@ -1,0 +1,164 @@
+{
+  "case_id": "HC-049",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "夫妻 / 伴侣家庭",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我喜欢看武打片。",
+          "我喜欢看刘德华的电影，我喜欢看武打片，我喜欢吃甜的。",
+          "嗯，记住我喜欢看刘德华的电影，我喜欢吃甜的。"
+        ],
+        "memory": [
+          "用户表示喜欢吃甜的",
+          "用户想看成龙的电影和《捕风捉影》",
+          "用户喜欢看武打片",
+          "用户要玩双影奇境",
+          "用户喜欢吃甜的",
+          "用户喜欢看武打片和刘德华的电影",
+          "用户偏好动画片和喜剧类电影"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "换别的不要这个光头强熊熊出没那个。",
+          "我要看恐怖的音乐。"
+        ],
+        "memory": [
+          "用户打开了《熊出没》",
+          "用户的昵称是光头强",
+          "用户寻找光头强",
+          "用户喜欢看积木方块",
+          "用户找寻《熊出没》中的熊大熊二",
+          "用户看了汪汪队",
+          "用户要观看名为嘟嘟的动画片",
+          "用户找汪汪队"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "秦越",
+      "date_time": "2026-07-01 19:50",
+      "QA_details": [
+        {
+          "user": "我喜欢武打片。",
+          "assistant": "武打片偏好已记住。"
+        },
+        {
+          "user": "成龙电影。",
+          "assistant": "成龙电影专区已打开。"
+        },
+        {
+          "user": "找捕风捉影。",
+          "assistant": "《捕风捉影》已找到。"
+        },
+        {
+          "user": "我喜欢吃甜的。",
+          "assistant": "已记住你喜欢吃甜的。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "秦越",
+      "date_time": "2026-07-05 20:25",
+      "QA_details": [
+        {
+          "user": "刘德华电影。",
+          "assistant": "刘德华电影已为你打开。"
+        },
+        {
+          "user": "要武打片。",
+          "assistant": "已筛选刘德华武打片。"
+        },
+        {
+          "user": "动画片也行。",
+          "assistant": "动画片推荐已加入。"
+        },
+        {
+          "user": "喜剧类。",
+          "assistant": "喜剧电影也为你列出来了。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐晚",
+      "date_time": "2026-07-02 18:10",
+      "QA_details": [
+        {
+          "user": "找光头强。",
+          "assistant": "光头强相关内容已找到。"
+        },
+        {
+          "user": "打开熊出没。",
+          "assistant": "《熊出没》开始播放。"
+        },
+        {
+          "user": "找熊大熊二。",
+          "assistant": "熊大熊二片段已显示。"
+        },
+        {
+          "user": "放积木方块。",
+          "assistant": "积木方块视频已打开。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "唐晚",
+      "date_time": "2026-07-06 19:05",
+      "QA_details": [
+        {
+          "user": "换别的不要光头强。",
+          "assistant": "已避开光头强和《熊出没》。"
+        },
+        {
+          "user": "我要看恐怖的音乐。",
+          "assistant": "恐怖氛围音乐视频已找到。"
+        },
+        {
+          "user": "找汪汪队。",
+          "assistant": "《汪汪队立大功》已打开。"
+        },
+        {
+          "user": "再找嘟嘟。",
+          "assistant": "嘟嘟动画片已显示。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "推荐我喜欢的刘德华武打片。",
+      "answer": "刘德华武打片",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "换掉光头强，放我找过的动画。",
+      "answer": "嘟嘟动画片",
+      "category": "open_domain"
+    }
+  ]
+}

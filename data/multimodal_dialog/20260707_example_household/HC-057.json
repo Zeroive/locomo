@@ -1,0 +1,150 @@
+{
+  "case_id": "HC-057",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "单亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 多跳能力",
+    "question_type": "多跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "播放我的爱情之恋。"
+        ],
+        "memory": [
+          "用户最喜欢的是蒙古族"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "电影800。"
+        ],
+        "memory": [
+          "用户喜欢绿色",
+          "用户最喜欢用捞头玩儿。",
+          "用户提到18岁太奶奶驾到"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "苏明远",
+      "date_time": "2026-07-01 21:05",
+      "QA_details": [
+        {
+          "user": "我最喜欢蒙古族。",
+          "assistant": "已记住你最喜欢蒙古族。"
+        },
+        {
+          "user": "找蒙古族歌。",
+          "assistant": "蒙古族风格歌曲已打开。"
+        },
+        {
+          "user": "放爱情之恋。",
+          "assistant": "正在查找《爱情之恋》。"
+        },
+        {
+          "user": "要像蒙古族的。",
+          "assistant": "已优先推荐蒙古族风格版本。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "苏明远",
+      "date_time": "2026-07-05 20:40",
+      "QA_details": [
+        {
+          "user": "播放我的爱情之恋。",
+          "assistant": "按你的蒙古族偏好搜索《爱情之恋》。"
+        },
+        {
+          "user": "切一首蒙古族的。",
+          "assistant": "已切到蒙古族风格歌曲。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "这首歌已收藏。"
+        },
+        {
+          "user": "继续播放。",
+          "assistant": "歌曲继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏小禾",
+      "date_time": "2026-07-02 18:10",
+      "QA_details": [
+        {
+          "user": "我喜欢绿色。",
+          "assistant": "已记住你喜欢绿色。"
+        },
+        {
+          "user": "用捞头玩儿。",
+          "assistant": "已记录你最喜欢用捞头玩儿。"
+        },
+        {
+          "user": "找太奶奶驾到。",
+          "assistant": "《18岁太奶奶驾到》已找到。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "《18岁太奶奶驾到》开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏小禾",
+      "date_time": "2026-07-06 19:35",
+      "QA_details": [
+        {
+          "user": "电影800。",
+          "assistant": "正在按“电影800”搜索。"
+        },
+        {
+          "user": "绿色的。",
+          "assistant": "已优先显示绿色封面内容。"
+        },
+        {
+          "user": "看太奶奶那个。",
+          "assistant": "《18岁太奶奶驾到》继续播放。"
+        },
+        {
+          "user": "捞头那个也记着。",
+          "assistant": "已保留捞头相关偏好。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "按我最喜欢的风格放爱情之恋。",
+      "answer": "蒙古族风格",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "放我提过的绿色封面电影。",
+      "answer": "《18岁太奶奶驾到》",
+      "category": "multi_hop"
+    }
+  ]
+}

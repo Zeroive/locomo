@@ -1,0 +1,77 @@
+{
+  "case_id": "HC-071",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "男主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 单跳能力",
+    "question_type": "单跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "播放我爱洗澡。"
+        ],
+        "memory": [
+          "用户想健身"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "周景明",
+      "date_time": "2026-07-01 19:20",
+      "QA_details": [
+        {
+          "user": "打开健身。",
+          "assistant": "健身视频专区已打开。"
+        },
+        {
+          "user": "放个热身。",
+          "assistant": "热身运动开始播放。"
+        },
+        {
+          "user": "换轻松点。",
+          "assistant": "已切到轻松健身视频。"
+        },
+        {
+          "user": "收藏这个。",
+          "assistant": "这段健身视频已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "周景明",
+      "date_time": "2026-07-05 20:10",
+      "QA_details": [
+        {
+          "user": "播放我爱洗澡。",
+          "assistant": "《我爱洗澡》已找到。"
+        },
+        {
+          "user": "健身的时候放。",
+          "assistant": "已配到健身播放列表。"
+        },
+        {
+          "user": "声音大点。",
+          "assistant": "音量已调高。"
+        },
+        {
+          "user": "继续健身。",
+          "assistant": "健身视频继续播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我健身时听的歌。",
+      "answer": "《我爱洗澡》",
+      "category": "single_hop"
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "case_id": "HC-048",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "夫妻 / 伴侣家庭",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "看一部电影。"
+        ],
+        "memory": [
+          "用户喜欢左右弯弓射大雕这个动作",
+          "用户的名字是李红梅",
+          "用户播放了八段锦"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想看电影。的时候感觉这个不是这意思吗？为啥说那啥呢？清空对话"
+        ],
+        "memory": [
+          "用户喜欢看电影《飞驰人生》",
+          "用户想看《甄嬛传》"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "李红梅",
+      "date_time": "2026-07-01 07:30",
+      "QA_details": [
+        {
+          "user": "播放八段锦。",
+          "assistant": "八段锦开始播放。"
+        },
+        {
+          "user": "左右弯弓射大雕。",
+          "assistant": "已跳到左右弯弓射大雕动作。"
+        },
+        {
+          "user": "慢一点。",
+          "assistant": "播放速度已调慢。"
+        },
+        {
+          "user": "记住我叫李红梅。",
+          "assistant": "已记住你的名字是李红梅。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "李红梅",
+      "date_time": "2026-07-05 20:10",
+      "QA_details": [
+        {
+          "user": "看一部电影。",
+          "assistant": "电影推荐页已打开。"
+        },
+        {
+          "user": "先看八段锦。",
+          "assistant": "已切回八段锦。"
+        },
+        {
+          "user": "弯弓那个。",
+          "assistant": "左右弯弓射大雕继续播放。"
+        },
+        {
+          "user": "再回电影。",
+          "assistant": "电影推荐继续显示。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "方知夏",
+      "date_time": "2026-07-02 21:00",
+      "QA_details": [
+        {
+          "user": "看飞驰人生。",
+          "assistant": "电影《飞驰人生》开始播放。"
+        },
+        {
+          "user": "收藏这个。",
+          "assistant": "《飞驰人生》已收藏。"
+        },
+        {
+          "user": "找甄嬛传。",
+          "assistant": "《甄嬛传》已打开。"
+        },
+        {
+          "user": "下次看。",
+          "assistant": "《甄嬛传》已加入稍后观看。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "方知夏",
+      "date_time": "2026-07-06 19:35",
+      "QA_details": [
+        {
+          "user": "我想看电影。",
+          "assistant": "最近收藏的《飞驰人生》已显示。"
+        },
+        {
+          "user": "不是这意思。",
+          "assistant": "已回到影视搜索页。"
+        },
+        {
+          "user": "甄嬛传呢。",
+          "assistant": "《甄嬛传》继续播放。"
+        },
+        {
+          "user": "清空对话。",
+          "assistant": "当前对话记录已清空。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续我最近练的八段锦动作。",
+      "answer": "左右弯弓射大雕",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "播放我最近收藏的电影。",
+      "answer": "《飞驰人生》",
+      "category": "temporal"
+    }
+  ]
+}

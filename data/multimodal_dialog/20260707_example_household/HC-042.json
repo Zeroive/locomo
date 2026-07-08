@@ -1,0 +1,150 @@
+{
+  "case_id": "HC-042",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "夫妻 / 伴侣家庭",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 多跳能力",
+    "question_type": "多跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我想听我的名字叫郝有才。"
+        ],
+        "memory": [
+          "用户是快手官方"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "可以倍速吗？把这个电影。"
+        ],
+        "memory": [
+          "用户喜欢赵本山的电影",
+          "用户想观看电影《落叶归根》",
+          "用户喜欢周润发的电影"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "宋以安",
+      "date_time": "2026-07-01 18:40",
+      "QA_details": [
+        {
+          "user": "打开快手。",
+          "assistant": "快手页面已打开。"
+        },
+        {
+          "user": "搜官方。",
+          "assistant": "快手官方相关内容已显示。"
+        },
+        {
+          "user": "放个音乐。",
+          "assistant": "音乐内容已为你打开。"
+        },
+        {
+          "user": "切下一首。",
+          "assistant": "已切到下一首。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "宋以安",
+      "date_time": "2026-07-04 20:15",
+      "QA_details": [
+        {
+          "user": "我想听我的名字叫郝有才。",
+          "assistant": "正在搜索《我的名字叫郝有才》。"
+        },
+        {
+          "user": "快手那个。",
+          "assistant": "已优先查找快手相关版本。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "歌曲开始播放。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "这首歌已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "顾南枝",
+      "date_time": "2026-07-02 21:05",
+      "QA_details": [
+        {
+          "user": "放落叶归根。",
+          "assistant": "《落叶归根》已开始播放。"
+        },
+        {
+          "user": "赵本山的。",
+          "assistant": "已确认赵本山电影版本。"
+        },
+        {
+          "user": "可以倍速吗？",
+          "assistant": "倍速菜单已打开。"
+        },
+        {
+          "user": "快一点。",
+          "assistant": "播放速度已调快。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "顾南枝",
+      "date_time": "2026-07-05 19:50",
+      "QA_details": [
+        {
+          "user": "找周润发电影。",
+          "assistant": "周润发电影专区已打开。"
+        },
+        {
+          "user": "切回赵本山。",
+          "assistant": "已回到赵本山电影推荐。"
+        },
+        {
+          "user": "落叶归根继续。",
+          "assistant": "《落叶归根》继续播放。"
+        },
+        {
+          "user": "这个电影倍速。",
+          "assistant": "当前电影已倍速播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我在快手那边找过的歌。",
+      "answer": "《我的名字叫郝有才》",
+      "category": "multi_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "把我喜欢的赵本山电影倍速播放。",
+      "answer": "《落叶归根》倍速",
+      "category": "multi_hop"
+    }
+  ]
+}

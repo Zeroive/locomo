@@ -1,0 +1,166 @@
+{
+  "case_id": "HC-069",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "嗯，我喜欢什么类型的电影？",
+          "我喜欢的歌手。",
+          "我喜欢周星驰的喜剧电影。",
+          "我喜欢看谁的电影？",
+          "推荐一部我喜欢看的电影？",
+          "我喜欢看什么样的电影？",
+          "你知道我喜欢的歌手是谁吗？"
+        ],
+        "memory": [
+          "用户喜欢周杰伦",
+          "用户喜欢看周星驰的电影",
+          "用户喜欢周杰伦和其他歌手的歌",
+          "用户喜欢在晚间观看《老友记》",
+          "用户只喜欢周杰伦的歌",
+          "用户喜欢喜剧片、周星驰的电影、成龙演的电影和周星驰的喜剧电影",
+          "用户喜欢看周星驰的电影和喜剧电影",
+          "用户偏好喜剧类影视作品，以及关注刘德华、沈腾、成龙等演员的电影和电视剧，用户想看刘德华的电影，用户喜欢喜剧片",
+          "用户喜欢喜剧片、周星驰的电影和成龙演的电影",
+          "用户喜欢游泳"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "彤彤同学放河北一台。"
+        ],
+        "memory": [
+          "用户的彤彤放在中央一台",
+          "用户的同学彤彤转到北京一台",
+          "彤彤同学打开了电视",
+          "彤彤同学打开了北京一台"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林德荣",
+      "date_time": "2026-07-01 20:00",
+      "QA_details": [
+        {
+          "user": "放周杰伦。",
+          "assistant": "周杰伦歌曲开始播放。"
+        },
+        {
+          "user": "我只喜欢周杰伦。",
+          "assistant": "已记住你只喜欢周杰伦的歌。"
+        },
+        {
+          "user": "找周星驰喜剧。",
+          "assistant": "周星驰喜剧电影已打开。"
+        },
+        {
+          "user": "成龙的也行。",
+          "assistant": "成龙电影也加入推荐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "林德荣",
+      "date_time": "2026-07-06 21:00",
+      "QA_details": [
+        {
+          "user": "我喜欢什么类型电影？",
+          "assistant": "你喜欢喜剧片。"
+        },
+        {
+          "user": "我喜欢的歌手。",
+          "assistant": "你喜欢周杰伦。"
+        },
+        {
+          "user": "晚上看老友记。",
+          "assistant": "《老友记》晚间观看记录已保留。"
+        },
+        {
+          "user": "推荐电影。",
+          "assistant": "为你推荐周星驰喜剧电影。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林小南",
+      "date_time": "2026-07-02 18:10",
+      "QA_details": [
+        {
+          "user": "彤彤打开电视。",
+          "assistant": "电视播放页已打开。"
+        },
+        {
+          "user": "放中央一台。",
+          "assistant": "中央一台正在播放。"
+        },
+        {
+          "user": "转北京一台。",
+          "assistant": "已切到北京一台。"
+        },
+        {
+          "user": "记住彤彤同学。",
+          "assistant": "彤彤同学的频道记录已保留。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林小南",
+      "date_time": "2026-07-06 18:45",
+      "QA_details": [
+        {
+          "user": "彤彤同学放河北一台。",
+          "assistant": "正在为彤彤同学查找河北一台。"
+        },
+        {
+          "user": "看刚才电视。",
+          "assistant": "已返回电视播放页。"
+        },
+        {
+          "user": "北京一台呢。",
+          "assistant": "北京一台在最近频道里。"
+        },
+        {
+          "user": "先放河北一台。",
+          "assistant": "河北一台开始播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "推荐一部我喜欢看的电影。",
+      "answer": "周星驰喜剧",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "给彤彤同学放最近的电视台。",
+      "answer": "河北一台",
+      "category": "open_domain"
+    }
+  ]
+}

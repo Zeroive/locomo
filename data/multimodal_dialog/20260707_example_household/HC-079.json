@@ -1,0 +1,88 @@
+{
+  "case_id": "HC-079",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "男主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我想看我姥爷1945。",
+          "我想看中配版。",
+          "电影。"
+        ],
+        "memory": [
+          "用户踢足球",
+          "用户想听书",
+          "用户的年龄是18岁",
+          "用户的职业是刑警",
+          "用户想看电视",
+          "用户习惯在周三下午听音乐",
+          "用户喜欢在上午观看电影，用户有连续多天收藏节目和电视剧的习惯",
+          "用户想看吴京的电影",
+          "用户喜欢周杰伦的歌曲，想听王菲的歌",
+          "用户偏好电视剧和综艺节目"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林峻",
+      "date_time": "2026-07-02 09:15",
+      "QA_details": [
+        {
+          "user": "上午看电影。",
+          "assistant": "电影专区已打开。"
+        },
+        {
+          "user": "找吴京电影。",
+          "assistant": "吴京电影列表已显示。"
+        },
+        {
+          "user": "收藏节目。",
+          "assistant": "当前节目已收藏。"
+        },
+        {
+          "user": "电视剧也留着。",
+          "assistant": "电视剧推荐已加入收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "林峻",
+      "date_time": "2026-07-08 15:20",
+      "QA_details": [
+        {
+          "user": "我想看我姥爷1945。",
+          "assistant": "《我姥爷1945》已找到。"
+        },
+        {
+          "user": "我想看中配版。",
+          "assistant": "已筛选中配版。"
+        },
+        {
+          "user": "电影。",
+          "assistant": "电影播放页已打开。"
+        },
+        {
+          "user": "周三下午听音乐。",
+          "assistant": "周杰伦和王菲歌曲已加入音乐推荐。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "上午给我推荐我喜欢的电影。",
+      "answer": "吴京电影",
+      "category": "open_domain"
+    }
+  ]
+}

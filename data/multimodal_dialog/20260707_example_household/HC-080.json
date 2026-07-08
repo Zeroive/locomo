@@ -1,0 +1,80 @@
+{
+  "case_id": "HC-080",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "男主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "助手这台机器就相当于给家里请个专家医疗健身教练保安，你只管赚钱养家，他帮你守护家不好吧，孝敬一下爸妈，其实咱都知道这个老人呀，学智能设备比登天还难，我妈今年93了没。我还有呢九大板块一目了然，追剧啊，打电话呀，运动啊，看家呀，主打的就是看得明白用的省劲，简单操作，老人一学就如果爸妈用智能手机着时候都能视频通话。"
+        ],
+        "memory": [
+          "用户提到父母，说明用户有父母",
+          "用户提到家中请了一个相当于管家、医疗、健身教练和保安的AI助手，用于帮助照顾家庭和孝敬父母",
+          "用户提到母亲今年93岁，学习智能设备非常困难",
+          "用户的母亲今年93岁"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "高明轩",
+      "date_time": "2026-07-01 20:30",
+      "QA_details": [
+        {
+          "user": "打开追剧。",
+          "assistant": "追剧专区已打开。"
+        },
+        {
+          "user": "打开运动。",
+          "assistant": "运动健身页面已打开。"
+        },
+        {
+          "user": "给爸妈用简单点。",
+          "assistant": "已切换到简洁操作页面。"
+        },
+        {
+          "user": "我妈93岁。",
+          "assistant": "已记住母亲今年93岁。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "高明轩",
+      "date_time": "2026-07-06 19:45",
+      "QA_details": [
+        {
+          "user": "打开看家。",
+          "assistant": "看家页面已打开。"
+        },
+        {
+          "user": "给老人看明白。",
+          "assistant": "已保持大字简洁模式。"
+        },
+        {
+          "user": "视频通话。",
+          "assistant": "视频通话入口已打开。"
+        },
+        {
+          "user": "再回追剧。",
+          "assistant": "追剧专区已恢复。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我昨天看的小猪佩奇第10季。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

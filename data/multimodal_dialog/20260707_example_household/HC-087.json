@@ -1,0 +1,77 @@
+{
+  "case_id": "HC-087",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "女主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 多跳能力",
+    "question_type": "多跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "播放舍不得的他。"
+        ],
+        "memory": [
+          "用户喜欢观看《小兵张嘎》、《自古英雄出少年》、李连杰主演的电影《少林寺》和《傲蕾一兰》，以及《喜盈门》和《地道战》"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许清音",
+      "date_time": "2026-07-01 20:00",
+      "QA_details": [
+        {
+          "user": "找小兵张嘎。",
+          "assistant": "《小兵张嘎》已找到。"
+        },
+        {
+          "user": "换自古英雄出少年。",
+          "assistant": "《自古英雄出少年》开始播放。"
+        },
+        {
+          "user": "少林寺。",
+          "assistant": "李连杰主演的《少林寺》已打开。"
+        },
+        {
+          "user": "再找地道战。",
+          "assistant": "《地道战》已加入待播。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "许清音",
+      "date_time": "2026-07-05 21:05",
+      "QA_details": [
+        {
+          "user": "播放舍不得的他。",
+          "assistant": "《舍不得的他》已找到。"
+        },
+        {
+          "user": "还是少林寺。",
+          "assistant": "已切回《少林寺》。"
+        },
+        {
+          "user": "喜盈门也找着。",
+          "assistant": "《喜盈门》已显示。"
+        },
+        {
+          "user": "先看地道战。",
+          "assistant": "《地道战》开始播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我喜欢的李连杰功夫电影。",
+      "answer": "《少林寺》",
+      "category": "multi_hop"
+    }
+  ]
+}

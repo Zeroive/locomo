@@ -1,0 +1,89 @@
+{
+  "case_id": "HC-100",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "女主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要听多播小品一家人。",
+          "打开年年有熊。",
+          "播放小品一家人，咱们把水果吃了，最爱炖给你妈妈喝。",
+          "要听大播小品一家人。",
+          "播放第情歌。"
+        ],
+        "memory": [
+          "用户是《小品一家人》中的角色",
+          "用户要求播放小品",
+          "用户播放了第1个",
+          "用户播放了熊出没小品一家人",
+          "用户播放了小品一家人",
+          "用户播放了熊大熊二光头强的视频并说'你们给我等着瞧，我不会放过你的'",
+          "用户播放了第9个内容",
+          "用户播放了小品《一家人》",
+          "用户喜欢观看小品《一家人》"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林知语",
+      "date_time": "2026-07-01 18:50",
+      "QA_details": [
+        {
+          "user": "播放小品一家人。",
+          "assistant": "《小品一家人》开始播放。"
+        },
+        {
+          "user": "播放第1个。",
+          "assistant": "第1个内容已播放。"
+        },
+        {
+          "user": "熊出没小品一家人。",
+          "assistant": "熊出没小品一家人已打开。"
+        },
+        {
+          "user": "第9个。",
+          "assistant": "第9个内容开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "林知语",
+      "date_time": "2026-07-06 19:20",
+      "QA_details": [
+        {
+          "user": "我要听多播小品一家人。",
+          "assistant": "《小品一家人》音频已找到。"
+        },
+        {
+          "user": "打开年年有熊。",
+          "assistant": "“年年有熊”相关内容已搜索。"
+        },
+        {
+          "user": "播放熊大熊二光头强。",
+          "assistant": "熊大熊二光头强视频已打开。"
+        },
+        {
+          "user": "播放第情歌。",
+          "assistant": "正在按“第情歌”搜索歌曲。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续我昨天看的海底小纵队。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

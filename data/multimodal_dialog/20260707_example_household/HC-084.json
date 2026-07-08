@@ -1,0 +1,78 @@
+{
+  "case_id": "HC-084",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "男主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "请打开叫什么影音来着？"
+        ],
+        "memory": [
+          "用户要查看云盘里聚会的照片",
+          "用户要跳舞"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "贺明庭",
+      "date_time": "2026-07-01 19:05",
+      "QA_details": [
+        {
+          "user": "打开云盘。",
+          "assistant": "云盘页面已打开。"
+        },
+        {
+          "user": "找聚会照片。",
+          "assistant": "聚会照片相册已找到。"
+        },
+        {
+          "user": "放成视频。",
+          "assistant": "照片轮播视频开始播放。"
+        },
+        {
+          "user": "配跳舞音乐。",
+          "assistant": "适合跳舞的音乐已配上。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "贺明庭",
+      "date_time": "2026-07-06 20:20",
+      "QA_details": [
+        {
+          "user": "请打开叫什么影音来着？",
+          "assistant": "影音播放页已打开。"
+        },
+        {
+          "user": "看云盘聚会。",
+          "assistant": "云盘里的聚会照片正在播放。"
+        },
+        {
+          "user": "跳舞那个。",
+          "assistant": "已切到跳舞音乐版本。"
+        },
+        {
+          "user": "再放一遍。",
+          "assistant": "聚会照片视频重新播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "打开我云盘里配跳舞的照片视频。",
+      "answer": "聚会照片视频",
+      "category": "open_domain"
+    }
+  ]
+}

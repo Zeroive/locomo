@@ -1,0 +1,89 @@
+{
+  "case_id": "HC-074",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "男主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我想看我的同学是美人鱼。",
+          "你好好，我想看看我的同学是美人鱼。",
+          "我想看5分钟的电影。",
+          "我想看音乐公主爱美丽。",
+          "我想看音乐公主爱美莉。",
+          "你告诉我要看莉亚公主爱美丽。",
+          "我想看音乐公主。",
+          "你好嘟嘟，我想看我的同学是美人鱼。",
+          "我要看同我的同学是美人鱼。"
+        ],
+        "memory": [
+          "用户的同学是美人鱼",
+          "用户想看他的同学，提到同学是美人鱼",
+          "用户喜欢观看《音乐公主爱美丽》",
+          "用户计划看莫斯科",
+          "用户想看包粽子"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾远舟",
+      "date_time": "2026-07-01 20:30",
+      "QA_details": [
+        {
+          "user": "看我的同学是美人鱼。",
+          "assistant": "《我的同学是美人鱼》已打开。"
+        },
+        {
+          "user": "再找音乐公主。",
+          "assistant": "《音乐公主爱美丽》已找到。"
+        },
+        {
+          "user": "五分钟电影。",
+          "assistant": "已筛选5分钟短片。"
+        },
+        {
+          "user": "莫斯科也留着。",
+          "assistant": "莫斯科相关内容已加入待播。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "顾远舟",
+      "date_time": "2026-07-06 19:40",
+      "QA_details": [
+        {
+          "user": "我要看同学美人鱼。",
+          "assistant": "《我的同学是美人鱼》继续播放。"
+        },
+        {
+          "user": "换音乐公主爱美莉。",
+          "assistant": "已按《音乐公主爱美丽》查找。"
+        },
+        {
+          "user": "包粽子那个。",
+          "assistant": "包粽子视频已搜索到。"
+        },
+        {
+          "user": "先看美人鱼。",
+          "assistant": "已切回《我的同学是美人鱼》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我喜欢的美人鱼那个短片。",
+      "answer": "《我的同学是美人鱼》",
+      "category": "open_domain"
+    }
+  ]
+}

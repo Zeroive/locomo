@@ -1,0 +1,158 @@
+{
+  "case_id": "HC-043",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "夫妻 / 伴侣家庭",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "生成免费电影清单。"
+        ],
+        "memory": [
+          "用户播放了第5个内容",
+          "用户全屏播放并快进20分钟",
+          "用户快进20分钟",
+          "用户全屏播放"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "你别跟我说这些没用的，我就是烦你，我什么时候给给你说我我要给我要看开心锤锤的。",
+          "我想看最近不流行的。",
+          "找到我喜欢看的动画片。"
+        ],
+        "memory": [
+          "用户表示要看女孩子喜欢看的动画片",
+          "用户计划观看《茶啊，二中》第5季",
+          "用户要观看《菲梦少女》的动画片",
+          "用户不想看6岁以下儿童看的动画片，喜欢观看非常容易理解的搞笑动画片，想找世界上最搞笑的动画片，但不喜欢蜡笔小新和猫和老鼠这样的搞笑动画片，想观看《菲梦少女》动画片，也喜欢冒险类的动画片，觉得动画片《开心锤锤》是感人的",
+          "用户喜欢看跳舞类型的动画片",
+          "用户不想看6岁以下儿童看的动画片，喜欢观看非常容易理解的搞笑动画片，想找世界上最搞笑的动画片，但不喜欢蜡笔小新和猫和老鼠这样的搞笑动画片，想观看《菲梦少女》动画片，也喜欢冒险类的动画片"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林承泽",
+      "date_time": "2026-07-01 20:00",
+      "QA_details": [
+        {
+          "user": "播放第5个。",
+          "assistant": "第5个内容开始播放。"
+        },
+        {
+          "user": "全屏。",
+          "assistant": "已切到全屏播放。"
+        },
+        {
+          "user": "快进20分钟。",
+          "assistant": "已快进20分钟。"
+        },
+        {
+          "user": "继续看。",
+          "assistant": "内容继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "林承泽",
+      "date_time": "2026-07-05 21:10",
+      "QA_details": [
+        {
+          "user": "生成免费电影清单。",
+          "assistant": "免费电影清单已生成。"
+        },
+        {
+          "user": "看上次第5个。",
+          "assistant": "已找到上次播放的第5个内容。"
+        },
+        {
+          "user": "按上次那样全屏。",
+          "assistant": "已全屏播放。"
+        },
+        {
+          "user": "再快进20分钟。",
+          "assistant": "进度已向后快进20分钟。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "温浅",
+      "date_time": "2026-07-02 18:25",
+      "QA_details": [
+        {
+          "user": "我要女孩子看的动画。",
+          "assistant": "女孩子喜欢的动画片已推荐。"
+        },
+        {
+          "user": "不要六岁以下的。",
+          "assistant": "已排除低龄动画。"
+        },
+        {
+          "user": "放菲梦少女。",
+          "assistant": "《菲梦少女》开始播放。"
+        },
+        {
+          "user": "也要冒险的。",
+          "assistant": "冒险类动画已加入推荐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "温浅",
+      "date_time": "2026-07-06 19:30",
+      "QA_details": [
+        {
+          "user": "我想看最近不流行的。",
+          "assistant": "已按非热门动画筛选。"
+        },
+        {
+          "user": "找到我喜欢看的动画片。",
+          "assistant": "按你的偏好推荐《菲梦少女》。"
+        },
+        {
+          "user": "别给我开心锤锤。",
+          "assistant": "已避开《开心锤锤》。"
+        },
+        {
+          "user": "跳舞类型。",
+          "assistant": "跳舞类型动画已优先显示。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "按我上次看的方式播放第5个。",
+      "answer": "全屏快进20分钟",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "找我最近想看的动画片。",
+      "answer": "《菲梦少女》",
+      "category": "temporal"
+    }
+  ]
+}

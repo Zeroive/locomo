@@ -1,0 +1,77 @@
+{
+  "case_id": "HC-086",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "女主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 单跳能力",
+    "question_type": "单跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "傻逼你你在瞎说帮我帮我找找我，我喜欢蹦蹦跳跳像像先先找我的样子，然后再找我爸的样子歌。可以吗？"
+        ],
+        "memory": [
+          "用户喜欢看动画片"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林晚晴",
+      "date_time": "2026-07-01 18:20",
+      "QA_details": [
+        {
+          "user": "找动画片。",
+          "assistant": "动画片专区已打开。"
+        },
+        {
+          "user": "要蹦蹦跳跳的。",
+          "assistant": "已筛选活泼跳舞类动画片。"
+        },
+        {
+          "user": "播放一个。",
+          "assistant": "动画片开始播放。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "这部动画片已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "林晚晴",
+      "date_time": "2026-07-06 19:10",
+      "QA_details": [
+        {
+          "user": "帮我找我喜欢的。",
+          "assistant": "按你喜欢的动画片查找。"
+        },
+        {
+          "user": "蹦蹦跳跳的。",
+          "assistant": "活泼跳舞类动画已打开。"
+        },
+        {
+          "user": "再找歌。",
+          "assistant": "相关动画歌曲已显示。"
+        },
+        {
+          "user": "先看动画。",
+          "assistant": "动画片继续播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我喜欢看的。",
+      "answer": "动画片",
+      "category": "single_hop"
+    }
+  ]
+}

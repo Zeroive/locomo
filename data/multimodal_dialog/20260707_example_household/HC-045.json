@@ -1,0 +1,148 @@
+{
+  "case_id": "HC-045",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "夫妻 / 伴侣家庭",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "电影10天。"
+        ],
+        "memory": [
+          "用户提到了《熊出没之小小世界》"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "播放免费的汪汪队。"
+        ],
+        "memory": [
+          "用户播放了超级飞侠"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈砚",
+      "date_time": "2026-07-01 18:10",
+      "QA_details": [
+        {
+          "user": "找熊出没。",
+          "assistant": "《熊出没》相关内容已打开。"
+        },
+        {
+          "user": "小小世界。",
+          "assistant": "《熊出没之小小世界》已找到。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "开始播放《熊出没之小小世界》。"
+        },
+        {
+          "user": "换一集。",
+          "assistant": "已切到下一集。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "沈砚",
+      "date_time": "2026-07-04 19:45",
+      "QA_details": [
+        {
+          "user": "电影10天。",
+          "assistant": "正在按“电影10天”搜索。"
+        },
+        {
+          "user": "还是小小世界。",
+          "assistant": "已切回《熊出没之小小世界》。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "历史里有《熊出没之小小世界》。"
+        },
+        {
+          "user": "继续播。",
+          "assistant": "《熊出没之小小世界》继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶棠",
+      "date_time": "2026-07-02 17:20",
+      "QA_details": [
+        {
+          "user": "播放超级飞侠。",
+          "assistant": "《超级飞侠》开始播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "已切到下一集。"
+        },
+        {
+          "user": "声音小点。",
+          "assistant": "音量调低了。"
+        },
+        {
+          "user": "收藏这个。",
+          "assistant": "《超级飞侠》已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "叶棠",
+      "date_time": "2026-07-05 18:35",
+      "QA_details": [
+        {
+          "user": "播放免费的汪汪队。",
+          "assistant": "免费《汪汪队》已搜索到。"
+        },
+        {
+          "user": "先不看。",
+          "assistant": "已暂停播放。"
+        },
+        {
+          "user": "回超级飞侠。",
+          "assistant": "《超级飞侠》继续播放。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "最近播放里有《超级飞侠》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我昨天看的海底小纵队。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "继续我喜欢的奥特曼剧场版。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

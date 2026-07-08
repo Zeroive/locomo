@@ -1,0 +1,149 @@
+{
+  "case_id": "HC-064",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我要听辞九门回忆，去你这边洗边听。"
+        ],
+        "memory": [
+          "用户想玩游戏",
+          "用户想玩切西瓜的游戏"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "聪聪给我找一些幻影忍者的是动画片。"
+        ],
+        "memory": [
+          "用户喜欢《幻影忍者》动画片"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "赵桂芝",
+      "date_time": "2026-07-01 19:15",
+      "QA_details": [
+        {
+          "user": "我想玩游戏。",
+          "assistant": "游戏页面已打开。"
+        },
+        {
+          "user": "切西瓜的。",
+          "assistant": "切西瓜游戏已找到。"
+        },
+        {
+          "user": "先放音乐。",
+          "assistant": "音乐页面已打开。"
+        },
+        {
+          "user": "辞九门回忆。",
+          "assistant": "《辞九门回忆》开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "赵桂芝",
+      "date_time": "2026-07-05 20:05",
+      "QA_details": [
+        {
+          "user": "我要听辞九门回忆。",
+          "assistant": "《辞九门回忆》继续播放。"
+        },
+        {
+          "user": "边洗边听。",
+          "assistant": "已保持音乐播放。"
+        },
+        {
+          "user": "等会玩游戏。",
+          "assistant": "切西瓜游戏已放入待打开。"
+        },
+        {
+          "user": "声音大点。",
+          "assistant": "音量已调高。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "赵小满",
+      "date_time": "2026-07-02 18:25",
+      "QA_details": [
+        {
+          "user": "找幻影忍者。",
+          "assistant": "《幻影忍者》动画片已找到。"
+        },
+        {
+          "user": "播放第一集。",
+          "assistant": "第1集开始播放。"
+        },
+        {
+          "user": "换一集。",
+          "assistant": "已切到下一集。"
+        },
+        {
+          "user": "收藏这个。",
+          "assistant": "《幻影忍者》已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "赵小满",
+      "date_time": "2026-07-06 18:55",
+      "QA_details": [
+        {
+          "user": "聪聪找幻影忍者。",
+          "assistant": "《幻影忍者》动画片已打开。"
+        },
+        {
+          "user": "多找一些。",
+          "assistant": "相关动画合集已显示。"
+        },
+        {
+          "user": "先看这个。",
+          "assistant": "当前集开始播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "下一集已切换。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "放我边洗边听的歌。",
+      "answer": "《辞九门回忆》",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "找我喜欢的忍者动画片。",
+      "answer": "《幻影忍者》",
+      "category": "open_domain"
+    }
+  ]
+}

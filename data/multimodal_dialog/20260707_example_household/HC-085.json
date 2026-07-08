@@ -1,0 +1,78 @@
+{
+  "case_id": "HC-085",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "男主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "今天天气怎么样？然后三分钟后提醒我关火，然后我要看飞驰人生三。"
+        ],
+        "memory": [
+          "用户玩了切水果游戏",
+          "今天小明和小红去上学路上，小明迟到了，他回家去拿书包，到学校之后老师呃。"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "唐景深",
+      "date_time": "2026-07-01 18:15",
+      "QA_details": [
+        {
+          "user": "打开切水果。",
+          "assistant": "切水果游戏已打开。"
+        },
+        {
+          "user": "继续玩。",
+          "assistant": "游戏继续运行。"
+        },
+        {
+          "user": "小明小红那个。",
+          "assistant": "小明和小红上学的内容已显示。"
+        },
+        {
+          "user": "先返回。",
+          "assistant": "已返回主页面。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "唐景深",
+      "date_time": "2026-07-06 19:30",
+      "QA_details": [
+        {
+          "user": "我要看飞驰人生三。",
+          "assistant": "《飞驰人生3》已找到。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "《飞驰人生3》开始播放。"
+        },
+        {
+          "user": "全屏。",
+          "assistant": "画面已全屏。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "历史里有切水果游戏和《飞驰人生3》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续我昨天看的熊出没电影。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

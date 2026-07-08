@@ -1,0 +1,77 @@
+{
+  "case_id": "HC-094",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "女主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "播放张大嘴的平民，张大嘴的幸福生活。"
+        ],
+        "memory": [
+          "用户说'打开唱歌，妈妈我给你唱歌'"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陈若兰",
+      "date_time": "2026-07-01 19:30",
+      "QA_details": [
+        {
+          "user": "打开唱歌。",
+          "assistant": "唱歌页面已打开。"
+        },
+        {
+          "user": "妈妈我给你唱歌。",
+          "assistant": "伴唱模式已打开。"
+        },
+        {
+          "user": "放一首。",
+          "assistant": "歌曲伴唱开始播放。"
+        },
+        {
+          "user": "下一首。",
+          "assistant": "已切到下一首伴唱歌曲。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陈若兰",
+      "date_time": "2026-07-06 20:05",
+      "QA_details": [
+        {
+          "user": "播放张大嘴的平民。",
+          "assistant": "正在搜索“张大嘴的平民”。"
+        },
+        {
+          "user": "张大嘴的幸福生活。",
+          "assistant": "《张大嘴的幸福生活》已找到。"
+        },
+        {
+          "user": "先唱歌。",
+          "assistant": "已切回唱歌页面。"
+        },
+        {
+          "user": "再播放那个。",
+          "assistant": "《张大嘴的幸福生活》开始播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "打开我给妈妈唱歌的模式。",
+      "answer": "伴唱模式",
+      "category": "open_domain"
+    }
+  ]
+}

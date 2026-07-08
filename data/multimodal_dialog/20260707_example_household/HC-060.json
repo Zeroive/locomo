@@ -1,0 +1,151 @@
+{
+  "case_id": "HC-060",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "单亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "悬疑片会不会很吓人？"
+        ],
+        "memory": [
+          "用户想看《卧虎藏龙》"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "返回妈妈，我想看那个。"
+        ],
+        "memory": [
+          "用户播放了第8个",
+          "用户播放了小猪佩奇",
+          "用户播放了第4个",
+          "用户继续播放小猪佩奇"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "韩知予",
+      "date_time": "2026-07-01 20:20",
+      "QA_details": [
+        {
+          "user": "找卧虎藏龙。",
+          "assistant": "《卧虎藏龙》已找到。"
+        },
+        {
+          "user": "播放这个。",
+          "assistant": "《卧虎藏龙》开始播放。"
+        },
+        {
+          "user": "悬疑片吓人吗。",
+          "assistant": "已为你打开悬疑片分类说明。"
+        },
+        {
+          "user": "还是卧虎藏龙。",
+          "assistant": "已切回《卧虎藏龙》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "韩知予",
+      "date_time": "2026-07-05 21:00",
+      "QA_details": [
+        {
+          "user": "继续卧虎藏龙。",
+          "assistant": "《卧虎藏龙》继续播放。"
+        },
+        {
+          "user": "换清晰点。",
+          "assistant": "清晰度已调高。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "历史里有《卧虎藏龙》。"
+        },
+        {
+          "user": "全屏。",
+          "assistant": "画面已全屏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "韩小鹿",
+      "date_time": "2026-07-02 18:00",
+      "QA_details": [
+        {
+          "user": "播放小猪佩奇。",
+          "assistant": "《小猪佩奇》开始播放。"
+        },
+        {
+          "user": "第8个。",
+          "assistant": "第8个内容已播放。"
+        },
+        {
+          "user": "换第4个。",
+          "assistant": "已切到第4个。"
+        },
+        {
+          "user": "继续佩奇。",
+          "assistant": "《小猪佩奇》继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "韩小鹿",
+      "date_time": "2026-07-06 18:25",
+      "QA_details": [
+        {
+          "user": "返回妈妈。",
+          "assistant": "已返回上一级页面。"
+        },
+        {
+          "user": "我想看那个。",
+          "assistant": "按最近内容继续播放《小猪佩奇》。"
+        },
+        {
+          "user": "第8个。",
+          "assistant": "第8个小猪佩奇内容已打开。"
+        },
+        {
+          "user": "继续播放。",
+          "assistant": "《小猪佩奇》继续播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我喜欢的哈利波特。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "继续我昨天看的汪汪队。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

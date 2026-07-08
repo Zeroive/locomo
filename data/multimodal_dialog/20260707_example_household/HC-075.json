@@ -1,0 +1,79 @@
+{
+  "case_id": "HC-075",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "男主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "黑狐方天翼。"
+        ],
+        "memory": [
+          "用户提到'生死连53加入八路军'",
+          "用户的昵称是风影方天翼",
+          "用户提到电影《之王井泉》"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "韩峥",
+      "date_time": "2026-07-01 20:00",
+      "QA_details": [
+        {
+          "user": "找生死连53。",
+          "assistant": "《生死连》第53集相关内容已找到。"
+        },
+        {
+          "user": "加入八路军。",
+          "assistant": "已搜索加入八路军相关片段。"
+        },
+        {
+          "user": "我叫风影方天翼。",
+          "assistant": "已记住你的昵称是风影方天翼。"
+        },
+        {
+          "user": "找之王井泉。",
+          "assistant": "电影《之王井泉》已搜索。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "韩峥",
+      "date_time": "2026-07-06 21:10",
+      "QA_details": [
+        {
+          "user": "黑狐方天翼。",
+          "assistant": "正在搜索“黑狐方天翼”。"
+        },
+        {
+          "user": "看生死连。",
+          "assistant": "《生死连》第53集继续播放。"
+        },
+        {
+          "user": "加入八路军那个。",
+          "assistant": "相关片段已打开。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "历史里有《生死连》和《之王井泉》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我昨天看的亮剑第18集。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

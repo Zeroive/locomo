@@ -1,0 +1,154 @@
+{
+  "case_id": "HC-068",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我想看童话世界。"
+        ],
+        "memory": [
+          "用户奶奶会在星期五给用户包粽子",
+          "用户想看方块世界",
+          "用户想玩玩游戏",
+          "用户想玩游戏",
+          "用户只想看没有广告的奶龙",
+          "用户的哥哥在用户7岁的时候给用户发了一个大萝卜刀"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "下辈子和你成个家，我想唱这个。"
+        ],
+        "memory": [
+          "用户的国籍是日本",
+          "用户喜欢日本电视剧和动漫"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "何桂香",
+      "date_time": "2026-07-03 17:20",
+      "QA_details": [
+        {
+          "user": "星期五包粽子。",
+          "assistant": "已记录星期五奶奶包粽子。"
+        },
+        {
+          "user": "找方块世界。",
+          "assistant": "方块世界视频已找到。"
+        },
+        {
+          "user": "我想玩游戏。",
+          "assistant": "游戏页面已打开。"
+        },
+        {
+          "user": "看无广告奶龙。",
+          "assistant": "无广告奶龙已筛选。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "何桂香",
+      "date_time": "2026-07-06 18:30",
+      "QA_details": [
+        {
+          "user": "我想看童话世界。",
+          "assistant": "童话世界内容已搜索。"
+        },
+        {
+          "user": "还是方块世界。",
+          "assistant": "已切回方块世界。"
+        },
+        {
+          "user": "哥哥那个大萝卜刀。",
+          "assistant": "大萝卜刀相关记录已显示。"
+        },
+        {
+          "user": "先放奶龙。",
+          "assistant": "无广告奶龙开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "何小澄",
+      "date_time": "2026-07-02 20:10",
+      "QA_details": [
+        {
+          "user": "我是日本国籍。",
+          "assistant": "已记住你的国籍是日本。"
+        },
+        {
+          "user": "找日本电视剧。",
+          "assistant": "日本电视剧专区已打开。"
+        },
+        {
+          "user": "动漫也要。",
+          "assistant": "日本动漫推荐已加入。"
+        },
+        {
+          "user": "先看动漫。",
+          "assistant": "日本动漫开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "何小澄",
+      "date_time": "2026-07-06 20:25",
+      "QA_details": [
+        {
+          "user": "下辈子和你成个家。",
+          "assistant": "这首歌已搜索到。"
+        },
+        {
+          "user": "我想唱这个。",
+          "assistant": "已打开伴唱版本。"
+        },
+        {
+          "user": "唱完看日剧。",
+          "assistant": "日本电视剧已加入待播。"
+        },
+        {
+          "user": "动漫也留着。",
+          "assistant": "日本动漫也已保留。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续最近看的无广告动画。",
+      "answer": "无广告奶龙",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "唱完播放我喜欢的日本内容。",
+      "answer": "日本动漫",
+      "category": "temporal"
+    }
+  ]
+}

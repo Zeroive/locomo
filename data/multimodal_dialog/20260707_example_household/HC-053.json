@@ -1,0 +1,154 @@
+{
+  "case_id": "HC-053",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "单亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "明天晚上看电影，频道不调。"
+        ],
+        "memory": [
+          "用户播放了梨园春频道",
+          "用户请播放233频道",
+          "用户请播放奥特曼频道",
+          "用户播放了频道235",
+          "用户播放了戏曲频道",
+          "用户请求调到234频道"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "全屏。你好痛，刘德华的电影。"
+        ],
+        "memory": [
+          "用户偏好喜剧类和打斗类的动作片影视内容，尤其喜欢刘德华的电影、经典IP作品、《爱在零纬度》以及想看刘德华的电影",
+          "用户是拆弹专家"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "顾云澜",
+      "date_time": "2026-07-01 20:00",
+      "QA_details": [
+        {
+          "user": "播放梨园春频道。",
+          "assistant": "梨园春频道开始播放。"
+        },
+        {
+          "user": "换233频道。",
+          "assistant": "已切到233频道。"
+        },
+        {
+          "user": "奥特曼频道。",
+          "assistant": "奥特曼频道已打开。"
+        },
+        {
+          "user": "再到235。",
+          "assistant": "频道235正在播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "顾云澜",
+      "date_time": "2026-07-07 19:40",
+      "QA_details": [
+        {
+          "user": "调到234频道。",
+          "assistant": "已切到234频道。"
+        },
+        {
+          "user": "明天晚上看电影。",
+          "assistant": "已保留明晚看电影的频道。"
+        },
+        {
+          "user": "频道不调。",
+          "assistant": "会保持当前频道不切换。"
+        },
+        {
+          "user": "看历史。",
+          "assistant": "最近频道包括233、234和235。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "顾小星",
+      "date_time": "2026-07-02 20:15",
+      "QA_details": [
+        {
+          "user": "找刘德华电影。",
+          "assistant": "刘德华电影专区已打开。"
+        },
+        {
+          "user": "要打斗的。",
+          "assistant": "已筛选打斗类动作片。"
+        },
+        {
+          "user": "全屏。",
+          "assistant": "画面已全屏。"
+        },
+        {
+          "user": "拆弹专家。",
+          "assistant": "《拆弹专家》开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "顾小星",
+      "date_time": "2026-07-06 21:05",
+      "QA_details": [
+        {
+          "user": "你好痛，刘德华的电影。",
+          "assistant": "刘德华电影已继续查找。"
+        },
+        {
+          "user": "喜剧动作。",
+          "assistant": "喜剧动作片已筛选。"
+        },
+        {
+          "user": "爱在零纬度。",
+          "assistant": "《爱在零纬度》已找到。"
+        },
+        {
+          "user": "回拆弹专家。",
+          "assistant": "已切回《拆弹专家》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "明晚看电影就用最新调的频道。",
+      "answer": "234频道",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "继续我最近全屏看的刘德华电影。",
+      "answer": "《拆弹专家》",
+      "category": "temporal"
+    }
+  ]
+}

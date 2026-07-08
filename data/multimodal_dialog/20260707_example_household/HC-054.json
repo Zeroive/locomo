@@ -1,0 +1,153 @@
+{
+  "case_id": "HC-054",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "单亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "我现在比较无聊，想随便看点啥。"
+        ],
+        "memory": [
+          "用户喜欢刘德华的电影，想看刘德华2020年以后的电影"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我要看王兰美。",
+          "我要看王蓝莓。"
+        ],
+        "memory": [
+          "用户喜欢看王蓝莓的动画片",
+          "用户看的是王蓝莓的动画片儿",
+          "用户想看王蓝莓的动画片",
+          "用户看的是王蓝莓的动画片，不是真人版",
+          "用户要看的电视是王兰美的电视"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "林清越",
+      "date_time": "2026-07-01 21:10",
+      "QA_details": [
+        {
+          "user": "找刘德华电影。",
+          "assistant": "刘德华电影列表已打开。"
+        },
+        {
+          "user": "要2020年以后的。",
+          "assistant": "已筛选2020年以后的刘德华电影。"
+        },
+        {
+          "user": "随便放一个。",
+          "assistant": "已为你播放一部刘德华电影。"
+        },
+        {
+          "user": "收藏这个。",
+          "assistant": "这部电影已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "林清越",
+      "date_time": "2026-07-05 20:00",
+      "QA_details": [
+        {
+          "user": "我现在比较无聊。",
+          "assistant": "按你的喜好推荐刘德华电影。"
+        },
+        {
+          "user": "想随便看点啥。",
+          "assistant": "给你选一部2020年以后的刘德华电影。"
+        },
+        {
+          "user": "换一部。",
+          "assistant": "已切到另一部刘德华电影。"
+        },
+        {
+          "user": "继续这个。",
+          "assistant": "当前电影继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林小棠",
+      "date_time": "2026-07-02 18:05",
+      "QA_details": [
+        {
+          "user": "我要看王蓝莓。",
+          "assistant": "王蓝莓动画片已找到。"
+        },
+        {
+          "user": "不是真人版。",
+          "assistant": "已筛选动画片版本。"
+        },
+        {
+          "user": "播放电视。",
+          "assistant": "王蓝莓动画电视开始播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "下一集已切换。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "林小棠",
+      "date_time": "2026-07-06 18:40",
+      "QA_details": [
+        {
+          "user": "我要看王兰美。",
+          "assistant": "按王蓝莓动画片为你查找。"
+        },
+        {
+          "user": "我要看王蓝莓。",
+          "assistant": "《王蓝莓的幸福生活》动画片已打开。"
+        },
+        {
+          "user": "不要真人。",
+          "assistant": "继续播放动画片版本。"
+        },
+        {
+          "user": "接着看。",
+          "assistant": "王蓝莓动画片继续播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "我无聊，推荐我喜欢的近年电影。",
+      "answer": "刘德华2020年后电影",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "我要看我喜欢的王蓝莓，不要真人。",
+      "answer": "王蓝莓动画片",
+      "category": "open_domain"
+    }
+  ]
+}

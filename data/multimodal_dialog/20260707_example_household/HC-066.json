@@ -1,0 +1,156 @@
+{
+  "case_id": "HC-066",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 单跳能力",
+    "question_type": "单跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "你别跟我说这些没用的，我就是烦你，我什么时候给给你说我我要给我要看开心锤锤的。",
+          "我想看最近不流行的。",
+          "找到我喜欢看的动画片。"
+        ],
+        "memory": [
+          "用户表示要看女孩子喜欢看的动画片",
+          "用户计划观看《茶啊，二中》第5季",
+          "用户要观看《菲梦少女》的动画片",
+          "用户不想看6岁以下儿童看的动画片，喜欢观看非常容易理解的搞笑动画片，想找世界上最搞笑的动画片，但不喜欢蜡笔小新和猫和老鼠这样的搞笑动画片，想观看《菲梦少女》动画片，也喜欢冒险类的动画片，觉得动画片《开心锤锤》是感人的",
+          "用户喜欢看跳舞类型的动画片",
+          "用户不想看6岁以下儿童看的动画片，喜欢观看非常容易理解的搞笑动画片，想找世界上最搞笑的动画片，但不喜欢蜡笔小新和猫和老鼠这样的搞笑动画片，想观看《菲梦少女》动画片，也喜欢冒险类的动画片"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "打开宝贝jojo我看。",
+          "打开宝贝jojo，我看这。"
+        ],
+        "memory": [
+          "用户想看《星汉灿烂》这部剧"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆桂芳",
+      "date_time": "2026-07-01 18:30",
+      "QA_details": [
+        {
+          "user": "找女孩子看的动画。",
+          "assistant": "女孩子喜欢的动画片已打开。"
+        },
+        {
+          "user": "不要六岁以下。",
+          "assistant": "已排除低龄动画。"
+        },
+        {
+          "user": "放菲梦少女。",
+          "assistant": "《菲梦少女》开始播放。"
+        },
+        {
+          "user": "也要跳舞的。",
+          "assistant": "跳舞类型动画已加入推荐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陆桂芳",
+      "date_time": "2026-07-05 19:20",
+      "QA_details": [
+        {
+          "user": "找到我喜欢的动画片。",
+          "assistant": "按你的偏好推荐《菲梦少女》。"
+        },
+        {
+          "user": "不要蜡笔小新。",
+          "assistant": "已避开《蜡笔小新》。"
+        },
+        {
+          "user": "猫和老鼠也不要。",
+          "assistant": "《猫和老鼠》也已排除。"
+        },
+        {
+          "user": "开心锤锤先不要。",
+          "assistant": "已避开《开心锤锤》。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陆小禾",
+      "date_time": "2026-07-02 20:10",
+      "QA_details": [
+        {
+          "user": "找星汉灿烂。",
+          "assistant": "《星汉灿烂》已找到。"
+        },
+        {
+          "user": "播放这部剧。",
+          "assistant": "《星汉灿烂》开始播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "已切到下一集。"
+        },
+        {
+          "user": "收藏一下。",
+          "assistant": "《星汉灿烂》已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "陆小禾",
+      "date_time": "2026-07-06 18:40",
+      "QA_details": [
+        {
+          "user": "打开宝贝jojo。",
+          "assistant": "《宝贝JOJO》已打开。"
+        },
+        {
+          "user": "我看这。",
+          "assistant": "当前内容开始播放。"
+        },
+        {
+          "user": "还是星汉灿烂。",
+          "assistant": "已切回《星汉灿烂》。"
+        },
+        {
+          "user": "接着看。",
+          "assistant": "《星汉灿烂》继续播放。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "找到我喜欢看的动画片。",
+      "answer": "《菲梦少女》",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "继续我想看的那部剧。",
+      "answer": "《星汉灿烂》",
+      "category": "single_hop"
+    }
+  ]
+}

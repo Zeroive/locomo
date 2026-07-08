@@ -1,0 +1,78 @@
+{
+  "case_id": "HC-077",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "男主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 多跳能力",
+    "question_type": "多跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "打开宝贝jojo我看。",
+          "打开宝贝jojo，我看这。"
+        ],
+        "memory": [
+          "用户想看《星汉灿烂》这部剧"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "许明川",
+      "date_time": "2026-07-01 21:00",
+      "QA_details": [
+        {
+          "user": "找星汉灿烂。",
+          "assistant": "《星汉灿烂》已找到。"
+        },
+        {
+          "user": "播放这部剧。",
+          "assistant": "《星汉灿烂》开始播放。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "已切到下一集。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "《星汉灿烂》已收藏。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "许明川",
+      "date_time": "2026-07-06 18:50",
+      "QA_details": [
+        {
+          "user": "打开宝贝jojo。",
+          "assistant": "《宝贝JOJO》已打开。"
+        },
+        {
+          "user": "我看这。",
+          "assistant": "当前内容开始播放。"
+        },
+        {
+          "user": "还是星汉灿烂。",
+          "assistant": "已切回《星汉灿烂》。"
+        },
+        {
+          "user": "接着上次。",
+          "assistant": "《星汉灿烂》从上次进度继续。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "打开我想看的那部剧接着播。",
+      "answer": "《星汉灿烂》",
+      "category": "multi_hop"
+    }
+  ]
+}

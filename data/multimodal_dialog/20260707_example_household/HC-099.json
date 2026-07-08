@@ -1,0 +1,78 @@
+{
+  "case_id": "HC-099",
+  "dimension_tags": {
+    "household_size": "1人",
+    "household_structure": "女主人",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "单人关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "通通给我放一首雨爱。"
+        ],
+        "memory": [
+          "用户提到奶奶要听他离婚，不听别人离婚",
+          "用户的奶奶要听用户离婚，不听其他人离婚"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "宋晚棠",
+      "date_time": "2026-07-01 19:45",
+      "QA_details": [
+        {
+          "user": "打开音乐。",
+          "assistant": "音乐页面已打开。"
+        },
+        {
+          "user": "奶奶要听我离婚。",
+          "assistant": "已按你说的版本查找歌曲。"
+        },
+        {
+          "user": "别放别人离婚。",
+          "assistant": "已避开其他版本。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "歌曲开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "宋晚棠",
+      "date_time": "2026-07-06 20:30",
+      "QA_details": [
+        {
+          "user": "通通放一首雨爱。",
+          "assistant": "《雨爱》已找到。"
+        },
+        {
+          "user": "先听这个。",
+          "assistant": "《雨爱》开始播放。"
+        },
+        {
+          "user": "奶奶那个也留着。",
+          "assistant": "奶奶要听的版本已保留。"
+        },
+        {
+          "user": "下一首。",
+          "assistant": "已切到下一首歌曲。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我刚让通通放的歌。",
+      "answer": "《雨爱》",
+      "category": "open_domain"
+    }
+  ]
+}

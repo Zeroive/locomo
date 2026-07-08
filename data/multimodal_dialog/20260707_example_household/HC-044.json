@@ -1,0 +1,150 @@
+{
+  "case_id": "HC-044",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "夫妻 / 伴侣家庭",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 开放领域知识能力",
+    "question_type": "开放领域知识问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "请打开叫什么影音来着？"
+        ],
+        "memory": [
+          "用户要查看云盘里聚会的照片",
+          "用户要跳舞"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "涛涛请给我播放小猪佩奇免费的。"
+        ],
+        "memory": [
+          "用户要求播放《蛋仔派对》的视频",
+          "用户要求播放小猪佩奇"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "SPOUSE_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "SPOUSE_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "陆景然",
+      "date_time": "2026-07-01 19:05",
+      "QA_details": [
+        {
+          "user": "打开云盘。",
+          "assistant": "云盘页面已打开。"
+        },
+        {
+          "user": "找聚会照片。",
+          "assistant": "聚会照片相册已找到。"
+        },
+        {
+          "user": "放成视频。",
+          "assistant": "照片轮播视频开始播放。"
+        },
+        {
+          "user": "配跳舞的。",
+          "assistant": "已配上适合跳舞的音乐。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "陆景然",
+      "date_time": "2026-07-04 20:20",
+      "QA_details": [
+        {
+          "user": "请打开叫什么影音来着？",
+          "assistant": "影音播放页已打开。"
+        },
+        {
+          "user": "看云盘聚会。",
+          "assistant": "云盘里的聚会照片正在播放。"
+        },
+        {
+          "user": "跳舞那个音乐。",
+          "assistant": "跳舞音乐已切回。"
+        },
+        {
+          "user": "再放一遍。",
+          "assistant": "聚会照片视频重新播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏晚棠",
+      "date_time": "2026-07-02 17:40",
+      "QA_details": [
+        {
+          "user": "播放蛋仔派对。",
+          "assistant": "《蛋仔派对》视频已打开。"
+        },
+        {
+          "user": "换个小猪佩奇。",
+          "assistant": "《小猪佩奇》已切换播放。"
+        },
+        {
+          "user": "要免费的。",
+          "assistant": "免费可看的小猪佩奇已筛选。"
+        },
+        {
+          "user": "下一集。",
+          "assistant": "已切到下一集。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "苏晚棠",
+      "date_time": "2026-07-05 18:15",
+      "QA_details": [
+        {
+          "user": "涛涛播放小猪佩奇免费的。",
+          "assistant": "免费版《小猪佩奇》开始播放。"
+        },
+        {
+          "user": "别收费。",
+          "assistant": "继续只显示免费内容。"
+        },
+        {
+          "user": "蛋仔派对呢。",
+          "assistant": "《蛋仔派对》视频也已找到。"
+        },
+        {
+          "user": "先看佩奇。",
+          "assistant": "已切回《小猪佩奇》。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "打开我云盘里能配跳舞的那个。",
+      "answer": "聚会照片视频",
+      "category": "open_domain"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "播放我想看的免费动画。",
+      "answer": "免费《小猪佩奇》",
+      "category": "open_domain"
+    }
+  ]
+}

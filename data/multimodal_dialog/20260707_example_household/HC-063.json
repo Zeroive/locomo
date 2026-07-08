@@ -1,0 +1,148 @@
+{
+  "case_id": "HC-063",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 时间推理能力",
+    "question_type": "时间推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "咱们今天中午吃什饭干吃干多了做什么多啊，自动给我妈安了一首他百分，这是咱俩的妈现你的q空空聊挺好的，你要什么时候聊什么时候聊。好生气了，这个就是我给我妈安排的中国礼财。"
+        ],
+        "memory": [
+          "用户的名字是李康"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "播放小猪佩奇歌牛什么牛羽喜欢我要听嗯唱的歌。"
+        ],
+        "memory": [
+          "用户表示不喜欢需要花钱的小马宝莉，并请求寻找不花钱的小马宝莉"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "李康",
+      "date_time": "2026-07-01 12:10",
+      "QA_details": [
+        {
+          "user": "我叫李康。",
+          "assistant": "已记住你的名字是李康。"
+        },
+        {
+          "user": "给我妈放首歌。",
+          "assistant": "音乐页面已打开。"
+        },
+        {
+          "user": "中国礼财那个。",
+          "assistant": "正在按“中国礼财”搜索歌曲。"
+        },
+        {
+          "user": "先放着。",
+          "assistant": "搜索到的歌曲已开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "李康",
+      "date_time": "2026-07-06 12:20",
+      "QA_details": [
+        {
+          "user": "咱们今天中午吃什饭。",
+          "assistant": "我先保留在音乐播放页。"
+        },
+        {
+          "user": "给我妈安排一首。",
+          "assistant": "已打开最近为妈妈播放的歌曲。"
+        },
+        {
+          "user": "中国礼财。",
+          "assistant": "“中国礼财”相关歌曲继续播放。"
+        },
+        {
+          "user": "看我名字。",
+          "assistant": "当前用户是李康。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "李小安",
+      "date_time": "2026-07-02 18:00",
+      "QA_details": [
+        {
+          "user": "找小马宝莉。",
+          "assistant": "小马宝莉内容已打开。"
+        },
+        {
+          "user": "不要花钱。",
+          "assistant": "免费内容已筛选。"
+        },
+        {
+          "user": "这个要钱。",
+          "assistant": "已跳过付费内容。"
+        },
+        {
+          "user": "找免费的。",
+          "assistant": "免费小马宝莉列表已更新。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "李小安",
+      "date_time": "2026-07-06 18:35",
+      "QA_details": [
+        {
+          "user": "播放小猪佩奇歌。",
+          "assistant": "小猪佩奇歌曲已播放。"
+        },
+        {
+          "user": "牛什么牛那个。",
+          "assistant": "正在查找相关歌曲。"
+        },
+        {
+          "user": "还是小马宝莉。",
+          "assistant": "已切回免费小马宝莉。"
+        },
+        {
+          "user": "不要收费。",
+          "assistant": "继续只显示免费内容。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放最近给我妈安排的歌。",
+      "answer": "中国礼财",
+      "category": "temporal"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "继续最近找的免费动画。",
+      "answer": "免费小马宝莉",
+      "category": "temporal"
+    }
+  ]
+}

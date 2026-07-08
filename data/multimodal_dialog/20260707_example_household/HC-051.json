@@ -1,0 +1,152 @@
+{
+  "case_id": "HC-051",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "单亲 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 单跳能力",
+    "question_type": "单跳推理",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "聪聪，我要看小。"
+        ],
+        "memory": [
+          "用户喜欢《小马宝莉》和恐怖动画片，但希望程度适中，既不要太恐怖，也不要完全不恐怖",
+          "用户喜欢听最恐怖的音乐",
+          "用户的昵称是苹果嘉儿"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "播放爱丽丝梦游仙境电影四电视是啥玩意儿啊？看是谁？"
+        ],
+        "memory": [
+          "用户关闭了电视机播放的世界杯",
+          "白色的遥控器被梁雨欣在2026-06-23拿走了",
+          "2026-06-23梁雨欣拿来了白遥控器"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "沈知遥",
+      "date_time": "2026-07-01 18:20",
+      "QA_details": [
+        {
+          "user": "打开小马宝莉。",
+          "assistant": "《小马宝莉》已打开。"
+        },
+        {
+          "user": "要有点恐怖。",
+          "assistant": "已筛选轻微恐怖风格动画。"
+        },
+        {
+          "user": "别太吓人。",
+          "assistant": "恐怖程度已调到适中。"
+        },
+        {
+          "user": "叫我苹果嘉儿。",
+          "assistant": "已记住你的昵称是苹果嘉儿。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "沈知遥",
+      "date_time": "2026-07-04 19:30",
+      "QA_details": [
+        {
+          "user": "聪聪，我要看小。",
+          "assistant": "按你喜欢的《小马宝莉》查找。"
+        },
+        {
+          "user": "别完全不恐怖。",
+          "assistant": "已保留一点恐怖氛围。"
+        },
+        {
+          "user": "放恐怖音乐。",
+          "assistant": "最恐怖的音乐已搜索到。"
+        },
+        {
+          "user": "先看小马宝莉。",
+          "assistant": "《小马宝莉》继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈小川",
+      "date_time": "2026-06-23 20:10",
+      "QA_details": [
+        {
+          "user": "电视关了世界杯。",
+          "assistant": "世界杯播放已关闭。"
+        },
+        {
+          "user": "白遥控器呢。",
+          "assistant": "记录里显示白色遥控器被梁雨欣拿走了。"
+        },
+        {
+          "user": "梁雨欣拿来了？",
+          "assistant": "2026-06-23梁雨欣拿来了白遥控器。"
+        },
+        {
+          "user": "打开电视。",
+          "assistant": "电视播放页已打开。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "沈小川",
+      "date_time": "2026-07-05 18:45",
+      "QA_details": [
+        {
+          "user": "播放爱丽丝梦游仙境。",
+          "assistant": "《爱丽丝梦游仙境》电影已找到。"
+        },
+        {
+          "user": "电影四电视是啥。",
+          "assistant": "已显示相关电影和电视结果。"
+        },
+        {
+          "user": "看是谁。",
+          "assistant": "影片详情页已打开。"
+        },
+        {
+          "user": "全屏。",
+          "assistant": "画面已全屏。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "给苹果嘉儿放我喜欢的动画。",
+      "answer": "《小马宝莉》",
+      "category": "single_hop"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "播放我刚找的爱丽丝电影。",
+      "answer": "《爱丽丝梦游仙境》",
+      "category": "single_hop"
+    }
+  ]
+}

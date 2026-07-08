@@ -1,0 +1,149 @@
+{
+  "case_id": "HC-065",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "通通你好，给我找现在的连续剧。"
+        ],
+        "memory": [
+          "用户想看黄梅戏",
+          "用户提到彤彤给他找到了一个曲剧《卷席筒》的整场演出"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "我想听小美满。"
+        ],
+        "memory": [
+          "用户喜欢周杰伦的歌"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "孙德芳",
+      "date_time": "2026-07-01 19:00",
+      "QA_details": [
+        {
+          "user": "找黄梅戏。",
+          "assistant": "黄梅戏内容已打开。"
+        },
+        {
+          "user": "卷席筒。",
+          "assistant": "曲剧《卷席筒》整场演出已找到。"
+        },
+        {
+          "user": "彤彤找的那个。",
+          "assistant": "已切到彤彤找过的《卷席筒》。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "《卷席筒》整场演出开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "孙德芳",
+      "date_time": "2026-07-05 20:15",
+      "QA_details": [
+        {
+          "user": "通通你好。",
+          "assistant": "我在。"
+        },
+        {
+          "user": "找现在的连续剧。",
+          "assistant": "连续剧专区已打开。"
+        },
+        {
+          "user": "先看黄梅戏。",
+          "assistant": "已切回黄梅戏内容。"
+        },
+        {
+          "user": "再放卷席筒。",
+          "assistant": "《卷席筒》整场演出继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "孙小乐",
+      "date_time": "2026-07-02 18:40",
+      "QA_details": [
+        {
+          "user": "放周杰伦。",
+          "assistant": "周杰伦歌曲列表已打开。"
+        },
+        {
+          "user": "换一首。",
+          "assistant": "已切到下一首周杰伦歌曲。"
+        },
+        {
+          "user": "收藏。",
+          "assistant": "当前歌曲已收藏。"
+        },
+        {
+          "user": "继续听。",
+          "assistant": "歌曲继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "孙小乐",
+      "date_time": "2026-07-06 19:20",
+      "QA_details": [
+        {
+          "user": "我想听小美满。",
+          "assistant": "《小美满》已搜索到。"
+        },
+        {
+          "user": "周杰伦那种。",
+          "assistant": "已回到周杰伦歌曲推荐。"
+        },
+        {
+          "user": "先放小美满。",
+          "assistant": "《小美满》开始播放。"
+        },
+        {
+          "user": "下一首周杰伦。",
+          "assistant": "已切到周杰伦歌曲。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "继续我昨天看的少林寺电影。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "播放我喜欢的林俊杰歌曲。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}

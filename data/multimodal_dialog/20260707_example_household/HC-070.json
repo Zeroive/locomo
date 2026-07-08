@@ -1,0 +1,150 @@
+{
+  "case_id": "HC-070",
+  "dimension_tags": {
+    "household_size": "2人",
+    "household_structure": "祖辈 + 1个孩子",
+    "relationship_direction": "家庭成员指向说话人",
+    "relationship_complexity": "二元关系 对抗能力",
+    "question_type": "对抗性问题",
+    "user_profiles": {
+      "person_001": {
+        "question": [
+          "咱们今天中午吃什饭干吃干多了做什么多啊，自动给我妈安了一首他百分，这是咱俩的妈现你的q空空聊挺好的，你要什么时候聊什么时候聊。好生气了，这个就是我给我妈安排的中国礼财。"
+        ],
+        "memory": [
+          "用户的名字是李康"
+        ]
+      },
+      "person_002": {
+        "question": [
+          "寻找昨天晚上的看的赛尔号。"
+        ],
+        "memory": [
+          "用户在看动画片",
+          "用户要看汪汪队大卡车",
+          "用户要看汪汪队大脚车"
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "from": "person_001",
+      "to": "person_002",
+      "type": "GRANDPARENT_OF"
+    },
+    {
+      "from": "person_002",
+      "to": "person_001",
+      "type": "GRANDCHILD_OF"
+    }
+  ],
+  "dialogues": [
+    {
+      "entity_id": "person_001",
+      "person_name": "李康",
+      "date_time": "2026-07-01 12:15",
+      "QA_details": [
+        {
+          "user": "我叫李康。",
+          "assistant": "已记住你的名字是李康。"
+        },
+        {
+          "user": "给我妈放歌。",
+          "assistant": "音乐页面已打开。"
+        },
+        {
+          "user": "中国礼财。",
+          "assistant": "“中国礼财”相关歌曲已搜索。"
+        },
+        {
+          "user": "先放着。",
+          "assistant": "歌曲开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_001",
+      "person_name": "李康",
+      "date_time": "2026-07-06 12:30",
+      "QA_details": [
+        {
+          "user": "今天中午吃啥。",
+          "assistant": "当前仍在音乐播放页。"
+        },
+        {
+          "user": "给我妈安排一首。",
+          "assistant": "已打开最近给妈妈放过的歌。"
+        },
+        {
+          "user": "看我名字。",
+          "assistant": "当前用户是李康。"
+        },
+        {
+          "user": "继续播放。",
+          "assistant": "歌曲继续播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "李小栩",
+      "date_time": "2026-07-02 18:20",
+      "QA_details": [
+        {
+          "user": "看动画片。",
+          "assistant": "动画片专区已打开。"
+        },
+        {
+          "user": "汪汪队大卡车。",
+          "assistant": "《汪汪队》大卡车内容已找到。"
+        },
+        {
+          "user": "大脚车也要。",
+          "assistant": "《汪汪队》大脚车内容已加入播放。"
+        },
+        {
+          "user": "播放。",
+          "assistant": "汪汪队车辆主题动画开始播放。"
+        }
+      ]
+    },
+    {
+      "entity_id": "person_002",
+      "person_name": "李小栩",
+      "date_time": "2026-07-06 19:10",
+      "QA_details": [
+        {
+          "user": "寻找昨天晚上的赛尔号。",
+          "assistant": "正在搜索《赛尔号》。"
+        },
+        {
+          "user": "先看动画。",
+          "assistant": "已回到动画片专区。"
+        },
+        {
+          "user": "汪汪队大卡车。",
+          "assistant": "《汪汪队》大卡车继续播放。"
+        },
+        {
+          "user": "大脚车。",
+          "assistant": "已切到《汪汪队》大脚车。"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "entity_id": "person_001",
+      "question": "播放我喜欢的刘德华电影。",
+      "answer": "未提到",
+      "category": "adversarial"
+    },
+    {
+      "entity_id": "person_002",
+      "question": "继续我昨天看的奥特曼。",
+      "answer": "未提到",
+      "category": "adversarial"
+    }
+  ]
+}
