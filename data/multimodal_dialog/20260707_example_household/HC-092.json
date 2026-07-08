@@ -73,7 +73,7 @@
     {
       "entity_id": "person_001",
       "question": "推荐我喜欢的歌手和热门电影。",
-      "answer": "周杰伦、五月天",
+      "answer": "周杰伦、五月天和张艺谋影片",
       "category": "multi_hop"
     }
   ]

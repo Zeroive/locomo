@@ -69,7 +69,7 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "打开我给妈妈唱歌的模式。",
+      "question": "我想给妈妈唱歌，用什么模式。",
       "answer": "伴唱模式",
       "category": "open_domain"
     }

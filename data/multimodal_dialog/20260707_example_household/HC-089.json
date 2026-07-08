@@ -69,7 +69,7 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "按我的名字播放刚才那首歌。",
+      "question": "按我的名字，适合放哪首歌。",
       "answer": "《梦想家》",
       "category": "open_domain"
     }

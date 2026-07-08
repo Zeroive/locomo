@@ -70,7 +70,7 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "播放我刚让通通放的歌。",
+      "question": "通通给我放哪首歌合适。",
       "answer": "《雨爱》",
       "category": "open_domain"
     }

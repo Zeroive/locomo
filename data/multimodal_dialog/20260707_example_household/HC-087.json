@@ -69,7 +69,7 @@
   "questions": [
     {
       "entity_id": "person_001",
-      "question": "播放我喜欢的李连杰功夫电影。",
+      "question": "按我喜欢的演员和功夫片偏好播放电影。",
       "answer": "《少林寺》",
       "category": "multi_hop"
     }

@@ -72,7 +72,7 @@
     {
       "entity_id": "person_001",
       "question": "播放我看过的汪汪队车辆动画。",
-      "answer": "汪汪队大卡车",
+      "answer": "汪汪队大卡车和大脚车",
       "category": "multi_hop"
     }
   ]
